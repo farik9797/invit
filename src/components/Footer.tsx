@@ -1,15 +1,24 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Phone, MapPin, Mail, Clock, Layers, ShieldCheck, Factory, Send } from 'lucide-react';
 import invitLogoMono from '../assets/logo/invit-mono.svg';
 import eurobandLogoMono from '../assets/logo/euroband-mono.svg';
+import { paths } from '../routes';
 
 interface FooterProps {
-  onSelectCategory: (slug: string) => void;
   onOpenCallback: () => void;
-  setActiveSection: (section: string) => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onOpenCallback, setActiveSection }) => {
+const CATALOG_LINKS = [
+  { label: 'Монтажные ленты для окон', slug: 'montazhnye-lenty', sub: 'Монтажные ленты' },
+  { label: 'ПСУЛ уплотнительные ленты', slug: 'montazhnye-lenty', sub: 'ПСУЛ' },
+  { label: 'Монтажная пена и герметики', slug: 'montazhnye-lenty', sub: 'Пена и очистители' },
+  { label: 'Фланцевый профиль (Шинорейка)', slug: 'komplektuyushchie-ventilyacii', sub: 'Фланцевый профиль' },
+  { label: 'Монтажные уголки УГ-20/30', slug: 'komplektuyushchie-ventilyacii', sub: 'Монтажные уголки' },
+  { label: 'Траверсы C-образные и ленты ПЭС', slug: 'komplektuyushchie-ventilyacii', sub: 'Траверса' }
+];
+
+export const Footer: React.FC<FooterProps> = ({ onOpenCallback }) => {
   return (
     <footer className="bg-[#12161C] text-slate-400 text-xs border-t border-slate-800">
       <div className="max-w-[1340px] mx-auto px-5 py-12">
@@ -68,54 +77,16 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onOpenCallback
               Каталог EUROBAND
             </h4>
             <ul className="space-y-2">
-              <li>
-                <button
-                  onClick={() => onSelectCategory('montazhnye-lenty')}
-                  className="hover:text-white transition-colors text-left"
-                >
-                  Монтажные ленты для окон
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => onSelectCategory('montazhnye-lenty')}
-                  className="hover:text-white transition-colors text-left"
-                >
-                  ПСУЛ уплотнительные ленты
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => onSelectCategory('montazhnye-lenty')}
-                  className="hover:text-white transition-colors text-left"
-                >
-                  Монтажная пена и герметики
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => onSelectCategory('komplektuyushchie-ventilyacii')}
-                  className="hover:text-white transition-colors text-left"
-                >
-                  Фланцевый профиль (Шинорейка)
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => onSelectCategory('komplektuyushchie-ventilyacii')}
-                  className="hover:text-white transition-colors text-left"
-                >
-                  Монтажные уголки УГ-20/30
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => onSelectCategory('komplektuyushchie-ventilyacii')}
-                  className="hover:text-white transition-colors text-left"
-                >
-                  Траверсы C-образные и ленты ПЭС
-                </button>
-              </li>
+              {CATALOG_LINKS.map((link) => (
+                <li key={link.label}>
+                  <Link
+                    to={`${paths.category(link.slug)}?sub=${encodeURIComponent(link.sub)}`}
+                    className="hover:text-white transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -126,47 +97,29 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onOpenCallback
             </h4>
             <ul className="space-y-2">
               <li>
-                <button
-                  onClick={() => {
-                    setActiveSection('manufacturing');
-                    document.getElementById('manufacturing')?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                  className="hover:text-white transition-colors"
-                >
+                <Link to={paths.about} className="hover:text-white transition-colors">
                   О заводе ООО «ИНВИТ»
-                </button>
+                </Link>
               </li>
               <li>
-                <button
-                  onClick={() => {
-                    setActiveSection('certificates');
-                    document.getElementById('certificates')?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                  className="hover:text-white transition-colors text-left"
-                >
+                <Link to={paths.certificates} className="hover:text-white transition-colors">
                   Сертификаты СТБ & ГОСТ
-                </button>
+                </Link>
               </li>
               <li>
-                <button
-                  onClick={() => {
-                    setActiveSection('tracking');
-                    document.getElementById('tracking')?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                  className="hover:text-white transition-colors"
-                >
+                <Link to={paths.orderStatus} className="hover:text-white transition-colors">
                   Отслеживание статуса заказа
-                </button>
+                </Link>
               </li>
               <li>
-                <button onClick={onOpenCallback} className="hover:text-white transition-colors">
+                <button onClick={onOpenCallback} className="hover:text-white transition-colors cursor-pointer">
                   Запросить оптовый прайс-лист (.XLSX)
                 </button>
               </li>
               <li>
-                <button onClick={onOpenCallback} className="hover:text-white transition-colors">
+                <Link to={paths.contacts} className="hover:text-white transition-colors">
                   Условия доставки по РБ и ЕАЭС
-                </button>
+                </Link>
               </li>
             </ul>
           </div>

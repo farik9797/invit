@@ -1,27 +1,26 @@
 import React, { useState } from 'react';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { Search, Phone, Menu, X, ShoppingBag, Shield, ChevronDown } from 'lucide-react';
 import invitLogo from '../assets/logo/invit-color.svg';
 import eurobandLogo from '../assets/logo/euroband-color.svg';
 import { PRODUCTS, CATEGORIES } from '../data/catalogData';
 import { Product } from '../types';
+import { paths } from '../routes';
 
 interface HeaderProps {
   onOpenCallback: () => void;
   onOpenQuoteCart: () => void;
   quoteCount: number;
   onSelectProduct: (product: Product) => void;
-  activeSection: string;
-  setActiveSection: (section: string) => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   onOpenCallback,
   onOpenQuoteCart,
   quoteCount,
-  onSelectProduct,
-  activeSection,
-  setActiveSection
+  onSelectProduct
 }) => {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -37,23 +36,13 @@ export const Header: React.FC<HeaderProps> = ({
     : [];
 
   const navItems = [
-    { id: 'main', label: 'Главная' },
-    { id: 'catalog', label: 'Каталог' },
-    { id: 'manufacturing', label: 'О компании & Завод' },
-    { id: 'tracking', label: 'Статус заказа' },
-    { id: 'certificates', label: 'Сертификаты (СТБ)' },
-    { id: 'news', label: 'Новости' },
-    { id: 'contacts', label: 'Контакты' },
+    { to: paths.catalog, label: 'Каталог' },
+    { to: paths.about, label: 'О компании' },
+    { to: paths.orderStatus, label: 'Статус заказа' },
+    { to: paths.certificates, label: 'Сертификаты' },
+    { to: paths.news, label: 'Новости' },
+    { to: paths.contacts, label: 'Контакты' }
   ];
-
-  const handleNavClick = (id: string) => {
-    setActiveSection(id);
-    setMobileMenuOpen(false);
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
 
   return (
     <header className="sticky top-0 z-40 bg-white shadow-md border-b border-slate-200">
@@ -62,7 +51,7 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="flex items-center justify-between gap-4">
           
           {/* LOGO AREA */}
-          <div className="flex items-center gap-3 cursor-pointer shrink-0" onClick={() => handleNavClick('main')}>
+          <Link to={paths.home} className="flex items-center gap-3 cursor-pointer shrink-0">
             <img
               src={invitLogo}
               alt="ООО «ИНВИТ» — надёжные системы"
@@ -74,7 +63,7 @@ export const Header: React.FC<HeaderProps> = ({
                 Белорусский производитель уплотнительных и герметизирующих лент
               </span>
             </div>
-          </div>
+          </Link>
 
           {/* SEARCH BAR CENTER (SmartTech index-3 archetype) */}
           <div className="relative flex-1 max-w-2xl mx-2 hidden md:block">
@@ -85,10 +74,7 @@ export const Header: React.FC<HeaderProps> = ({
                   className="appearance-none bg-transparent py-2.5 pl-3 pr-8 text-xs font-bold text-slate-700 cursor-pointer focus:outline-none"
                   onChange={(e) => {
                     const catSlug = e.target.value;
-                    if (catSlug) {
-                      const el = document.getElementById('catalog');
-                      if (el) el.scrollIntoView({ behavior: 'smooth' });
-                    }
+                    navigate(catSlug ? paths.category(catSlug) : paths.catalog);
                   }}
                 >
                   <option value="">Все категории</option>
@@ -237,18 +223,29 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="max-w-[1340px] mx-auto px-5">
           <div className="hidden md:flex items-center justify-between font-medium text-sm">
             <div className="flex items-center space-x-1 lg:space-x-2">
+              <NavLink
+                to={paths.home}
+                end
+                className={({ isActive }) =>
+                  `px-3 py-3 transition-colors rounded-t-sm font-medium ${
+                    isActive ? 'bg-white text-brand-blue font-bold shadow-sm' : 'hover:bg-brand-blue-hover text-slate-100'
+                  }`
+                }
+              >
+                Главная
+              </NavLink>
               {navItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => handleNavClick(item.id)}
-                  className={`px-3 py-3 transition-colors rounded-t-sm flex items-center gap-1 font-medium ${
-                    activeSection === item.id
-                      ? 'bg-white text-brand-blue font-bold shadow-sm'
-                      : 'hover:bg-brand-blue-hover text-slate-100'
-                  }`}
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  className={({ isActive }) =>
+                    `px-3 py-3 transition-colors rounded-t-sm font-medium ${
+                      isActive ? 'bg-white text-brand-blue font-bold shadow-sm' : 'hover:bg-brand-blue-hover text-slate-100'
+                    }`
+                  }
                 >
                   {item.label}
-                </button>
+                </NavLink>
               ))}
             </div>
 
@@ -275,16 +272,31 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
 
             <div className="flex flex-col space-y-1">
+              <NavLink
+                to={paths.home}
+                end
+                onClick={() => setMobileMenuOpen(false)}
+                className={({ isActive }) =>
+                  `text-left px-3 py-2.5 rounded text-sm font-medium transition-colors ${
+                    isActive ? 'bg-brand-blue text-white font-bold' : 'hover:bg-slate-800'
+                  }`
+                }
+              >
+                Главная
+              </NavLink>
               {navItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => handleNavClick(item.id)}
-                  className={`text-left px-3 py-2.5 rounded text-sm font-medium transition-colors ${
-                    activeSection === item.id ? 'bg-brand-blue text-white font-bold' : 'hover:bg-slate-800'
-                  }`}
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={({ isActive }) =>
+                    `text-left px-3 py-2.5 rounded text-sm font-medium transition-colors ${
+                      isActive ? 'bg-brand-blue text-white font-bold' : 'hover:bg-slate-800'
+                    }`
+                  }
                 >
                   {item.label}
-                </button>
+                </NavLink>
               ))}
             </div>
 
