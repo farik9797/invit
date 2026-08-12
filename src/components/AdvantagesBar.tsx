@@ -5,31 +5,31 @@ export const AdvantagesBar: React.FC = () => {
   const advantages = [
     {
       icon: Factory,
-      title: 'Собственное производство',
-      desc: 'Высокоточная порезка рулонов EUROBAND любой ширины от 10 мм за 24ч.',
-      color: 'text-[#0B5FA5]',
+      title: 'Белорусский производитель',
+      desc: 'Уплотнительные и герметизирующие бутилкаучуковые ленты EUROBAND производим сами, в Минске.',
+      color: 'text-brand-red',
       badge: 'ООО ИНВИТ'
     },
     {
       icon: Percent,
       title: 'Гибкое ценообразование',
       desc: 'Специальные оптовые прайсы для застройщиков, монтажников и дилеров.',
-      color: 'text-[#F39200]',
+      color: 'text-brand-blue',
       badge: 'B2B Скидки'
     },
     {
       icon: Truck,
       title: 'Прямые поставки комплектующих',
-      desc: 'Собственный склад в Минске (ТЦ Сеница на МКАД), быстрая отгрузка по РБ.',
-      color: 'text-[#0B5FA5]',
+      desc: 'Вентиляционные комплектующие от ведущих производителей — со склада в Минске.',
+      color: 'text-brand-blue',
       badge: 'Склад Минск'
     },
     {
       icon: ShieldCheck,
-      title: 'Сертифицированное качество',
-      desc: 'Продукция соответствует СТБ 1488-2004, ГОСТ и техническим регламентам.',
+      title: 'Документы по качеству',
+      desc: 'Технические свидетельства, декларации о соответствии, паспорта качества на каждую партию.',
       color: 'text-emerald-600',
-      badge: 'СТБ / ISO'
+      badge: 'СТБ / ГОСТ'
     }
   ];
 
@@ -48,7 +48,7 @@ export const AdvantagesBar: React.FC = () => {
                   <Icon className={`w-6 h-6 ${adv.color}`} />
                 </div>
                 <div className="space-y-1">
-                  <h3 className="text-sm font-extrabold text-slate-900 group-hover:text-[#0B5FA5] transition-colors leading-snug">
+                  <h3 className="text-sm font-extrabold text-slate-900 group-hover:text-brand-blue transition-colors leading-snug">
                     {adv.title}
                   </h3>
                   <p className="text-xs text-slate-600 leading-relaxed font-normal">

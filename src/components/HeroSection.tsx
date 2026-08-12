@@ -39,9 +39,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSelectCategory, onOp
           {/* LEFT MEGA-MENU CATALOG SIDEBAR */}
           <div className="lg:col-span-4 xl:col-span-3 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col justify-between">
             {/* Header Title */}
-            <div className="bg-[#0B5FA5] text-white px-4 py-3.5 flex items-center justify-between font-extrabold text-xs uppercase tracking-wider">
+            <div className="bg-brand-blue text-white px-4 py-3.5 flex items-center justify-between font-extrabold text-xs uppercase tracking-wider">
               <span className="flex items-center gap-2">
-                <Sliders className="w-4 h-4 text-[#F39200]" />
+                <Sliders className="w-4 h-4 text-white" />
                 Категории товаров
               </span>
               <span className="text-[10px] bg-blue-800/80 text-blue-100 px-2 py-0.5 rounded font-mono font-bold">
@@ -59,11 +59,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSelectCategory, onOp
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
                       {cat.division === 'windows' ? (
-                        <Layers className="w-4 h-4 text-[#0B5FA5] shrink-0 group-hover:scale-110 transition-transform" />
+                        <Layers className="w-4 h-4 text-brand-blue shrink-0 group-hover:scale-110 transition-transform" />
                       ) : (
-                        <Wind className="w-4 h-4 text-[#0B5FA5] shrink-0 group-hover:scale-110 transition-transform" />
+                        <Wind className="w-4 h-4 text-brand-blue shrink-0 group-hover:scale-110 transition-transform" />
                       )}
-                      <span className="group-hover:text-[#0B5FA5] transition-colors truncate">{cat.name}</span>
+                      <span className="group-hover:text-brand-blue transition-colors truncate">{cat.name}</span>
                     </div>
                     <ChevronRight className="w-3.5 h-3.5 text-slate-400 shrink-0 group-hover:translate-x-0.5 transition-transform" />
                   </div>
@@ -74,7 +74,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSelectCategory, onOp
                       <div
                         key={sub.id}
                         onClick={() => onSelectCategory(cat.slug)}
-                        className="flex items-center justify-between py-1.5 px-2.5 rounded-lg hover:bg-slate-100 text-slate-600 hover:text-[#0B5FA5] cursor-pointer transition-colors text-[11px] font-medium"
+                        className="flex items-center justify-between py-1.5 px-2.5 rounded-lg hover:bg-slate-100 text-slate-600 hover:text-brand-blue cursor-pointer transition-colors text-[11px] font-medium"
                       >
                         <span className="truncate">{sub.name}</span>
                         {sub.count && (
@@ -93,9 +93,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSelectCategory, onOp
             <div className="p-3 bg-slate-50 border-t border-slate-200">
               <button
                 onClick={onOpenCallback}
-                className="w-full bg-[#0B5FA5] hover:bg-[#1A6DB5] text-white font-bold text-xs py-2.5 px-3 rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                className="w-full bg-brand-blue hover:bg-brand-blue-hover text-white font-bold text-xs py-2.5 px-3 rounded-xl shadow-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer"
               >
-                <Box className="w-3.5 h-3.5 text-[#F39200]" />
+                <Box className="w-3.5 h-3.5 text-white" />
                 <span>Запросить прайс-лист (.XLSX)</span>
               </button>
             </div>
@@ -117,12 +117,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSelectCategory, onOp
             <div className="relative z-10 p-6 sm:p-8 lg:p-10 flex flex-col justify-between h-full">
               {/* Badge Tag */}
               <div className="flex flex-wrap items-center gap-2">
-                <span className="bg-[#F39200] text-slate-950 font-black text-[10px] sm:text-[11px] uppercase tracking-widest px-3 py-1 rounded-md shadow-sm">
-                  Бренд EUROBAND
+                <span className="bg-brand-red text-white font-black text-[10px] sm:text-[11px] uppercase tracking-widest px-3 py-1 rounded-md shadow-sm">
+                  Сделано в Беларуси
                 </span>
                 <span className="text-xs font-semibold text-slate-200 bg-slate-900/80 backdrop-blur px-3 py-1 rounded-md border border-slate-700/80 flex items-center gap-1.5">
-                  <ShieldCheck className="w-3.5 h-3.5 text-[#F39200]" />
-                  <span>Гарантия качества РБ (СТБ)</span>
+                  <ShieldCheck className="w-3.5 h-3.5 text-brand-red-light" />
+                  <span>Собственное производство ООО «ИНВИТ»</span>
                 </span>
               </div>
 
@@ -135,7 +135,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSelectCategory, onOp
                   {slide.subtitle}
                 </p>
 
-                <div className="p-3.5 bg-blue-950/70 border-l-4 border-[#F39200] rounded-r-xl text-xs sm:text-sm font-semibold text-blue-100 backdrop-blur-xs">
+                <div className="p-3.5 bg-blue-950/70 border-l-4 border-brand-red rounded-r-xl text-xs sm:text-sm font-semibold text-blue-100 backdrop-blur-xs">
                   ⚡ {slide.highlight}
                 </div>
 
@@ -143,7 +143,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSelectCategory, onOp
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
                   {slide.features.map((feat, idx) => (
                     <div key={idx} className="flex items-center gap-2 text-xs text-slate-200 font-medium">
-                      <CheckCircle2 className="w-4 h-4 text-[#F39200] shrink-0" />
+                      <CheckCircle2 className="w-4 h-4 text-brand-red-light shrink-0" />
                       <span className="truncate">{feat}</span>
                     </div>
                   ))}
@@ -154,10 +154,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSelectCategory, onOp
               <div className="pt-2 flex flex-wrap items-center gap-3">
                 <button
                   onClick={() => onSelectCategory(slide.categoryLink)}
-                  className="bg-[#0B5FA5] hover:bg-[#1A6DB5] active:scale-98 text-white font-extrabold text-xs sm:text-sm px-6 py-3 rounded-xl shadow-lg hover:shadow-blue-500/20 transition-all flex items-center gap-2 uppercase tracking-wide cursor-pointer"
+                  className="bg-brand-blue hover:bg-brand-blue-hover active:scale-98 text-white font-extrabold text-xs sm:text-sm px-6 py-3 rounded-xl shadow-lg hover:shadow-blue-500/20 transition-all flex items-center gap-2 uppercase tracking-wide cursor-pointer"
                 >
                   <span>Смотреть каталог</span>
-                  <ArrowRight className="w-4 h-4 text-[#F39200]" />
+                  <ArrowRight className="w-4 h-4 text-white" />
                 </button>
 
                 <button
@@ -178,7 +178,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSelectCategory, onOp
                     key={idx}
                     onClick={() => setCurrentSlide(idx)}
                     className={`h-2 rounded-full transition-all cursor-pointer ${
-                      currentSlide === idx ? 'w-7 bg-[#F39200]' : 'w-2 bg-slate-600 hover:bg-slate-400'
+                      currentSlide === idx ? 'w-7 bg-brand-red' : 'w-2 bg-slate-600 hover:bg-slate-400'
                     }`}
                     aria-label={`Slide ${idx + 1}`}
                   />

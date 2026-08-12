@@ -20,7 +20,7 @@ export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ onSelect
       count: '18 товаров',
       image: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=600',
       badge: 'Собственное производство',
-      badgeColor: 'bg-blue-100 text-[#0B5FA5] border-blue-200',
+      badgeColor: 'bg-blue-100 text-brand-blue border-blue-200',
       subitems: [
         { name: 'Внутренние пароизоляционные ленты', count: '8 видов' },
         { name: 'Наружные диффузионные (мембранные)', count: '6 видов' },
@@ -37,7 +37,7 @@ export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ onSelect
       count: '12 товаров',
       image: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80&w=600',
       badge: 'Хит СТБ 1488',
-      badgeColor: 'bg-[#F39200]/15 text-amber-900 border-[#F39200]/30',
+      badgeColor: 'bg-brand-red/15 text-amber-900 border-brand-red/30',
       subitems: [
         { name: 'ПСУЛ 10/2-8, 15/4-20, 20/8-40', count: '10 размеров' },
         { name: 'Защита от ливневого дождя (600 Па)', count: 'Сертификат' },
@@ -88,7 +88,7 @@ export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ onSelect
       count: '12 видов',
       image: 'https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&q=80&w=600',
       badge: 'Штампованная сталь',
-      badgeColor: 'bg-blue-100 text-[#0B5FA5] border-blue-200',
+      badgeColor: 'bg-blue-100 text-brand-blue border-blue-200',
       subitems: [
         { name: 'Уголки УГ-20 (толщина 2.0 мм / 2.5 мм)', count: 'М8 отверстие' },
         { name: 'Уголки УГ-30 для больших сечений', count: 'М10 отверстие' },
@@ -105,7 +105,7 @@ export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ onSelect
       count: '32 товара',
       image: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&q=80&w=600',
       badge: 'В наличии на складе',
-      badgeColor: 'bg-[#F39200]/15 text-amber-900 border-[#F39200]/30',
+      badgeColor: 'bg-brand-red/15 text-amber-900 border-brand-red/30',
       subitems: [
         { name: 'Монтажная C-траверса 20x30 / 30x30', count: 'Длина 3 м' },
         { name: 'Межфланцевая лента ПЭС (Пеноэтилен)', count: '10х4, 15x4' },
@@ -128,8 +128,8 @@ export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ onSelect
         {/* SECTION HEADER WITH TABS */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-8 sm:mb-10 gap-6">
           <div>
-            <div className="inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-[#0B5FA5] bg-blue-50 border border-blue-200/80 px-3 py-1 rounded-md mb-2">
-              <Sparkles className="w-3.5 h-3.5 text-[#F39200]" />
+            <div className="inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-wider text-brand-blue bg-blue-50 border border-blue-200/80 px-3 py-1 rounded-md mb-2">
+              <Sparkles className="w-3.5 h-3.5 text-brand-red" />
               <span>Главные направления производства</span>
             </div>
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-tight">
@@ -146,7 +146,7 @@ export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ onSelect
               onClick={() => setActiveTab('all')}
               className={`text-xs font-bold px-4 py-2.5 rounded-xl transition-all cursor-pointer ${
                 activeTab === 'all'
-                  ? 'bg-[#0B5FA5] text-white shadow-xs'
+                  ? 'bg-brand-blue text-white shadow-xs'
                   : 'text-slate-700 hover:bg-slate-100'
               }`}
             >
@@ -156,22 +156,22 @@ export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ onSelect
               onClick={() => setActiveTab('windows')}
               className={`text-xs font-bold px-4 py-2.5 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
                 activeTab === 'windows'
-                  ? 'bg-[#0B5FA5] text-white shadow-xs'
+                  ? 'bg-brand-blue text-white shadow-xs'
                   : 'text-slate-700 hover:bg-slate-100'
               }`}
             >
-              <Layers className="w-3.5 h-3.5 text-[#F39200]" />
+              <Layers className="w-3.5 h-3.5 text-brand-red" />
               <span>Оконный монтаж</span>
             </button>
             <button
               onClick={() => setActiveTab('hvac')}
               className={`text-xs font-bold px-4 py-2.5 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
                 activeTab === 'hvac'
-                  ? 'bg-[#0B5FA5] text-white shadow-xs'
+                  ? 'bg-brand-blue text-white shadow-xs'
                   : 'text-slate-700 hover:bg-slate-100'
               }`}
             >
-              <Wind className="w-3.5 h-3.5 text-[#F39200]" />
+              <Wind className="w-3.5 h-3.5 text-brand-red" />
               <span>Вентиляция & Фасад</span>
             </button>
           </div>
@@ -200,7 +200,7 @@ export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ onSelect
 
                     <h3
                       onClick={() => onSelectCategory(card.categorySlug)}
-                      className="text-base sm:text-lg font-extrabold text-slate-900 group-hover:text-[#0B5FA5] cursor-pointer transition-colors leading-snug tracking-tight"
+                      className="text-base sm:text-lg font-extrabold text-slate-900 group-hover:text-brand-blue cursor-pointer transition-colors leading-snug tracking-tight"
                     >
                       {card.title}
                     </h3>
@@ -223,17 +223,17 @@ export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ onSelect
                 <div className="bg-slate-50/80 p-3.5 rounded-xl border border-slate-200/70 space-y-2">
                   <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center justify-between">
                     <span>Подкатегории:</span>
-                    <span className="text-[10px] text-[#0B5FA5] font-semibold">СТБ / ГОСТ</span>
+                    <span className="text-[10px] text-brand-blue font-semibold">СТБ / ГОСТ</span>
                   </div>
                   <ul className="space-y-1.5 text-xs text-slate-700">
                     {card.subitems.map((sub, sIdx) => (
                       <li
                         key={sIdx}
                         onClick={() => onSelectCategory(card.categorySlug)}
-                        className="flex items-center justify-between hover:text-[#0B5FA5] cursor-pointer transition-colors font-medium group/sub"
+                        className="flex items-center justify-between hover:text-brand-blue cursor-pointer transition-colors font-medium group/sub"
                       >
                         <div className="flex items-center gap-2 truncate pr-2">
-                          <div className="w-1.5 h-1.5 rounded-full bg-[#0B5FA5] shrink-0 group-hover/sub:scale-125 transition-transform"></div>
+                          <div className="w-1.5 h-1.5 rounded-full bg-brand-blue shrink-0 group-hover/sub:scale-125 transition-transform"></div>
                           <span className="truncate">{sub.name}</span>
                         </div>
                         <span className="text-[10px] text-slate-400 font-mono font-normal shrink-0">
@@ -247,13 +247,13 @@ export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ onSelect
                 {/* Bottom Action Button */}
                 <button
                   onClick={() => onSelectCategory(card.categorySlug)}
-                  className="w-full pt-2 flex items-center justify-between text-xs font-extrabold text-[#0B5FA5] group-hover:text-[#1A6DB5] cursor-pointer transition-colors"
+                  className="w-full pt-2 flex items-center justify-between text-xs font-extrabold text-brand-blue group-hover:text-brand-blue-hover cursor-pointer transition-colors"
                 >
                   <span className="uppercase tracking-wider flex items-center gap-1.5">
-                    <CheckCircle2 className="w-4 h-4 text-[#F39200]" />
+                    <CheckCircle2 className="w-4 h-4 text-brand-red" />
                     Перейти в каталог раздела
                   </span>
-                  <div className="p-2 rounded-xl bg-blue-50 group-hover:bg-[#0B5FA5] group-hover:text-white transition-all shadow-2xs">
+                  <div className="p-2 rounded-xl bg-blue-50 group-hover:bg-brand-blue group-hover:text-white transition-all shadow-2xs">
                     <ArrowUpRight className="w-4 h-4" />
                   </div>
                 </button>
@@ -266,8 +266,8 @@ export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ onSelect
         {/* BOTTOM CALLOUT BANNER FOR ALL CATEGORIES */}
         <div className="mt-8 bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-2xs">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-blue-50 text-[#0B5FA5] rounded-xl border border-blue-100 shrink-0">
-              <Layers className="w-6 h-6 text-[#F39200]" />
+            <div className="p-3 bg-blue-50 text-brand-blue rounded-xl border border-blue-100 shrink-0">
+              <Layers className="w-6 h-6 text-brand-blue" />
             </div>
             <div>
               <div className="text-sm font-extrabold text-slate-900">Нужен индивидуальный типоразмер или оптовый спецификация?</div>
@@ -280,10 +280,10 @@ export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ onSelect
               const el = document.getElementById('contacts');
               if (el) el.scrollIntoView({ behavior: 'smooth' });
             }}
-            className="w-full sm:w-auto bg-[#0B5FA5] hover:bg-[#1A6DB5] text-white font-extrabold text-xs px-5 py-3 rounded-xl transition-all flex items-center justify-center gap-2 uppercase tracking-wide cursor-pointer shrink-0 shadow-xs"
+            className="w-full sm:w-auto bg-brand-blue hover:bg-brand-blue-hover text-white font-extrabold text-xs px-5 py-3 rounded-xl transition-all flex items-center justify-center gap-2 uppercase tracking-wide cursor-pointer shrink-0 shadow-xs"
           >
             <span>Запросить спецификацию</span>
-            <ArrowRight className="w-4 h-4 text-[#F39200]" />
+            <ArrowRight className="w-4 h-4 text-white" />
           </button>
         </div>
 

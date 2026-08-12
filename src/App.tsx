@@ -194,19 +194,19 @@ export default function App() {
             title="Наверх"
             aria-label="Наверх"
           >
-            <ChevronUp className="w-5 h-5 text-[#F39200] group-hover:-translate-y-0.5 transition-transform" />
+            <ChevronUp className="w-5 h-5 text-brand-red-light group-hover:-translate-y-0.5 transition-transform" />
           </button>
         )}
 
         {quoteCart.length > 0 && (
           <button
             onClick={() => setIsQuoteCartOpen(true)}
-            className="pointer-events-auto bg-[#0B5FA5] hover:bg-[#1A6DB5] text-white p-3.5 rounded-full shadow-2xl flex items-center gap-2 border-2 border-white transition-all transform hover:scale-105 cursor-pointer group"
+            className="pointer-events-auto bg-brand-blue hover:bg-brand-blue-hover text-white p-3.5 rounded-full shadow-2xl flex items-center gap-2 border-2 border-white transition-all transform hover:scale-105 cursor-pointer group"
             title="Открыть смету КП"
           >
             <div className="relative">
-              <ShoppingBag className="w-5 h-5 text-[#F39200]" />
-              <span className="absolute -top-2 -right-2 bg-[#F39200] text-slate-950 font-black text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
+              <ShoppingBag className="w-5 h-5 text-white" />
+              <span className="absolute -top-2 -right-2 bg-brand-red text-white font-black text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
                 {quoteCart.length}
               </span>
             </div>
@@ -221,10 +221,10 @@ export default function App() {
             setCallbackCustomNote('Быстрый звонок с плавающей кнопки');
             setIsCallbackOpen(true);
           }}
-          className="pointer-events-auto bg-[#F39200] hover:bg-[#E08200] text-slate-950 p-4 rounded-full shadow-2xl flex items-center justify-center border-2 border-white transition-all transform hover:scale-110 cursor-pointer group relative"
+          className="pointer-events-auto bg-brand-red hover:bg-brand-red-hover text-white p-4 rounded-full shadow-2xl flex items-center justify-center border-2 border-white transition-all transform hover:scale-110 cursor-pointer group relative"
           title="Заказать обратный звонок"
         >
-          <span className="absolute inset-0 rounded-full bg-[#F39200] opacity-40 animate-ping"></span>
+          <span className="absolute inset-0 rounded-full bg-brand-red opacity-40 animate-ping"></span>
           <PhoneCall className="w-6 h-6 relative z-10 text-slate-950" />
         </button>
       </div>

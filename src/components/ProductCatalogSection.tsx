@@ -42,8 +42,8 @@ export const ProductCatalogSection: React.FC<ProductCatalogSectionProps> = ({
         {/* Header & Tabs */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-10 gap-4">
           <div>
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0B5FA5] mb-1.5">
-              <Package className="w-4 h-4 text-[#F39200]" />
+            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-brand-blue mb-1.5">
+              <Package className="w-4 h-4 text-brand-red" />
               <span>B2B Каталог Продукции</span>
             </div>
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight">
@@ -69,7 +69,7 @@ export const ProductCatalogSection: React.FC<ProductCatalogSectionProps> = ({
               }}
               className={`text-xs font-bold px-3.5 py-2 rounded-lg transition-all shrink-0 cursor-pointer ${
                 activeTab === 'all' && !selectedCategorySlug
-                  ? 'bg-[#0B5FA5] text-white shadow-xs'
+                  ? 'bg-brand-blue text-white shadow-xs'
                   : 'text-slate-700 hover:bg-slate-200/80'
               }`}
             >
@@ -83,11 +83,11 @@ export const ProductCatalogSection: React.FC<ProductCatalogSectionProps> = ({
               }}
               className={`text-xs font-bold px-3.5 py-2 rounded-lg transition-all shrink-0 cursor-pointer flex items-center gap-1 ${
                 activeTab === 'hits' && !selectedCategorySlug
-                  ? 'bg-[#0B5FA5] text-white shadow-xs'
+                  ? 'bg-brand-blue text-white shadow-xs'
                   : 'text-slate-700 hover:bg-slate-200/80'
               }`}
             >
-              <span className="text-[#F39200]">★</span>
+              <span className="text-brand-red">★</span>
               <span>Хиты & Собственный прокат</span>
             </button>
 
@@ -98,7 +98,7 @@ export const ProductCatalogSection: React.FC<ProductCatalogSectionProps> = ({
               }}
               className={`text-xs font-bold px-3.5 py-2 rounded-lg transition-all shrink-0 cursor-pointer flex items-center gap-1 ${
                 activeTab === 'windows' && !selectedCategorySlug
-                  ? 'bg-[#0B5FA5] text-white shadow-xs'
+                  ? 'bg-brand-blue text-white shadow-xs'
                   : 'text-slate-700 hover:bg-slate-200/80'
               }`}
             >
@@ -113,7 +113,7 @@ export const ProductCatalogSection: React.FC<ProductCatalogSectionProps> = ({
               }}
               className={`text-xs font-bold px-3.5 py-2 rounded-lg transition-all shrink-0 cursor-pointer flex items-center gap-1 ${
                 activeTab === 'hvac' && !selectedCategorySlug
-                  ? 'bg-[#0B5FA5] text-white shadow-xs'
+                  ? 'bg-brand-blue text-white shadow-xs'
                   : 'text-slate-700 hover:bg-slate-200/80'
               }`}
             >
@@ -143,7 +143,7 @@ export const ProductCatalogSection: React.FC<ProductCatalogSectionProps> = ({
 
                   {/* Badge */}
                   {product.badge && (
-                    <span className="absolute top-3 left-3 bg-[#F39200] text-slate-950 font-black text-[10px] uppercase px-2.5 py-0.5 rounded-md shadow-2xs">
+                    <span className="absolute top-3 left-3 bg-brand-red text-white font-black text-[10px] uppercase px-2.5 py-0.5 rounded-md shadow-2xs">
                       {product.badge}
                     </span>
                   )}
@@ -158,7 +158,7 @@ export const ProductCatalogSection: React.FC<ProductCatalogSectionProps> = ({
                     onClick={() => onSelectProduct(product)}
                     className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white font-bold text-xs uppercase gap-1.5 backdrop-blur-xs cursor-pointer"
                   >
-                    <Eye className="w-4 h-4 text-[#F39200]" />
+                    <Eye className="w-4 h-4 text-brand-red" />
                     <span>Быстрый просмотр / ТДС</span>
                   </button>
                 </div>
@@ -167,14 +167,14 @@ export const ProductCatalogSection: React.FC<ProductCatalogSectionProps> = ({
                 <div className="p-5 flex-1 flex flex-col justify-between space-y-3.5">
                   <div>
                     {/* Category Label */}
-                    <div className="text-[11px] font-bold text-[#0B5FA5] uppercase tracking-wider mb-1">
+                    <div className="text-[11px] font-bold text-brand-blue uppercase tracking-wider mb-1">
                       {product.subcategoryName}
                     </div>
 
                     {/* Title */}
                     <h3
                       onClick={() => onSelectProduct(product)}
-                      className="text-sm font-extrabold text-slate-900 line-clamp-2 hover:text-[#0B5FA5] cursor-pointer transition-colors leading-snug"
+                      className="text-sm font-extrabold text-slate-900 line-clamp-2 hover:text-brand-blue cursor-pointer transition-colors leading-snug"
                     >
                       {product.title}
                     </h3>
@@ -213,7 +213,7 @@ export const ProductCatalogSection: React.FC<ProductCatalogSectionProps> = ({
                       <span className="block text-[10px] text-slate-400 uppercase font-bold">
                         Цена для опта:
                       </span>
-                      <span className="text-xs font-bold text-[#0B5FA5]">
+                      <span className="text-xs font-bold text-brand-blue">
                         По запросу / В смету
                       </span>
                     </div>
@@ -238,7 +238,7 @@ export const ProductCatalogSection: React.FC<ProductCatalogSectionProps> = ({
                       className={`font-bold text-xs py-2 px-2 rounded-xl transition-all flex items-center justify-center gap-1 cursor-pointer shadow-xs ${
                         isAdded
                           ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
-                          : 'bg-[#0B5FA5] hover:bg-[#1A6DB5] text-white'
+                          : 'bg-brand-blue hover:bg-brand-blue-hover text-white'
                       }`}
                     >
                       {isAdded ? (
@@ -248,7 +248,7 @@ export const ProductCatalogSection: React.FC<ProductCatalogSectionProps> = ({
                         </>
                       ) : (
                         <>
-                          <Plus className="w-3.5 h-3.5 text-[#F39200]" />
+                          <Plus className="w-3.5 h-3.5 text-brand-red" />
                           <span>В прайс КП</span>
                         </>
                       )}
