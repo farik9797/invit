@@ -1,6 +1,7 @@
 export interface SubCategory {
   id: string;
   name: string;
+  slug: string;
   count?: number;
 }
 
@@ -15,28 +16,35 @@ export interface Category {
   division: 'windows' | 'hvac';
 }
 
+export interface ProductSpec {
+  label: string;
+  value: string;
+}
+
+/** Размерный ряд с сайта: шапка таблицы и строки. */
+export interface ProductSizes {
+  headers: string[];
+  rows: string[][];
+}
+
 export interface Product {
   id: string;
-  code: string; // e.g. EB-7025-IN
+  slug: string;
   title: string;
+  shortTitle: string;
   categorySlug: string;
+  subcategorySlug: string;
   subcategoryName: string;
   division: 'windows' | 'hvac';
   description: string;
   image: string;
+  imageLarge?: string;
   badge?: 'Хит' | 'Новинка' | 'Акция' | 'Собственное производство';
-  specs: {
-    width?: string;
-    length?: string;
-    density?: string;
-    tempRange?: string;
-    thickness?: string;
-    material?: string;
-    packaging?: string;
-    class?: string;
-  };
+  specs: ProductSpec[];
+  sizes?: ProductSizes;
   features: string[];
-  inStock: boolean;
+  datasheetUrl?: string;
+  sourceUrl: string;
 }
 
 export interface HeroSlide {

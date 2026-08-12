@@ -30,7 +30,7 @@ export const Header: React.FC<HeaderProps> = ({
     ? PRODUCTS.filter(
         (p) =>
           p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          p.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          p.shortTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
           p.subcategoryName.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : [];
@@ -91,7 +91,7 @@ export const Header: React.FC<HeaderProps> = ({
               <div className="relative flex-1 flex items-center">
                 <input
                   type="text"
-                  placeholder="Поиск по названию, артикулу (напр. EB-IN-70) или СТБ..."
+                  placeholder="Поиск по каталогу: лента, ПСУЛ, герметик, профиль..."
                   value={searchQuery}
                   onChange={(e) => {
                     setSearchQuery(e.target.value);
@@ -143,9 +143,6 @@ export const Header: React.FC<HeaderProps> = ({
                         />
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
-                            <span className="text-[10px] font-mono font-bold bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded">
-                              Артикул: {p.code}
-                            </span>
                             <span className="text-[10px] text-brand-blue font-semibold">
                               {p.subcategoryName}
                             </span>

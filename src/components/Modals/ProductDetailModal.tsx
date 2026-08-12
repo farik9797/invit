@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X, Check, FileText, ShieldCheck, Layers, Plus, PhoneCall } from 'lucide-react';
 import { Product } from '../../types';
+import { variantOptions } from '../../lib/product';
 
 interface ProductDetailModalProps {
   product: Product | null;
@@ -17,8 +18,8 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
 }) => {
   if (!product) return null;
 
-  const widthOptions = ['15 мм', '20 мм', '70 мм', '100 мм', '150 мм', '200 мм', 'Индивидуальная порезка'];
-  const [selectedWidth, setSelectedWidth] = useState(product.specs.width || '70 мм');
+  const widthOptions = variantOptions(product);
+  const [selectedWidth, setSelectedWidth] = useState(variantOptions(product)[0]);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm overflow-y-auto">
@@ -55,10 +56,10 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
 
               <div className="p-3 bg-blue-50 border border-blue-200 rounded-xl text-xs space-y-1">
                 <span className="font-extrabold text-brand-blue block">
-                  Артикул в реестре ИНВИТ:
+                  Раздел каталога:
                 </span>
-                <span className="font-mono font-bold text-slate-900 block text-sm">
-                  {product.code}
+                <span className="font-bold text-slate-900 block text-sm">
+                  {product.subcategoryName}
                 </span>
               </div>
             </div>
@@ -80,7 +81,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
               {/* Width Configuration Picker */}
               <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
                 <label className="font-extrabold text-slate-900 block text-xs">
-                  Выберите ширину ролика для расчёта сметы:
+                  Типоразмер для расчёта сметы:
                 </label>
                 <div className="flex flex-wrap gap-1.5">
                   {widthOptions.map((w) => (
@@ -103,13 +104,13 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
               {/* Technical Specifications Table */}
               <div className="border border-slate-200 rounded-xl overflow-hidden">
                 <div className="bg-slate-100 px-3 py-2 font-extrabold text-slate-800 border-b border-slate-200">
-                  Технические характеристики СТБ
+                  Технические характеристики
                 </div>
                 <div className="divide-y divide-slate-100 p-2 space-y-1 text-slate-700">
-                  {Object.entries(product.specs).map(([key, value]) => (
-                    <div key={key} className="flex justify-between px-2 py-1">
-                      <span className="text-slate-400 capitalize">{key}:</span>
-                      <span className="font-bold text-slate-900">{value}</span>
+                  {product.specs.map((spec) => (
+                    <div key={spec.label} className="flex justify-between gap-3 px-2 py-1">
+                      <span className="text-slate-400">{spec.label}</span>
+                      <span className="font-bold text-slate-900 text-right">{spec.value}</span>
                     </div>
                   ))}
                 </div>

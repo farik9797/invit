@@ -32,7 +32,11 @@ export const HomePage: React.FC = () => {
 
       <AdvantagesBar />
 
-      <FeaturedCategories onSelectCategory={(slug) => navigate(paths.category(slug))} />
+      <FeaturedCategories
+        onSelectCategory={(slug, sub) =>
+          navigate(sub ? `${paths.category(slug)}?sub=${sub}` : paths.category(slug))
+        }
+      />
 
       <CustomCutBanner onOpenCallbackWithNote={shop.openCallback} />
 

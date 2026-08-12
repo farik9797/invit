@@ -1,38 +1,28 @@
 import React, { useState } from 'react';
 import { useParams, Navigate, Link } from 'react-router-dom';
-import { Check, ShieldCheck, Plus, Phone, FileText } from 'lucide-react';
+import { Check, ShieldCheck, Plus, Phone, FileText, Download, ExternalLink } from 'lucide-react';
 import { Breadcrumbs } from '../components/Breadcrumbs';
 import { ProductGrid } from '../components/ProductCard';
 import { CATEGORIES, PRODUCTS } from '../data/catalogData';
 import { useShop } from '../context/ShopContext';
 import { paths, productSlug } from '../routes';
-
-const SPEC_LABELS: Record<string, string> = {
-  width: 'Ширина',
-  length: 'Длина / намотка',
-  density: 'Плотность',
-  tempRange: 'Диапазон температур',
-  thickness: 'Толщина',
-  material: 'Основа / материал',
-  packaging: 'Упаковка',
-  class: 'Класс'
-};
+import { variantOptions } from '../lib/product';
 
 export const ProductPage: React.FC = () => {
   const { productSlug: slug } = useParams();
   const shop = useShop();
 
   const product = PRODUCTS.find((p) => productSlug(p) === slug);
-  const [selectedWidth, setSelectedWidth] = useState<string>(product?.specs.width || '');
+  const [selectedWidth, setSelectedWidth] = useState<string>(
+    product ? variantOptions(product)[0] : ''
+  );
 
   if (!product) return <Navigate to={paths.catalog} replace />;
 
   const category = CATEGORIES.find((c) => c.slug === product.categorySlug);
   const isAdded = shop.quoteCart.some((i) => i.product.id === product.id);
 
-  const widthOptions = product.specs.width
-    ? [product.specs.width, '10 мм', '50 мм', '100 мм', '150 мм', 'Нестандарт (под заказ)']
-    : ['Стандарт', 'Нестандарт (под заказ)'];
+  const widthOptions = variantOptions(product);
 
   const related = PRODUCTS.filter(
     (p) => p.categorySlug === product.categorySlug && p.id !== product.id
@@ -53,15 +43,24 @@ export const ProductPage: React.FC = () => {
           {/* Изображение */}
           <div className="lg:col-span-5 space-y-3">
             <div className="bg-slate-100 rounded-2xl overflow-hidden border border-slate-200 aspect-4/3">
-              <img src={product.image} alt={product.title} className="w-full h-full object-cover" />
+              <img
+                src={product.imageLarge || product.image}
+                alt={product.title}
+                className="w-full h-full object-contain bg-white"
+              />
             </div>
 
-            <div className="p-4 bg-blue-50 border border-blue-100 rounded-2xl text-xs">
-              <span className="font-extrabold text-brand-blue block mb-0.5">
-                Артикул в реестре ИНВИТ
-              </span>
-              <span className="font-mono font-bold text-slate-900 text-sm">{product.code}</span>
-            </div>
+            {product.datasheetUrl && (
+              <a
+                href={product.datasheetUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-2.5 p-4 bg-blue-50 border border-blue-100 rounded-2xl text-xs font-bold text-brand-blue hover:bg-blue-100 transition-colors"
+              >
+                <Download className="w-4 h-4 shrink-0" />
+                <span>Технический лист (PDF)</span>
+              </a>
+            )}
           </div>
 
           {/* Описание и заказ */}
@@ -87,7 +86,7 @@ export const ProductPage: React.FC = () => {
             {/* Выбор ширины */}
             <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-2.5">
               <span className="font-extrabold text-slate-900 block text-xs">
-                Ширина ролика для расчёта сметы:
+                Типоразмер для расчёта сметы:
               </span>
               <div className="flex flex-wrap gap-1.5">
                 {widthOptions.map((w) => (
@@ -122,7 +121,7 @@ export const ProductPage: React.FC = () => {
               </button>
 
               <button
-                onClick={() => shop.openCallback(`Запрос по позиции ${product.code}: ${product.title}`)}
+                onClick={() => shop.openCallback(`Запрос по позиции: ${product.title}`)}
                 className="flex-1 px-5 py-3.5 rounded-xl border border-slate-300 bg-white text-slate-800 font-bold text-xs uppercase tracking-wider hover:bg-slate-50 transition-colors flex items-center justify-center gap-2 cursor-pointer"
               >
                 <Phone className="w-4 h-4 text-brand-red" />
@@ -131,22 +130,56 @@ export const ProductPage: React.FC = () => {
             </div>
 
             {/* Характеристики */}
+            {product.specs.length > 0 && (
             <div className="border border-slate-200 rounded-2xl overflow-hidden bg-white">
               <div className="bg-slate-100 px-4 py-2.5 font-extrabold text-xs uppercase tracking-wider text-slate-700 border-b border-slate-200 flex items-center gap-2">
                 <FileText className="w-4 h-4 text-brand-blue" />
                 Технические характеристики
               </div>
               <dl className="divide-y divide-slate-100 text-xs">
-                {Object.entries(product.specs).map(([key, value]) => (
-                  <div key={key} className="flex justify-between gap-4 px-4 py-2.5">
-                    <dt className="text-slate-500">{SPEC_LABELS[key] || key}</dt>
-                    <dd className="font-bold text-slate-900 text-right">{value}</dd>
+                {product.specs.map((spec) => (
+                  <div key={spec.label} className="flex justify-between gap-4 px-4 py-2.5">
+                    <dt className="text-slate-500">{spec.label}</dt>
+                    <dd className="font-bold text-slate-900 text-right">{spec.value}</dd>
                   </div>
                 ))}
               </dl>
             </div>
+            )}
+
+            {/* Размерный ряд */}
+            {product.sizes && (
+              <div className="border border-slate-200 rounded-2xl overflow-hidden bg-white">
+                <div className="bg-slate-100 px-4 py-2.5 font-extrabold text-xs uppercase tracking-wider text-slate-700 border-b border-slate-200">
+                  Размерный ряд
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-xs min-w-[420px]">
+                    <thead>
+                      <tr className="bg-slate-50 text-slate-500 text-left">
+                        {product.sizes.headers.map((h) => (
+                          <th key={h} className="px-3 py-2 font-semibold whitespace-nowrap">{h}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100">
+                      {product.sizes.rows.map((row, idx) => (
+                        <tr key={idx} className="text-slate-800">
+                          {row.map((cell, cIdx) => (
+                            <td key={cIdx} className={`px-3 py-2 ${cIdx === 0 ? 'font-bold text-slate-900' : ''}`}>
+                              {cell}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
 
             {/* Преимущества */}
+            {product.features.length > 0 && (
             <div className="space-y-2.5">
               <h2 className="font-extrabold text-xs uppercase tracking-wider text-slate-500">
                 Преимущества и область применения
@@ -160,6 +193,7 @@ export const ProductPage: React.FC = () => {
                 ))}
               </div>
             </div>
+            )}
 
             <div className="flex items-center gap-2 text-xs text-slate-500 pt-1">
               <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />

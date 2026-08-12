@@ -10,12 +10,12 @@ interface FooterProps {
 }
 
 const CATALOG_LINKS = [
-  { label: 'Монтажные ленты для окон', slug: 'montazhnye-lenty', sub: 'Монтажные ленты' },
-  { label: 'ПСУЛ уплотнительные ленты', slug: 'montazhnye-lenty', sub: 'ПСУЛ' },
-  { label: 'Монтажная пена и герметики', slug: 'montazhnye-lenty', sub: 'Пена и очистители' },
-  { label: 'Фланцевый профиль (Шинорейка)', slug: 'komplektuyushchie-ventilyacii', sub: 'Фланцевый профиль' },
-  { label: 'Монтажные уголки УГ-20/30', slug: 'komplektuyushchie-ventilyacii', sub: 'Монтажные уголки' },
-  { label: 'Траверсы C-образные и ленты ПЭС', slug: 'komplektuyushchie-ventilyacii', sub: 'Траверса' }
+  { label: 'Монтажные ленты для окон', slug: 'materialy-dlya-okon', sub: 'montazhnye-lenty-dlya-okon' },
+  { label: 'Саморасширяющаяся лента ПСУЛ', slug: 'materialy-dlya-okon', sub: 'samorasshiryayuschayasya-lenta-psul' },
+  { label: 'Пена монтажная и очистители', slug: 'materialy-dlya-okon', sub: 'pena-montazhnaya-ochistitel-dlya-peny' },
+  { label: 'Герметики, клея, химия', slug: 'materialy-dlya-okon', sub: 'germetiki-kleya-himiya-smazki' },
+  { label: 'Фланцевый профиль для воздуховодов', slug: 'ventilyaciya', sub: 'flancevyy-profil-dlya-vozduhovodov' },
+  { label: 'Уголки монтажные и траверсы', slug: 'ventilyaciya', sub: 'ugolki-montazhnye' }
 ];
 
 export const Footer: React.FC<FooterProps> = ({ onOpenCallback }) => {
@@ -80,7 +80,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenCallback }) => {
               {CATALOG_LINKS.map((link) => (
                 <li key={link.label}>
                   <Link
-                    to={`${paths.category(link.slug)}?sub=${encodeURIComponent(link.sub)}`}
+                    to={`${paths.category(link.slug)}?sub=${link.sub}`}
                     className="hover:text-white transition-colors"
                   >
                     {link.label}

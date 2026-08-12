@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
 import { Product, QuoteCartItem } from '../types';
+import { defaultVariant } from '../lib/product';
 
 /**
  * Общее состояние магазина: смета КП и модалки, которые нужны на любой странице.
@@ -36,7 +37,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
 
   const addToQuote = (product: Product, width?: string) => {
-    const selectedWidth = width || product.specs.width || '70 мм';
+    const selectedWidth = width || defaultVariant(product);
     setQuoteCart((prev) => {
       const existingIndex = prev.findIndex((item) => item.product.id === product.id);
       if (existingIndex > -1) {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useSearchParams, Navigate } from 'react-router-dom';
 import { Breadcrumbs, PageHeading } from '../components/Breadcrumbs';
 import { ProductGrid } from '../components/ProductCard';
@@ -15,10 +15,15 @@ export const CategoryPage: React.FC = () => {
   if (!category) return <Navigate to={paths.catalog} replace />;
 
   const activeSub = searchParams.get('sub');
+  const activeSubName = category.subcategories.find((s) => s.slug === activeSub)?.name;
   const categoryProducts = PRODUCTS.filter((p) => p.categorySlug === category.slug);
   const products = activeSub
-    ? categoryProducts.filter((p) => p.subcategoryName === activeSub)
+    ? categoryProducts.filter((p) => p.subcategorySlug === activeSub)
     : categoryProducts;
+
+  const PAGE_SIZE = 24;
+  const [visible, setVisible] = useState(PAGE_SIZE);
+  useEffect(() => setVisible(PAGE_SIZE), [categorySlug, activeSub]);
 
   const selectSub = (name: string | null) => {
     if (name) setSearchParams({ sub: name });
@@ -59,15 +64,15 @@ export const CategoryPage: React.FC = () => {
 
                 {category.subcategories.map((sub) => {
                   const subCount = categoryProducts.filter(
-                    (p) => p.subcategoryName === sub.name
+                    (p) => p.subcategorySlug === sub.slug
                   ).length;
 
                   return (
                     <button
                       key={sub.id}
-                      onClick={() => selectSub(sub.name)}
+                      onClick={() => selectSub(sub.slug)}
                       className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs transition-colors cursor-pointer ${
-                        activeSub === sub.name
+                        activeSub === sub.slug
                           ? 'bg-blue-50 text-brand-blue font-bold'
                           : 'text-slate-600 hover:bg-slate-100'
                       }`}
@@ -88,7 +93,7 @@ export const CategoryPage: React.FC = () => {
             <div className="flex items-center justify-between gap-3 flex-wrap">
               <span className="text-xs text-slate-500">
                 Показано позиций: <strong className="text-slate-900">{products.length}</strong>
-                {activeSub && <span className="ml-1">в подразделе «{activeSub}»</span>}
+                {activeSubName && <span className="ml-1">в подразделе «{activeSubName}»</span>}
               </span>
               {activeSub && (
                 <button
@@ -101,11 +106,21 @@ export const CategoryPage: React.FC = () => {
             </div>
 
             <ProductGrid
-              products={products}
+              products={products.slice(0, visible)}
               quoteItemsIds={shop.quoteCart.map((i) => i.product.id)}
               onQuickView={shop.openQuickView}
               onAddToQuote={shop.addToQuote}
             />
+            {visible < products.length && (
+              <div className="flex justify-center pt-2">
+                <button
+                  onClick={() => setVisible((v) => v + PAGE_SIZE)}
+                  className="px-6 py-3 rounded-xl border border-slate-300 bg-white text-slate-800 font-bold text-xs uppercase tracking-wide hover:bg-slate-100 transition-colors cursor-pointer"
+                >
+                  Показать ещё ({products.length - visible})
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </section>

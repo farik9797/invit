@@ -97,7 +97,7 @@ export const QuoteCartModal: React.FC<QuoteCartModalProps> = ({
 
                     <div className="flex-1 min-w-0">
                       <span className="font-mono text-[10px] text-slate-400 block font-bold">
-                        {product.code}
+                        {product.subcategoryName}
                       </span>
                       <h4 className="font-bold text-slate-900 truncate">
                         {product.title}

@@ -14,4 +14,4 @@ export const paths = {
   orderStatus: '/status'
 };
 
-export const productSlug = (product: Product) => product.code.toLowerCase();
+export const productSlug = (product: Product) => product.slug;

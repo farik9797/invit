@@ -16,14 +16,31 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   isAdded,
   onQuickView,
   onAddToQuote
-}) => (
+}) => {
+  // Два коротких факта: характеристики с сайта, иначе шапка размерного ряда.
+  // Длинные лабораторные формулировки в карточку не влезают — обрезаем по запятой.
+  const shortLabel = (label: string) => label.split(',')[0].trim().slice(0, 34);
+  const highlights = (
+    product.specs.length
+      ? product.specs.map((s) => ({ label: s.label, value: s.value }))
+      : (product.sizes?.headers.slice(1, 3).map((header, idx) => ({
+          label: header,
+          value: product.sizes!.rows[0]?.[idx + 1] ?? '—'
+        })) ?? [])
+  )
+    .filter((row) => row.value.length < 40)
+    .slice(0, 2)
+    .map((row) => ({ label: shortLabel(row.label), value: row.value }));
+
+  return (
   <div className="bg-white rounded-2xl border border-slate-200 shadow-xs hover:shadow-xl hover:border-blue-300 transition-all duration-300 flex flex-col justify-between overflow-hidden group">
     {/* Изображение и бейджи */}
-    <div className="relative h-48 bg-slate-100 overflow-hidden flex items-center justify-center p-4">
+    <div className="relative h-48 bg-white overflow-hidden flex items-center justify-center p-4 border-b border-slate-100">
       <img
         src={product.image}
         alt={product.title}
-        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 rounded-xl"
+        loading="lazy"
+        className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
       />
 
       {product.badge && (
@@ -31,10 +48,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           {product.badge}
         </span>
       )}
-
-      <span className="absolute top-3 right-3 bg-slate-900/80 backdrop-blur text-white font-mono text-[10px] font-bold px-2 py-0.5 rounded-md">
-        {product.code}
-      </span>
 
       <button
         onClick={() => onQuickView(product)}
@@ -64,28 +77,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         </p>
       </div>
 
-      <div className="bg-slate-50/80 p-3 rounded-xl border border-slate-200/80 text-[11px] text-slate-700 space-y-1">
-        {product.specs.width && (
-          <div className="flex justify-between">
-            <span className="text-slate-400 font-medium">Ширина:</span>
-            <span className="font-bold text-slate-900">{product.specs.width}</span>
-          </div>
-        )}
-        {product.specs.length && (
-          <div className="flex justify-between">
-            <span className="text-slate-400 font-medium">Намотка:</span>
-            <span className="font-bold text-slate-900">{product.specs.length}</span>
-          </div>
-        )}
-        {product.specs.material && (
-          <div className="flex justify-between">
-            <span className="text-slate-400 font-medium">Основа:</span>
-            <span className="font-bold text-slate-900 truncate max-w-[140px]">
-              {product.specs.material}
-            </span>
-          </div>
-        )}
-      </div>
+      {highlights.length > 0 && (
+        <div className="bg-slate-50/80 p-3 rounded-xl border border-slate-200/80 text-[11px] text-slate-700 space-y-1">
+          {highlights.map((row) => (
+            <div key={row.label} className="flex justify-between gap-2">
+              <span className="text-slate-400 font-medium truncate">{row.label}</span>
+              <span className="font-bold text-slate-900 whitespace-nowrap shrink-0">{row.value}</span>
+            </div>
+          ))}
+        </div>
+      )}
 
       <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
         <div>
@@ -93,8 +94,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           <span className="text-xs font-bold text-brand-blue">По запросу / В смету</span>
         </div>
 
-        <span className="text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200/80 font-bold px-2 py-0.5 rounded-md flex items-center gap-1">
-          <ShieldCheck className="w-3 h-3 text-emerald-600" /> На складе РБ
+        <span className="text-[10px] bg-slate-100 text-slate-600 border border-slate-200 font-bold px-2 py-0.5 rounded-md flex items-center gap-1">
+          <ShieldCheck className="w-3 h-3 text-slate-500" /> Наличие по запросу
         </span>
       </div>
 
@@ -130,7 +131,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       </div>
     </div>
   </div>
-);
+  );
+};
 
 interface ProductGridProps {
   products: Product[];

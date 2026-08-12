@@ -1,119 +1,40 @@
 import React, { useState } from 'react';
 import { ArrowRight, ArrowUpRight, Layers, Wind, Sparkles, CheckCircle2 } from 'lucide-react';
-import { CATEGORIES } from '../data/catalogData';
+import { CATEGORIES, PRODUCTS } from '../data/catalogData';
 
 interface FeaturedCategoriesProps {
-  onSelectCategory: (slug: string) => void;
+  onSelectCategory: (categorySlug: string, subSlug?: string) => void;
 }
 
 export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ onSelectCategory }) => {
   const [activeTab, setActiveTab] = useState<'all' | 'windows' | 'hvac'>('all');
 
-  // Detailed categories formatted as featured cards with subitems and images
-  const categoryCards = [
-    {
-      id: 'montazhnye-lenty-main',
-      title: 'Монтажные ленты EUROBAND',
-      subtitle: 'Пароизоляционные, гидроизоляционные & бутиловые',
-      categorySlug: 'montazhnye-lenty',
-      division: 'windows',
-      count: '18 товаров',
-      image: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=600',
-      badge: 'Собственное производство',
-      badgeColor: 'bg-blue-100 text-brand-blue border-blue-200',
-      subitems: [
-        { name: 'Внутренние пароизоляционные ленты', count: '8 видов' },
-        { name: 'Наружные диффузионные (мембранные)', count: '6 видов' },
-        { name: 'Полнобутиловые гидроизоляционные', count: '4 вида' },
-        { name: 'Ленты под штукатурку и мокрый фасад', count: '5 видов' }
-      ]
-    },
-    {
-      id: 'psul-main',
-      title: 'ПСУЛ уплотнители',
-      subtitle: 'Предварительно сжатые саморасширяющиеся ленты',
-      categorySlug: 'montazhnye-lenty',
-      division: 'windows',
-      count: '12 товаров',
-      image: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80&w=600',
-      badge: 'Хит СТБ 1488',
-      badgeColor: 'bg-brand-red/15 text-amber-900 border-brand-red/30',
-      subitems: [
-        { name: 'ПСУЛ 10/2-8, 15/4-20, 20/8-40', count: '10 размеров' },
-        { name: 'Защита от ливневого дождя (600 Па)', count: 'Сертификат' },
-        { name: 'Паропроницаемое уплотнение', count: 'СТБ ГОСТ' },
-        { name: 'Ленты с акриловой пропиткой', count: 'Гарантия' }
-      ]
-    },
-    {
-      id: 'pena-germetik-main',
-      title: 'Монтажная пена & Клеи',
-      subtitle: 'Профессиональная пена PRO 70L, очистители, герметики',
-      categorySlug: 'montazhnye-lenty',
-      division: 'windows',
-      count: '15 товаров',
-      image: 'https://images.unsplash.com/photo-1572981779307-38b8cabb2407?auto=format&fit=crop&q=80&w=600',
-      badge: 'Всесезонная формула',
-      badgeColor: 'bg-emerald-100 text-emerald-800 border-emerald-200',
-      subitems: [
-        { name: 'Пена пистолетная EUROBAND PRO 70L', count: '1000 мл' },
-        { name: 'Очиститель монтажной пены', count: '500 мл' },
-        { name: 'Бутиловые & Акриловые герметики', count: 'Картриджи' },
-        { name: 'Клей-пена для пенополистирола', count: 'Выход 14 м²' }
-      ]
-    },
-    {
-      id: 'shinoreyka-main',
-      title: 'Фланцевый профиль (Шинорейка)',
-      subtitle: 'Шинорейка №20 и №30 для прямоугольных воздуховодов',
-      categorySlug: 'komplektuyushchie-ventilyacii',
-      division: 'hvac',
-      count: '8 видов',
-      image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&q=80&w=600',
-      badge: 'Заводской прокат',
-      badgeColor: 'bg-slate-200 text-slate-800 border-slate-300',
-      subitems: [
-        { name: 'Шинорейка №20 (длина 3.0 м)', count: 'Толщ. 0.6-0.7' },
-        { name: 'Шинорейка №30 (длина 3.0 м)', count: 'Толщ. 0.8-0.9' },
-        { name: 'Сталь оцинкованная ГОСТ 14918', count: 'Высокий цинк' },
-        { name: 'Класс герметичности B и C', count: 'СТБ ЕН 1507' }
-      ]
-    },
-    {
-      id: 'ugolki-main',
-      title: 'Монтажные уголки УГ',
-      subtitle: 'Уголки фланцевые УГ-18, УГ-20, УГ-30',
-      categorySlug: 'komplektuyushchie-ventilyacii',
-      division: 'hvac',
-      count: '12 видов',
-      image: 'https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?auto=format&fit=crop&q=80&w=600',
-      badge: 'Штампованная сталь',
-      badgeColor: 'bg-blue-100 text-brand-blue border-blue-200',
-      subitems: [
-        { name: 'Уголки УГ-20 (толщина 2.0 мм / 2.5 мм)', count: 'М8 отверстие' },
-        { name: 'Уголки УГ-30 для больших сечений', count: 'М10 отверстие' },
-        { name: 'Жесткое угловое скрепление', count: 'Антикоррозия' },
-        { name: 'Упаковки по 250 / 500 шт', count: 'Со склада' }
-      ]
-    },
-    {
-      id: 'traversy-pes-main',
-      title: 'Траверсы, ПЭС & Крепёж',
-      subtitle: 'Комплектующие для монтажа систем вентиляции',
-      categorySlug: 'komplektuyushchie-ventilyacii',
-      division: 'hvac',
-      count: '32 товара',
-      image: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&q=80&w=600',
-      badge: 'В наличии на складе',
-      badgeColor: 'bg-brand-red/15 text-amber-900 border-brand-red/30',
-      subitems: [
-        { name: 'Монтажная C-траверса 20x30 / 30x30', count: 'Длина 3 м' },
-        { name: 'Межфланцевая лента ПЭС (Пеноэтилен)', count: '10х4, 15x4' },
-        { name: 'Перфолента оцинкованная & Шпильки', count: 'М6 / М8 / М10' },
-        { name: 'Антикоррозийный цинковый спрей', count: '400 мл' }
-      ]
-    }
-  ];
+  // Карточки строим из реального каталога: 6 самых наполненных разделов.
+  const categoryCards = CATEGORIES.flatMap((cat) =>
+    cat.subcategories.map((sub) => {
+      const items = PRODUCTS.filter((p) => p.subcategorySlug === sub.slug);
+      const leafNames = [...new Set(items.map((p) => p.shortTitle))].slice(0, 4);
+      const own = items.some((p) => p.badge === 'Собственное производство');
+
+      return {
+        id: sub.slug,
+        title: sub.name,
+        subtitle: cat.name,
+        categorySlug: cat.slug,
+        subSlug: sub.slug,
+        division: cat.division,
+        count: `${sub.count} позиций`,
+        image: items[0]?.image ?? cat.image,
+        badge: own ? 'Собственное производство' : 'Прямые поставки',
+        badgeColor: own
+          ? 'bg-brand-red/10 text-brand-red border-brand-red/25'
+          : 'bg-blue-100 text-brand-blue border-blue-200',
+        subitems: leafNames.map((name) => ({ name, count: '' }))
+      };
+    })
+  )
+    .sort((a, b) => parseInt(b.count) - parseInt(a.count))
+    .slice(0, 6);
 
   const filteredCards = categoryCards.filter((card) => {
     if (activeTab === 'windows') return card.division === 'windows';
@@ -199,7 +120,7 @@ export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ onSelect
                     </div>
 
                     <h3
-                      onClick={() => onSelectCategory(card.categorySlug)}
+                      onClick={() => onSelectCategory(card.categorySlug, card.subSlug)}
                       className="text-base sm:text-lg font-extrabold text-slate-900 group-hover:text-brand-blue cursor-pointer transition-colors leading-snug tracking-tight"
                     >
                       {card.title}
@@ -229,16 +150,18 @@ export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ onSelect
                     {card.subitems.map((sub, sIdx) => (
                       <li
                         key={sIdx}
-                        onClick={() => onSelectCategory(card.categorySlug)}
+                        onClick={() => onSelectCategory(card.categorySlug, card.subSlug)}
                         className="flex items-center justify-between hover:text-brand-blue cursor-pointer transition-colors font-medium group/sub"
                       >
                         <div className="flex items-center gap-2 truncate pr-2">
                           <div className="w-1.5 h-1.5 rounded-full bg-brand-blue shrink-0 group-hover/sub:scale-125 transition-transform"></div>
                           <span className="truncate">{sub.name}</span>
                         </div>
-                        <span className="text-[10px] text-slate-400 font-mono font-normal shrink-0">
-                          {sub.count}
-                        </span>
+                        {sub.count && (
+                          <span className="text-[10px] text-slate-400 font-mono font-normal shrink-0">
+                            {sub.count}
+                          </span>
+                        )}
                       </li>
                     ))}
                   </ul>
@@ -246,7 +169,7 @@ export const FeaturedCategories: React.FC<FeaturedCategoriesProps> = ({ onSelect
 
                 {/* Bottom Action Button */}
                 <button
-                  onClick={() => onSelectCategory(card.categorySlug)}
+                  onClick={() => onSelectCategory(card.categorySlug, card.subSlug)}
                   className="w-full pt-2 flex items-center justify-between text-xs font-extrabold text-brand-blue group-hover:text-brand-blue-hover cursor-pointer transition-colors"
                 >
                   <span className="uppercase tracking-wider flex items-center gap-1.5">

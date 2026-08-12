@@ -7,6 +7,9 @@ import { CATEGORIES, PRODUCTS } from '../data/catalogData';
 import { useShop } from '../context/ShopContext';
 import { paths } from '../routes';
 
+/** Витрина собственного производства — вместо простыни из всех позиций. */
+const OWN_PRODUCTION = PRODUCTS.filter((p) => p.badge === 'Собственное производство').slice(0, 8);
+
 export const CatalogPage: React.FC = () => {
   const shop = useShop();
 
@@ -52,7 +55,7 @@ export const CatalogPage: React.FC = () => {
                     {cat.subcategories.map((sub) => (
                       <Link
                         key={sub.id}
-                        to={`${paths.category(cat.slug)}?sub=${encodeURIComponent(sub.name)}`}
+                        to={`${paths.category(cat.slug)}?sub=${sub.slug}`}
                         className="flex items-center justify-between py-1.5 text-xs text-slate-700 hover:text-brand-blue transition-colors border-b border-slate-100"
                       >
                         <span className="truncate">{sub.name}</span>
@@ -79,9 +82,14 @@ export const CatalogPage: React.FC = () => {
       <section className="py-12 bg-white border-t border-slate-200">
         <div className="max-w-[1340px] mx-auto px-5">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-8">
-            <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-              Все позиции ({PRODUCTS.length})
-            </h2>
+            <div>
+              <div className="text-xs font-bold uppercase tracking-wider text-brand-red mb-1.5">
+                Собственное производство
+              </div>
+              <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+                Продукция под маркой EUROBAND
+              </h2>
+            </div>
             <Link
               to={paths.contacts}
               className="inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-wide text-brand-blue hover:text-brand-blue-hover transition-colors"
@@ -92,7 +100,7 @@ export const CatalogPage: React.FC = () => {
           </div>
 
           <ProductGrid
-            products={PRODUCTS}
+            products={OWN_PRODUCTION}
             quoteItemsIds={shop.quoteCart.map((i) => i.product.id)}
             onQuickView={shop.openQuickView}
             onAddToQuote={shop.addToQuote}
