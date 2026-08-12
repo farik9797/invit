@@ -6,9 +6,3 @@ coverage/
 *.log
 .env*
 !.env.example
-
-# secrets — never commit
-password.md
-
-# local Claude Code settings
-.claude/settings.local.json

@@ -4,7 +4,7 @@ import { Phone, MapPin, Mail, Factory, ShieldCheck } from 'lucide-react';
 export const TopBar: React.FC = () => {
   return (
     <div className="bg-[#1E232A] text-slate-300 text-xs py-2 border-b border-slate-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-2">
+      <div className="max-w-[1340px] mx-auto px-5 flex flex-col md:flex-row justify-between items-center gap-2">
         {/* Left Notice */}
         <div className="flex items-center gap-2 font-medium text-slate-200">
           <span className="bg-[#0B5FA5] text-white text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded flex items-center gap-1">

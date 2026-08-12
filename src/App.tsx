@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { PhoneCall, ShoppingBag, ChevronUp } from 'lucide-react';
 import { TopBar } from './components/TopBar';
 import { Header } from './components/Header';
 import { HeroSection } from './components/HeroSection';
@@ -36,6 +37,26 @@ export default function App() {
   const [callbackCustomNote, setCallbackCustomNote] = useState('');
   const [selectedCertificate, setSelectedCertificate] = useState<CertificateItem | null>(null);
   const [selectedNews, setSelectedNews] = useState<NewsArticle | null>(null);
+
+  // Back to top button state
+  const [showBackToTop, setShowBackToTop] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 500) {
+        setShowBackToTop(true);
+      } else {
+        setShowBackToTop(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // Add item to quote cart
   const handleAddToQuote = (product: Product, width?: string) => {
@@ -116,22 +137,13 @@ export default function App() {
         {/* 4. ADVANTAGES BAR (4 icons) */}
         <AdvantagesBar />
 
-        {/* 5. FEATURED CATEGORIES TILE GRID (2x3) */}
+        {/* 5. FEATURED CATEGORIES TILE GRID */}
         <FeaturedCategories onSelectCategory={handleSelectCategory} />
 
-        {/* 6. PRODUCT CATALOG & HITS CAROUSEL/TABBED GRID */}
-        <ProductCatalogSection
-          onSelectProduct={(product) => setSelectedProduct(product)}
-          onAddToQuote={(product, width) => handleAddToQuote(product, width)}
-          quoteItemsIds={quoteCart.map((i) => i.product.id)}
-          selectedCategorySlug={selectedCategorySlug}
-          onResetCategoryFilter={() => setSelectedCategorySlug(null)}
-        />
-
-        {/* 7. CUSTOM CUT PROMO BANNER & CALCULATOR */}
+        {/* 6. CUSTOM CUT PROMO BANNER & CALCULATOR */}
         <CustomCutBanner onOpenCallbackWithNote={handleOpenCallbackWithNote} />
 
-        {/* 8. MANUFACTURING & ABOUT SECTION */}
+        {/* 7. MANUFACTURING & ABOUT SECTION */}
         <ManufacturingSection
           onOpenCallback={() => {
             setCallbackCustomNote('Запрос информации о заводе и презентации');
@@ -141,6 +153,15 @@ export default function App() {
             setActiveSection('certificates');
             document.getElementById('certificates')?.scrollIntoView({ behavior: 'smooth' });
           }}
+        />
+
+        {/* 8. PRODUCT CATALOG & HITS TABBED GRID */}
+        <ProductCatalogSection
+          onSelectProduct={(product) => setSelectedProduct(product)}
+          onAddToQuote={(product, width) => handleAddToQuote(product, width)}
+          quoteItemsIds={quoteCart.map((i) => i.product.id)}
+          selectedCategorySlug={selectedCategorySlug}
+          onResetCategoryFilter={() => setSelectedCategorySlug(null)}
         />
 
         {/* 9. ORDER STATUS TRACKING MODULE */}
@@ -163,6 +184,50 @@ export default function App() {
         onOpenCallback={() => setIsCallbackOpen(true)}
         setActiveSection={setActiveSection}
       />
+
+      {/* FLOATING ACTION BUTTON (Call / Quote Quick Access / Back to Top) */}
+      <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-3 pointer-events-none">
+        {showBackToTop && (
+          <button
+            onClick={scrollToTop}
+            className="pointer-events-auto bg-slate-900/90 hover:bg-slate-950 text-white p-3.5 rounded-full shadow-2xl flex items-center justify-center border-2 border-white/80 transition-all transform hover:scale-110 cursor-pointer group backdrop-blur"
+            title="Наверх"
+            aria-label="Наверх"
+          >
+            <ChevronUp className="w-5 h-5 text-[#F39200] group-hover:-translate-y-0.5 transition-transform" />
+          </button>
+        )}
+
+        {quoteCart.length > 0 && (
+          <button
+            onClick={() => setIsQuoteCartOpen(true)}
+            className="pointer-events-auto bg-[#0B5FA5] hover:bg-[#1A6DB5] text-white p-3.5 rounded-full shadow-2xl flex items-center gap-2 border-2 border-white transition-all transform hover:scale-105 cursor-pointer group"
+            title="Открыть смету КП"
+          >
+            <div className="relative">
+              <ShoppingBag className="w-5 h-5 text-[#F39200]" />
+              <span className="absolute -top-2 -right-2 bg-[#F39200] text-slate-950 font-black text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
+                {quoteCart.length}
+              </span>
+            </div>
+            <span className="text-xs font-bold uppercase tracking-wider hidden sm:inline pr-1">
+              Смета КП ({quoteCart.length})
+            </span>
+          </button>
+        )}
+
+        <button
+          onClick={() => {
+            setCallbackCustomNote('Быстрый звонок с плавающей кнопки');
+            setIsCallbackOpen(true);
+          }}
+          className="pointer-events-auto bg-[#F39200] hover:bg-[#E08200] text-slate-950 p-4 rounded-full shadow-2xl flex items-center justify-center border-2 border-white transition-all transform hover:scale-110 cursor-pointer group relative"
+          title="Заказать обратный звонок"
+        >
+          <span className="absolute inset-0 rounded-full bg-[#F39200] opacity-40 animate-ping"></span>
+          <PhoneCall className="w-6 h-6 relative z-10 text-slate-950" />
+        </button>
+      </div>
 
       {/* INTERACTIVE MODALS */}
       <ProductDetailModal

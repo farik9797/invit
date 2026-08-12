@@ -33,7 +33,7 @@ export const QuoteFormSection: React.FC<QuoteFormSectionProps> = ({ initialNote 
 
   return (
     <section id="contacts" className="py-14 bg-gradient-to-b from-slate-900 via-[#08487F] to-slate-950 text-white relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[1340px] mx-auto px-5">
         
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
           

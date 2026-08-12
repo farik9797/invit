@@ -10,7 +10,7 @@ interface NewsSectionProps {
 export const NewsSection: React.FC<NewsSectionProps> = ({ onSelectNews }) => {
   return (
     <section id="news" className="py-12 bg-white border-b border-slate-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[1340px] mx-auto px-5">
         
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">

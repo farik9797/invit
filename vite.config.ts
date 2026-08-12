@@ -3,10 +3,8 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import {defineConfig} from 'vite';
 
-export default defineConfig(({command}) => {
+export default defineConfig(() => {
   return {
-    // GitHub Pages hosts the site under /invit/, dev server stays at /.
-    base: command === 'build' ? '/invit/' : '/',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
