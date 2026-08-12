@@ -68,9 +68,9 @@ export const Header: React.FC<HeaderProps> = ({
               alt="ООО «ИНВИТ» — надёжные системы"
               className="h-9 sm:h-11 w-auto"
             />
-            <div className="hidden lg:block border-l border-slate-300 pl-3">
+            <div className="hidden xl:block border-l border-slate-300 pl-3">
               <img src={eurobandLogo} alt="EUROBAND" className="h-4 w-auto" />
-              <span className="block text-[11px] font-medium text-slate-500 leading-tight mt-1 max-w-[190px]">
+              <span className="block text-[11px] font-medium text-slate-500 leading-tight mt-1 max-w-[170px]">
                 Белорусский производитель уплотнительных и герметизирующих лент
               </span>
             </div>
@@ -183,13 +183,13 @@ export const Header: React.FC<HeaderProps> = ({
           {/* HOTLINE & B2B QUOTE BASKET BUTTONS */}
           <div className="flex items-center gap-3">
             {/* Phone Hotline */}
-            <div className="hidden lg:flex flex-col items-end">
+            <div className="hidden xl:flex flex-col items-end whitespace-nowrap">
               <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
                 Отдел оптовых продаж
               </span>
               <a
                 href="tel:+375296444979"
-                className="text-base font-extrabold text-brand-blue hover:text-brand-blue-hover transition-colors leading-none"
+                className="text-base font-extrabold text-brand-blue hover:text-brand-blue-hover transition-colors leading-none whitespace-nowrap"
               >
                 +375 (29) 644-49-79
               </a>
@@ -198,10 +198,10 @@ export const Header: React.FC<HeaderProps> = ({
             {/* Quick Callback Trigger Button */}
             <button
               onClick={onOpenCallback}
-              className="hidden sm:inline-flex items-center gap-1.5 bg-brand-red hover:bg-brand-red-hover active:scale-95 text-white font-bold text-xs uppercase tracking-wider px-3.5 py-2.5 rounded-lg shadow transition-all"
+              className="hidden sm:inline-flex shrink-0 items-center gap-1.5 bg-brand-red hover:bg-brand-red-hover active:scale-95 text-white font-bold text-xs uppercase tracking-wider px-3.5 py-2.5 rounded-lg shadow transition-all"
             >
               <Phone className="w-4 h-4" />
-              <span>Оставить заявку</span>
+              <span className="whitespace-nowrap">Оставить заявку</span>
             </button>
 
             {/* B2B Quote Basket Button */}
@@ -211,7 +211,7 @@ export const Header: React.FC<HeaderProps> = ({
               title="Запросить расчет КП"
             >
               <ShoppingBag className="w-5 h-5 text-brand-blue" />
-              <span className="hidden xl:inline text-xs font-bold uppercase text-slate-700">
+              <span className="hidden xl:inline text-xs font-bold uppercase text-slate-700 whitespace-nowrap">
                 Смета КП
               </span>
               {quoteCount > 0 && (
