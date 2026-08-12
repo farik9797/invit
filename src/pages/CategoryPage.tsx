@@ -5,6 +5,7 @@ import { ProductGrid } from '../components/ProductCard';
 import { CATEGORIES, PRODUCTS } from '../data/catalogData';
 import { useShop } from '../context/ShopContext';
 import { paths } from '../routes';
+import { sortForListing } from '../lib/product';
 
 export const CategoryPage: React.FC = () => {
   const { categorySlug } = useParams();
@@ -16,7 +17,7 @@ export const CategoryPage: React.FC = () => {
 
   const activeSub = searchParams.get('sub');
   const activeSubName = category.subcategories.find((s) => s.slug === activeSub)?.name;
-  const categoryProducts = PRODUCTS.filter((p) => p.categorySlug === category.slug);
+  const categoryProducts = sortForListing(PRODUCTS.filter((p) => p.categorySlug === category.slug));
   const products = activeSub
     ? categoryProducts.filter((p) => p.subcategorySlug === activeSub)
     : categoryProducts;

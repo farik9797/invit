@@ -17,3 +17,10 @@ export const variantOptions = (product: Product): string[] => {
 };
 
 export const defaultVariant = (product: Product) => variantOptions(product)[0];
+
+/** В выдаче раздела собственное производство EUROBAND показываем первым. */
+export const sortForListing = (products: Product[]) =>
+  [...products].sort((a, b) => {
+    const weight = (p: Product) => (p.badge === 'Собственное производство' ? 0 : 1);
+    return weight(a) - weight(b);
+  });
