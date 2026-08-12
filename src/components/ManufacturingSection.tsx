@@ -18,15 +18,15 @@ export const ManufacturingSection: React.FC<ManufacturingSectionProps> = ({
         
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-10">
-          <div className="inline-flex items-center gap-2 bg-blue-100 text-[#0B5FA5] text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-2">
+          <div className="inline-flex items-center gap-2 bg-red-50 text-brand-red text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full mb-2 border border-red-100">
             <Factory className="w-3.5 h-3.5" />
-            <span>Официальный белорусский производитель</span>
+            <span>Белорусский производитель</span>
           </div>
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight">
-            О компании ООО «ИНВИТ» & Бренд EUROBAND
+            ООО «ИНВИТ» — производство лент EUROBAND
           </h2>
           <p className="text-slate-600 text-sm sm:text-base mt-2">
-            Разработка, производство и оптовые поставки профессиональных герметизирующих материалов для строительного сектора Республики Беларусь и стран ЕАЭС с 2009 года.
+            Производим уплотнительные и герметизирующие бутилкаучуковые ленты EUROBAND для строительства. Высокое качество, гибкость в ценообразовании, индивидуальный подход.
           </p>
         </div>
 
@@ -37,7 +37,7 @@ export const ManufacturingSection: React.FC<ManufacturingSectionProps> = ({
               onClick={() => setActiveTab('about')}
               className={`px-4 py-2 text-xs sm:text-sm font-bold rounded-lg transition-all cursor-pointer ${
                 activeTab === 'about'
-                  ? 'bg-[#0B5FA5] text-white shadow-md'
+                  ? 'bg-brand-blue text-white shadow-md'
                   : 'text-slate-700 hover:bg-slate-300/60'
               }`}
             >
@@ -47,7 +47,7 @@ export const ManufacturingSection: React.FC<ManufacturingSectionProps> = ({
               onClick={() => setActiveTab('capacity')}
               className={`px-4 py-2 text-xs sm:text-sm font-bold rounded-lg transition-all cursor-pointer ${
                 activeTab === 'capacity'
-                  ? 'bg-[#0B5FA5] text-white shadow-md'
+                  ? 'bg-brand-blue text-white shadow-md'
                   : 'text-slate-700 hover:bg-slate-300/60'
               }`}
             >
@@ -57,7 +57,7 @@ export const ManufacturingSection: React.FC<ManufacturingSectionProps> = ({
               onClick={() => setActiveTab('standards')}
               className={`px-4 py-2 text-xs sm:text-sm font-bold rounded-lg transition-all cursor-pointer ${
                 activeTab === 'standards'
-                  ? 'bg-[#0B5FA5] text-white shadow-md'
+                  ? 'bg-brand-blue text-white shadow-md'
                   : 'text-slate-700 hover:bg-slate-300/60'
               }`}
             >
@@ -72,38 +72,38 @@ export const ManufacturingSection: React.FC<ManufacturingSectionProps> = ({
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
               <div className="lg:col-span-7 space-y-4">
                 <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 leading-snug">
-                  Надёжный белорусский бренд для профессионалов оконного и вентиляционного монтажа
+                  Белорусский производитель строительных клейких лент и уплотнителей
                 </h3>
                 <p className="text-slate-600 text-sm leading-relaxed">
-                  ООО «ИНВИТ» — белорусская производственно-торговая компания, специализирующаяся на разработке и выпуске высококачественных строительных клейких лент, уплотнителей и крепежных элементов под собственной торговой маркой <strong>EUROBAND</strong>.
+                  ООО «ИНВИТ» — белорусский производитель строительных клейких лент и уплотнителей из синтетических материалов для различных областей строительства, в том числе монтажных лент для установки окон под собственной маркой <strong>EUROBAND</strong>.
                 </p>
                 <p className="text-slate-600 text-sm leading-relaxed">
-                  Наш комплексный подходи обеспечивает застройщикам и монтажным организациям выполнение нормативных требований СТБ 1488-2004 при устройстве узлов примыкания оконных и дверных блоков, а также соответствие систем вентиляции классам герметичности В и С.
+                  Энергосберегающая безопасная технология ООО «ИНВИТ» представлена системой герметизирующих материалов EUROBAND для качественного монтажа светопрозрачных конструкций. По желанию клиента производим уплотнительные и герметизирующие ленты нетипичных размеров на различных основах и подложках.
                 </p>
 
                 <div className="pt-2 grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 text-center">
-                    <span className="block text-xl font-black text-[#0B5FA5]">15+</span>
-                    <span className="text-[11px] font-semibold text-slate-500">Лет на рынке</span>
+                    <span className="block text-xl font-black text-brand-blue">с 2009</span>
+                    <span className="text-[11px] font-semibold text-slate-500">Работаем на рынке</span>
                   </div>
                   <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 text-center">
-                    <span className="block text-xl font-black text-[#0B5FA5]">3500+</span>
-                    <span className="text-[11px] font-semibold text-slate-500">Км ленты/мес</span>
+                    <span className="block text-xl font-black text-brand-red">РБ</span>
+                    <span className="text-[11px] font-semibold text-slate-500">Производство в Минске</span>
                   </div>
                   <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 text-center">
-                    <span className="block text-xl font-black text-[#F39200]">24ч</span>
-                    <span className="text-[11px] font-semibold text-slate-500">Отгрузка заказа</span>
+                    <span className="block text-xl font-black text-brand-blue">10–1500</span>
+                    <span className="text-[11px] font-semibold text-slate-500">Мм — ширина порезки</span>
                   </div>
                   <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 text-center">
-                    <span className="block text-xl font-black text-emerald-600">100%</span>
-                    <span className="text-[11px] font-semibold text-slate-500">Сертификация СТБ</span>
+                    <span className="block text-xl font-black text-emerald-600">2025–27</span>
+                    <span className="text-[11px] font-semibold text-slate-500">Сертификат собств. пр-ва</span>
                   </div>
                 </div>
 
                 <div className="pt-3 flex flex-wrap items-center gap-3">
                   <button
                     onClick={onOpenCallback}
-                    className="bg-[#0B5FA5] hover:bg-[#1A6DB5] text-white font-bold text-xs uppercase px-5 py-3 rounded-lg shadow transition-colors"
+                    className="bg-brand-blue hover:bg-brand-blue-hover text-white font-bold text-xs uppercase px-5 py-3 rounded-lg shadow transition-colors"
                   >
                     Запросить презентацию компании
                   </button>
@@ -124,11 +124,11 @@ export const ManufacturingSection: React.FC<ManufacturingSectionProps> = ({
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
                 <div className="absolute bottom-4 left-4 right-4 text-white">
-                  <span className="bg-[#F39200] text-slate-950 text-[10px] font-black uppercase px-2.5 py-0.5 rounded">
+                  <span className="bg-brand-red text-white text-[10px] font-black uppercase px-2.5 py-0.5 rounded">
                     Минский завод
                   </span>
                   <p className="text-xs font-bold mt-1">
-                    Производственные цеха и складской комплекс на МКАД (ТЦ Сеница)
+                    Производство и склад: Минский р-н, Сеницкий с/с, 84 (ТЦ Сеница)
                   </p>
                 </div>
               </div>
@@ -139,7 +139,7 @@ export const ManufacturingSection: React.FC<ManufacturingSectionProps> = ({
             <div className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
-                  <div className="p-2.5 bg-[#0B5FA5] text-white w-fit rounded-lg">
+                  <div className="p-2.5 bg-brand-blue text-white w-fit rounded-lg">
                     <Layers className="w-5 h-5" />
                   </div>
                   <h4 className="font-extrabold text-base text-slate-900">
@@ -151,7 +151,7 @@ export const ManufacturingSection: React.FC<ManufacturingSectionProps> = ({
                 </div>
 
                 <div className="p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
-                  <div className="p-2.5 bg-[#F39200] text-slate-950 w-fit rounded-lg">
+                  <div className="p-2.5 bg-brand-red text-white w-fit rounded-lg">
                     <Factory className="w-5 h-5" />
                   </div>
                   <h4 className="font-extrabold text-base text-slate-900">
@@ -170,7 +170,7 @@ export const ManufacturingSection: React.FC<ManufacturingSectionProps> = ({
                     Складской терминал в Минске
                   </h4>
                   <p className="text-xs text-slate-600 leading-relaxed">
-                    Собственный отапливаемый логистический склад более 1500 м² на развязке МКАД (ТЦ Сеница). Постоянный резерв ходовых позиций.
+                    Собственный склад в Минском районе (ТЦ Сеница) на выезде из Минска. Постоянный резерв ходовых позиций и отгрузка со склада.
                   </p>
                 </div>
               </div>
@@ -181,7 +181,7 @@ export const ManufacturingSection: React.FC<ManufacturingSectionProps> = ({
                 </span>
                 <button
                   onClick={onOpenCallback}
-                  className="bg-[#0B5FA5] hover:bg-[#1A6DB5] text-white font-bold px-4 py-2 rounded text-xs uppercase shrink-0"
+                  className="bg-brand-blue hover:bg-brand-blue-hover text-white font-bold px-4 py-2 rounded text-xs uppercase shrink-0"
                 >
                   Связаться с главным технологом
                 </button>
@@ -200,15 +200,15 @@ export const ManufacturingSection: React.FC<ManufacturingSectionProps> = ({
                 </p>
                 <ul className="space-y-2 text-slate-800 font-medium pt-2">
                   <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-[#F39200]" />
+                    <CheckCircle2 className="w-4 h-4 text-brand-red" />
                     <span>Соответствие СТБ 1488-2004 «Строительство. Уплотнение оконных швов»</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-[#F39200]" />
+                    <CheckCircle2 className="w-4 h-4 text-brand-red" />
                     <span>Испытания адгезии к бетону, кирпичу и профилям ПВХ по ГОСТ</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-[#F39200]" />
+                    <CheckCircle2 className="w-4 h-4 text-brand-red" />
                     <span>Протоколы стойкости к УФ-излучению и циклическому замораживанию</span>
                   </li>
                 </ul>
@@ -216,7 +216,7 @@ export const ManufacturingSection: React.FC<ManufacturingSectionProps> = ({
 
               <div className="bg-slate-50 p-6 rounded-xl border border-slate-200 space-y-4">
                 <div className="flex items-center gap-3">
-                  <FileCheck className="w-8 h-8 text-[#0B5FA5]" />
+                  <FileCheck className="w-8 h-8 text-brand-blue" />
                   <div>
                     <h4 className="font-bold text-slate-900 text-sm">
                       Паспорта качества и ТДС
@@ -229,9 +229,9 @@ export const ManufacturingSection: React.FC<ManufacturingSectionProps> = ({
 
                 <button
                   onClick={onOpenCertificates}
-                  className="w-full bg-[#0B5FA5] hover:bg-[#1A6DB5] text-white font-bold py-2.5 px-4 rounded-lg text-xs uppercase tracking-wider flex items-center justify-center gap-1.5"
+                  className="w-full bg-brand-blue hover:bg-brand-blue-hover text-white font-bold py-2.5 px-4 rounded-lg text-xs uppercase tracking-wider flex items-center justify-center gap-1.5"
                 >
-                  <Award className="w-4 h-4 text-[#F39200]" />
+                  <Award className="w-4 h-4 text-white" />
                   <span>Открыть реестр сертификатов</span>
                 </button>
               </div>

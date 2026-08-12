@@ -15,9 +15,9 @@ export const NewsDetailModal: React.FC<NewsDetailModalProps> = ({ article, onClo
       <div className="relative bg-white rounded-2xl max-w-2xl w-full shadow-2xl border border-slate-200 overflow-hidden my-8">
         
         {/* Header */}
-        <div className="bg-[#0B5FA5] text-white p-4 flex items-center justify-between">
+        <div className="bg-brand-blue text-white p-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Newspaper className="w-5 h-5 text-[#F39200]" />
+            <Newspaper className="w-5 h-5 text-white" />
             <span className="font-extrabold text-xs uppercase tracking-wide">
               Пресс-релиз ООО «ИНВИТ»
             </span>
@@ -33,11 +33,11 @@ export const NewsDetailModal: React.FC<NewsDetailModalProps> = ({ article, onClo
         {/* Content */}
         <div className="p-6 space-y-4 max-h-[80vh] overflow-y-auto text-slate-800">
           <div className="flex items-center justify-between text-xs text-slate-500">
-            <span className="bg-[#F39200] text-slate-950 font-black text-[10px] uppercase px-2.5 py-0.5 rounded">
+            <span className="bg-brand-red text-white font-black text-[10px] uppercase px-2.5 py-0.5 rounded">
               {article.category}
             </span>
             <span className="flex items-center gap-1 font-mono">
-              <Calendar className="w-3.5 h-3.5 text-[#0B5FA5]" />
+              <Calendar className="w-3.5 h-3.5 text-brand-blue" />
               {article.date}
             </span>
           </div>
@@ -68,7 +68,7 @@ export const NewsDetailModal: React.FC<NewsDetailModalProps> = ({ article, onClo
             </span>
             <button
               onClick={onClose}
-              className="px-4 py-2 bg-[#0B5FA5] text-white font-bold text-xs uppercase rounded-lg hover:bg-[#1A6DB5] transition-colors"
+              className="px-4 py-2 bg-brand-blue text-white font-bold text-xs uppercase rounded-lg hover:bg-brand-blue-hover transition-colors"
             >
               Вернуться назад
             </button>

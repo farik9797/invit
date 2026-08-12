@@ -44,8 +44,8 @@ export const OrderStatusModule: React.FC = () => {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
           <div>
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0B5FA5] mb-1">
-              <Truck className="w-4 h-4 text-[#F39200]" />
+            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-brand-blue mb-1">
+              <Truck className="w-4 h-4 text-brand-red" />
               <span>B2B Сервис для покупателей</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
@@ -53,7 +53,7 @@ export const OrderStatusModule: React.FC = () => {
             </h2>
           </div>
           <p className="text-xs sm:text-sm text-slate-600 max-w-md">
-            Введите номер вашего счета-фактуры или заказа (например, <span className="font-mono font-bold text-[#0B5FA5]">INV-2026-9041</span>) для контроля стадии порезки и логистики.
+            Введите номер вашего счета-фактуры или заказа (например, <span className="font-mono font-bold text-brand-blue">INV-2026-9041</span>) для контроля стадии порезки и логистики.
           </p>
         </div>
 
@@ -62,7 +62,7 @@ export const OrderStatusModule: React.FC = () => {
           {/* Search Box Column */}
           <div className="lg:col-span-5 bg-slate-50 p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
             <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
-              <Search className="w-5 h-5 text-[#0B5FA5]" />
+              <Search className="w-5 h-5 text-brand-blue" />
               Проверить статус заказа онлайн
             </h3>
 
@@ -77,11 +77,11 @@ export const OrderStatusModule: React.FC = () => {
                     value={searchCode}
                     onChange={(e) => setSearchCode(e.target.value)}
                     placeholder="Например: INV-2026-9041"
-                    className="w-full pl-3 pr-24 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-900 text-sm font-mono font-bold focus:ring-2 focus:ring-[#0B5FA5] focus:outline-none"
+                    className="w-full pl-3 pr-24 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-900 text-sm font-mono font-bold focus:ring-2 focus:ring-brand-blue focus:outline-none"
                   />
                   <button
                     type="submit"
-                    className="absolute right-1 top-1 bottom-1 bg-[#0B5FA5] hover:bg-[#1A6DB5] text-white font-bold text-xs px-3 rounded-md transition-colors cursor-pointer"
+                    className="absolute right-1 top-1 bottom-1 bg-brand-blue hover:bg-brand-blue-hover text-white font-bold text-xs px-3 rounded-md transition-colors cursor-pointer"
                   >
                     Проверить
                   </button>
@@ -104,7 +104,7 @@ export const OrderStatusModule: React.FC = () => {
                       }}
                       className={`text-xs font-mono font-bold px-2.5 py-1 rounded border transition-colors cursor-pointer ${
                         activeOrder?.orderNumber === code
-                          ? 'bg-[#0B5FA5] text-white border-[#0B5FA5]'
+                          ? 'bg-brand-blue text-white border-brand-blue'
                           : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'
                       }`}
                     >
@@ -116,11 +116,11 @@ export const OrderStatusModule: React.FC = () => {
             </form>
 
             <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs text-slate-700 space-y-1">
-              <span className="font-bold text-[#0B5FA5] block">
+              <span className="font-bold text-brand-blue block">
                 Нужна помощь по отгрузке?
               </span>
               <p>
-                Отдел складской логистики: <a href="tel:+375296444979" className="font-bold text-slate-900 hover:text-[#0B5FA5]">+375 (29) 644-49-79</a>
+                Отдел складской логистики: <a href="tel:+375296444979" className="font-bold text-slate-900 hover:text-brand-blue">+375 (29) 644-49-79</a>
               </p>
             </div>
           </div>
@@ -136,7 +136,7 @@ export const OrderStatusModule: React.FC = () => {
                       <span className="text-xs text-slate-400 font-mono">
                         Заказ №
                       </span>
-                      <span className="text-lg font-black text-[#F39200] font-mono">
+                      <span className="text-lg font-black text-brand-red font-mono">
                         {activeOrder.orderNumber}
                       </span>
                     </div>
@@ -147,7 +147,7 @@ export const OrderStatusModule: React.FC = () => {
                   </div>
 
                   <div className="text-left sm:text-right">
-                    <span className="inline-block bg-[#0B5FA5] text-white text-[10px] uppercase font-bold px-2.5 py-1 rounded">
+                    <span className="inline-block bg-brand-blue text-white text-[10px] uppercase font-bold px-2.5 py-1 rounded">
                       {activeOrder.statusText}
                     </span>
                     <span className="block text-[11px] text-slate-400 mt-1">
@@ -161,7 +161,7 @@ export const OrderStatusModule: React.FC = () => {
                   <div>
                     <span className="text-slate-400 block text-[10px] uppercase font-bold">Пункт назначения:</span>
                     <span className="font-semibold text-slate-900 flex items-center gap-1 mt-0.5">
-                      <MapPin className="w-3.5 h-3.5 text-[#0B5FA5]" />
+                      <MapPin className="w-3.5 h-3.5 text-brand-blue" />
                       <span className="truncate">{activeOrder.destination}</span>
                     </span>
                   </div>
@@ -190,7 +190,7 @@ export const OrderStatusModule: React.FC = () => {
                             step.completed
                               ? 'bg-emerald-600 text-white'
                               : step.current
-                              ? 'bg-[#F39200] text-slate-950 ring-4 ring-orange-100'
+                              ? 'bg-brand-red text-white ring-4 ring-red-100'
                               : 'bg-slate-200 text-slate-500'
                           }`}
                         >
@@ -202,7 +202,7 @@ export const OrderStatusModule: React.FC = () => {
                           <h5
                             className={`text-xs font-extrabold ${
                               step.current
-                                ? 'text-[#0B5FA5]'
+                                ? 'text-brand-blue'
                                 : step.completed
                                 ? 'text-slate-900'
                                 : 'text-slate-400'

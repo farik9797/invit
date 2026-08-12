@@ -25,9 +25,9 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
       <div className="relative bg-white rounded-2xl max-w-3xl w-full shadow-2xl border border-slate-200 overflow-hidden my-8">
         
         {/* Header */}
-        <div className="bg-[#0B5FA5] text-white p-4 sm:p-5 flex items-center justify-between">
+        <div className="bg-brand-blue text-white p-4 sm:p-5 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Layers className="w-5 h-5 text-[#F39200]" />
+            <Layers className="w-5 h-5 text-white" />
             <span className="font-extrabold text-sm sm:text-base tracking-wide uppercase">
               Технический Паспорт Изделия (ТДС) — EUROBAND
             </span>
@@ -54,7 +54,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
               </div>
 
               <div className="p-3 bg-blue-50 border border-blue-200 rounded-xl text-xs space-y-1">
-                <span className="font-extrabold text-[#0B5FA5] block">
+                <span className="font-extrabold text-brand-blue block">
                   Артикул в реестре ИНВИТ:
                 </span>
                 <span className="font-mono font-bold text-slate-900 block text-sm">
@@ -66,7 +66,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
             {/* Title & Specs */}
             <div className="md:col-span-7 space-y-4 text-xs">
               <div>
-                <span className="bg-[#F39200] text-slate-950 font-black text-[10px] uppercase px-2.5 py-0.5 rounded">
+                <span className="bg-brand-red text-white font-black text-[10px] uppercase px-2.5 py-0.5 rounded">
                   {product.subcategoryName}
                 </span>
                 <h2 className="text-lg font-black text-slate-900 mt-1 leading-snug">
@@ -90,7 +90,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                       onClick={() => setSelectedWidth(w)}
                       className={`px-2.5 py-1 rounded text-xs font-semibold border transition-all cursor-pointer ${
                         selectedWidth === w
-                          ? 'bg-[#0B5FA5] text-white border-[#0B5FA5] font-bold shadow-sm'
+                          ? 'bg-brand-blue text-white border-brand-blue font-bold shadow-sm'
                           : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'
                       }`}
                     >
@@ -153,9 +153,9 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                 onAddToQuote(product, selectedWidth);
                 onClose();
               }}
-              className="flex-1 sm:flex-initial px-5 py-2.5 rounded-lg bg-[#0B5FA5] hover:bg-[#1A6DB5] text-white font-extrabold text-xs uppercase tracking-wider shadow transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+              className="flex-1 sm:flex-initial px-5 py-2.5 rounded-lg bg-brand-blue hover:bg-brand-blue-hover text-white font-extrabold text-xs uppercase tracking-wider shadow transition-all flex items-center justify-center gap-1.5 cursor-pointer"
             >
-              <Plus className="w-4 h-4 text-[#F39200]" />
+              <Plus className="w-4 h-4 text-white" />
               <span>Добавить в смету КП</span>
             </button>
           </div>

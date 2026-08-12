@@ -39,7 +39,7 @@ export const QuoteFormSection: React.FC<QuoteFormSectionProps> = ({ initialNote 
           
           {/* Left Column Text & Contacts */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="inline-flex items-center gap-2 bg-[#F39200] text-slate-950 font-black text-xs uppercase px-3 py-1 rounded shadow">
+            <div className="inline-flex items-center gap-2 bg-brand-red text-white font-black text-xs uppercase px-3 py-1 rounded shadow">
               <PhoneCall className="w-4 h-4" />
               <span>Прямое сотрудничество с заводом</span>
             </div>
@@ -55,7 +55,7 @@ export const QuoteFormSection: React.FC<QuoteFormSectionProps> = ({ initialNote 
             {/* Benefit Bullets */}
             <div className="space-y-3 pt-2 text-xs sm:text-sm">
               <div className="flex items-start gap-3">
-                <div className="p-1.5 bg-[#F39200] text-slate-950 rounded shrink-0 mt-0.5">
+                <div className="p-1.5 bg-brand-red text-white rounded shrink-0 mt-0.5">
                   <CheckCircle2 className="w-4 h-4" />
                 </div>
                 <div>
@@ -65,7 +65,7 @@ export const QuoteFormSection: React.FC<QuoteFormSectionProps> = ({ initialNote 
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="p-1.5 bg-[#F39200] text-slate-950 rounded shrink-0 mt-0.5">
+                <div className="p-1.5 bg-brand-red text-white rounded shrink-0 mt-0.5">
                   <Building className="w-4 h-4" />
                 </div>
                 <div>
@@ -75,7 +75,7 @@ export const QuoteFormSection: React.FC<QuoteFormSectionProps> = ({ initialNote 
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="p-1.5 bg-[#F39200] text-slate-950 rounded shrink-0 mt-0.5">
+                <div className="p-1.5 bg-brand-red text-white rounded shrink-0 mt-0.5">
                   <ShieldCheck className="w-4 h-4" />
                 </div>
                 <div>
@@ -90,7 +90,7 @@ export const QuoteFormSection: React.FC<QuoteFormSectionProps> = ({ initialNote 
               <span className="block text-xs text-slate-400 font-mono uppercase">Прямой номер отдела продаж:</span>
               <a
                 href="tel:+375296444979"
-                className="text-xl font-black text-[#F39200] hover:text-white transition-colors block"
+                className="text-xl font-black text-brand-red-light hover:text-white transition-colors block"
               >
                 +375 (29) 644-49-79
               </a>
@@ -111,11 +111,11 @@ export const QuoteFormSection: React.FC<QuoteFormSectionProps> = ({ initialNote 
                   Заявка на КП успешно принята!
                 </h3>
                 <p className="text-slate-600 text-sm max-w-md mx-auto">
-                  Спасибо, {formData.name}. Специалист отдела продаж ООО «ИНВИТ» свяжется с вами по номеру <strong className="text-[#0B5FA5]">{formData.phone}</strong> для передачи оптового прайс-листа и договора.
+                  Спасибо, {formData.name}. Специалист отдела продаж ООО «ИНВИТ» свяжется с вами по номеру <strong className="text-brand-blue">{formData.phone}</strong> для передачи оптового прайс-листа и договора.
                 </p>
                 <button
                   onClick={() => setSubmitted(false)}
-                  className="bg-[#0B5FA5] text-white font-bold text-xs uppercase px-6 py-2.5 rounded-lg transition-colors"
+                  className="bg-brand-blue text-white font-bold text-xs uppercase px-6 py-2.5 rounded-lg transition-colors"
                 >
                   Отправить еще одну заявку
                 </button>
@@ -124,7 +124,7 @@ export const QuoteFormSection: React.FC<QuoteFormSectionProps> = ({ initialNote 
               <form onSubmit={handleSubmit} className="space-y-4 text-xs">
                 <div className="border-b border-slate-100 pb-3 mb-2">
                   <h3 className="text-lg font-black text-slate-900 flex items-center gap-2">
-                    <FileText className="w-5 h-5 text-[#0B5FA5]" />
+                    <FileText className="w-5 h-5 text-brand-blue" />
                     Запрос Коммерческого Предложения (КП)
                   </h3>
                   <p className="text-xs text-slate-500">
@@ -143,7 +143,7 @@ export const QuoteFormSection: React.FC<QuoteFormSectionProps> = ({ initialNote 
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       placeholder="Иван Петров"
-                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 font-medium focus:ring-2 focus:ring-[#0B5FA5] focus:outline-none"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 font-medium focus:ring-2 focus:ring-brand-blue focus:outline-none"
                     />
                   </div>
 
@@ -157,7 +157,7 @@ export const QuoteFormSection: React.FC<QuoteFormSectionProps> = ({ initialNote 
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       placeholder="+375 (29) 000-00-00"
-                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 font-medium focus:ring-2 focus:ring-[#0B5FA5] focus:outline-none"
+                      className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 font-medium focus:ring-2 focus:ring-brand-blue focus:outline-none"
                     />
                   </div>
                 </div>
@@ -184,7 +184,7 @@ export const QuoteFormSection: React.FC<QuoteFormSectionProps> = ({ initialNote 
                       type="text"
                       value={formData.unp}
                       onChange={(e) => setFormData({ ...formData, unp: e.target.value })}
-                      placeholder="УНП 191234567"
+                      placeholder="УНП организации"
                       className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 font-medium"
                     />
                   </div>
@@ -234,12 +234,12 @@ export const QuoteFormSection: React.FC<QuoteFormSectionProps> = ({ initialNote 
                 {/* File Upload Attachment */}
                 <div className="p-3 bg-slate-50 rounded-xl border border-dashed border-slate-300 flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Upload className="w-4 h-4 text-[#0B5FA5]" />
+                    <Upload className="w-4 h-4 text-brand-blue" />
                     <span className="text-xs font-semibold text-slate-700">
                       {fileName ? fileName : 'Прикрепить реквизиты / ТЗ (.PDF, .XLSX, .DOC)'}
                     </span>
                   </div>
-                  <label className="bg-[#0B5FA5] hover:bg-[#1A6DB5] text-white text-[11px] font-bold px-3 py-1.5 rounded cursor-pointer transition-colors">
+                  <label className="bg-brand-blue hover:bg-brand-blue-hover text-white text-[11px] font-bold px-3 py-1.5 rounded cursor-pointer transition-colors">
                     Обзор
                     <input
                       type="file"
@@ -252,7 +252,7 @@ export const QuoteFormSection: React.FC<QuoteFormSectionProps> = ({ initialNote 
 
                 <button
                   type="submit"
-                  className="w-full bg-[#F39200] hover:bg-[#E08200] text-slate-950 font-black py-3.5 px-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 text-xs uppercase tracking-wider cursor-pointer"
+                  className="w-full bg-brand-red hover:bg-brand-red-hover text-white font-black py-3.5 px-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 text-xs uppercase tracking-wider cursor-pointer"
                 >
                   <Send className="w-4 h-4" />
                   <span>Отправить заявку в отдел продаж ИНВИТ</span>

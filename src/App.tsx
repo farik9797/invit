@@ -102,7 +102,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans antialiased selection:bg-[#0B5FA5] selection:text-white flex flex-col justify-between">
+    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans antialiased selection:bg-brand-blue selection:text-white flex flex-col justify-between">
       
       {/* 1. TOP BAR */}
       <TopBar />

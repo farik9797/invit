@@ -36,9 +36,9 @@ export const QuoteCartModal: React.FC<QuoteCartModalProps> = ({
       <div className="relative bg-white rounded-2xl max-w-2xl w-full shadow-2xl border border-slate-200 overflow-hidden my-8">
         
         {/* Header */}
-        <div className="bg-[#0B5FA5] text-white p-4 sm:p-5 flex items-center justify-between">
+        <div className="bg-brand-blue text-white p-4 sm:p-5 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <ShoppingBag className="w-5 h-5 text-[#F39200]" />
+            <ShoppingBag className="w-5 h-5 text-white" />
             <span className="font-extrabold text-sm sm:text-base uppercase tracking-wide">
               Смета Коммерческого Предложения ({items.length})
             </span>
@@ -68,7 +68,7 @@ export const QuoteCartModal: React.FC<QuoteCartModalProps> = ({
                   setSubmitted(false);
                   onClose();
                 }}
-                className="bg-[#0B5FA5] text-white font-bold text-xs uppercase px-6 py-2.5 rounded-lg"
+                className="bg-brand-blue text-white font-bold text-xs uppercase px-6 py-2.5 rounded-lg"
               >
                 Очистить и закрыть
               </button>
@@ -102,7 +102,7 @@ export const QuoteCartModal: React.FC<QuoteCartModalProps> = ({
                       <h4 className="font-bold text-slate-900 truncate">
                         {product.title}
                       </h4>
-                      <span className="text-[#0B5FA5] text-[11px] font-semibold">
+                      <span className="text-brand-blue text-[11px] font-semibold">
                         Ширина: {selectedWidth}
                       </span>
                     </div>
@@ -156,7 +156,7 @@ export const QuoteCartModal: React.FC<QuoteCartModalProps> = ({
 
                 <button
                   type="submit"
-                  className="w-full bg-[#F39200] hover:bg-[#E08200] text-slate-950 font-black py-3 px-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-xs uppercase cursor-pointer"
+                  className="w-full bg-brand-red hover:bg-brand-red-hover text-white font-black py-3 px-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-xs uppercase cursor-pointer"
                 >
                   <Send className="w-4 h-4" />
                   <span>Отправить смету на расчет за 15 минут</span>

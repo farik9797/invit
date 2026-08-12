@@ -1,1 +1,13 @@
 @import "tailwindcss";
+
+/* Фирменные цвета взяты напрямую из логотипов ИНВИТ и EUROBAND (brand/*.ai). */
+@theme {
+  --color-brand-blue: #0b5fa5; /* основной синий ИНВИТ — поверхности, ссылки */
+  --color-brand-blue-hover: #1a6db5;
+  --color-brand-sky: #3d90cd; /* синий из знака ИНВИТ — иконки на тёмном */
+  --color-brand-navy: #35485b; /* тёмный из логотипа ИНВИТ */
+  --color-brand-graphite: #3f464c; /* «BAND» из логотипа EUROBAND */
+  --color-brand-red: #d91920; /* «EURO» из логотипа EUROBAND — акцент, CTA */
+  --color-brand-red-hover: #b71219;
+  --color-brand-red-light: #f0575d; /* акцентный текст на тёмном фоне */
+}

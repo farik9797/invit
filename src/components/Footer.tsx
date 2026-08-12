@@ -1,5 +1,7 @@
 import React from 'react';
 import { Phone, MapPin, Mail, Clock, Layers, ShieldCheck, Factory, Send } from 'lucide-react';
+import invitLogoMono from '../assets/logo/invit-mono.svg';
+import eurobandLogoMono from '../assets/logo/euroband-mono.svg';
 
 interface FooterProps {
   onSelectCategory: (slug: string) => void;
@@ -15,22 +17,21 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onOpenCallback
           
           {/* Column 1: About Company */}
           <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <div className="bg-[#0B5FA5] text-white font-black text-lg px-2.5 py-1 rounded shadow-sm border-b-2 border-[#F39200]">
-                ИНВИТ
-              </div>
-              <div>
-                <span className="block font-black text-white text-xs tracking-wider">
-                  EUROBAND
-                </span>
-                <span className="text-[10px] text-slate-500 block">
-                  Завод строительной изоляции
-                </span>
-              </div>
+            <div className="space-y-3">
+              <img
+                src={invitLogoMono}
+                alt="ООО «ИНВИТ» — надёжные системы"
+                className="h-10 w-auto brightness-0 invert"
+              />
+              <img
+                src={eurobandLogoMono}
+                alt="EUROBAND"
+                className="h-4 w-auto brightness-0 invert opacity-90"
+              />
             </div>
 
             <p className="text-slate-400 text-xs leading-relaxed">
-              ООО «ИНВИТ» — официальный производитель систем монтажных лент, ПСУЛ, пенополиэтилена и комплектующих для вентиляционных систем торговой марки EUROBAND в Минске.
+              ООО «ИНВИТ» — белорусский производитель уплотнительных и герметизирующих бутилкаучуковых лент EUROBAND для строительства. Также поставляем комплектующие для изготовления и монтажа воздуховодов и систем вентиляции.
             </p>
 
             <div className="flex items-center gap-3 pt-1">
@@ -38,7 +39,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onOpenCallback
                 href="https://viber.click"
                 target="_blank"
                 rel="noreferrer"
-                className="p-2 bg-slate-800 hover:bg-[#0B5FA5] text-white rounded-lg transition-colors font-bold text-[10px]"
+                className="p-2 bg-slate-800 hover:bg-brand-blue text-white rounded-lg transition-colors font-bold text-[10px]"
               >
                 Viber
               </a>
@@ -46,7 +47,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onOpenCallback
                 href="https://t.me"
                 target="_blank"
                 rel="noreferrer"
-                className="p-2 bg-slate-800 hover:bg-[#0B5FA5] text-white rounded-lg transition-colors font-bold text-[10px]"
+                className="p-2 bg-slate-800 hover:bg-brand-blue text-white rounded-lg transition-colors font-bold text-[10px]"
               >
                 Telegram
               </a>
@@ -54,7 +55,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onOpenCallback
                 href="https://whatsapp.com"
                 target="_blank"
                 rel="noreferrer"
-                className="p-2 bg-slate-800 hover:bg-[#0B5FA5] text-white rounded-lg transition-colors font-bold text-[10px]"
+                className="p-2 bg-slate-800 hover:bg-brand-blue text-white rounded-lg transition-colors font-bold text-[10px]"
               >
                 WhatsApp
               </a>
@@ -175,29 +176,58 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onOpenCallback
             <h4 className="text-sm font-extrabold text-white uppercase tracking-wider border-b border-slate-800 pb-2">
               Контакты офиса и склада
             </h4>
-            <div className="space-y-2.5">
-              <div className="flex items-start gap-2">
-                <MapPin className="w-4 h-4 text-[#F39200] shrink-0 mt-0.5" />
-                <span>г. Минск, ТЦ Сеница, оф. 9 (развязка МКАД и Слуцкого направления)</span>
+            <div className="space-y-3">
+              <div className="space-y-1.5">
+                <div className="flex items-start gap-2">
+                  <MapPin className="w-4 h-4 text-brand-red-light shrink-0 mt-0.5" />
+                  <span>
+                    <span className="block text-white font-semibold">Минск</span>
+                    Минский р-н, Сеницкий с/с, 84 (ТЦ Сеница, оф. 9)
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 pl-6">
+                  <a href="tel:+375296444979" className="whitespace-nowrap text-white font-bold hover:text-brand-red-light">
+                    +375 (29) 644-49-79
+                  </a>
+                  <span className="text-slate-600">·</span>
+                  <a href="tel:+375173437736" className="whitespace-nowrap hover:text-white">
+                    +375 (17) 343-77-36
+                  </a>
+                </div>
+                <div className="flex items-center gap-2 pl-6 text-[11px] text-slate-500">
+                  <Clock className="w-3.5 h-3.5 shrink-0" />
+                  <span>Пн–Чт: 9:00–17:30, Пт: 9:00–16:00</span>
+                </div>
               </div>
 
-              <div className="flex items-center gap-2">
-                <Phone className="w-4 h-4 text-[#F39200] shrink-0" />
-                <a href="tel:+375296444979" className="text-white font-bold hover:text-[#F39200]">
-                  +375 (29) 644-49-79
-                </a>
+              <div className="space-y-1.5 pt-1 border-t border-slate-800">
+                <div className="flex items-start gap-2 pt-2">
+                  <MapPin className="w-4 h-4 text-brand-red-light shrink-0 mt-0.5" />
+                  <span>
+                    <span className="block text-white font-semibold">Солигорск</span>
+                    223701, ул. Строителей, 30, оф. 101
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 pl-6">
+                  <a href="tel:+375174325022" className="whitespace-nowrap hover:text-white">
+                    +375 (174) 32-50-22
+                  </a>
+                  <span className="text-slate-600">·</span>
+                  <a href="tel:+375296444270" className="whitespace-nowrap hover:text-white">
+                    +375 (29) 644-42-70
+                  </a>
+                </div>
+                <div className="flex items-center gap-2 pl-6 text-[11px] text-slate-500">
+                  <Clock className="w-3.5 h-3.5 shrink-0" />
+                  <span>Пн–Пт: 8:00–17:00</span>
+                </div>
               </div>
 
-              <div className="flex items-center gap-2">
-                <Mail className="w-4 h-4 text-[#F39200] shrink-0" />
-                <a href="mailto:info@invit.by" className="hover:text-white">
+              <div className="flex items-center gap-2 pt-1 border-t border-slate-800">
+                <Mail className="w-4 h-4 text-brand-red-light shrink-0 mt-2" />
+                <a href="mailto:info@invit.by" className="hover:text-white mt-2">
                   info@invit.by
                 </a>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-[#F39200] shrink-0" />
-                <span>Пн–Пт: 08:30 – 17:30 (Сб, Вс — вых)</span>
               </div>
             </div>
           </div>
@@ -207,7 +237,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory, onOpenCallback
         {/* Bottom Line */}
         <div className="mt-12 pt-6 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-[11px] text-slate-500">
           <div>
-            © 2009–2026 ООО «ИНВИТ». Ленты и уплотнители EUROBAND. Все права защищены. УНП 191234567.
+            © 2009–2026 ООО «ИНВИТ». Ленты и уплотнители EUROBAND — собственная торговая марка. Все права защищены.
           </div>
           <div className="flex items-center gap-4">
             <span>СТБ 1488-2004</span>

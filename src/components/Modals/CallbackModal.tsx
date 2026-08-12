@@ -26,9 +26,9 @@ export const CallbackModal: React.FC<CallbackModalProps> = ({ isOpen, onClose, c
       <div className="relative bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-200 overflow-hidden">
         
         {/* Header */}
-        <div className="bg-[#0B5FA5] text-white p-4 flex items-center justify-between">
+        <div className="bg-brand-blue text-white p-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <PhoneCall className="w-5 h-5 text-[#F39200]" />
+            <PhoneCall className="w-5 h-5 text-white" />
             <span className="font-extrabold text-sm uppercase tracking-wide">
               Заказать звонок / Консультацию
             </span>
@@ -57,7 +57,7 @@ export const CallbackModal: React.FC<CallbackModalProps> = ({ isOpen, onClose, c
                   setSubmitted(false);
                   onClose();
                 }}
-                className="bg-[#0B5FA5] text-white font-bold text-xs px-4 py-2 rounded-lg"
+                className="bg-brand-blue text-white font-bold text-xs px-4 py-2 rounded-lg"
               >
                 Закрыть
               </button>
@@ -111,7 +111,7 @@ export const CallbackModal: React.FC<CallbackModalProps> = ({ isOpen, onClose, c
 
               <button
                 type="submit"
-                className="w-full bg-[#F39200] hover:bg-[#E08200] text-slate-950 font-black py-3 px-4 rounded-xl shadow transition-all flex items-center justify-center gap-2 uppercase tracking-wider cursor-pointer"
+                className="w-full bg-brand-red hover:bg-brand-red-hover text-white font-black py-3 px-4 rounded-xl shadow transition-all flex items-center justify-center gap-2 uppercase tracking-wider cursor-pointer"
               >
                 <Send className="w-4 h-4" />
                 <span>Жду звонка инженера</span>

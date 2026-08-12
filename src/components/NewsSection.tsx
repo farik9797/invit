@@ -15,8 +15,8 @@ export const NewsSection: React.FC<NewsSectionProps> = ({ onSelectNews }) => {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
           <div>
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0B5FA5] mb-1">
-              <Newspaper className="w-4 h-4 text-[#F39200]" />
+            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-brand-blue mb-1">
+              <Newspaper className="w-4 h-4 text-brand-red" />
               <span>Новости компании ИНВИТ</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
@@ -25,7 +25,7 @@ export const NewsSection: React.FC<NewsSectionProps> = ({ onSelectNews }) => {
           </div>
           <button
             onClick={() => onSelectNews(NEWS[0])}
-            className="text-xs font-bold text-[#0B5FA5] hover:text-[#1A6DB5] flex items-center gap-1 uppercase tracking-wider cursor-pointer"
+            className="text-xs font-bold text-brand-blue hover:text-brand-blue-hover flex items-center gap-1 uppercase tracking-wider cursor-pointer"
           >
             <span>Все новости & пресс-релизы</span>
             <ArrowRight className="w-4 h-4" />
@@ -46,7 +46,7 @@ export const NewsSection: React.FC<NewsSectionProps> = ({ onSelectNews }) => {
                   alt={item.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90"
                 />
-                <span className="absolute top-3 left-3 bg-[#0B5FA5] text-white text-[10px] font-bold uppercase px-2.5 py-0.5 rounded shadow">
+                <span className="absolute top-3 left-3 bg-brand-blue text-white text-[10px] font-bold uppercase px-2.5 py-0.5 rounded shadow">
                   {item.category}
                 </span>
               </div>
@@ -54,11 +54,11 @@ export const NewsSection: React.FC<NewsSectionProps> = ({ onSelectNews }) => {
               <div className="p-5 flex-1 flex flex-col justify-between space-y-3">
                 <div className="space-y-2">
                   <div className="flex items-center gap-1.5 text-slate-400 text-[11px] font-medium">
-                    <Calendar className="w-3.5 h-3.5 text-[#F39200]" />
+                    <Calendar className="w-3.5 h-3.5 text-brand-red" />
                     <span>{item.date}</span>
                   </div>
 
-                  <h3 className="text-sm font-extrabold text-slate-900 leading-snug group-hover:text-[#0B5FA5] transition-colors">
+                  <h3 className="text-sm font-extrabold text-slate-900 leading-snug group-hover:text-brand-blue transition-colors">
                     {item.title}
                   </h3>
 
@@ -67,7 +67,7 @@ export const NewsSection: React.FC<NewsSectionProps> = ({ onSelectNews }) => {
                   </p>
                 </div>
 
-                <div className="pt-3 border-t border-slate-200/80 flex items-center justify-between text-xs font-bold text-[#0B5FA5]">
+                <div className="pt-3 border-t border-slate-200/80 flex items-center justify-between text-xs font-bold text-brand-blue">
                   <span>Читать полностью</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </div>

@@ -15,8 +15,8 @@ export const CertificatesSection: React.FC<CertificatesSectionProps> = ({ onSele
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
           <div>
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0B5FA5] mb-1">
-              <ShieldCheck className="w-4 h-4 text-[#F39200]" />
+            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-brand-blue mb-1">
+              <ShieldCheck className="w-4 h-4 text-brand-red" />
               <span>Официальная декларация & Гарантия СТБ</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
@@ -44,7 +44,7 @@ export const CertificatesSection: React.FC<CertificatesSectionProps> = ({ onSele
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 rounded"
                 />
                 <div className="absolute inset-0 bg-slate-950/20 group-hover:bg-slate-950/40 transition-colors flex items-center justify-center">
-                  <span className="bg-[#0B5FA5] text-white text-[11px] font-bold px-3 py-1.5 rounded-lg shadow uppercase flex items-center gap-1 group-hover:bg-[#F39200] group-hover:text-slate-950 transition-colors">
+                  <span className="bg-brand-blue text-white text-[11px] font-bold px-3 py-1.5 rounded-lg shadow uppercase flex items-center gap-1 group-hover:bg-brand-red group-hover:text-white transition-colors">
                     <ExternalLink className="w-3.5 h-3.5" />
                     <span>Просмотр</span>
                   </span>
@@ -54,10 +54,10 @@ export const CertificatesSection: React.FC<CertificatesSectionProps> = ({ onSele
               {/* Document Metadata */}
               <div className="space-y-2 flex-1 flex flex-col justify-between">
                 <div>
-                  <span className="text-[10px] font-extrabold text-[#0B5FA5] uppercase tracking-wider block">
+                  <span className="text-[10px] font-extrabold text-brand-blue uppercase tracking-wider block">
                     {cert.type}
                   </span>
-                  <h3 className="text-xs font-extrabold text-slate-900 line-clamp-2 mt-0.5 group-hover:text-[#0B5FA5] transition-colors">
+                  <h3 className="text-xs font-extrabold text-slate-900 line-clamp-2 mt-0.5 group-hover:text-brand-blue transition-colors">
                     {cert.title}
                   </h3>
                 </div>
@@ -80,19 +80,19 @@ export const CertificatesSection: React.FC<CertificatesSectionProps> = ({ onSele
         {/* Logos & Quality Standards Trust Strip */}
         <div className="mt-10 p-6 bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-wrap items-center justify-around gap-6 text-slate-400">
           <div className="flex items-center gap-2 font-black text-slate-700 text-sm">
-            <Award className="w-5 h-5 text-[#F39200]" />
+            <Award className="w-5 h-5 text-brand-red" />
             <span>СТБ 1488-2004</span>
           </div>
           <div className="flex items-center gap-2 font-black text-slate-700 text-sm">
-            <ShieldCheck className="w-5 h-5 text-[#0B5FA5]" />
+            <ShieldCheck className="w-5 h-5 text-brand-blue" />
             <span>ГОСТ РБ</span>
           </div>
           <div className="flex items-center gap-2 font-black text-slate-700 text-sm">
             <CheckCircle className="w-5 h-5 text-emerald-600" />
-            <span>БелТПП №2025</span>
+            <span>Собств. производство 2025–2027</span>
           </div>
           <div className="flex items-center gap-2 font-black text-slate-700 text-sm">
-            <FileText className="w-5 h-5 text-[#0B5FA5]" />
+            <FileText className="w-5 h-5 text-brand-blue" />
             <span>Декларация ТР ТС ЕАЭС</span>
           </div>
         </div>

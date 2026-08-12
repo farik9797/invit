@@ -15,9 +15,9 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({ certificate,
       <div className="relative bg-white rounded-2xl max-w-xl w-full shadow-2xl border border-slate-200 overflow-hidden">
         
         {/* Header */}
-        <div className="bg-[#0B5FA5] text-white p-4 flex items-center justify-between">
+        <div className="bg-brand-blue text-white p-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Award className="w-5 h-5 text-[#F39200]" />
+            <Award className="w-5 h-5 text-white" />
             <span className="font-extrabold text-xs uppercase tracking-wide">
               {certificate.type}
             </span>
