@@ -105,11 +105,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSelectCategory, onOp
           <div className="lg:col-span-8 xl:col-span-9 relative bg-slate-950 rounded-2xl shadow-xl overflow-hidden min-h-[440px] lg:min-h-[480px] flex flex-col justify-between group border border-slate-800">
             {/* Background Image & Overlay Gradient */}
             <div className="absolute inset-0 z-0">
-              <img
-                src={slide.image}
-                alt={slide.title}
-                className="w-full h-full object-cover opacity-40 transform scale-105 transition-transform duration-1000 ease-out"
-              />
+              {HERO_SLIDES.map((item, idx) => (
+                <img
+                  key={item.id}
+                  src={item.image}
+                  alt=""
+                  aria-hidden
+                  className={`absolute inset-0 w-full h-full object-cover transform scale-105 transition-opacity duration-700 ${
+                    idx === currentSlide ? 'opacity-40' : 'opacity-0'
+                  }`}
+                />
+              ))}
               <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/85 to-transparent"></div>
             </div>
 
@@ -126,28 +132,39 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onSelectCategory, onOp
                 </span>
               </div>
 
-              {/* Title & Description */}
-              <div className="my-auto py-4 space-y-4 max-w-2xl">
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight leading-tight">
-                  {slide.title}
-                </h1>
-                <p className="text-xs sm:text-sm lg:text-base text-slate-300 font-normal leading-relaxed">
-                  {slide.subtitle}
-                </p>
+              {/* Title & Description — все слайды лежат в одной ячейке грида,
+                  поэтому высота блока равна самому длинному слайду и не прыгает при смене */}
+              <div className="my-auto py-4 grid max-w-2xl">
+                {HERO_SLIDES.map((item, idx) => (
+                  <div
+                    key={item.id}
+                    aria-hidden={idx !== currentSlide}
+                    className={`col-start-1 row-start-1 space-y-4 transition-opacity duration-500 ${
+                      idx === currentSlide ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                    }`}
+                  >
+                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight leading-tight">
+                      {item.title}
+                    </h1>
+                    <p className="text-xs sm:text-sm lg:text-base text-slate-300 font-normal leading-relaxed">
+                      {item.subtitle}
+                    </p>
 
-                <div className="p-3.5 bg-blue-950/70 border-l-4 border-brand-red rounded-r-xl text-xs sm:text-sm font-semibold text-blue-100 backdrop-blur-xs">
-                  ⚡ {slide.highlight}
-                </div>
-
-                {/* Features bullets */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
-                  {slide.features.map((feat, idx) => (
-                    <div key={idx} className="flex items-center gap-2 text-xs text-slate-200 font-medium">
-                      <CheckCircle2 className="w-4 h-4 text-brand-red-light shrink-0" />
-                      <span className="truncate">{feat}</span>
+                    <div className="p-3.5 bg-blue-950/70 border-l-4 border-brand-red rounded-r-xl text-xs sm:text-sm font-semibold text-blue-100 backdrop-blur-xs">
+                      ⚡ {item.highlight}
                     </div>
-                  ))}
-                </div>
+
+                    {/* Features bullets */}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
+                      {item.features.map((feat, fIdx) => (
+                        <div key={fIdx} className="flex items-center gap-2 text-xs text-slate-200 font-medium">
+                          <CheckCircle2 className="w-4 h-4 text-brand-red-light shrink-0" />
+                          <span className="truncate">{feat}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
               </div>
 
               {/* Slider Action Buttons */}
