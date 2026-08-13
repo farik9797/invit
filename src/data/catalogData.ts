@@ -5177,40 +5177,89 @@ export const MOCK_ORDERS: Record<string, OrderStatus> = {
   }
 };
 
-// TODO: заменить изображения сертификатов и новостей на реальные сканы/фото ООО «ИНВИТ».
+// Сканы сертификатов взяты из галереи invit.by (Документы -> Сертификаты).
+// TODO: заменить изображения новостей на реальные фото ООО «ИНВИТ».
 export const CERTIFICATES: CertificateItem[] = [
   {
     id: 'cert-1',
-    title: 'Сертификат соответствия СТБ 1488-2004 (Монтажные ленты EUROBAND)',
-    type: 'Сертификат соответствия РБ',
-    validUntil: '2027-11-20',
-    issuedBy: 'Орган по сертификации РУП «Стройтехнорм»',
-    image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&q=80&w=600'
+    title: 'Сертификат продукции собственного производства на ленты EUROBAND',
+    type: 'Сертификат',
+    image: 'https://invit.by/image/cache/data/news/%D1%81%D0%B5%D1%80%D1%82%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%82%D1%8B%202018-2023/sertifikat_produkcii_sobstvennogo_proizvodstva_invit_2023-500x500.jpg',
+    imageFull: 'https://invit.by/image/data/news/%D1%81%D0%B5%D1%80%D1%82%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%82%D1%8B%202018-2023/sertifikat_produkcii_sobstvennogo_proizvodstva_invit_2023.jpg',
+    sourceUrl: 'https://invit.by/index.php?route=information/gallery'
   },
   {
     id: 'cert-2',
-    title: 'Декларация о соответствии ЕАЭС (Профиль фланцевый и уголки)',
-    type: 'Декларация ТР ТС / ЕАЭС',
-    validUntil: '2028-04-15',
-    issuedBy: 'Госстандарт Республики Беларусь',
-    image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=600'
+    title: 'Свидетельство от технической компетентности ООО «ИНВИТ»',
+    type: 'Свидетельство',
+    image: 'https://invit.by/image/cache/data/news/%D1%81%D0%B5%D1%80%D1%82%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%82%D1%8B%202018-2023/svidetel%27stvo_tehnicheskoj_kompetencii_invit_2028-500x500.jpg',
+    imageFull: 'https://invit.by/image/data/news/%D1%81%D0%B5%D1%80%D1%82%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%82%D1%8B%202018-2023/svidetel%27stvo_tehnicheskoj_kompetencii_invit_2028.jpg',
+    sourceUrl: 'https://invit.by/index.php?route=information/gallery'
   },
   {
     id: 'cert-3',
-    title: 'Сертификат продукции собственного производства (2025–2027)',
-    type: 'Сертификат собственного производства',
-    validUntil: '2027-12-31',
-    issuedBy: 'Белорусская торгово-промышленная палата',
-    image: 'https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&q=80&w=600'
+    title: 'Техническое свидетельство ВЛ, ВЛ(а)',
+    type: 'Техническое свидетельство',
+    image: 'https://invit.by/image/cache/data/news/%D1%81%D0%B5%D1%80%D1%82%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%82%D1%8B%202018-2023/tehnicheskoe_svidetel%27stvo_evroband_vla_2028-500x500.jpg',
+    imageFull: 'https://invit.by/image/data/news/%D1%81%D0%B5%D1%80%D1%82%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%82%D1%8B%202018-2023/tehnicheskoe_svidetel%27stvo_evroband_vla_2028.jpg',
+    sourceUrl: 'https://invit.by/index.php?route=information/gallery'
   },
   {
     id: 'cert-4',
-    title: 'Протокол акустических и теплотехнических испытаний ПСУЛ EUROBAND',
-    type: 'Протокол НИИ Стройэкономики',
-    validUntil: 'Бессрочно',
-    issuedBy: 'Лаборатория физики строительных конструкций',
-    image: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&q=80&w=600'
-  }
+    title: 'Техническое свидетельство на НЛ',
+    type: 'Техническое свидетельство',
+    image: 'https://invit.by/image/cache/data/news/%D1%81%D0%B5%D1%80%D1%82%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%82%D1%8B%202018-2023/tehnicheskoe_svidetel%27stvo_evroband_nl_2028-500x500.jpg',
+    imageFull: 'https://invit.by/image/data/news/%D1%81%D0%B5%D1%80%D1%82%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%82%D1%8B%202018-2023/tehnicheskoe_svidetel%27stvo_evroband_nl_2028.jpg',
+    sourceUrl: 'https://invit.by/index.php?route=information/gallery'
+  },
+  {
+    id: 'cert-5',
+    title: 'Техническое свидетельство на ПСУЛ',
+    type: 'Техническое свидетельство',
+    image: 'https://invit.by/image/cache/data/news/%D1%81%D0%B5%D1%80%D1%82%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%82%D1%8B%202018-2023/tehnicheskoe_svidetel%27stvo_evroband_psul_2028-500x500.jpg',
+    imageFull: 'https://invit.by/image/data/news/%D1%81%D0%B5%D1%80%D1%82%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%82%D1%8B%202018-2023/tehnicheskoe_svidetel%27stvo_evroband_psul_2028.jpg',
+    sourceUrl: 'https://invit.by/index.php?route=information/gallery'
+  },
+  {
+    id: 'cert-6',
+    title: 'Техническое свидетельство на ПЭС',
+    type: 'Техническое свидетельство',
+    image: 'https://invit.by/image/cache/data/news/%D1%81%D0%B5%D1%80%D1%82%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%82%D1%8B%202018-2023/tehnicheskoe_svidetel%27stvo_evroband_pes_2028-500x500.jpg',
+    imageFull: 'https://invit.by/image/data/news/%D1%81%D0%B5%D1%80%D1%82%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%82%D1%8B%202018-2023/tehnicheskoe_svidetel%27stvo_evroband_pes_2028.jpg',
+    sourceUrl: 'https://invit.by/index.php?route=information/gallery'
+  },
+  {
+    id: 'cert-7',
+    title: 'Декларация на ленту НЛ',
+    type: 'Декларация о соответствии',
+    image: 'https://invit.by/image/cache/data/news/%D1%81%D0%B5%D1%80%D1%82%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%82%D1%8B%202018-2023/deklaracija_o_sootvetstvii_lenta_evroband_nl_2028-500x500.jpg',
+    imageFull: 'https://invit.by/image/data/news/%D1%81%D0%B5%D1%80%D1%82%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%82%D1%8B%202018-2023/deklaracija_o_sootvetstvii_lenta_evroband_nl_2028.jpg',
+    sourceUrl: 'https://invit.by/index.php?route=information/gallery'
+  },
+  {
+    id: 'cert-8',
+    title: 'Декларация на ленту ПСУЛ',
+    type: 'Декларация о соответствии',
+    image: 'https://invit.by/image/cache/data/news/%D1%81%D0%B5%D1%80%D1%82%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%82%D1%8B%202018-2023/deklaracija_o_sootvetstvii_lenta_evroband_psul_2028-500x500.jpg',
+    imageFull: 'https://invit.by/image/data/news/%D1%81%D0%B5%D1%80%D1%82%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%82%D1%8B%202018-2023/deklaracija_o_sootvetstvii_lenta_evroband_psul_2028.jpg',
+    sourceUrl: 'https://invit.by/index.php?route=information/gallery'
+  },
+  {
+    id: 'cert-9',
+    title: 'Декларация на ленту ПЭС',
+    type: 'Декларация о соответствии',
+    image: 'https://invit.by/image/cache/data/news/%D1%81%D0%B5%D1%80%D1%82%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%82%D1%8B%202018-2023/deklaracija_o_sootvetstvii_lenta_evroband_pjes_2028-500x500.jpg',
+    imageFull: 'https://invit.by/image/data/news/%D1%81%D0%B5%D1%80%D1%82%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%82%D1%8B%202018-2023/deklaracija_o_sootvetstvii_lenta_evroband_pjes_2028.jpg',
+    sourceUrl: 'https://invit.by/index.php?route=information/gallery'
+  },
+  {
+    id: 'cert-10',
+    title: 'Декларация на ленты ВЛ(а) и ВЛ',
+    type: 'Декларация о соответствии',
+    image: 'https://invit.by/image/cache/data/news/%D1%81%D0%B5%D1%80%D1%82%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%82%D1%8B%202018-2023/deklaracija_o_sootvetstvii_lenta_evroband_vla_vl_lba_lb_lbn_2028--500x500.jpg',
+    imageFull: 'https://invit.by/image/data/news/%D1%81%D0%B5%D1%80%D1%82%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%82%D1%8B%202018-2023/deklaracija_o_sootvetstvii_lenta_evroband_vla_vl_lba_lb_lbn_2028-.jpg',
+    sourceUrl: 'https://invit.by/index.php?route=information/gallery'
+  },
 ];
 
 export const NEWS: NewsArticle[] = [

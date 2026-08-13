@@ -193,11 +193,11 @@ export const Footer: React.FC<FooterProps> = ({ onOpenCallback }) => {
             © 2009–2026 ООО «ИНВИТ». Ленты и уплотнители EUROBAND — собственная торговая марка. Все права защищены.
           </div>
           <div className="flex items-center gap-4">
-            <span>СТБ 1488-2004</span>
+            <span>ТКП 45-3.02-223-2010</span>
             <span>·</span>
-            <span>ГОСТ РБ</span>
+            <span>ГОСТ 30971-2002</span>
             <span>·</span>
-            <span>БелТПП</span>
+            <span>ТУ BY 600500616.001-2010</span>
           </div>
         </div>
       </div>

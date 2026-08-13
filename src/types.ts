@@ -79,9 +79,13 @@ export interface CertificateItem {
   id: string;
   title: string;
   type: string;
-  validUntil: string;
-  issuedBy: string;
   image: string;
+  /** Скан в полном разрешении. */
+  imageFull?: string;
+  /** Страница-источник на invit.by, если документ опубликован там. */
+  sourceUrl?: string;
+  issuedBy?: string;
+  validUntil?: string;
   pdfUrl?: string;
 }
 
