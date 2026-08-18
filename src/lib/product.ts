@@ -24,3 +24,17 @@ export const sortForListing = (products: Product[]) =>
     const weight = (p: Product) => (p.badge === 'Собственное производство' ? 0 : 1);
     return weight(a) - weight(b);
   });
+
+/**
+ * EUROBAND — это только ленты. Остальные разделы каталога (пена, герметики, крепёж,
+ * инструмент, вентиляция) — сопутствующие товары прямой поставки, не наше производство.
+ */
+export const TAPE_SUBCATEGORIES = [
+  'montazhnye-lenty-dlya-okon',
+  'samorasshiryayuschayasya-lenta-psul',
+  'krovelnye-uplotniteli-kleykie-lenty',
+  'uplotnitelnye-lenty-pes-samokleyaschiesy',
+  'lenty-uplotnitelnye-samokleyaschiesya'
+];
+
+export const isTape = (product: Product) => TAPE_SUBCATEGORIES.includes(product.subcategorySlug);

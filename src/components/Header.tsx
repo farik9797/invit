@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { Search, Phone, Menu, X, ShoppingBag, Shield, ChevronDown } from 'lucide-react';
+import { Link, NavLink } from 'react-router-dom';
+import { Search, Menu, X, ShoppingBag } from 'lucide-react';
 import invitLogo from '../assets/logo/invit-color.svg';
 import eurobandLogo from '../assets/logo/euroband-color.svg';
-import { PRODUCTS, CATEGORIES } from '../data/catalogData';
+import { PRODUCTS } from '../data/catalogData';
 import { Product } from '../types';
 import { paths } from '../routes';
 
@@ -14,312 +14,184 @@ interface HeaderProps {
   onSelectProduct: (product: Product) => void;
 }
 
+const NAV = [
+  { to: paths.catalog, label: 'Каталог' },
+  { to: paths.about, label: 'О компании' },
+  { to: paths.certificates, label: 'Документы' },
+  { to: paths.orderStatus, label: 'Статус заказа' },
+  { to: paths.news, label: 'Новости' },
+  { to: paths.contacts, label: 'Контакты' }
+];
+
+const navClass = ({ isActive }: { isActive: boolean }) =>
+  `py-3.5 text-sm transition-colors border-b-2 ${
+    isActive
+      ? 'text-brand-blue font-semibold border-brand-blue'
+      : 'text-brand-navy/70 hover:text-brand-blue border-transparent'
+  }`;
+
 export const Header: React.FC<HeaderProps> = ({
   onOpenCallback,
   onOpenQuoteCart,
   quoteCount,
   onSelectProduct
 }) => {
-  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Live filter products for instant auto-complete search
-  const filteredProducts = searchQuery.trim()
+  const query = searchQuery.trim().toLowerCase();
+  const results = query
     ? PRODUCTS.filter(
         (p) =>
-          p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          p.shortTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          p.subcategoryName.toLowerCase().includes(searchQuery.toLowerCase())
-      )
+          p.title.toLowerCase().includes(query) ||
+          p.shortTitle.toLowerCase().includes(query) ||
+          p.subcategoryName.toLowerCase().includes(query)
+      ).slice(0, 8)
     : [];
 
-  const navItems = [
-    { to: paths.catalog, label: 'Каталог' },
-    { to: paths.about, label: 'О компании' },
-    { to: paths.orderStatus, label: 'Статус заказа' },
-    { to: paths.certificates, label: 'Сертификаты' },
-    { to: paths.news, label: 'Новости' },
-    { to: paths.contacts, label: 'Контакты' }
-  ];
-
   return (
-    <header className="sticky top-0 z-40 bg-white shadow-md border-b border-slate-200">
-      {/* Upper Main Header */}
-      <div className="max-w-[1340px] mx-auto px-5 py-3.5">
-        <div className="flex items-center justify-between gap-4">
-          
-          {/* LOGO AREA */}
-          <Link to={paths.home} className="flex items-center gap-3 cursor-pointer shrink-0">
-            <img
-              src={invitLogo}
-              alt="ООО «ИНВИТ» — надёжные системы"
-              className="h-9 sm:h-11 w-auto"
+    <header className="sticky top-0 z-40 bg-surface border-b border-line">
+      <div className="max-w-[1340px] mx-auto px-5 py-4 flex items-center justify-between gap-6">
+        {/* Логотипы */}
+        <Link to={paths.home} className="flex items-center gap-3 shrink-0">
+          <img src={invitLogo} alt="ООО «ИНВИТ»" className="h-9 sm:h-10 w-auto" />
+          <span className="hidden xl:block border-l border-line pl-3">
+            <img src={eurobandLogo} alt="EUROBAND" className="h-3.5 w-auto" />
+            <span className="block text-[11px] text-brand-navy/50 mt-1">
+              Ленты собственного производства
+            </span>
+          </span>
+        </Link>
+
+        {/* Поиск */}
+        <div className="relative flex-1 max-w-md hidden md:block">
+          <div className="relative flex items-center">
+            <Search className="w-4 h-4 text-brand-navy/40 absolute left-3.5" />
+            <input
+              type="text"
+              placeholder="Поиск по каталогу"
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setIsSearchOpen(true);
+              }}
+              onFocus={() => setIsSearchOpen(true)}
+              className="w-full pl-10 pr-4 py-2.5 text-sm bg-surface-soft border border-line rounded-lg text-brand-navy placeholder:text-brand-navy/40 focus:outline-none focus:border-brand-sky focus:bg-white transition-colors"
             />
-            <div className="hidden xl:block border-l border-slate-300 pl-3">
-              <img src={eurobandLogo} alt="EUROBAND" className="h-4 w-auto" />
-              <span className="block text-[11px] font-medium text-slate-500 leading-tight mt-1 max-w-[170px]">
-                Белорусский производитель уплотнительных и герметизирующих лент
-              </span>
-            </div>
-          </Link>
+          </div>
 
-          {/* SEARCH BAR CENTER (SmartTech index-3 archetype) */}
-          <div className="relative flex-1 max-w-2xl mx-2 hidden md:block">
-            <div className="relative flex items-center bg-slate-50 border border-slate-300 rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-brand-blue focus-within:border-transparent transition-all shadow-inner">
-              {/* Category Dropdown inside Search */}
-              <div className="relative border-r border-slate-200 bg-slate-100 shrink-0">
-                <select
-                  className="appearance-none bg-transparent py-2.5 pl-3 pr-8 text-xs font-bold text-slate-700 cursor-pointer focus:outline-none"
-                  onChange={(e) => {
-                    const catSlug = e.target.value;
-                    navigate(catSlug ? paths.category(catSlug) : paths.catalog);
-                  }}
-                >
-                  <option value="">Все категории</option>
-                  {CATEGORIES.map((cat) => (
-                    <option key={cat.id} value={cat.slug}>
-                      {cat.name}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown className="w-3.5 h-3.5 text-slate-500 absolute right-2.5 top-3.5 pointer-events-none" />
-              </div>
-
-              {/* Input field */}
-              <div className="relative flex-1 flex items-center">
-                <input
-                  type="text"
-                  placeholder="Поиск по каталогу: лента, ПСУЛ, герметик, профиль..."
-                  value={searchQuery}
-                  onChange={(e) => {
-                    setSearchQuery(e.target.value);
-                    setIsSearchOpen(true);
-                  }}
-                  onFocus={() => setIsSearchOpen(true)}
-                  className="w-full pl-9 pr-4 py-2.5 bg-transparent text-slate-800 text-sm focus:outline-none"
-                />
-                <Search className="w-4 h-4 text-slate-400 absolute left-3" />
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setIsSearchOpen(true)}
-                className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-bold px-4 py-2.5 transition-colors cursor-pointer shrink-0 uppercase tracking-wider"
-              >
-                Найти
-              </button>
-            </div>
-
-            {/* Instant Search Results Dropdown */}
-            {isSearchOpen && searchQuery.trim() !== '' && (
-              <div className="absolute left-0 right-0 top-full mt-1.5 bg-white border border-slate-200 rounded-xl shadow-2xl z-50 overflow-hidden max-h-96 overflow-y-auto">
-                <div className="bg-slate-100 px-4 py-2 text-xs font-semibold text-slate-500 flex justify-between items-center border-b border-slate-200">
-                  <span>Результаты поиска ({filteredProducts.length})</span>
+          {isSearchOpen && query !== '' && (
+            <div className="absolute left-0 right-0 top-full mt-2 bg-white border border-line rounded-xl shadow-lg z-50 overflow-hidden">
+              {results.length > 0 ? (
+                results.map((p) => (
                   <button
-                    onClick={() => setIsSearchOpen(false)}
-                    className="text-slate-400 hover:text-slate-700 text-xs"
+                    key={p.id}
+                    onClick={() => {
+                      onSelectProduct(p);
+                      setIsSearchOpen(false);
+                      setSearchQuery('');
+                    }}
+                    className="w-full text-left p-3 hover:bg-surface-soft transition-colors flex items-center gap-3 cursor-pointer"
                   >
-                    Закрыть
+                    <img
+                      src={p.image}
+                      alt=""
+                      className="w-10 h-10 object-contain bg-white border border-line rounded shrink-0"
+                    />
+                    <span className="min-w-0">
+                      <span className="block text-[11px] text-brand-blue">{p.subcategoryName}</span>
+                      <span className="block text-sm text-brand-navy truncate">{p.title}</span>
+                    </span>
                   </button>
+                ))
+              ) : (
+                <div className="p-4 text-sm text-brand-navy/60">
+                  Ничего не найдено. Напишите нам — подберём аналог.
                 </div>
-                {filteredProducts.length > 0 ? (
-                  <div className="divide-y divide-slate-100">
-                    {filteredProducts.map((p) => (
-                      <div
-                        key={p.id}
-                        onClick={() => {
-                          onSelectProduct(p);
-                          setIsSearchOpen(false);
-                          setSearchQuery('');
-                        }}
-                        className="p-3 hover:bg-slate-50 transition-colors cursor-pointer flex items-center gap-3"
-                      >
-                        <img
-                          src={p.image}
-                          alt={p.title}
-                          className="w-12 h-12 object-cover rounded border border-slate-200 bg-slate-100 shrink-0"
-                        />
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2">
-                            <span className="text-[10px] text-brand-blue font-semibold">
-                              {p.subcategoryName}
-                            </span>
-                          </div>
-                          <h4 className="text-sm font-semibold text-slate-900 truncate mt-0.5">
-                            {p.title}
-                          </h4>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="p-4 text-center text-sm text-slate-500">
-                    По запросу «{searchQuery}» ничего не найдено. Напишите нам для заказа спец-позиции!
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-
-          {/* HOTLINE & B2B QUOTE BASKET BUTTONS */}
-          <div className="flex items-center gap-3">
-            {/* Phone Hotline */}
-            <div className="hidden xl:flex flex-col items-end whitespace-nowrap">
-              <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">
-                Отдел оптовых продаж
-              </span>
-              <a
-                href="tel:+375296444979"
-                className="text-base font-extrabold text-brand-blue hover:text-brand-blue-hover transition-colors leading-none whitespace-nowrap"
-              >
-                +375 (29) 644-49-79
-              </a>
-            </div>
-
-            {/* Quick Callback Trigger Button */}
-            <button
-              onClick={onOpenCallback}
-              className="hidden sm:inline-flex shrink-0 items-center gap-1.5 bg-brand-red hover:bg-brand-red-hover active:scale-95 text-white font-bold text-xs uppercase tracking-wider px-3.5 py-2.5 rounded-lg shadow transition-all"
-            >
-              <Phone className="w-4 h-4" />
-              <span className="whitespace-nowrap">Оставить заявку</span>
-            </button>
-
-            {/* B2B Quote Basket Button */}
-            <button
-              onClick={onOpenQuoteCart}
-              className="relative bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-800 p-2.5 rounded-lg flex items-center gap-2 transition-all cursor-pointer"
-              title="Запросить расчет КП"
-            >
-              <ShoppingBag className="w-5 h-5 text-brand-blue" />
-              <span className="hidden xl:inline text-xs font-bold uppercase text-slate-700 whitespace-nowrap">
-                Смета КП
-              </span>
-              {quoteCount > 0 && (
-                <span className="bg-brand-red text-white text-xs font-extrabold w-5 h-5 rounded-full flex items-center justify-center shadow-sm">
-                  {quoteCount}
-                </span>
               )}
-            </button>
+            </div>
+          )}
+        </div>
 
-            {/* Mobile Hamburger Toggle */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 text-slate-700 hover:text-brand-blue rounded-lg border border-slate-200"
-            >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
-          </div>
+        {/* Действия */}
+        <div className="flex items-center gap-3 shrink-0">
+          <button
+            onClick={onOpenCallback}
+            className="hidden sm:inline-flex bg-brand-red hover:bg-brand-red-hover text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors cursor-pointer whitespace-nowrap"
+          >
+            Запросить расчёт
+          </button>
+
+          <button
+            onClick={onOpenQuoteCart}
+            className="relative border border-line hover:border-brand-sky text-brand-navy p-2.5 rounded-lg transition-colors cursor-pointer"
+            title="Смета КП"
+          >
+            <ShoppingBag className="w-5 h-5" />
+            {quoteCount > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 bg-brand-red text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                {quoteCount}
+              </span>
+            )}
+          </button>
+
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden border border-line p-2.5 rounded-lg text-brand-navy cursor-pointer"
+            aria-label="Меню"
+          >
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
         </div>
       </div>
 
-      {/* LOWER NAVIGATION MENU BAR */}
-      <nav className="bg-brand-blue text-white border-t border-blue-600/30">
-        <div className="max-w-[1340px] mx-auto px-5">
-          <div className="hidden md:flex items-center justify-between font-medium text-sm">
-            <div className="flex items-center space-x-1 lg:space-x-2">
-              <NavLink
-                to={paths.home}
-                end
-                className={({ isActive }) =>
-                  `px-3 py-3 transition-colors rounded-t-sm font-medium ${
-                    isActive ? 'bg-white text-brand-blue font-bold shadow-sm' : 'hover:bg-brand-blue-hover text-slate-100'
-                  }`
-                }
-              >
-                Главная
-              </NavLink>
-              {navItems.map((item) => (
-                <NavLink
-                  key={item.to}
-                  to={item.to}
-                  className={({ isActive }) =>
-                    `px-3 py-3 transition-colors rounded-t-sm font-medium ${
-                      isActive ? 'bg-white text-brand-blue font-bold shadow-sm' : 'hover:bg-brand-blue-hover text-slate-100'
-                    }`
-                  }
-                >
-                  {item.label}
-                </NavLink>
-              ))}
-            </div>
-
-            <div className="hidden xl:flex items-center gap-2 text-xs text-blue-100 bg-blue-900/40 px-3 py-1.5 rounded">
-              <Shield className="w-3.5 h-3.5 text-brand-red-light" />
-              <span>Собственное производство лент EUROBAND в Минске</span>
-            </div>
-          </div>
+      {/* Навигация */}
+      <nav className="hidden md:block border-t border-line">
+        <div className="max-w-[1340px] mx-auto px-5 flex items-center gap-7">
+          <NavLink to={paths.home} end className={navClass}>
+            Главная
+          </NavLink>
+          {NAV.map((item) => (
+            <NavLink key={item.to} to={item.to} className={navClass}>
+              {item.label}
+            </NavLink>
+          ))}
         </div>
-
-        {/* MOBILE MENU DROPDOWN */}
-        {mobileMenuOpen && (
-          <div className="md:hidden bg-[#1E232A] text-slate-100 px-4 pt-3 pb-6 border-t border-slate-800 space-y-3">
-            {/* Mobile Search */}
-            <div className="relative mb-3">
-              <input
-                type="text"
-                placeholder="Поиск по каталогу..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 bg-slate-800 text-white text-sm rounded border border-slate-700 focus:outline-none"
-              />
-              <Search className="w-4 h-4 text-slate-400 absolute left-2.5 top-2.5" />
-            </div>
-
-            <div className="flex flex-col space-y-1">
-              <NavLink
-                to={paths.home}
-                end
-                onClick={() => setMobileMenuOpen(false)}
-                className={({ isActive }) =>
-                  `text-left px-3 py-2.5 rounded text-sm font-medium transition-colors ${
-                    isActive ? 'bg-brand-blue text-white font-bold' : 'hover:bg-slate-800'
-                  }`
-                }
-              >
-                Главная
-              </NavLink>
-              {navItems.map((item) => (
-                <NavLink
-                  key={item.to}
-                  to={item.to}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={({ isActive }) =>
-                    `text-left px-3 py-2.5 rounded text-sm font-medium transition-colors ${
-                      isActive ? 'bg-brand-blue text-white font-bold' : 'hover:bg-slate-800'
-                    }`
-                  }
-                >
-                  {item.label}
-                </NavLink>
-              ))}
-            </div>
-
-            <div className="pt-3 border-t border-slate-800 space-y-2">
-              <div className="text-xs text-slate-400">
-                Телефон отдела продаж:
-              </div>
-              <a
-                href="tel:+375296444979"
-                className="block text-lg font-bold text-brand-red-light"
-              >
-                +375 (29) 644-49-79
-              </a>
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  onOpenCallback();
-                }}
-                className="w-full bg-brand-red hover:bg-brand-red-hover text-white font-bold py-2.5 rounded text-xs uppercase"
-              >
-                Оставить заявку на расчет
-              </button>
-            </div>
-          </div>
-        )}
       </nav>
+
+      {/* Мобильное меню */}
+      {mobileMenuOpen && (
+        <div className="md:hidden border-t border-line bg-surface px-5 py-4 space-y-1">
+          <NavLink
+            to={paths.home}
+            end
+            onClick={() => setMobileMenuOpen(false)}
+            className="block py-2.5 text-sm text-brand-navy"
+          >
+            Главная
+          </NavLink>
+          {NAV.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              onClick={() => setMobileMenuOpen(false)}
+              className="block py-2.5 text-sm text-brand-navy"
+            >
+              {item.label}
+            </NavLink>
+          ))}
+          <button
+            onClick={() => {
+              setMobileMenuOpen(false);
+              onOpenCallback();
+            }}
+            className="w-full mt-3 bg-brand-red text-white text-sm font-semibold py-3 rounded-lg cursor-pointer"
+          >
+            Запросить расчёт
+          </button>
+        </div>
+      )}
     </header>
   );
 };

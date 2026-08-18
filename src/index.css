@@ -1,13 +1,46 @@
 @import "tailwindcss";
 
-/* Фирменные цвета взяты напрямую из логотипов ИНВИТ и EUROBAND (brand/*.ai). */
+/*
+ * Фирменные цвета взяты из логотипов ИНВИТ и EUROBAND (brand/*.ai).
+ * Палитра светлая: белый фон, тёмно-синий текст, синий из знака ИНВИТ как акцент,
+ * красный EUROBAND — только на действиях (кнопки, бейдж производства).
+ */
 @theme {
-  --color-brand-blue: #0b5fa5; /* основной синий ИНВИТ — поверхности, ссылки */
-  --color-brand-blue-hover: #1a6db5;
-  --color-brand-sky: #3d90cd; /* синий из знака ИНВИТ — иконки на тёмном */
-  --color-brand-navy: #35485b; /* тёмный из логотипа ИНВИТ */
+  --font-sans: 'Onest', ui-sans-serif, system-ui, sans-serif;
+
+  --color-brand-blue: #1f7ab8; /* синий ИНВИТ — ссылки, акценты */
+  --color-brand-blue-hover: #17679c;
+  --color-brand-sky: #3d90cd; /* синий прямо из знака — иконки, подложки */
+  --color-brand-sky-soft: #eaf4fb; /* светлая подложка того же синего */
+  --color-brand-navy: #35485b; /* тёмный из логотипа ИНВИТ — текст, подвал */
   --color-brand-graphite: #3f464c; /* «BAND» из логотипа EUROBAND */
-  --color-brand-red: #d91920; /* «EURO» из логотипа EUROBAND — акцент, CTA */
+  --color-brand-red: #d91920; /* «EURO» из логотипа EUROBAND — CTA */
   --color-brand-red-hover: #b71219;
   --color-brand-red-light: #f0575d; /* акцентный текст на тёмном фоне */
+
+  --color-surface: #ffffff;
+  --color-surface-soft: #f4f7fa; /* фон чередующихся секций */
+  --color-line: #e2e8ef; /* границы */
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-brand-navy);
+  background: var(--color-surface);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

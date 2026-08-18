@@ -1,206 +1,140 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Phone, MapPin, Mail, Clock, Layers, ShieldCheck, Factory, Send } from 'lucide-react';
-import invitLogoMono from '../assets/logo/invit-mono.svg';
-import eurobandLogoMono from '../assets/logo/euroband-mono.svg';
+import { MapPin, Phone, Mail } from 'lucide-react';
+import invitLogo from '../assets/logo/invit-color.svg';
+import eurobandLogo from '../assets/logo/euroband-color.svg';
 import { paths } from '../routes';
+import { TAPE_SUBCATEGORIES } from '../lib/product';
+import { CATEGORIES } from '../data/catalogData';
 
 interface FooterProps {
   onOpenCallback: () => void;
 }
 
-const CATALOG_LINKS = [
-  { label: 'Монтажные ленты для окон', slug: 'materialy-dlya-okon', sub: 'montazhnye-lenty-dlya-okon' },
-  { label: 'Саморасширяющаяся лента ПСУЛ', slug: 'materialy-dlya-okon', sub: 'samorasshiryayuschayasya-lenta-psul' },
-  { label: 'Пена монтажная и очистители', slug: 'materialy-dlya-okon', sub: 'pena-montazhnaya-ochistitel-dlya-peny' },
-  { label: 'Герметики, клея, химия', slug: 'materialy-dlya-okon', sub: 'germetiki-kleya-himiya-smazki' },
-  { label: 'Фланцевый профиль для воздуховодов', slug: 'ventilyaciya', sub: 'flancevyy-profil-dlya-vozduhovodov' },
-  { label: 'Уголки монтажные и траверсы', slug: 'ventilyaciya', sub: 'ugolki-montazhnye' }
-];
+/** Ссылки на разделы лент — то, что производим сами. */
+const TAPE_LINKS = CATEGORIES.flatMap((category) =>
+  category.subcategories
+    .filter((sub) => TAPE_SUBCATEGORIES.includes(sub.slug))
+    .map((sub) => ({
+      label: sub.name,
+      href: `${paths.category(category.slug)}?sub=${sub.slug}`
+    }))
+);
 
-export const Footer: React.FC<FooterProps> = ({ onOpenCallback }) => {
-  return (
-    <footer className="bg-[#12161C] text-slate-400 text-xs border-t border-slate-800">
-      <div className="max-w-[1340px] mx-auto px-5 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          
-          {/* Column 1: About Company */}
-          <div className="space-y-4">
-            <div className="space-y-3">
-              <img
-                src={invitLogoMono}
-                alt="ООО «ИНВИТ» — надёжные системы"
-                className="h-10 w-auto brightness-0 invert"
-              />
-              <img
-                src={eurobandLogoMono}
-                alt="EUROBAND"
-                className="h-4 w-auto brightness-0 invert opacity-90"
-              />
-            </div>
-
-            <p className="text-slate-400 text-xs leading-relaxed">
-              ООО «ИНВИТ» — белорусский производитель уплотнительных и герметизирующих бутилкаучуковых лент EUROBAND для строительства. Также поставляем комплектующие для изготовления и монтажа воздуховодов и систем вентиляции.
-            </p>
-
-            <div className="flex items-center gap-3 pt-1">
-              <a
-                href="https://viber.click"
-                target="_blank"
-                rel="noreferrer"
-                className="p-2 bg-slate-800 hover:bg-brand-blue text-white rounded-lg transition-colors font-bold text-[10px]"
-              >
-                Viber
-              </a>
-              <a
-                href="https://t.me"
-                target="_blank"
-                rel="noreferrer"
-                className="p-2 bg-slate-800 hover:bg-brand-blue text-white rounded-lg transition-colors font-bold text-[10px]"
-              >
-                Telegram
-              </a>
-              <a
-                href="https://whatsapp.com"
-                target="_blank"
-                rel="noreferrer"
-                className="p-2 bg-slate-800 hover:bg-brand-blue text-white rounded-lg transition-colors font-bold text-[10px]"
-              >
-                WhatsApp
-              </a>
-            </div>
-          </div>
-
-          {/* Column 2: Catalog Links */}
-          <div className="space-y-3">
-            <h4 className="text-sm font-extrabold text-white uppercase tracking-wider border-b border-slate-800 pb-2">
-              Каталог EUROBAND
-            </h4>
-            <ul className="space-y-2">
-              {CATALOG_LINKS.map((link) => (
-                <li key={link.label}>
-                  <Link
-                    to={`${paths.category(link.slug)}?sub=${link.sub}`}
-                    className="hover:text-white transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Column 3: For Buyers */}
-          <div className="space-y-3">
-            <h4 className="text-sm font-extrabold text-white uppercase tracking-wider border-b border-slate-800 pb-2">
-              Покупателям & Партнерам
-            </h4>
-            <ul className="space-y-2">
-              <li>
-                <Link to={paths.about} className="hover:text-white transition-colors">
-                  О заводе ООО «ИНВИТ»
-                </Link>
-              </li>
-              <li>
-                <Link to={paths.certificates} className="hover:text-white transition-colors">
-                  Сертификаты СТБ & ГОСТ
-                </Link>
-              </li>
-              <li>
-                <Link to={paths.orderStatus} className="hover:text-white transition-colors">
-                  Отслеживание статуса заказа
-                </Link>
-              </li>
-              <li>
-                <button onClick={onOpenCallback} className="hover:text-white transition-colors cursor-pointer">
-                  Запросить оптовый прайс-лист (.XLSX)
-                </button>
-              </li>
-              <li>
-                <Link to={paths.contacts} className="hover:text-white transition-colors">
-                  Условия доставки по РБ и ЕАЭС
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Column 4: Contacts */}
-          <div className="space-y-3">
-            <h4 className="text-sm font-extrabold text-white uppercase tracking-wider border-b border-slate-800 pb-2">
-              Контакты офиса и склада
-            </h4>
-            <div className="space-y-3">
-              <div className="space-y-1.5">
-                <div className="flex items-start gap-2">
-                  <MapPin className="w-4 h-4 text-brand-red-light shrink-0 mt-0.5" />
-                  <span>
-                    <span className="block text-white font-semibold">Минск</span>
-                    Минский р-н, Сеницкий с/с, 84 (ТЦ Сеница, оф. 9)
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 pl-6">
-                  <a href="tel:+375296444979" className="whitespace-nowrap text-white font-bold hover:text-brand-red-light">
-                    +375 (29) 644-49-79
-                  </a>
-                  <span className="text-slate-600">·</span>
-                  <a href="tel:+375173437736" className="whitespace-nowrap hover:text-white">
-                    +375 (17) 343-77-36
-                  </a>
-                </div>
-                <div className="flex items-center gap-2 pl-6 text-[11px] text-slate-500">
-                  <Clock className="w-3.5 h-3.5 shrink-0" />
-                  <span>Пн–Чт: 9:00–17:30, Пт: 9:00–16:00</span>
-                </div>
-              </div>
-
-              <div className="space-y-1.5 pt-1 border-t border-slate-800">
-                <div className="flex items-start gap-2 pt-2">
-                  <MapPin className="w-4 h-4 text-brand-red-light shrink-0 mt-0.5" />
-                  <span>
-                    <span className="block text-white font-semibold">Солигорск</span>
-                    223701, ул. Строителей, 30, оф. 101
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 pl-6">
-                  <a href="tel:+375174325022" className="whitespace-nowrap hover:text-white">
-                    +375 (174) 32-50-22
-                  </a>
-                  <span className="text-slate-600">·</span>
-                  <a href="tel:+375296444270" className="whitespace-nowrap hover:text-white">
-                    +375 (29) 644-42-70
-                  </a>
-                </div>
-                <div className="flex items-center gap-2 pl-6 text-[11px] text-slate-500">
-                  <Clock className="w-3.5 h-3.5 shrink-0" />
-                  <span>Пн–Пт: 8:00–17:00</span>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2 pt-1 border-t border-slate-800">
-                <Mail className="w-4 h-4 text-brand-red-light shrink-0 mt-2" />
-                <a href="mailto:info@invit.by" className="hover:text-white mt-2">
-                  info@invit.by
-                </a>
-              </div>
-            </div>
-          </div>
-
+export const Footer: React.FC<FooterProps> = ({ onOpenCallback }) => (
+  <footer className="bg-surface-soft border-t border-line text-sm text-brand-navy/70">
+    <div className="max-w-[1340px] mx-auto px-5 py-14">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+        {/* О компании */}
+        <div className="space-y-4">
+          <img src={invitLogo} alt="ООО «ИНВИТ»" className="h-10 w-auto" />
+          <img src={eurobandLogo} alt="EUROBAND" className="h-3.5 w-auto" />
+          <p className="text-xs leading-relaxed">
+            Белорусский производитель уплотнительных и герметизирующих лент EUROBAND. Сопутствующие
+            материалы поставляем напрямую от производителей.
+          </p>
         </div>
 
-        {/* Bottom Line */}
-        <div className="mt-12 pt-6 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-[11px] text-slate-500">
-          <div>
-            © 2009–2026 ООО «ИНВИТ». Ленты и уплотнители EUROBAND — собственная торговая марка. Все права защищены.
-          </div>
-          <div className="flex items-center gap-4">
-            <span>ТКП 45-3.02-223-2010</span>
-            <span>·</span>
-            <span>ГОСТ 30971-2002</span>
-            <span>·</span>
-            <span>ТУ BY 600500616.001-2010</span>
+        {/* Ленты */}
+        <div className="space-y-3">
+          <h4 className="text-sm font-semibold text-brand-navy">Ленты EUROBAND</h4>
+          <ul className="space-y-2 text-xs">
+            {TAPE_LINKS.map((link) => (
+              <li key={link.href}>
+                <Link to={link.href} className="hover:text-brand-blue transition-colors">
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Компания */}
+        <div className="space-y-3">
+          <h4 className="text-sm font-semibold text-brand-navy">Компания</h4>
+          <ul className="space-y-2 text-xs">
+            <li>
+              <Link to={paths.catalog} className="hover:text-brand-blue transition-colors">
+                Весь каталог
+              </Link>
+            </li>
+            <li>
+              <Link to={paths.about} className="hover:text-brand-blue transition-colors">
+                О производстве
+              </Link>
+            </li>
+            <li>
+              <Link to={paths.certificates} className="hover:text-brand-blue transition-colors">
+                Документы и сертификаты
+              </Link>
+            </li>
+            <li>
+              <Link to={paths.orderStatus} className="hover:text-brand-blue transition-colors">
+                Статус заказа
+              </Link>
+            </li>
+            <li>
+              <button
+                onClick={onOpenCallback}
+                className="hover:text-brand-blue transition-colors cursor-pointer"
+              >
+                Запросить прайс-лист
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        {/* Контакты */}
+        <div className="space-y-3">
+          <h4 className="text-sm font-semibold text-brand-navy">Контакты</h4>
+          <div className="space-y-3 text-xs">
+            <div className="flex items-start gap-2">
+              <MapPin className="w-4 h-4 text-brand-sky shrink-0 mt-0.5" />
+              <span>
+                <span className="block text-brand-navy font-medium">Минск</span>
+                Минский р-н, Сеницкий с/с, 84 (ТЦ Сеница, оф. 9)
+              </span>
+            </div>
+
+            <div className="flex items-start gap-2">
+              <MapPin className="w-4 h-4 text-brand-sky shrink-0 mt-0.5" />
+              <span>
+                <span className="block text-brand-navy font-medium">Солигорск</span>
+                ул. Строителей, 30, оф. 101
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Phone className="w-4 h-4 text-brand-red shrink-0" />
+              <a
+                href="tel:+375296444979"
+                className="font-semibold text-brand-navy hover:text-brand-blue transition-colors whitespace-nowrap"
+              >
+                +375 (29) 644-49-79
+              </a>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Mail className="w-4 h-4 text-brand-sky shrink-0" />
+              <a href="mailto:info@invit.by" className="hover:text-brand-blue transition-colors">
+                info@invit.by
+              </a>
+            </div>
+
+            <Link
+              to={paths.contacts}
+              className="inline-block text-brand-blue font-semibold hover:text-brand-blue-hover transition-colors"
+            >
+              Все контакты и график работы
+            </Link>
           </div>
         </div>
       </div>
-    </footer>
-  );
-};
+
+      <div className="mt-12 pt-6 border-t border-line flex flex-col md:flex-row justify-between items-center gap-3 text-xs text-brand-navy/50">
+        <span>© 2009–2026 ООО «ИНВИТ». EUROBAND — собственная торговая марка.</span>
+        <span>ТКП 45-3.02-223-2010 · ГОСТ 30971-2002 · ТУ BY 600500616.001-2010</span>
+      </div>
+    </div>
+  </footer>
+);
