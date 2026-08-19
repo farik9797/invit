@@ -9,7 +9,7 @@ export const CATEGORIES: Category[] = [
     name: 'Материалы для монтажа окон',
     slug: 'materialy-dlya-okon',
     division: 'windows',
-    description: 'Монтажные и уплотнительные ленты EUROBAND, ПСУЛ, пена, герметики, крепёж и инструмент для установки окон, фасадов и кровли.',
+    description: 'Ленты EUROBAND собственного производства — монтажные, ПСУЛ, бутилкаучуковые и уплотнительные ПЭС. Пена, герметики, крепёж и инструмент — прямые поставки.',
 
     iconName: 'Layers',
     image: 'https://invit.by/image/cache/data/PES/lenta_pod_kontrrejku-208x208.jpg',
@@ -31,7 +31,7 @@ export const CATEGORIES: Category[] = [
     name: 'Комплектующие для вентиляции',
     slug: 'ventilyaciya',
     division: 'hvac',
-    description: 'Фланцевый профиль, монтажные уголки, траверсы, крепёж и уплотнительные ленты для изготовления и монтажа воздуховодов.',
+    description: 'Прямые поставки: фланцевый профиль, монтажные уголки, траверсы и крепёж для изготовления и монтажа воздуховодов. Собственного производства EUROBAND здесь только уплотнительные ленты.',
 
     iconName: 'Wind',
     image: 'https://invit.by/image/cache/data/ventilation/traversa_profil%27_montazhnyj_20%D1%8530-208x208.jpg',

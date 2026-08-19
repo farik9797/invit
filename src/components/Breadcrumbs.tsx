@@ -9,21 +9,21 @@ export interface Crumb {
 }
 
 export const Breadcrumbs: React.FC<{ items: Crumb[] }> = ({ items }) => (
-  <nav aria-label="Хлебные крошки" className="bg-slate-100 border-b border-slate-200">
-    <div className="max-w-[1340px] mx-auto px-5 py-3 flex items-center gap-1.5 text-xs text-slate-500 flex-wrap">
+  <nav aria-label="Хлебные крошки" className="bg-surface-soft border-b border-line">
+    <div className="max-w-[1340px] mx-auto px-5 py-3 flex items-center gap-1.5 text-xs text-brand-navy/55 flex-wrap">
       <Link to={paths.home} className="hover:text-brand-blue transition-colors flex items-center gap-1">
         <Home className="w-3.5 h-3.5" />
         <span>Главная</span>
       </Link>
       {items.map((item, idx) => (
         <React.Fragment key={idx}>
-          <ChevronRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+          <ChevronRight className="w-3.5 h-3.5 text-brand-navy/45 shrink-0" />
           {item.to ? (
             <Link to={item.to} className="hover:text-brand-blue transition-colors">
               {item.label}
             </Link>
           ) : (
-            <span className="text-slate-900 font-semibold">{item.label}</span>
+            <span className="text-brand-navy font-semibold">{item.label}</span>
           )}
         </React.Fragment>
       ))}
@@ -41,11 +41,11 @@ export const PageHeading: React.FC<{
     {eyebrow && (
       <div className="text-xs font-bold uppercase tracking-wider text-brand-red mb-1.5">{eyebrow}</div>
     )}
-    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight">
+    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-brand-navy tracking-tight">
       {title}
     </h1>
     {description && (
-      <p className="text-slate-600 text-sm sm:text-base mt-2 max-w-3xl leading-relaxed">
+      <p className="text-brand-navy/70 text-sm sm:text-base mt-2 max-w-3xl leading-relaxed">
         {description}
       </p>
     )}

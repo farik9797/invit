@@ -38,21 +38,21 @@ export const OrderStatusModule: React.FC = () => {
   };
 
   return (
-    <section id="tracking" className="py-12 bg-white border-b border-slate-200">
+    <section id="tracking" className="py-12 bg-white border-b border-line">
       <div className="max-w-[1340px] mx-auto px-5">
         
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
           <div>
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-brand-blue mb-1">
+            <div className="flex items-center gap-2 text-xs font-bold  text-brand-blue mb-1">
               <Truck className="w-4 h-4 text-brand-red" />
               <span>B2B Сервис для покупателей</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+            <h2 className="text-2xl sm:text-3xl font-bold text-brand-navy tracking-tight">
               Отслеживание статуса текущих заказов
             </h2>
           </div>
-          <p className="text-xs sm:text-sm text-slate-600 max-w-md">
+          <p className="text-xs sm:text-sm text-brand-navy/70 max-w-md">
             Введите номер вашего счета-фактуры или заказа (например, <span className="font-mono font-bold text-brand-blue">INV-2026-9041</span>) для контроля стадии порезки и логистики.
           </p>
         </div>
@@ -60,15 +60,15 @@ export const OrderStatusModule: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
           {/* Search Box Column */}
-          <div className="lg:col-span-5 bg-slate-50 p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-            <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
+          <div className="lg:col-span-5 bg-surface-soft p-6 rounded-xl border border-line shadow-sm space-y-4">
+            <h3 className="text-base font-semibold text-brand-navy flex items-center gap-2">
               <Search className="w-5 h-5 text-brand-blue" />
               Проверить статус заказа онлайн
             </h3>
 
             <form onSubmit={handleSearch} className="space-y-3">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
+                <label className="block text-xs font-bold text-brand-navy/80 mb-1">
                   Номер заказа / счета:
                 </label>
                 <div className="relative">
@@ -77,7 +77,7 @@ export const OrderStatusModule: React.FC = () => {
                     value={searchCode}
                     onChange={(e) => setSearchCode(e.target.value)}
                     placeholder="Например: INV-2026-9041"
-                    className="w-full pl-3 pr-24 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-900 text-sm font-mono font-bold focus:ring-2 focus:ring-brand-blue focus:outline-none"
+                    className="w-full pl-3 pr-24 py-2.5 bg-white border border-line rounded-lg text-brand-navy text-sm font-mono font-bold focus:ring-2 focus:ring-brand-blue focus:outline-none"
                   />
                   <button
                     type="submit"
@@ -89,8 +89,8 @@ export const OrderStatusModule: React.FC = () => {
               </div>
 
               {/* Sample Presets */}
-              <div className="pt-2 border-t border-slate-200">
-                <span className="block text-[11px] text-slate-500 font-medium mb-1.5">
+              <div className="pt-2 border-t border-line">
+                <span className="block text-[11px] text-brand-navy/55 font-medium mb-1.5">
                   Быстрый выбор тестовых заказов:
                 </span>
                 <div className="flex flex-wrap gap-2">
@@ -105,7 +105,7 @@ export const OrderStatusModule: React.FC = () => {
                       className={`text-xs font-mono font-bold px-2.5 py-1 rounded border transition-colors cursor-pointer ${
                         activeOrder?.orderNumber === code
                           ? 'bg-brand-blue text-white border-brand-blue'
-                          : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'
+                          : 'bg-white text-brand-navy/80 border-line hover:bg-surface-soft'
                       }`}
                     >
                       {code}
@@ -115,33 +115,33 @@ export const OrderStatusModule: React.FC = () => {
               </div>
             </form>
 
-            <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs text-slate-700 space-y-1">
+            <div className="p-3 bg-brand-sky-soft border border-line rounded-lg text-xs text-brand-navy/80 space-y-1">
               <span className="font-bold text-brand-blue block">
                 Нужна помощь по отгрузке?
               </span>
               <p>
-                Отдел складской логистики: <a href="tel:+375296444979" className="font-bold text-slate-900 hover:text-brand-blue">+375 (29) 644-49-79</a>
+                Отдел складской логистики: <a href="tel:+375296444979" className="font-bold text-brand-navy hover:text-brand-blue">+375 (29) 644-49-79</a>
               </p>
             </div>
           </div>
 
           {/* Status Progress Results Column */}
-          <div className="lg:col-span-7 bg-white p-6 rounded-2xl border border-slate-200 shadow-lg">
+          <div className="lg:col-span-7 bg-white p-6 rounded-xl border border-line shadow-lg">
             {activeOrder ? (
               <div className="space-y-6">
                 {/* Order Top Banner */}
-                <div className="p-4 bg-slate-900 text-white rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                <div className="p-4 bg-brand-navy text-white rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-slate-400 font-mono">
+                      <span className="text-xs text-brand-navy/45 font-mono">
                         Заказ №
                       </span>
-                      <span className="text-lg font-black text-brand-red font-mono">
+                      <span className="text-lg font-bold text-brand-red font-mono">
                         {activeOrder.orderNumber}
                       </span>
                     </div>
-                    <div className="text-xs text-slate-300 font-semibold flex items-center gap-1.5 mt-0.5">
-                      <Building2 className="w-3.5 h-3.5 text-slate-400" />
+                    <div className="text-xs text-brand-navy/40 font-semibold flex items-center gap-1.5 mt-0.5">
+                      <Building2 className="w-3.5 h-3.5 text-brand-navy/45" />
                       <span>{activeOrder.companyName}</span>
                     </div>
                   </div>
@@ -150,38 +150,38 @@ export const OrderStatusModule: React.FC = () => {
                     <span className="inline-block bg-brand-blue text-white text-[10px] uppercase font-bold px-2.5 py-1 rounded">
                       {activeOrder.statusText}
                     </span>
-                    <span className="block text-[11px] text-slate-400 mt-1">
+                    <span className="block text-[11px] text-brand-navy/45 mt-1">
                       Ориентировочная готовность: <strong className="text-white">{activeOrder.estimatedDelivery}</strong>
                     </span>
                   </div>
                 </div>
 
                 {/* Details Meta Grid */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs bg-surface-soft p-3.5 rounded-xl border border-line">
                   <div>
-                    <span className="text-slate-400 block text-[10px] uppercase font-bold">Пункт назначения:</span>
-                    <span className="font-semibold text-slate-900 flex items-center gap-1 mt-0.5">
+                    <span className="text-brand-navy/45 block text-[10px] uppercase font-bold">Пункт назначения:</span>
+                    <span className="font-semibold text-brand-navy flex items-center gap-1 mt-0.5">
                       <MapPin className="w-3.5 h-3.5 text-brand-blue" />
                       <span className="truncate">{activeOrder.destination}</span>
                     </span>
                   </div>
                   <div>
-                    <span className="text-slate-400 block text-[10px] uppercase font-bold">Количество мест:</span>
-                    <span className="font-semibold text-slate-900 mt-0.5 block">{activeOrder.itemsCount} позиций ({activeOrder.weight})</span>
+                    <span className="text-brand-navy/45 block text-[10px] uppercase font-bold">Количество мест:</span>
+                    <span className="font-semibold text-brand-navy mt-0.5 block">{activeOrder.itemsCount} позиций ({activeOrder.weight})</span>
                   </div>
                   <div className="col-span-2 sm:col-span-1">
-                    <span className="text-slate-400 block text-[10px] uppercase font-bold">Дата оформления:</span>
-                    <span className="font-semibold text-slate-900 mt-0.5 block">{activeOrder.date}</span>
+                    <span className="text-brand-navy/45 block text-[10px] uppercase font-bold">Дата оформления:</span>
+                    <span className="font-semibold text-brand-navy mt-0.5 block">{activeOrder.date}</span>
                   </div>
                 </div>
 
                 {/* Step Timeline */}
                 <div className="space-y-4 pt-2">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                  <h4 className="text-xs font-bold  text-brand-navy/55">
                     Этапы производства и отгрузки:
                   </h4>
 
-                  <div className="relative pl-6 space-y-6 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200">
+                  <div className="relative pl-6 space-y-6 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-line">
                     {activeOrder.steps.map((step, idx) => (
                       <div key={idx} className="relative flex items-start gap-3">
                         {/* Dot */}
@@ -191,7 +191,7 @@ export const OrderStatusModule: React.FC = () => {
                               ? 'bg-emerald-600 text-white'
                               : step.current
                               ? 'bg-brand-red text-white ring-4 ring-red-100'
-                              : 'bg-slate-200 text-slate-500'
+                              : 'bg-surface-soft text-brand-navy/55'
                           }`}
                         >
                           {step.completed ? '✓' : idx + 1}
@@ -200,17 +200,17 @@ export const OrderStatusModule: React.FC = () => {
                         {/* Text */}
                         <div className="space-y-0.5">
                           <h5
-                            className={`text-xs font-extrabold ${
+                            className={`text-xs font-semibold ${
                               step.current
                                 ? 'text-brand-blue'
                                 : step.completed
-                                ? 'text-slate-900'
-                                : 'text-slate-400'
+                                ? 'text-brand-navy'
+                                : 'text-brand-navy/45'
                             }`}
                           >
                             {step.title}
                           </h5>
-                          <span className="text-[11px] text-slate-400 font-mono block">
+                          <span className="text-[11px] text-brand-navy/45 font-mono block">
                             {step.date}
                           </span>
                         </div>
@@ -220,7 +220,7 @@ export const OrderStatusModule: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <div className="text-center py-12 text-slate-500 text-sm">
+              <div className="text-center py-12 text-brand-navy/55 text-sm">
                 Введите номер заказа для просмотра текущего статуса.
               </div>
             )}

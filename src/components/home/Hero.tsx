@@ -49,7 +49,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCallback }) => (
         <img
           src="https://invit.by/image/data/GIL%20PIL/lenta_euroband_%20vla.jpg"
           alt="Пароизоляционная лента EUROBAND ВЛ(а)"
-          className="w-full h-full max-h-[420px] object-contain drop-shadow-2xl"
+          className="w-full h-full max-h-[420px] object-contain drop-shadow-lg"
         />
       </div>
     </div>

@@ -49,15 +49,15 @@ export const CategoryPage: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Подкатегории */}
           <aside className="lg:col-span-3">
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden lg:sticky lg:top-28">
-              <div className="bg-brand-blue text-white px-4 py-3 text-xs font-extrabold uppercase tracking-wider">
+            <div className="bg-white rounded-xl border border-line shadow-xs overflow-hidden lg:sticky lg:top-28">
+              <div className="bg-brand-blue text-white px-4 py-3 text-xs font-semibold ">
                 Подразделы
               </div>
               <div className="p-2">
                 <button
                   onClick={() => selectSub(null)}
                   className={`w-full text-left px-3 py-2 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
-                    !activeSub ? 'bg-blue-50 text-brand-blue' : 'text-slate-700 hover:bg-slate-100'
+                    !activeSub ? 'bg-brand-sky-soft text-brand-blue' : 'text-brand-navy/80 hover:bg-surface-soft'
                   }`}
                 >
                   Все позиции ({categoryProducts.length})
@@ -74,12 +74,12 @@ export const CategoryPage: React.FC = () => {
                       onClick={() => selectSub(sub.slug)}
                       className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs transition-colors cursor-pointer ${
                         activeSub === sub.slug
-                          ? 'bg-blue-50 text-brand-blue font-bold'
-                          : 'text-slate-600 hover:bg-slate-100'
+                          ? 'bg-brand-sky-soft text-brand-blue font-bold'
+                          : 'text-brand-navy/70 hover:bg-surface-soft'
                       }`}
                     >
                       <span className="truncate text-left">{sub.name}</span>
-                      <span className="text-[10px] text-slate-400 font-mono ml-2">
+                      <span className="text-[10px] text-brand-navy/45 font-mono ml-2">
                         {subCount}
                       </span>
                     </button>
@@ -92,8 +92,8 @@ export const CategoryPage: React.FC = () => {
           {/* Товары */}
           <div className="lg:col-span-9 space-y-5">
             <div className="flex items-center justify-between gap-3 flex-wrap">
-              <span className="text-xs text-slate-500">
-                Показано позиций: <strong className="text-slate-900">{products.length}</strong>
+              <span className="text-xs text-brand-navy/55">
+                Показано позиций: <strong className="text-brand-navy">{products.length}</strong>
                 {activeSubName && <span className="ml-1">в подразделе «{activeSubName}»</span>}
               </span>
               {activeSub && (
@@ -116,7 +116,7 @@ export const CategoryPage: React.FC = () => {
               <div className="flex justify-center pt-2">
                 <button
                   onClick={() => setVisible((v) => v + PAGE_SIZE)}
-                  className="px-6 py-3 rounded-xl border border-slate-300 bg-white text-slate-800 font-bold text-xs uppercase tracking-wide hover:bg-slate-100 transition-colors cursor-pointer"
+                  className="px-6 py-3 rounded-xl border border-line bg-white text-brand-navy font-bold text-sm hover:bg-surface-soft transition-colors cursor-pointer"
                 >
                   Показать ещё ({products.length - visible})
                 </button>

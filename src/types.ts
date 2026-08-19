@@ -16,6 +16,19 @@ export interface Category {
   division: 'windows' | 'hvac';
 }
 
+/** Блок описания товара в исходном порядке со страницы invit.by. */
+export type ContentBlock =
+  | { kind: 'heading'; text: string }
+  | { kind: 'text'; text: string }
+  | { kind: 'list'; items: string[] }
+  | { kind: 'table'; headers: string[]; rows: string[][] }
+  | { kind: 'image'; src: string };
+
+export interface ProductContent {
+  images: string[];
+  blocks: ContentBlock[];
+}
+
 export interface ProductSpec {
   label: string;
   value: string;

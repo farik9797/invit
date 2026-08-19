@@ -19,7 +19,7 @@ export const NewsPage: React.FC = () => (
         {NEWS.map((article) => (
           <article
             key={article.id}
-            className="bg-white rounded-2xl border border-slate-200 shadow-xs hover:shadow-lg transition-all overflow-hidden flex flex-col group"
+            className="bg-white rounded-xl border border-line shadow-xs hover:shadow-sm transition-all overflow-hidden flex flex-col group"
           >
             <Link to={paths.newsArticle(article.id)} className="block relative h-44 overflow-hidden">
               <img
@@ -27,24 +27,24 @@ export const NewsPage: React.FC = () => (
                 alt={article.title}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
-              <span className="absolute top-3 left-3 bg-brand-red text-white text-[10px] font-black uppercase px-2.5 py-1 rounded-md">
+              <span className="absolute top-3 left-3 bg-brand-red text-white text-[10px] font-bold uppercase px-2.5 py-1 rounded-md">
                 {article.category}
               </span>
             </Link>
 
             <div className="p-5 flex-1 flex flex-col justify-between gap-3">
               <div className="space-y-2">
-                <div className="flex items-center gap-1.5 text-[11px] text-slate-400 font-semibold">
+                <div className="flex items-center gap-1.5 text-[11px] text-brand-navy/45 font-semibold">
                   <Calendar className="w-3.5 h-3.5 text-brand-red" />
                   <span>{article.date}</span>
                 </div>
                 <Link
                   to={paths.newsArticle(article.id)}
-                  className="block text-sm font-extrabold text-slate-900 hover:text-brand-blue transition-colors leading-snug"
+                  className="block text-sm font-semibold text-brand-navy hover:text-brand-blue transition-colors leading-snug"
                 >
                   {article.title}
                 </Link>
-                <p className="text-xs text-slate-500 leading-relaxed line-clamp-3">
+                <p className="text-xs text-brand-navy/55 leading-relaxed line-clamp-3">
                   {article.summary}
                 </p>
               </div>

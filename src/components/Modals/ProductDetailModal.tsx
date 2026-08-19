@@ -22,14 +22,14 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
   const [selectedWidth, setSelectedWidth] = useState(variantOptions(product)[0]);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm overflow-y-auto">
-      <div className="relative bg-white rounded-2xl max-w-3xl w-full shadow-2xl border border-slate-200 overflow-hidden my-8">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-navy/70 backdrop-blur-sm overflow-y-auto">
+      <div className="relative bg-white rounded-xl max-w-3xl w-full shadow-lg border border-line overflow-hidden my-8">
         
         {/* Header */}
         <div className="bg-brand-blue text-white p-4 sm:p-5 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Layers className="w-5 h-5 text-white" />
-            <span className="font-extrabold text-sm sm:text-base tracking-wide uppercase">
+            <span className="font-semibold text-sm sm:text-base tracking-wide uppercase">
               Технический Паспорт Изделия (ТДС) — EUROBAND
             </span>
           </div>
@@ -46,7 +46,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
             {/* Image */}
             <div className="md:col-span-5 space-y-3">
-              <div className="bg-slate-100 rounded-xl overflow-hidden border border-slate-200 h-60 flex items-center justify-center p-2">
+              <div className="bg-surface-soft rounded-xl overflow-hidden border border-line h-60 flex items-center justify-center p-2">
                 <img
                   src={product.image}
                   alt={product.title}
@@ -54,11 +54,11 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                 />
               </div>
 
-              <div className="p-3 bg-blue-50 border border-blue-200 rounded-xl text-xs space-y-1">
-                <span className="font-extrabold text-brand-blue block">
+              <div className="p-3 bg-brand-sky-soft border border-line rounded-xl text-xs space-y-1">
+                <span className="font-semibold text-brand-blue block">
                   Раздел каталога:
                 </span>
-                <span className="font-bold text-slate-900 block text-sm">
+                <span className="font-bold text-brand-navy block text-sm">
                   {product.subcategoryName}
                 </span>
               </div>
@@ -67,20 +67,20 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
             {/* Title & Specs */}
             <div className="md:col-span-7 space-y-4 text-xs">
               <div>
-                <span className="bg-brand-red text-white font-black text-[10px] uppercase px-2.5 py-0.5 rounded">
+                <span className="bg-brand-red text-white font-bold text-[10px] uppercase px-2.5 py-0.5 rounded">
                   {product.subcategoryName}
                 </span>
-                <h2 className="text-lg font-black text-slate-900 mt-1 leading-snug">
+                <h2 className="text-lg font-bold text-brand-navy mt-1 leading-snug">
                   {product.title}
                 </h2>
-                <p className="text-slate-600 mt-2 leading-relaxed">
+                <p className="text-brand-navy/70 mt-2 leading-relaxed">
                   {product.description}
                 </p>
               </div>
 
               {/* Width Configuration Picker */}
-              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
-                <label className="font-extrabold text-slate-900 block text-xs">
+              <div className="p-3 bg-surface-soft rounded-xl border border-line space-y-2">
+                <label className="font-semibold text-brand-navy block text-xs">
                   Типоразмер для расчёта сметы:
                 </label>
                 <div className="flex flex-wrap gap-1.5">
@@ -92,7 +92,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                       className={`px-2.5 py-1 rounded text-xs font-semibold border transition-all cursor-pointer ${
                         selectedWidth === w
                           ? 'bg-brand-blue text-white border-brand-blue font-bold shadow-sm'
-                          : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-100'
+                          : 'bg-white text-brand-navy/80 border-line hover:bg-surface-soft'
                       }`}
                     >
                       {w}
@@ -102,15 +102,15 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
               </div>
 
               {/* Technical Specifications Table */}
-              <div className="border border-slate-200 rounded-xl overflow-hidden">
-                <div className="bg-slate-100 px-3 py-2 font-extrabold text-slate-800 border-b border-slate-200">
+              <div className="border border-line rounded-xl overflow-hidden">
+                <div className="bg-surface-soft px-3 py-2 font-semibold text-brand-navy border-b border-line">
                   Технические характеристики
                 </div>
-                <div className="divide-y divide-slate-100 p-2 space-y-1 text-slate-700">
+                <div className="divide-y divide-line p-2 space-y-1 text-brand-navy/80">
                   {product.specs.map((spec) => (
                     <div key={spec.label} className="flex justify-between gap-3 px-2 py-1">
-                      <span className="text-slate-400">{spec.label}</span>
-                      <span className="font-bold text-slate-900 text-right">{spec.value}</span>
+                      <span className="text-brand-navy/45">{spec.label}</span>
+                      <span className="font-bold text-brand-navy text-right">{spec.value}</span>
                     </div>
                   ))}
                 </div>
@@ -119,11 +119,11 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
           </div>
 
           {/* Features List */}
-          <div className="space-y-2 pt-2 border-t border-slate-200">
-            <h4 className="font-extrabold text-xs uppercase tracking-wider text-slate-500">
+          <div className="space-y-2 pt-2 border-t border-line">
+            <h4 className="font-semibold text-sm text-brand-navy/55">
               Преимущества и область применения:
             </h4>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-700 font-medium">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-brand-navy/80 font-medium">
               {product.features.map((feat, idx) => (
                 <div key={idx} className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-emerald-600 shrink-0" />
@@ -135,8 +135,8 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
         </div>
 
         {/* Modal Footer Actions */}
-        <div className="p-4 bg-slate-50 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="text-xs text-slate-500 flex items-center gap-1.5">
+        <div className="p-4 bg-surface-soft border-t border-line flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="text-xs text-brand-navy/55 flex items-center gap-1.5">
             <ShieldCheck className="w-4 h-4 text-emerald-600" />
             <span>Соответствует стандартам БелТПП РБ</span>
           </div>
@@ -144,7 +144,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
           <div className="flex items-center gap-2 w-full sm:w-auto">
             <button
               onClick={onClose}
-              className="flex-1 sm:flex-initial px-4 py-2.5 rounded-lg border border-slate-300 text-slate-700 font-bold text-xs uppercase hover:bg-slate-100 transition-colors cursor-pointer"
+              className="flex-1 sm:flex-initial px-4 py-2.5 rounded-lg border border-line text-brand-navy/80 font-semibold text-sm hover:bg-surface-soft transition-colors cursor-pointer"
             >
               Закрыть
             </button>
@@ -154,7 +154,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                 onAddToQuote(product, selectedWidth);
                 onClose();
               }}
-              className="flex-1 sm:flex-initial px-5 py-2.5 rounded-lg bg-brand-blue hover:bg-brand-blue-hover text-white font-extrabold text-xs uppercase tracking-wider shadow transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+              className="flex-1 sm:flex-initial px-5 py-2.5 rounded-lg bg-brand-blue hover:bg-brand-blue-hover text-white font-semibold text-sm shadow transition-all flex items-center justify-center gap-1.5 cursor-pointer"
             >
               <Plus className="w-4 h-4 text-white" />
               <span>Добавить в смету КП</span>

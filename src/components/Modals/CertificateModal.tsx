@@ -11,14 +11,14 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({ certificate,
   if (!certificate) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
-      <div className="relative bg-white rounded-2xl max-w-xl w-full shadow-2xl border border-slate-200 overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-navy/80 backdrop-blur-sm">
+      <div className="relative bg-white rounded-xl max-w-xl w-full shadow-lg border border-line overflow-hidden">
         
         {/* Header */}
         <div className="bg-brand-blue text-white p-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Award className="w-5 h-5 text-white" />
-            <span className="font-extrabold text-xs uppercase tracking-wide">
+            <span className="font-semibold text-sm">
               {certificate.type}
             </span>
           </div>
@@ -32,7 +32,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({ certificate,
 
         {/* Content */}
         <div className="p-6 space-y-4">
-          <div className="bg-white rounded-xl overflow-hidden border border-slate-200 h-[420px] flex items-center justify-center p-2">
+          <div className="bg-white rounded-xl overflow-hidden border border-line h-[420px] flex items-center justify-center p-2">
             <img
               src={certificate.imageFull || certificate.image}
               alt={certificate.title}
@@ -41,15 +41,15 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({ certificate,
           </div>
 
           <div>
-            <h3 className="text-base font-extrabold text-slate-900 leading-snug">
+            <h3 className="text-base font-semibold text-brand-navy leading-snug">
               {certificate.title}
             </h3>
             {(certificate.issuedBy || certificate.validUntil) && (
-              <div className="mt-2 p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs space-y-1 text-slate-600">
+              <div className="mt-2 p-3 bg-surface-soft border border-line rounded-lg text-xs space-y-1 text-brand-navy/70">
                 {certificate.issuedBy && (
                   <div className="flex justify-between">
                     <span>Орган сертификации:</span>
-                    <span className="font-bold text-slate-900">{certificate.issuedBy}</span>
+                    <span className="font-bold text-brand-navy">{certificate.issuedBy}</span>
                   </div>
                 )}
                 {certificate.validUntil && (
@@ -75,7 +75,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({ certificate,
 
             <button
               onClick={onClose}
-              className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs uppercase rounded-lg cursor-pointer"
+              className="px-4 py-2 bg-surface-soft hover:bg-surface-soft text-brand-navy font-semibold text-sm rounded-lg cursor-pointer"
             >
               Закрыть
             </button>
