@@ -31,11 +31,11 @@ export const ManufacturingSection: React.FC<ManufacturingSectionProps> = ({
         </div>
 
         {/* Tab Selection Navigation */}
-        <div className="flex justify-center mb-8">
-          <div className="bg-surface-soft p-1.5 rounded-xl flex gap-1 border border-line">
+        <div className="flex justify-start sm:justify-center mb-8 overflow-x-auto -mx-5 px-5 sm:mx-0 sm:px-0">
+          <div className="bg-surface-soft p-1.5 rounded-xl flex gap-1 border border-line shrink-0">
             <button
               onClick={() => setActiveTab('about')}
-              className={`px-4 py-2 text-xs sm:text-sm font-bold rounded-lg transition-all cursor-pointer ${
+              className={`px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all cursor-pointer whitespace-nowrap ${
                 activeTab === 'about'
                   ? 'bg-brand-blue text-white shadow-xs'
                   : 'text-brand-navy/80 hover:bg-surface-soft'
@@ -45,7 +45,7 @@ export const ManufacturingSection: React.FC<ManufacturingSectionProps> = ({
             </button>
             <button
               onClick={() => setActiveTab('capacity')}
-              className={`px-4 py-2 text-xs sm:text-sm font-bold rounded-lg transition-all cursor-pointer ${
+              className={`px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all cursor-pointer whitespace-nowrap ${
                 activeTab === 'capacity'
                   ? 'bg-brand-blue text-white shadow-xs'
                   : 'text-brand-navy/80 hover:bg-surface-soft'
@@ -55,7 +55,7 @@ export const ManufacturingSection: React.FC<ManufacturingSectionProps> = ({
             </button>
             <button
               onClick={() => setActiveTab('standards')}
-              className={`px-4 py-2 text-xs sm:text-sm font-bold rounded-lg transition-all cursor-pointer ${
+              className={`px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all cursor-pointer whitespace-nowrap ${
                 activeTab === 'standards'
                   ? 'bg-brand-blue text-white shadow-xs'
                   : 'text-brand-navy/80 hover:bg-surface-soft'

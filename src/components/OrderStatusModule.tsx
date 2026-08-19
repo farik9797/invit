@@ -71,17 +71,17 @@ export const OrderStatusModule: React.FC = () => {
                 <label className="block text-xs font-bold text-brand-navy/80 mb-1">
                   Номер заказа / счета:
                 </label>
-                <div className="relative">
+                <div className="flex flex-col sm:flex-row gap-2">
                   <input
                     type="text"
                     value={searchCode}
                     onChange={(e) => setSearchCode(e.target.value)}
                     placeholder="Например: INV-2026-9041"
-                    className="w-full pl-3 pr-24 py-2.5 bg-white border border-line rounded-lg text-brand-navy text-sm font-mono font-bold focus:ring-2 focus:ring-brand-blue focus:outline-none"
+                    className="flex-1 min-w-0 px-3 py-2.5 bg-white border border-line rounded-lg text-brand-navy text-sm font-mono focus:outline-none focus:border-brand-sky"
                   />
                   <button
                     type="submit"
-                    className="absolute right-1 top-1 bottom-1 bg-brand-blue hover:bg-brand-blue-hover text-white font-bold text-xs px-3 rounded-md transition-colors cursor-pointer"
+                    className="bg-brand-blue hover:bg-brand-blue-hover text-white font-semibold text-sm px-5 py-2.5 rounded-lg transition-colors cursor-pointer shrink-0"
                   >
                     Проверить
                   </button>
@@ -130,7 +130,7 @@ export const OrderStatusModule: React.FC = () => {
             {activeOrder ? (
               <div className="space-y-6">
                 {/* Order Top Banner */}
-                <div className="p-4 bg-brand-navy text-white rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                <div className="p-4 bg-brand-navy text-white rounded-xl flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
                   <div>
                     <div className="flex items-center gap-2">
                       <span className="text-xs text-brand-navy/45 font-mono">

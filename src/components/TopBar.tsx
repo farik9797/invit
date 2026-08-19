@@ -3,8 +3,8 @@ import { Phone, MapPin, Mail } from 'lucide-react';
 
 export const TopBar: React.FC = () => (
   <div className="bg-surface-soft text-brand-navy/70 text-xs border-b border-line">
-    <div className="max-w-[1340px] mx-auto px-5 h-9 flex items-center justify-between gap-4">
-      <span className="truncate">
+    <div className="max-w-[1340px] mx-auto px-5 h-9 flex items-center justify-between sm:justify-between gap-4">
+      <span className="truncate hidden sm:block">
         Белорусский производитель уплотнительных и герметизирующих лент EUROBAND
       </span>
 

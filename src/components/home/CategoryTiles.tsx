@@ -57,7 +57,7 @@ export const CategoryTiles: React.FC = () => (
         </p>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
         {TAPES.map((tile) => (
           <Link
             key={tile.href}
@@ -73,7 +73,7 @@ export const CategoryTiles: React.FC = () => (
               />
             </div>
             <div className="p-4 border-t border-line">
-              <h3 className="text-sm font-semibold text-brand-navy leading-snug group-hover:text-brand-blue transition-colors">
+              <h3 className="text-sm font-semibold text-brand-navy leading-snug group-hover:text-brand-blue transition-colors hyphens-auto break-words">
                 {tile.name}
               </h3>
               <span className="mt-1 block text-xs text-brand-navy/50">{tile.count} позиций</span>

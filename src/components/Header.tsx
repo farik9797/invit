@@ -163,6 +163,45 @@ export const Header: React.FC<HeaderProps> = ({
       {/* Мобильное меню */}
       {mobileMenuOpen && (
         <div className="md:hidden border-t border-line bg-surface px-5 py-4 space-y-1">
+          {/* Поиск на телефоне живёт в меню — в шапке для него нет места */}
+          <div className="relative mb-3">
+            <Search className="w-4 h-4 text-brand-navy/40 absolute left-3.5 top-3.5" />
+            <input
+              type="text"
+              placeholder="Поиск по каталогу"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-3 text-sm bg-surface-soft border border-line rounded-lg text-brand-navy placeholder:text-brand-navy/40 focus:outline-none focus:border-brand-sky focus:bg-white transition-colors"
+            />
+          </div>
+
+          {query !== '' && (
+            <div className="mb-3 border border-line rounded-lg overflow-hidden divide-y divide-line">
+              {results.length > 0 ? (
+                results.slice(0, 5).map((p) => (
+                  <button
+                    key={p.id}
+                    onClick={() => {
+                      onSelectProduct(p);
+                      setMobileMenuOpen(false);
+                      setSearchQuery('');
+                    }}
+                    className="w-full text-left p-3 flex items-center gap-3 cursor-pointer"
+                  >
+                    <img
+                      src={p.image}
+                      alt=""
+                      className="w-9 h-9 object-contain bg-white border border-line rounded shrink-0"
+                    />
+                    <span className="text-xs text-brand-navy line-clamp-2">{p.title}</span>
+                  </button>
+                ))
+              ) : (
+                <div className="p-3 text-xs text-brand-navy/60">Ничего не найдено</div>
+              )}
+            </div>
+          )}
+
           <NavLink
             to={paths.home}
             end

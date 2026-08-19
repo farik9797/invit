@@ -9,7 +9,7 @@ interface HeroProps {
 
 export const Hero: React.FC<HeroProps> = ({ onOpenCallback }) => (
   <section className="bg-brand-navy">
-    <div className="max-w-[1340px] mx-auto px-5 grid lg:grid-cols-2 items-center gap-10 py-14 lg:py-0">
+    <div className="max-w-[1340px] mx-auto px-5 grid lg:grid-cols-2 items-center gap-10 py-10 sm:py-14 lg:py-0">
       {/* Текст */}
       <div className="lg:py-24">
         <span className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/60">
@@ -26,10 +26,10 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCallback }) => (
           Собственное производство в Минске. Изготовим ленты нетипичных размеров под ваш проект.
         </p>
 
-        <div className="mt-8 flex flex-wrap items-center gap-3">
+        <div className="mt-8 flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3">
           <Link
             to={paths.category('materialy-dlya-okon')}
-            className="inline-flex items-center gap-2 bg-brand-red hover:bg-brand-red-hover text-white text-sm font-semibold px-6 py-3.5 rounded-lg transition-colors"
+            className="inline-flex justify-center items-center gap-2 bg-brand-red hover:bg-brand-red-hover text-white text-sm font-semibold px-6 py-3.5 rounded-lg transition-colors w-full sm:w-auto"
           >
             Смотреть ленты
             <ArrowRight className="w-4 h-4" />
@@ -37,7 +37,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCallback }) => (
 
           <button
             onClick={onOpenCallback}
-            className="inline-flex items-center gap-2 border border-white/25 hover:bg-white/10 text-white text-sm font-semibold px-6 py-3.5 rounded-lg transition-colors cursor-pointer"
+            className="inline-flex justify-center items-center gap-2 border border-white/25 hover:bg-white/10 text-white text-sm font-semibold px-6 py-3.5 rounded-lg transition-colors cursor-pointer w-full sm:w-auto"
           >
             Запросить расчёт
           </button>

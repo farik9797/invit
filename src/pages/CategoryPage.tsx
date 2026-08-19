@@ -47,8 +47,41 @@ export const CategoryPage: React.FC = () => {
 
       <section className="max-w-[1340px] mx-auto px-5 pb-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Подкатегории */}
-          <aside className="lg:col-span-3">
+          {/* Подразделы: на телефоне — прокручиваемая лента чипов, на десктопе — боковой список */}
+          <div className="lg:hidden -mx-5 px-5 overflow-x-auto">
+            <div className="flex gap-2 w-max pb-1">
+              <button
+                onClick={() => selectSub(null)}
+                className={`px-3.5 py-2 rounded-lg text-xs whitespace-nowrap border transition-colors cursor-pointer ${
+                  !activeSub
+                    ? 'bg-brand-blue text-white border-brand-blue font-semibold'
+                    : 'bg-white text-brand-navy/80 border-line'
+                }`}
+              >
+                Все ({categoryProducts.length})
+              </button>
+              {category.subcategories.map((sub) => {
+                const subCount = categoryProducts.filter(
+                  (p) => p.subcategorySlug === sub.slug
+                ).length;
+                return (
+                  <button
+                    key={sub.id}
+                    onClick={() => selectSub(sub.slug)}
+                    className={`px-3.5 py-2 rounded-lg text-xs whitespace-nowrap border transition-colors cursor-pointer ${
+                      activeSub === sub.slug
+                        ? 'bg-brand-blue text-white border-brand-blue font-semibold'
+                        : 'bg-white text-brand-navy/80 border-line'
+                    }`}
+                  >
+                    {sub.name} <span className="opacity-60">{subCount}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <aside className="hidden lg:block lg:col-span-3">
             <div className="bg-white rounded-xl border border-line shadow-xs overflow-hidden lg:sticky lg:top-28">
               <div className="bg-brand-blue text-white px-4 py-3 text-xs font-semibold ">
                 Подразделы

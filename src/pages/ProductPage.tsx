@@ -198,7 +198,7 @@ export const ProductPage: React.FC = () => {
                 </button>
               </div>
 
-              <p className="flex items-center gap-2 text-xs text-brand-navy/50">
+              <p className="flex items-start gap-2 text-xs text-brand-navy/50">
                 <ShieldCheck className="w-4 h-4 text-brand-sky shrink-0" />
                 Документы по качеству предоставляем с каждой партией —{' '}
                 <Link to={paths.certificates} className="text-brand-blue hover:underline">

@@ -12,8 +12,8 @@ export const Facts: React.FC = () => (
   <section className="border-b border-line bg-surface">
     <div className="max-w-[1340px] mx-auto px-5 grid grid-cols-2 lg:grid-cols-4 divide-x divide-line">
       {FACTS.map((fact) => (
-        <div key={fact.label} className="px-5 py-8 first:pl-0 text-center lg:text-left">
-          <div className="text-2xl sm:text-3xl font-bold text-brand-blue tracking-tight">
+        <div key={fact.label} className="px-4 sm:px-5 py-6 sm:py-8 first:pl-0 text-center lg:text-left border-b border-line lg:border-b-0 [&:nth-last-child(-n+2)]:border-b-0">
+          <div className="text-xl sm:text-3xl font-bold text-brand-blue tracking-tight">
             {fact.value}
           </div>
           <div className="mt-1 text-xs text-brand-navy/60">{fact.label}</div>
