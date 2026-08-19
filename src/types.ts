@@ -110,6 +110,8 @@ export interface NewsArticle {
   summary: string;
   content: string;
   image: string;
+  /** Страница-источник на invit.by. */
+  sourceUrl?: string;
 }
 
 export interface QuoteCartItem {

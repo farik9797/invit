@@ -38,7 +38,7 @@ export const NewsArticlePage: React.FC = () => {
         <img
           src={article.image}
           alt={article.title}
-          className="w-full h-72 sm:h-96 object-cover rounded-xl border border-line"
+          className="w-full max-h-96 object-contain bg-white rounded-xl border border-line p-4"
         />
 
         <div className="text-sm text-brand-navy/80 leading-relaxed space-y-4">
@@ -70,7 +70,7 @@ export const NewsArticlePage: React.FC = () => {
                   <img
                     src={n.image}
                     alt={n.title}
-                    className="w-20 h-20 object-cover rounded-xl shrink-0"
+                    className="w-20 h-20 object-contain bg-white border border-line rounded-xl shrink-0 p-1.5"
                   />
                   <div className="min-w-0 space-y-1">
                     <span className="text-[11px] text-brand-navy/45 font-semibold">{n.date}</span>

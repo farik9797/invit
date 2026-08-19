@@ -116,21 +116,38 @@ export const ManufacturingSection: React.FC<ManufacturingSectionProps> = ({
                 </div>
               </div>
 
-              <div className="lg:col-span-5 relative rounded-xl overflow-hidden shadow-lg border border-line">
-                <img
-                  src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&q=80&w=800"
-                  alt="Производство ООО ИНВИТ"
-                  className="w-full h-80 object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/85 via-transparent to-transparent"></div>
-                <div className="absolute bottom-4 left-4 right-4 text-white">
-                  <span className="bg-brand-red text-white text-[10px] font-bold uppercase px-2.5 py-0.5 rounded">
-                    Минский завод
-                  </span>
-                  <p className="text-xs font-bold mt-1">
-                    Производство и склад: Минский р-н, Сеницкий с/с, 84 (ТЦ Сеница)
-                  </p>
+              {/* Реальные фото продукции EUROBAND с invit.by */}
+              <div className="lg:col-span-5 space-y-3">
+                <div className="rounded-xl overflow-hidden border border-line bg-white">
+                  <img
+                    src="https://invit.by/image/cache/data/slides/lenta_vla_euroband_pil-1092x337.jpg"
+                    alt="Пароизоляционная лента EUROBAND ВЛ(а) собственного производства"
+                    className="w-full h-44 object-cover"
+                  />
                 </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="rounded-xl overflow-hidden border border-line bg-white">
+                    <img
+                      src="https://invit.by/image/data/PSUL/psul_eyroband_okna.png"
+                      alt="Лента ПСУЛ EUROBAND"
+                      loading="lazy"
+                      className="w-full h-32 object-contain p-2"
+                    />
+                  </div>
+                  <div className="rounded-xl overflow-hidden border border-line bg-white">
+                    <img
+                      src="https://invit.by/image/data/GIL%20PIL/lenta_euroband_%20vla.jpg"
+                      alt="Ленты EUROBAND в рулонах"
+                      loading="lazy"
+                      className="w-full h-32 object-contain p-2"
+                    />
+                  </div>
+                </div>
+
+                <p className="text-xs text-brand-navy/55 leading-relaxed">
+                  Производство и склад: Минский р-н, Сеницкий с/с, 84 (ТЦ Сеница)
+                </p>
               </div>
             </div>
           )}

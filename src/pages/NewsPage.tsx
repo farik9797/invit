@@ -21,11 +21,11 @@ export const NewsPage: React.FC = () => (
             key={article.id}
             className="bg-white rounded-xl border border-line shadow-xs hover:shadow-sm transition-all overflow-hidden flex flex-col group"
           >
-            <Link to={paths.newsArticle(article.id)} className="block relative h-44 overflow-hidden">
+            <Link to={paths.newsArticle(article.id)} className="block relative h-44 overflow-hidden bg-white border-b border-line">
               <img
                 src={article.image}
                 alt={article.title}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-500"
               />
               <span className="absolute top-3 left-3 bg-brand-red text-white text-[10px] font-bold uppercase px-2.5 py-1 rounded-md">
                 {article.category}
