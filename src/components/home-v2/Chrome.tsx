@@ -168,7 +168,7 @@ export const HeaderV2: React.FC = () => {
       <div className="max-w-[1400px] mx-auto px-4 lg:px-8 h-[68px] flex items-center justify-between gap-6">
         <Link
           to="/v2"
-          className="shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amex-blue"
+          className="shrink-0 flex items-center min-h-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amex-blue"
         >
           <img src={invitLogo} alt="ООО «ИНВИТ»" className="h-8 w-auto" />
         </Link>
@@ -236,7 +236,7 @@ export const HeaderV2: React.FC = () => {
 
 export const FooterV2: React.FC = () => (
   <footer className="bg-amex-navy text-amex-on-navy">
-    <div className="max-w-[1400px] mx-auto px-4 lg:px-8 py-16 grid grid-cols-1 md:grid-cols-3 gap-12">
+    <div className="max-w-[1400px] mx-auto px-4 lg:px-8 py-10 sm:py-16 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
       <div className="space-y-4">
         <img
           src={invitLogoMono}

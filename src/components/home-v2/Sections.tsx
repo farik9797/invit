@@ -12,7 +12,7 @@ import heroSlab from '../../assets/hero/tape-slab-joint.jpg';
 import { gsap, AMEX_DURATION, AMEX_EASE, prefersReducedMotion, useScrollParallax } from './gsap';
 
 const WRAP = 'max-w-[1400px] mx-auto px-4 lg:px-8';
-const H2 = 'text-3xl md:text-[40px] font-semibold tracking-[-0.01em] leading-[1.15]';
+const H2 = 'text-2xl sm:text-3xl md:text-[40px] font-semibold tracking-[-0.01em] leading-[1.15]';
 
 /** Русское склонение после числа: 1 позиция, 2 позиции, 5 позиций. */
 const plural = (n: number, forms: [string, string, string]) => {
@@ -127,7 +127,7 @@ export const HeroV2: React.FC = () => {
   }, []);
 
   return (
-    <section className="bg-white pt-4 pb-10 lg:pb-16">
+    <section className="bg-white pt-3 pb-8 lg:pb-16">
       {/* Карточка шире контентной сетки: 95vw по просьбе клиента. Скругление 12px
           это верхняя ступень шкалы радиусов Amex, для крупных поверхностей. */}
       <div
@@ -155,7 +155,7 @@ export const HeroV2: React.FC = () => {
         {/* На узком экране текст лежит поверх всей ширины, поэтому вертикальная подложка */}
         <div className="absolute inset-0 bg-gradient-to-t from-amex-navy/90 via-amex-navy/55 via-45% to-amex-navy/30 lg:hidden" />
 
-        <div className="relative px-6 sm:px-10 lg:px-16 pt-14 pb-10 lg:pt-24 lg:pb-16">
+        <div className="relative px-5 sm:px-10 lg:px-16 pt-10 pb-8 lg:pt-24 lg:pb-16">
           {/* Слайды в одной ячейке грида: высота карточки не прыгает при смене */}
           <div className="grid max-w-3xl">
             {HERO_SLIDES.map((slide, idx) => {
@@ -174,20 +174,20 @@ export const HeroV2: React.FC = () => {
                   className={`col-start-1 row-start-1 min-w-0 ${isActive ? '' : 'pointer-events-none'}`}
                 >
                   {idx === 0 ? (
-                    <h1 className="text-4xl md:text-5xl lg:text-[52px] font-semibold tracking-[-0.01em] leading-[1.1]">
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[52px] font-semibold tracking-[-0.01em] leading-[1.1]">
                       {slide.title}
                     </h1>
                   ) : (
-                    <p className="text-4xl md:text-5xl lg:text-[52px] font-semibold tracking-[-0.01em] leading-[1.1]">
+                    <p className="text-3xl sm:text-4xl md:text-5xl lg:text-[52px] font-semibold tracking-[-0.01em] leading-[1.1]">
                       {slide.title}
                     </p>
                   )}
 
-                  <p className="mt-6 text-lg leading-[1.55] text-amex-on-navy max-w-[44ch]">
+                  <p className="mt-4 sm:mt-6 text-base sm:text-lg leading-[1.55] text-amex-on-navy max-w-[44ch]">
                     {slide.text}
                   </p>
 
-                  <div className="mt-10 flex flex-col sm:flex-row gap-3">
+                  <div className="mt-7 sm:mt-10 flex flex-col sm:flex-row gap-3">
                     <BlueButton href="#zapros" className="w-full sm:w-auto">
                       Запросить расчёт
                     </BlueButton>
@@ -204,7 +204,7 @@ export const HeroV2: React.FC = () => {
             })}
           </div>
 
-          <div className="mt-12 flex items-center gap-4">
+          <div className="mt-8 sm:mt-12 flex items-center gap-4">
             <div className="flex items-center gap-2">
               {HERO_SLIDES.map((slide, idx) => (
                 <button
@@ -249,15 +249,15 @@ const FACTS = [
 
 export const FactsRow: React.FC = () => (
   <section className="bg-white border-b border-amex-border">
-    <FadeGroup className={`${WRAP} py-12`}>
-      <dl className="grid grid-cols-2 lg:grid-cols-4 gap-y-8">
+    <FadeGroup className={`${WRAP} py-8 sm:py-12`}>
+      <dl className="grid grid-cols-2 lg:grid-cols-4 gap-y-6 sm:gap-y-8">
         {FACTS.map((fact, idx) => (
           <div
             key={fact.label}
             data-fade-item
             className={idx > 0 ? 'lg:pl-8 lg:border-l lg:border-amex-border' : ''}
           >
-            <dt className="text-[32px] font-semibold text-amex-ink leading-none">
+            <dt className="text-[26px] sm:text-[32px] font-semibold text-amex-ink leading-none">
               <CountUp value={fact.value} />
             </dt>
             <dd className="mt-2 text-sm text-amex-ink-muted max-w-[22ch]">{fact.label}</dd>
@@ -307,7 +307,7 @@ export const TapeBento: React.FC = () => {
 
   return (
     <section className="bg-amex-surface-1" ref={parallaxRef}>
-      <div className={`${WRAP} py-16 lg:py-24`}>
+      <div className={`${WRAP} py-10 sm:py-14 lg:py-24`}>
         <Fade className="max-w-[46ch]">
           <span className="text-xs font-semibold uppercase tracking-[0.12em] text-amex-blue">
             Продукция
@@ -315,10 +315,10 @@ export const TapeBento: React.FC = () => {
           <h2 className={`${H2} mt-3 text-amex-ink`}>Разделы лент</h2>
         </Fade>
 
-        <FadeGroup className="mt-10 grid grid-cols-1 md:grid-cols-6 gap-4 md:auto-rows-[196px]">
+        <FadeGroup className="mt-6 sm:mt-10 grid grid-cols-1 md:grid-cols-6 gap-3 sm:gap-4 md:auto-rows-[196px]">
           {/* Крупная ячейка с фото: задаёт ритм и не даёт сетке стать шестью белыми карточками */}
           <div data-fade-item className="md:col-span-4 md:row-span-2">
-            <Link to={cellHref(lead)} className={`${CELL_BASE} relative h-full min-h-[280px]`}>
+            <Link to={cellHref(lead)} className={`${CELL_BASE} relative h-full min-h-[210px] sm:min-h-[280px]`}>
               <img
                 data-bento-photo
                 src={heroRoof}
@@ -327,14 +327,14 @@ export const TapeBento: React.FC = () => {
                 className="absolute left-0 top-0 w-full h-[110%] object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-amex-navy via-amex-navy/70 to-amex-navy/20" />
-              <div className="relative mt-auto p-6 lg:p-8">
-                <h3 className="text-2xl lg:text-3xl font-semibold text-white tracking-[-0.01em]">
+              <div className="relative mt-auto p-5 lg:p-8">
+                <h3 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-white tracking-[-0.01em]">
                   {lead.name}
                 </h3>
                 <p className="mt-2 text-sm text-amex-on-navy tabular-nums">
                   {positions(lead.count)} в разделе
                 </p>
-                <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-white">
+                <span className="mt-4 sm:mt-5 inline-flex items-center gap-2 text-sm font-semibold text-white">
                   Открыть раздел
                   <ArrowRight className="w-4 h-4 transition-transform duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:translate-x-1" />
                 </span>
@@ -351,7 +351,7 @@ export const TapeBento: React.FC = () => {
               <div key={cell.slug} data-fade-item className={span}>
                 <Link
                   to={cellHref(cell)}
-                  className={`${CELL_BASE} h-full min-h-[196px] items-center gap-4 p-5 lg:p-6 border border-amex-border ${
+                  className={`${CELL_BASE} h-full min-h-[104px] sm:min-h-[196px] items-center gap-4 p-4 sm:p-5 lg:p-6 border border-amex-border ${
                     tinted ? 'bg-amex-surface-2' : 'bg-white'
                   }`}
                 >
@@ -360,7 +360,7 @@ export const TapeBento: React.FC = () => {
                     alt=""
                     aria-hidden
                     loading="lazy"
-                    className="w-20 h-20 lg:w-24 lg:h-24 shrink-0 object-contain rounded-[8px] bg-white"
+                    className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 shrink-0 object-contain rounded-[8px] bg-white"
                   />
                   <div className="min-w-0">
                     <h3 className="text-lg font-semibold text-amex-ink leading-snug">
@@ -387,12 +387,12 @@ const OWN_TAPES = PRODUCTS.filter((p) => p.badge === 'Собственное п�
 
 export const ProductRail: React.FC = () => (
   <section className="bg-white">
-    <div className={`${WRAP} py-16 lg:py-24`}>
+    <div className={`${WRAP} py-10 sm:py-14 lg:py-24`}>
       <Fade className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <h2 className={`${H2} text-amex-ink max-w-[24ch]`}>Ленты EUROBAND</h2>
         <Link
           to={paths.catalog}
-          className="inline-flex items-center gap-2 text-sm font-semibold text-amex-blue hover:text-amex-blue-pressed transition-colors duration-[120ms] whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amex-blue"
+          className="inline-flex items-center gap-2 min-h-11 sm:min-h-0 text-sm font-semibold text-amex-blue hover:text-amex-blue-pressed transition-colors duration-[120ms] whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amex-blue"
         >
           Весь каталог
           <ArrowRight className="w-4 h-4" />
@@ -400,12 +400,12 @@ export const ProductRail: React.FC = () => (
       </Fade>
 
       <FadeGroup
-        className="mt-10 -mx-4 lg:-mx-8 px-4 lg:px-8 overflow-x-auto snap-x snap-mandatory"
+        className="mt-6 sm:mt-10 -mx-4 lg:-mx-8 px-4 lg:px-8 overflow-x-auto snap-x snap-mandatory"
         stagger={0.04}
       >
         <ul className="flex gap-4 w-max pb-2">
           {OWN_TAPES.map((product) => (
-            <li key={product.id} data-fade-item className="w-[248px] shrink-0 snap-start">
+            <li key={product.id} data-fade-item className="w-[212px] sm:w-[248px] shrink-0 snap-start">
               <Link
                 to={paths.product(product)}
                 className="group flex flex-col h-full rounded-[8px] border border-amex-border bg-white overflow-hidden transition-[transform,box-shadow] duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(0,23,90,0.16)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amex-blue"
@@ -414,9 +414,9 @@ export const ProductRail: React.FC = () => (
                   src={product.image}
                   alt={product.shortTitle}
                   loading="lazy"
-                  className="w-full h-[176px] object-contain bg-white p-4"
+                  className="w-full h-[140px] sm:h-[176px] object-contain bg-white p-4"
                 />
-                <div className="flex flex-col flex-1 gap-2 p-5 border-t border-amex-border-subtle">
+                <div className="flex flex-col flex-1 gap-2 p-4 sm:p-5 border-t border-amex-border-subtle">
                   <span className="text-xs text-amex-ink-muted">{product.subcategoryName}</span>
                   <h3 className="text-base font-semibold text-amex-ink leading-snug">
                     {product.shortTitle}
@@ -451,11 +451,11 @@ export const AboutBlock: React.FC = () => {
   return (
     <section className="bg-white" ref={parallaxRef}>
       <div
-        className={`${WRAP} py-16 lg:py-24 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center`}
+        className={`${WRAP} py-10 sm:py-14 lg:py-24 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-center`}
       >
         <Fade className="lg:col-span-6">
-          <div className="relative pb-14 sm:pb-16">
-            <div className="w-[82%] h-[240px] sm:h-[320px] rounded-[8px] overflow-hidden border border-amex-border">
+          <div className="relative pb-12 sm:pb-16">
+            <div className="w-[82%] h-[200px] sm:h-[320px] rounded-[8px] overflow-hidden border border-amex-border">
               <img
                 data-about-scene
                 src={ABOUT_SCENE}
@@ -465,7 +465,7 @@ export const AboutBlock: React.FC = () => {
               />
             </div>
 
-            <div className="absolute right-0 bottom-0 w-[54%] h-[160px] sm:h-[200px] rounded-[8px] overflow-hidden border border-amex-border bg-white shadow-[0_6px_24px_rgba(0,23,90,0.16)]">
+            <div className="absolute right-0 bottom-0 w-[54%] h-[136px] sm:h-[200px] rounded-[8px] overflow-hidden border border-amex-border bg-white shadow-[0_6px_24px_rgba(0,23,90,0.16)]">
               <img
                 data-about-product
                 src={ABOUT_PRODUCT}
@@ -482,7 +482,7 @@ export const AboutBlock: React.FC = () => {
             Собственное производство в Минске
           </h2>
 
-          <p className="mt-6 text-base leading-[1.55] text-amex-ink-muted max-w-[60ch]">
+          <p className="mt-5 sm:mt-6 text-base leading-[1.55] text-amex-ink-muted max-w-[60ch]">
             Производим монтажные, бутилкаучуковые, саморасширяющиеся ПСУЛ и уплотнительные
             ленты ПЭС под маркой EUROBAND. По желанию клиента изготавливаем ленты нетипичных
             размеров на разных основах и подложках.
@@ -495,7 +495,7 @@ export const AboutBlock: React.FC = () => {
 
           <Link
             to={paths.about}
-            className="group mt-8 inline-flex items-center gap-2 min-h-11 text-sm font-semibold text-amex-blue hover:text-amex-blue-pressed transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amex-blue"
+            className="group mt-6 sm:mt-8 inline-flex items-center gap-2 min-h-11 text-sm font-semibold text-amex-blue hover:text-amex-blue-pressed transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amex-blue"
           >
             Подробнее о компании
             <ArrowRight className="w-4 h-4 transition-transform duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:translate-x-1" />
@@ -525,12 +525,12 @@ const VALUES = [
 
 export const ValuesBlock: React.FC = () => (
   <section className="bg-amex-surface-1">
-    <div className={`${WRAP} py-16 lg:py-24 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16`}>
+    <div className={`${WRAP} py-10 sm:py-14 lg:py-24 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16`}>
       <Fade className="lg:col-span-5">
         <div className="lg:sticky lg:top-24">
           <h2 className={`${H2} text-amex-ink max-w-[16ch]`}>Работаем с 2009 года</h2>
 
-          <p className="mt-6 text-base leading-[1.55] text-amex-ink-muted max-w-[46ch]">
+          <p className="mt-5 sm:mt-6 text-base leading-[1.55] text-amex-ink-muted max-w-[46ch]">
             За это время наладили собственное производство в Минске, подтвердили статус
             отечественного производителя и наработали репутацию надёжного поставщика.
           </p>
@@ -545,7 +545,7 @@ export const ValuesBlock: React.FC = () => (
       <FadeGroup className="lg:col-span-7" stagger={0.08}>
         <ul className="divide-y divide-amex-border">
           {VALUES.map((value) => (
-            <li key={value.title} data-fade-item className="py-7 first:pt-0 last:pb-0">
+            <li key={value.title} data-fade-item className="py-5 sm:py-7 first:pt-0 last:pb-0">
               <h3 className="text-xl font-semibold text-amex-ink">{value.title}</h3>
               <p className="mt-2 text-base leading-[1.55] text-amex-ink-muted max-w-[52ch]">
                 {value.text}
@@ -562,17 +562,17 @@ export const ValuesBlock: React.FC = () => (
 
 export const DocumentsBand: React.FC = () => (
   <section className="bg-amex-navy text-white">
-    <div className={`${WRAP} py-16 lg:py-24`}>
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
+    <div className={`${WRAP} py-10 sm:py-14 lg:py-24`}>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16">
         <Fade className="lg:col-span-5">
           <h2 className={`${H2} text-white`}>Документы на продукцию</h2>
-          <p className="mt-5 text-base leading-[1.55] text-amex-on-navy max-w-[46ch]">
+          <p className="mt-4 sm:mt-5 text-base leading-[1.55] text-amex-on-navy max-w-[46ch]">
             Сертификат продукции собственного производства, технические свидетельства
             и декларации о соответствии на каждый тип ленты.
           </p>
           <Link
             to={paths.certificates}
-            className="mt-8 inline-flex items-center gap-2 min-h-11 text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            className="mt-6 sm:mt-8 inline-flex items-center gap-2 min-h-11 text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
           >
             <FileText className="w-4 h-4" />
             Все документы
@@ -580,7 +580,7 @@ export const DocumentsBand: React.FC = () => (
           </Link>
         </Fade>
 
-        <FadeGroup className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <FadeGroup className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
           {CERTIFICATES.slice(0, 4).map((cert) => (
             <div key={cert.id} data-fade-item>
               <figure className="h-full">
@@ -588,9 +588,9 @@ export const DocumentsBand: React.FC = () => (
                   src={cert.image}
                   alt={cert.title}
                   loading="lazy"
-                  className="w-full h-[180px] sm:h-[200px] object-cover object-top rounded-[8px] bg-white"
+                  className="w-full h-[142px] sm:h-[200px] object-cover object-top rounded-[8px] bg-white"
                 />
-                <figcaption className="mt-3 text-xs leading-relaxed text-amex-on-navy">
+                <figcaption className="mt-2 sm:mt-3 text-xs leading-relaxed text-amex-on-navy">
                   {cert.type}
                 </figcaption>
               </figure>
@@ -606,18 +606,18 @@ export const DocumentsBand: React.FC = () => (
 
 export const NewsList: React.FC = () => (
   <section className="bg-white">
-    <div className={`${WRAP} py-16 lg:py-24`}>
+    <div className={`${WRAP} py-10 sm:py-14 lg:py-24`}>
       <Fade>
         <h2 className={`${H2} text-amex-ink`}>Новости</h2>
       </Fade>
 
-      <FadeGroup className="mt-8">
+      <FadeGroup className="mt-6 sm:mt-8">
         <ul className="divide-y divide-amex-border-subtle border-t border-amex-border-subtle">
           {NEWS.slice(0, 3).map((item) => (
             <li key={item.id} data-fade-item>
               <Link
                 to={paths.newsArticle(item.id)}
-                className="group grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-8 py-6 items-baseline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amex-blue"
+                className="group grid grid-cols-1 md:grid-cols-12 gap-1.5 md:gap-8 py-5 sm:py-6 items-baseline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amex-blue"
               >
                 <span className="md:col-span-3 text-sm text-amex-ink-muted tabular-nums">
                   {item.date}
@@ -637,7 +637,7 @@ export const NewsList: React.FC = () => (
       <Fade>
         <Link
           to={paths.news}
-          className="mt-8 inline-flex items-center gap-2 min-h-11 text-sm font-semibold text-amex-blue hover:text-amex-blue-pressed transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amex-blue"
+          className="mt-6 sm:mt-8 inline-flex items-center gap-2 min-h-11 text-sm font-semibold text-amex-blue hover:text-amex-blue-pressed transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amex-blue"
         >
           Все новости
           <ArrowRight className="w-4 h-4" />
@@ -693,28 +693,28 @@ export const ContactSplit: React.FC = () => {
 
   return (
     <section id="zapros" className="bg-amex-surface-1 scroll-mt-20">
-      <div className={`${WRAP} py-16 lg:py-24`}>
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
+      <div className={`${WRAP} py-10 sm:py-14 lg:py-24`}>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16">
           <Fade className="lg:col-span-5">
             <h2 className={`${H2} text-amex-ink`}>Запросить расчёт</h2>
-            <p className="mt-5 text-base leading-[1.55] text-amex-ink-muted max-w-[46ch]">
+            <p className="mt-4 sm:mt-5 text-base leading-[1.55] text-amex-ink-muted max-w-[46ch]">
               Пришлём цену и сроки по вашему объёму. Нетиповую ширину и длину
               рассчитываем отдельно.
             </p>
 
-            <div className="mt-10 space-y-8">
+            <div className="mt-8 space-y-6 sm:space-y-8">
               {OFFICES.map((office) => (
                 <div key={office.city}>
                   <h3 className="text-sm font-semibold text-amex-ink">{office.city}</h3>
                   <p className="mt-1.5 text-sm text-amex-ink-muted max-w-[36ch]">
                     {office.address}
                   </p>
-                  <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1">
+                  <div className="mt-1 sm:mt-2 flex flex-wrap gap-x-5 sm:gap-y-1">
                     {office.phones.map((p) => (
                       <a
                         key={p}
                         href={telHref(p)}
-                        className="text-sm font-semibold text-amex-blue hover:text-amex-blue-pressed transition-colors duration-[120ms] whitespace-nowrap"
+                        className="inline-flex items-center min-h-11 sm:min-h-0 text-sm font-semibold text-amex-blue hover:text-amex-blue-pressed transition-colors duration-[120ms] whitespace-nowrap"
                       >
                         {p}
                       </a>
@@ -727,7 +727,7 @@ export const ContactSplit: React.FC = () => {
                 <h3 className="text-sm font-semibold text-amex-ink">Почта</h3>
                 <a
                   href="mailto:info@invit.by"
-                  className="mt-1.5 inline-block text-sm font-semibold text-amex-blue hover:text-amex-blue-pressed transition-colors duration-[120ms]"
+                  className="mt-0.5 sm:mt-1.5 inline-flex items-center min-h-11 sm:min-h-0 text-sm font-semibold text-amex-blue hover:text-amex-blue-pressed transition-colors duration-[120ms]"
                 >
                   info@invit.by
                 </a>
@@ -736,7 +736,7 @@ export const ContactSplit: React.FC = () => {
           </Fade>
 
           <Fade className="lg:col-span-7" delay={0.06}>
-            <div className="bg-white border border-amex-border rounded-[8px] p-6 lg:p-8">
+            <div className="bg-white border border-amex-border rounded-[8px] p-5 sm:p-6 lg:p-8">
               {status === 'done' ? (
                 <div className="flex flex-col items-start gap-4 py-6">
                   <span className="flex items-center justify-center w-11 h-11 rounded-full bg-amex-success/10">
@@ -755,7 +755,7 @@ export const ContactSplit: React.FC = () => {
                   </button>
                 </div>
               ) : (
-                <form onSubmit={submit} noValidate className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <form onSubmit={submit} noValidate className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                   <div className="flex flex-col gap-2">
                     <label htmlFor="v2-name" className="text-sm font-semibold text-amex-ink">
                       Имя
@@ -827,7 +827,7 @@ export const ContactSplit: React.FC = () => {
                     </label>
                     <textarea
                       id="v2-task"
-                      rows={4}
+                      rows={3}
                       value={task}
                       onChange={(e) => setTask(e.target.value)}
                       className={`${FIELD} border-amex-border resize-y`}
