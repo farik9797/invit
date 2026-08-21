@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { CERTIFICATES } from '../../data/catalogData';
 import { paths } from '../../routes';
+import { RevealGroup } from '../Reveal';
 
 /** Компактная полоса документов вместо большой секции с карточками. */
 export const CertificatesStrip: React.FC = () => (
@@ -27,19 +28,19 @@ export const CertificatesStrip: React.FC = () => (
         </Link>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+      <RevealGroup className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
         {CERTIFICATES.slice(0, 5).map((cert) => (
           <Link
             key={cert.id}
             to={paths.certificates}
-            className="group bg-white border border-line rounded-xl p-3 hover:border-brand-sky transition-colors"
+            className="block h-full group bg-white border border-line rounded-xl p-3 hover:border-brand-green hover:-translate-y-1 hover:shadow-lg transition-[transform,box-shadow,border-color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
           >
             <div className="aspect-3/4 overflow-hidden rounded-lg bg-white">
               <img
                 src={cert.image}
                 alt={cert.title}
                 loading="lazy"
-                className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
+                className="w-full h-full object-contain group-hover:scale-[1.06] transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
               />
             </div>
             <span className="mt-3 block text-xs text-ink/70 leading-snug line-clamp-2">
@@ -47,7 +48,7 @@ export const CertificatesStrip: React.FC = () => (
             </span>
           </Link>
         ))}
-      </div>
+      </RevealGroup>
     </div>
   </section>
 );

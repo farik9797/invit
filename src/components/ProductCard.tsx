@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FileText, Plus, Check, Eye } from 'lucide-react';
 import { Product } from '../types';
+import { Reveal } from './Reveal';
 import { paths } from '../routes';
 
 interface ProductCardProps {
@@ -33,14 +34,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     .map((row) => ({ label: shortLabel(row.label), value: row.value }));
 
   return (
-  <div className="bg-white rounded-xl border border-line hover:border-brand-sky transition-colors flex flex-col justify-between overflow-hidden group">
+  <div className="bg-white rounded-xl border border-line hover:border-brand-green hover:-translate-y-1 hover:shadow-lg transition-[transform,box-shadow,border-color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col justify-between overflow-hidden group">
     {/* Изображение и бейджи */}
     <div className="relative h-44 bg-white overflow-hidden flex items-center justify-center p-4 border-b border-line">
       <img
         src={product.image}
         alt={product.title}
         loading="lazy"
-        className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
+        className="w-full h-full object-contain group-hover:scale-[1.06] transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
       />
 
       {product.badge && (
@@ -91,7 +92,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       <div className="grid grid-cols-2 gap-2 pt-1">
         <Link
           to={paths.product(product)}
-          className="border border-line hover:border-brand-sky text-ink text-xs font-semibold py-2.5 px-2 rounded-lg transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+          className="border border-line hover:border-brand-sky text-ink text-xs font-semibold py-2.5 px-2 rounded-lg transition-[background-color,border-color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] active:scale-[0.98] flex items-center justify-center gap-1.5 cursor-pointer"
         >
           <FileText className="w-3.5 h-3.5 text-ink/40" />
           <span>Подробнее</span>
@@ -99,7 +100,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
         <button
           onClick={() => onAddToQuote(product)}
-          className={`text-xs font-semibold py-2.5 px-2 rounded-lg transition-colors flex items-center justify-center gap-1.5 cursor-pointer ${
+          className={`text-xs font-semibold py-2.5 px-2 rounded-lg transition-[background-color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] active:scale-[0.98] flex items-center justify-center gap-1.5 cursor-pointer ${
             isAdded
               ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
               : 'bg-brand-blue hover:bg-brand-blue-hover text-white'
@@ -146,14 +147,15 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-      {products.map((product) => (
-        <ProductCard
-          key={product.id}
-          product={product}
-          isAdded={quoteItemsIds.includes(product.id)}
-          onQuickView={onQuickView}
-          onAddToQuote={onAddToQuote}
-        />
+      {products.map((product, idx) => (
+        <Reveal key={product.id} delay={Math.min(idx * 0.06, 0.35)}>
+          <ProductCard
+            product={product}
+            isAdded={quoteItemsIds.includes(product.id)}
+            onQuickView={onQuickView}
+            onAddToQuote={onAddToQuote}
+          />
+        </Reveal>
       ))}
     </div>
   );

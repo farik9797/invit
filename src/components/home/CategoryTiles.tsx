@@ -4,6 +4,7 @@ import { ArrowRight } from 'lucide-react';
 import { CATEGORIES, PRODUCTS } from '../../data/catalogData';
 import { paths } from '../../routes';
 import { TAPE_SUBCATEGORIES } from '../../lib/product';
+import { Reveal, RevealGroup } from '../Reveal';
 
 interface Tile {
   name: string;
@@ -57,19 +58,19 @@ export const CategoryTiles: React.FC = () => (
         </p>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
+      <RevealGroup className="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
         {TAPES.map((tile) => (
           <Link
             key={tile.href}
             to={tile.href}
-            className="group border border-line rounded-xl overflow-hidden hover:border-brand-sky transition-colors bg-surface"
+            className="block h-full group border border-line rounded-xl overflow-hidden bg-surface hover:border-brand-green hover:-translate-y-1 hover:shadow-lg transition-[transform,box-shadow,border-color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
           >
             <div className="aspect-4/3 bg-white overflow-hidden">
               <img
                 src={tile.image}
                 alt={tile.name}
                 loading="lazy"
-                className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-500"
+                className="w-full h-full object-contain p-4 group-hover:scale-[1.06] transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
               />
             </div>
             <div className="p-4 border-t border-line">
@@ -80,7 +81,7 @@ export const CategoryTiles: React.FC = () => (
             </div>
           </Link>
         ))}
-      </div>
+      </RevealGroup>
 
       {/* Сопутствующие товары — прямые поставки, не наше производство */}
       <div className="mt-12 pt-8 border-t border-line">
@@ -96,7 +97,7 @@ export const CategoryTiles: React.FC = () => (
             <Link
               key={item.href}
               to={item.href}
-              className="inline-flex items-center gap-2 border border-line hover:border-brand-sky hover:text-brand-blue rounded-lg px-3.5 py-2 text-xs text-ink/80 transition-colors"
+              className="inline-flex items-center gap-2 border border-line hover:border-brand-green hover:text-brand-green rounded-lg px-3.5 py-2 text-xs text-ink/80 transition-[color,border-color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px"
             >
               {item.name}
               <span className="text-ink/40">{item.count}</span>

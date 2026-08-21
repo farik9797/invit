@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { NEWS } from '../../data/catalogData';
 import { paths } from '../../routes';
+import { Reveal, RevealGroup } from '../Reveal';
 
 const SHORT_MONTH: Record<string, string> = {
   января: 'янв',
@@ -28,9 +29,11 @@ const splitDate = (date: string) => {
 export const NewsGrid: React.FC = () => (
   <section className="py-16 sm:py-24 bg-surface">
     <div className="max-w-[1340px] mx-auto px-5">
-      <h2 className="text-3xl sm:text-4xl font-bold text-ink tracking-tight text-center">Новости</h2>
+      <Reveal>
+        <h2 className="text-3xl sm:text-4xl font-bold text-ink tracking-tight text-center">Новости</h2>
+      </Reveal>
 
-      <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <RevealGroup className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {NEWS.slice(0, 4).map((article) => {
           const { day, month } = splitDate(article.date);
 
@@ -38,13 +41,13 @@ export const NewsGrid: React.FC = () => (
             <article key={article.id} className="group">
               <Link
                 to={paths.newsArticle(article.id)}
-                className="relative block bg-white border border-line overflow-hidden"
+                className="relative block bg-white border border-line overflow-hidden hover:border-brand-green transition-colors duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
               >
                 <img
                   src={article.image}
                   alt={article.title}
                   loading="lazy"
-                  className="w-full h-44 object-contain p-5 group-hover:scale-105 transition-transform duration-500"
+                  className="w-full h-44 object-contain p-5 group-hover:scale-[1.06] transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
                 />
                 {/* Зелёная плашка с датой в углу фото */}
                 <span className="absolute bottom-0 right-0 bg-brand-green text-white px-3 py-2 text-center leading-none">
@@ -68,7 +71,7 @@ export const NewsGrid: React.FC = () => (
             </article>
           );
         })}
-      </div>
+      </RevealGroup>
 
       <div className="mt-12 text-center">
         <Link

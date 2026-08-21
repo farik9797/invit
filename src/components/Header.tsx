@@ -5,6 +5,7 @@ import invitLogo from '../assets/logo/invit-green.svg';
 import { PRODUCTS } from '../data/catalogData';
 import { Product } from '../types';
 import { paths } from '../routes';
+import { MegaMenu } from './MegaMenu';
 
 interface HeaderProps {
   onOpenCallback: () => void;
@@ -14,7 +15,6 @@ interface HeaderProps {
 }
 
 const NAV = [
-  { to: paths.catalog, label: 'Каталог' },
   { to: paths.about, label: 'О компании' },
   { to: paths.certificates, label: 'Документация' },
   { to: paths.orderStatus, label: 'Статус заказа' },
@@ -22,9 +22,18 @@ const NAV = [
 ];
 
 const navClass = ({ isActive }: { isActive: boolean }) =>
-  `text-sm transition-colors ${
+  `group relative text-sm transition-colors ${
     isActive ? 'text-brand-green font-semibold' : 'text-ink/80 hover:text-brand-green'
   }`;
+
+/** Подчёркивание, которое разворачивается при наведении. */
+const NavUnderline: React.FC<{ active: boolean }> = ({ active }) => (
+  <span
+    className={`absolute -bottom-1 left-0 h-0.5 w-full bg-brand-green origin-left transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+      active ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+    }`}
+  />
+);
 
 export const Header: React.FC<HeaderProps> = ({
   onOpenCallback,
@@ -55,7 +64,7 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-surface border-b border-line">
+    <header className="sticky top-0 z-40 bg-surface border-b border-line relative">
       <div className="max-w-[1340px] mx-auto px-5 flex items-stretch justify-between gap-6">
         {/* Логотип */}
         <Link to={paths.home} className="flex items-center gap-3 shrink-0 py-3.5">
@@ -65,11 +74,24 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Меню */}
         <nav className="hidden lg:flex items-center gap-7">
           <NavLink to={paths.home} end className={navClass}>
-            Главная
+            {({ isActive }) => (
+              <>
+                Главная
+                <NavUnderline active={isActive} />
+              </>
+            )}
           </NavLink>
+
+          <MegaMenu />
+
           {NAV.map((item) => (
             <NavLink key={item.to} to={item.to} className={navClass}>
-              {item.label}
+              {({ isActive }) => (
+                <>
+                  {item.label}
+                  <NavUnderline active={isActive} />
+                </>
+              )}
             </NavLink>
           ))}
         </nav>
@@ -100,7 +122,7 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Зелёная кнопка во всю высоту шапки — как на invit.belinfo.by */}
           <Link
             to={paths.contacts}
-            className="hidden sm:flex items-center bg-brand-green hover:bg-brand-green-hover text-white text-sm font-semibold px-8 transition-colors"
+            className="hidden sm:flex items-center bg-brand-green hover:bg-brand-green-hover text-white text-sm font-semibold px-8 transition-[background-color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] active:scale-[0.98]"
           >
             Контакты
           </Link>
@@ -172,6 +194,16 @@ export const Header: React.FC<HeaderProps> = ({
             className="block py-2.5 text-sm text-ink"
           >
             Главная
+          </NavLink>
+
+          <MegaMenu />
+
+          <NavLink
+            to={paths.catalog}
+            onClick={() => setMobileMenuOpen(false)}
+            className="block py-2.5 text-sm text-ink"
+          >
+            Каталог
           </NavLink>
           {NAV.map((item) => (
             <NavLink
