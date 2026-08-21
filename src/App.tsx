@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ShopProvider } from './context/ShopContext';
 import { paths } from './routes';
 import { Layout } from './components/Layout';
 import { HomePage } from './pages/HomePage';
-import { HomePageV2 } from './pages/HomePageV2';
+
+// Второй вариант главной тянет за собой GSAP. Грузим его отдельным чанком,
+// чтобы посетители основного сайта не качали то, чем не пользуются.
+const HomePageV2 = lazy(() =>
+  import('./pages/HomePageV2').then((m) => ({ default: m.HomePageV2 }))
+);
 import { CatalogPage } from './pages/CatalogPage';
 import { CategoryPage } from './pages/CategoryPage';
 import { ProductPage } from './pages/ProductPage';
@@ -22,7 +27,14 @@ export default function App() {
       <BrowserRouter basename={import.meta.env.BASE_URL}>
         <Routes>
           {/* Второй вариант главной: своя шапка и подвал, поэтому вне Layout */}
-          <Route path={paths.homeV2} element={<HomePageV2 />} />
+          <Route
+            path={paths.homeV2}
+            element={
+              <Suspense fallback={<div className="min-h-screen bg-white" />}>
+                <HomePageV2 />
+              </Suspense>
+            }
+          />
 
           <Route element={<Layout />}>
             <Route path="/" element={<HomePage />} />

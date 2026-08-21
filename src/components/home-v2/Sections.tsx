@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ArrowUpRight, Check, AlertCircle, FileText } from 'lucide-react';
 import { CATEGORIES, CERTIFICATES, NEWS, PRODUCTS } from '../../data/catalogData';
@@ -7,6 +7,9 @@ import { paths } from '../../routes';
 import { Fade, BlueButton } from './Chrome';
 import heroTape from '../../assets/hero/tape-application.jpg';
 import heroRoof from '../../assets/hero/roof-standing-seam.jpg';
+import heroSheets from '../../assets/hero/roof-profile-sheets.jpg';
+import heroSlab from '../../assets/hero/tape-slab-joint.jpg';
+import { gsap, AMEX_DURATION, AMEX_EASE, prefersReducedMotion } from './gsap';
 
 const WRAP = 'max-w-[1400px] mx-auto px-4 lg:px-8';
 const H2 = 'text-3xl md:text-[40px] font-semibold tracking-[-0.01em] leading-[1.15]';
@@ -23,48 +26,212 @@ const plural = (n: number, forms: [string, string, string]) => {
 
 const positions = (n: number) => `${n} ${plural(n, ['позиция', 'позиции', 'позиций'])}`;
 
-/* ── 1. Герой: асимметричный сплит на тёмно-синем ─────────────────────── */
+/* ── 1. Герой: слайдер в скруглённой карточке на 95vw ─────────────────── */
 
-export const HeroV2: React.FC = () => (
-  <section className="bg-amex-navy text-white">
-    <div className={`${WRAP} pt-16 lg:pt-24 pb-16 lg:pb-24`}>
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
-        <div className="lg:col-span-6">
-          <h1 className="text-4xl md:text-5xl lg:text-[52px] font-semibold tracking-[-0.01em] leading-[1.1]">
-            Уплотнительные ленты EUROBAND
-          </h1>
+interface HeroSlide {
+  id: string;
+  title: string;
+  text: string;
+  image: string;
+  href: string;
+  cta: string;
+}
 
-          <p className="mt-6 text-lg leading-[1.55] text-amex-on-navy max-w-[44ch]">
-            Белорусский производитель с 2009 года. Уплотняем стыки в окнах, кровле,
-            сэндвич-панелях и вентиляции.
-          </p>
+const HERO_SLIDES: HeroSlide[] = [
+  {
+    id: 'about',
+    title: 'Уплотнительные ленты EUROBAND',
+    text: 'Белорусский производитель с 2009 года. Уплотняем стыки в окнах, кровле, сэндвич-панелях и вентиляции.',
+    image: heroRoof,
+    href: paths.catalog,
+    cta: 'Смотреть каталог'
+  },
+  {
+    id: 'vla',
+    title: 'Пароизоляционные ленты ВЛ(а) и ВЛ',
+    text: 'Внутренний слой монтажного шва: металлизированная плёнка с нетканым полотном, пять типоразмеров по ширине.',
+    image: heroTape,
+    href: `${paths.category('materialy-dlya-okon')}?sub=montazhnye-lenty-dlya-okon`,
+    cta: 'Монтажные ленты'
+  },
+  {
+    id: 'psul',
+    title: 'Саморасширяющаяся лента ПСУЛ',
+    text: 'Защита стыков от воды, шума и холода. Соответствует ТКП 45-3.02-223-2010 и ГОСТ 30971-2002.',
+    image: heroSheets,
+    href: `${paths.category('materialy-dlya-okon')}?sub=samorasshiryayuschayasya-lenta-psul`,
+    cta: 'Лента ПСУЛ'
+  },
+  {
+    id: 'pes',
+    title: 'Уплотнительные ленты ПЭС',
+    text: 'Самоклеящиеся ленты из вспененного полиэтилена для сэндвич-панелей, кровли и межфланцевых соединений.',
+    image: heroSlab,
+    href: `${paths.category('materialy-dlya-okon')}?sub=uplotnitelnye-lenty-pes-samokleyaschiesy`,
+    cta: 'Ленты ПЭС'
+  }
+];
 
-          <div className="mt-10 flex flex-col sm:flex-row gap-3">
-            <BlueButton href="#zapros" className="w-full sm:w-auto">
-              Запросить расчёт
-            </BlueButton>
-            <Link
-              to={paths.catalog}
-              className="inline-flex items-center justify-center min-h-11 px-6 rounded-[4px] border border-white/40 text-white text-sm font-semibold whitespace-nowrap transition-[background-color,transform] duration-[120ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:bg-white/10 active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-            >
-              Смотреть каталог
-            </Link>
+const HERO_DURATION = 7000;
+
+export const HeroV2: React.FC = () => {
+  const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  // Автосмена кадра. При prefers-reduced-motion слайдер стоит и листается только вручную.
+  useEffect(() => {
+    if (paused || prefersReducedMotion()) return;
+    const timer = window.setTimeout(
+      () => setActive((prev) => (prev + 1) % HERO_SLIDES.length),
+      HERO_DURATION
+    );
+    return () => window.clearTimeout(timer);
+  }, [active, paused]);
+
+  // Перекрёстное затухание текста. Уходящий гаснет быстрее, входящий ждёт:
+  // иначе два заголовка на мгновение накладываются.
+  useLayoutEffect(() => {
+    const reduced = prefersReducedMotion();
+    const tweens = slideRefs.current.map((el, idx) => {
+      if (!el) return null;
+      return idx === active
+        ? gsap.to(el, {
+            opacity: 1,
+            duration: reduced ? 0 : AMEX_DURATION,
+            delay: reduced ? 0 : 0.2,
+            ease: AMEX_EASE
+          })
+        : gsap.to(el, { opacity: 0, duration: reduced ? 0 : 0.16, ease: 'none' });
+    });
+    // Именно kill, а не revert: revert вернул бы прозрачность к исходной и мигал бы.
+    return () => tweens.forEach((tween) => tween?.kill());
+  }, [active]);
+
+  // Кадр уползает медленнее страницы. Ради этого и взят ScrollTrigger:
+  // привязка к прокрутке, а не таймлайн.
+  useLayoutEffect(() => {
+    const card = cardRef.current;
+    if (!card || prefersReducedMotion()) return;
+
+    const ctx = gsap.context(() => {
+      gsap.to('[data-hero-photo]', {
+        yPercent: -6,
+        ease: 'none',
+        scrollTrigger: { trigger: card, start: 'top top', end: 'bottom top', scrub: true }
+      });
+    }, card);
+
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section className="bg-white pt-4 pb-10 lg:pb-16">
+      {/* Карточка шире контентной сетки: 95vw по просьбе клиента. Скругление 12px
+          это верхняя ступень шкалы радиусов Amex, для крупных поверхностей. */}
+      <div
+        ref={cardRef}
+        className="relative w-[95vw] mx-auto rounded-[12px] overflow-hidden bg-amex-navy text-white"
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+      >
+        {/* Кадры выше карточки на 12%: запас, чтобы параллакс не оголил нижний край */}
+        {HERO_SLIDES.map((slide, idx) => (
+          <img
+            key={slide.id}
+            data-hero-photo
+            src={slide.image}
+            alt=""
+            aria-hidden
+            className={`absolute left-0 top-0 w-full h-[112%] object-cover transition-opacity duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)] ${
+              idx === active ? 'opacity-100' : 'opacity-0'
+            }`}
+          />
+        ))}
+
+        {/* Подложка под текстом: слева тёмно-синяя, справа кадр остаётся чистым */}
+        <div className="absolute inset-0 bg-gradient-to-r from-amex-navy from-15% via-amex-navy/70 via-50% to-transparent to-80%" />
+        {/* На узком экране текст лежит поверх всей ширины, поэтому вертикальная подложка */}
+        <div className="absolute inset-0 bg-gradient-to-t from-amex-navy/90 via-amex-navy/55 via-45% to-amex-navy/30 lg:hidden" />
+
+        <div className="relative px-6 sm:px-10 lg:px-16 pt-14 pb-10 lg:pt-24 lg:pb-16">
+          {/* Слайды в одной ячейке грида: высота карточки не прыгает при смене */}
+          <div className="grid max-w-3xl">
+            {HERO_SLIDES.map((slide, idx) => {
+              const isActive = idx === active;
+
+              return (
+                <div
+                  key={slide.id}
+                  ref={(el) => {
+                    slideRefs.current[idx] = el;
+                  }}
+                  aria-hidden={!isActive}
+                  style={{ opacity: idx === 0 ? 1 : 0 }}
+                  // min-w-0: у элемента грида min-width равен auto, и длинное слово
+                  // в заголовке распирало слайд шире карточки на телефоне.
+                  className={`col-start-1 row-start-1 min-w-0 ${isActive ? '' : 'pointer-events-none'}`}
+                >
+                  {idx === 0 ? (
+                    <h1 className="text-4xl md:text-5xl lg:text-[52px] font-semibold tracking-[-0.01em] leading-[1.1]">
+                      {slide.title}
+                    </h1>
+                  ) : (
+                    <p className="text-4xl md:text-5xl lg:text-[52px] font-semibold tracking-[-0.01em] leading-[1.1]">
+                      {slide.title}
+                    </p>
+                  )}
+
+                  <p className="mt-6 text-lg leading-[1.55] text-amex-on-navy max-w-[44ch]">
+                    {slide.text}
+                  </p>
+
+                  <div className="mt-10 flex flex-col sm:flex-row gap-3">
+                    <BlueButton href="#zapros" className="w-full sm:w-auto">
+                      Запросить расчёт
+                    </BlueButton>
+                    <Link
+                      to={slide.href}
+                      tabIndex={isActive ? 0 : -1}
+                      className="inline-flex items-center justify-center min-h-11 px-6 rounded-[4px] border border-white/40 text-white text-sm font-semibold whitespace-nowrap transition-[background-color,transform] duration-[120ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:bg-white/10 active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                    >
+                      {slide.cta}
+                    </Link>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="mt-12 flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              {HERO_SLIDES.map((slide, idx) => (
+                <button
+                  key={slide.id}
+                  type="button"
+                  onClick={() => setActive(idx)}
+                  aria-label={`Слайд ${idx + 1}`}
+                  aria-current={idx === active}
+                  className="w-8 h-11 flex items-center cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                >
+                  <span
+                    className={`h-1 w-full rounded-[4px] transition-colors duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] ${
+                      idx === active ? 'bg-amex-blue' : 'bg-white/35'
+                    }`}
+                  />
+                </button>
+              ))}
+            </div>
+            <span className="text-sm text-amex-on-navy tabular-nums">
+              {String(active + 1).padStart(2, '0')} / {String(HERO_SLIDES.length).padStart(2, '0')}
+            </span>
           </div>
         </div>
-
-        <div className="lg:col-span-6">
-          <img
-            src={heroTape}
-            alt="Монтаж уплотнительной ленты EUROBAND на стыке"
-            width={1920}
-            height={1279}
-            className="w-full h-[280px] sm:h-[380px] lg:h-[460px] object-cover rounded-[8px]"
-          />
-        </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 /* ── 2. Полоса фактов: четыре колонки, разделённые тонкой линией ──────── */
 

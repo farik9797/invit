@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { motion, useReducedMotion } from 'motion/react';
 import { Menu, X, Phone } from 'lucide-react';
 import invitLogo from '../../assets/logo/invit-color.svg';
 import invitLogoMono from '../../assets/logo/invit-mono.svg';
 import { paths } from '../../routes';
+import { gsap, AMEX_DURATION, AMEX_EASE, prefersReducedMotion } from './gsap';
 
 /*
  * Обвязка второго варианта главной. Вариант живёт отдельным маршрутом и не
@@ -14,25 +14,44 @@ import { paths } from '../../routes';
  * Другие значения не применяем.
  */
 
-/** Появление блока при прокрутке. Тайминг Amex: 240 мс, cubic-bezier(0.4,0,0.2,1). */
+/**
+ * Появление блока при прокрутке: GSAP ScrollTrigger, один раз на блок.
+ * useLayoutEffect, а не useEffect, иначе стартовое состояние ставится после
+ * первой отрисовки и блок успевает мигнуть.
+ */
 export const Fade: React.FC<{
   children: React.ReactNode;
   delay?: number;
   className?: string;
 }> = ({ children, delay = 0, className }) => {
-  const reduced = useReducedMotion();
-  if (reduced) return <div className={className}>{children}</div>;
+  const ref = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el || prefersReducedMotion()) return;
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        el,
+        { opacity: 0, y: 12 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: AMEX_DURATION,
+          delay,
+          ease: AMEX_EASE,
+          scrollTrigger: { trigger: el, start: 'top 88%', once: true }
+        }
+      );
+    }, el);
+
+    return () => ctx.revert();
+  }, [delay]);
 
   return (
-    <motion.div
-      className={className}
-      initial={{ opacity: 0, y: 12 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.25 }}
-      transition={{ duration: 0.24, delay, ease: [0.4, 0, 0.2, 1] }}
-    >
+    <div ref={ref} className={className}>
       {children}
-    </motion.div>
+    </div>
   );
 };
 
