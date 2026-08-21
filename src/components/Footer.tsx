@@ -23,7 +23,6 @@ const SECTIONS = [
   { label: 'Каталог', to: paths.catalog },
   { label: 'О компании', to: paths.about },
   { label: 'Документация', to: paths.certificates },
-  { label: 'Статус заказа', to: paths.orderStatus },
   { label: 'Новости', to: paths.news },
   { label: 'Контакты', to: paths.contacts }
 ];

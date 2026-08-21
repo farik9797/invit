@@ -1,4 +1,4 @@
-import { Category, Product, HeroSlide, OrderStatus, CertificateItem, NewsArticle } from '../types';
+import { Category, Product, HeroSlide, CertificateItem, NewsArticle } from '../types';
 
 // Каталог выгружен с invit.by. Изображения отдаются с invit.by — при переносе
 // сайта на боевой хостинг заменить на локальные файлы.
@@ -5137,45 +5137,6 @@ export const HERO_SLIDES: HeroSlide[] = [
     features: ['Профиль PQ и система «К»', 'Уголки к профилю 20/30/40', 'Полный комплект крепежа']
   }
 ];
-
-export const MOCK_ORDERS: Record<string, OrderStatus> = {
-  'INV-2026-9041': {
-    orderNumber: 'INV-2026-9041',
-    companyName: 'ЗАО «МинскПромСтрой»',
-    date: '10.08.2026',
-    status: 'cutting',
-    statusText: 'В производстве / Порезка нестандартных рулонов',
-    estimatedDelivery: '12.08.2026 (14:00)',
-    destination: 'г. Минск, ул. Промышленная, 28 (Склад №4)',
-    itemsCount: 120,
-    weight: '340 кг',
-    steps: [
-      { title: 'Заказ принят и согласован менеджером', date: '10.08.2026 09:30', completed: true },
-      { title: 'Счет оплачен / Включен в производственный план', date: '10.08.2026 11:15', completed: true },
-      { title: 'Порезка и намотка лент на станочной линии EUROBAND', date: '11.08.2026 08:00', completed: true, current: true },
-      { title: 'Упаковка и маркировка паллет', date: '11.08.2026 16:00', completed: false },
-      { title: 'Отгрузка со склада (г. Минск, ТЦ Сеница)', date: '12.08.2026 10:00', completed: false }
-    ]
-  },
-  'INV-2026-8812': {
-    orderNumber: 'INV-2026-8812',
-    companyName: 'ООО «ВентМонтажФасад»',
-    date: '08.08.2026',
-    status: 'shipped',
-    statusText: 'Отгружен / В пути к заказчику',
-    estimatedDelivery: '11.08.2026 (Сегодня)',
-    destination: 'г. Брест, ул. Коммерческая, 12',
-    itemsCount: 45,
-    weight: '180 кг',
-    steps: [
-      { title: 'Заказ принят и согласован', date: '08.08.2026 14:20', completed: true },
-      { title: 'Оплата получена', date: '08.08.2026 16:00', completed: true },
-      { title: 'Производство комплектующих завершено', date: '09.08.2026 17:30', completed: true },
-      { title: 'Передано в транспортную компанию', date: '10.08.2026 09:00', completed: true, current: true },
-      { title: 'Доставлено получателю', date: '11.08.2026 15:00', completed: false }
-    ]
-  }
-};
 
 // Сканы сертификатов взяты из галереи invit.by (Документы -> Сертификаты).
 export const CERTIFICATES: CertificateItem[] = [

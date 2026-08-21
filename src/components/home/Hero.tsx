@@ -83,12 +83,12 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCallback }) => {
           alt=""
           aria-hidden
           className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
-            idx === active ? 'opacity-75' : 'opacity-0'
+            idx === active ? 'opacity-90' : 'opacity-0'
           }`}
         />
       ))}
-      {/* Затемнение оставляем только слева, под текстом — фото справа видно почти целиком */}
-      <div className="absolute inset-0 bg-gradient-to-r from-ink/90 via-ink/60 to-ink/10" />
+      {/* Затемняем только левую половину под текстом, правая остаётся чистым фото */}
+      <div className="absolute inset-0 bg-gradient-to-r from-ink/85 from-10% via-ink/45 via-45% to-transparent to-70%" />
 
       <div className="relative max-w-[1340px] mx-auto px-5 py-20 sm:py-28 lg:py-32">
         {/* Слайды лежат в одной ячейке грида: высота равна самому длинному */}

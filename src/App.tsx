@@ -11,7 +11,6 @@ import { CertificatesPage } from './pages/CertificatesPage';
 import { NewsPage } from './pages/NewsPage';
 import { NewsArticlePage } from './pages/NewsArticlePage';
 import { ContactsPage } from './pages/ContactsPage';
-import { OrderStatusPage } from './pages/OrderStatusPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 
 export default function App() {
@@ -30,7 +29,6 @@ export default function App() {
             <Route path="/news" element={<NewsPage />} />
             <Route path="/news/:newsId" element={<NewsArticlePage />} />
             <Route path="/contacts" element={<ContactsPage />} />
-            <Route path="/status" element={<OrderStatusPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>

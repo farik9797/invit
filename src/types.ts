@@ -70,24 +70,6 @@ export interface HeroSlide {
   features: string[];
 }
 
-export interface OrderStatus {
-  orderNumber: string;
-  companyName: string;
-  date: string;
-  status: 'received' | 'cutting' | 'packed' | 'shipped' | 'delivered';
-  statusText: string;
-  estimatedDelivery: string;
-  destination: string;
-  itemsCount: number;
-  weight: string;
-  steps: {
-    title: string;
-    date: string;
-    completed: boolean;
-    current?: boolean;
-  }[];
-}
-
 export interface CertificateItem {
   id: string;
   title: string;

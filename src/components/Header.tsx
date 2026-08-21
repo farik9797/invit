@@ -17,7 +17,6 @@ interface HeaderProps {
 const NAV = [
   { to: paths.about, label: 'О компании' },
   { to: paths.certificates, label: 'Документация' },
-  { to: paths.orderStatus, label: 'Статус заказа' },
   { to: paths.news, label: 'Новости' }
 ];
 

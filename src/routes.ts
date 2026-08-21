@@ -10,8 +10,7 @@ export const paths = {
   certificates: '/certificates',
   news: '/news',
   newsArticle: (id: string) => `/news/${id}`,
-  contacts: '/contacts',
-  orderStatus: '/status'
+  contacts: '/contacts'
 };
 
 export const productSlug = (product: Product) => product.slug;
