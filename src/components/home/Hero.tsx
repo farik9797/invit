@@ -83,11 +83,12 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCallback }) => {
           alt=""
           aria-hidden
           className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
-            idx === active ? 'opacity-35' : 'opacity-0'
+            idx === active ? 'opacity-75' : 'opacity-0'
           }`}
         />
       ))}
-      <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/85 to-ink/40" />
+      {/* Затемнение оставляем только слева, под текстом — фото справа видно почти целиком */}
+      <div className="absolute inset-0 bg-gradient-to-r from-ink/90 via-ink/60 to-ink/10" />
 
       <div className="relative max-w-[1340px] mx-auto px-5 py-20 sm:py-28 lg:py-32">
         {/* Слайды лежат в одной ячейке грида: высота равна самому длинному */}
@@ -119,7 +120,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCallback }) => {
                   <span className="border-b-4 border-brand-green pb-1">{slide.accent}</span>
                 </h1>
 
-                <p className="mt-7 text-base sm:text-lg text-white/70 leading-relaxed max-w-xl">
+                <p className="mt-7 text-base sm:text-lg text-white/85 leading-relaxed max-w-xl">
                   {slide.text}
                 </p>
 
