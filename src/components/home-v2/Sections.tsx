@@ -9,7 +9,8 @@ import heroTape from '../../assets/hero/tape-application.jpg';
 import heroRoof from '../../assets/hero/roof-standing-seam.jpg';
 import heroSheets from '../../assets/hero/roof-profile-sheets.jpg';
 import heroSlab from '../../assets/hero/tape-slab-joint.jpg';
-import { gsap, AMEX_DURATION, AMEX_EASE, prefersReducedMotion, useScrollParallax } from './gsap';
+import eurobandLogo from '../../assets/logo/euroband-color.svg';
+import { gsap, MOTION_DURATION, MOTION_EASE, prefersReducedMotion, useScrollParallax } from './gsap';
 
 const WRAP = 'max-w-[1400px] mx-auto px-4 lg:px-8';
 const H2 = 'text-2xl sm:text-3xl md:text-[40px] font-semibold tracking-[-0.01em] leading-[1.15]';
@@ -99,9 +100,9 @@ export const HeroV2: React.FC = () => {
       return idx === active
         ? gsap.to(el, {
             opacity: 1,
-            duration: reduced ? 0 : AMEX_DURATION,
+            duration: reduced ? 0 : MOTION_DURATION,
             delay: reduced ? 0 : 0.2,
-            ease: AMEX_EASE
+            ease: MOTION_EASE
           })
         : gsap.to(el, { opacity: 0, duration: reduced ? 0 : 0.16, ease: 'none' });
     });
@@ -132,7 +133,7 @@ export const HeroV2: React.FC = () => {
           это верхняя ступень шкалы радиусов Amex, для крупных поверхностей. */}
       <div
         ref={cardRef}
-        className="relative w-[95vw] mx-auto rounded-[12px] overflow-hidden bg-amex-navy text-white"
+        className="relative w-[95vw] mx-auto rounded-[12px] overflow-hidden bg-inv-deep text-white"
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
       >
@@ -151,9 +152,9 @@ export const HeroV2: React.FC = () => {
         ))}
 
         {/* Подложка под текстом: слева тёмно-синяя, справа кадр остаётся чистым */}
-        <div className="absolute inset-0 bg-gradient-to-r from-amex-navy from-15% via-amex-navy/70 via-50% to-transparent to-80%" />
+        <div className="absolute inset-0 bg-gradient-to-r from-inv-deep from-15% via-inv-deep/70 via-50% to-transparent to-80%" />
         {/* На узком экране текст лежит поверх всей ширины, поэтому вертикальная подложка */}
-        <div className="absolute inset-0 bg-gradient-to-t from-amex-navy/90 via-amex-navy/55 via-45% to-amex-navy/30 lg:hidden" />
+        <div className="absolute inset-0 bg-gradient-to-t from-inv-deep/90 via-inv-deep/55 via-45% to-inv-deep/30 lg:hidden" />
 
         <div className="relative px-5 sm:px-10 lg:px-16 pt-10 pb-8 lg:pt-24 lg:pb-16">
           {/* Слайды в одной ячейке грида: высота карточки не прыгает при смене */}
@@ -183,7 +184,7 @@ export const HeroV2: React.FC = () => {
                     </p>
                   )}
 
-                  <p className="mt-4 sm:mt-6 text-base sm:text-lg leading-[1.55] text-amex-on-navy max-w-[44ch]">
+                  <p className="mt-4 sm:mt-6 text-base sm:text-lg leading-[1.55] text-inv-on-deep max-w-[44ch]">
                     {slide.text}
                   </p>
 
@@ -217,13 +218,13 @@ export const HeroV2: React.FC = () => {
                 >
                   <span
                     className={`h-1 w-full rounded-[4px] transition-colors duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] ${
-                      idx === active ? 'bg-amex-blue' : 'bg-white/35'
+                      idx === active ? 'bg-inv-blue' : 'bg-white/35'
                     }`}
                   />
                 </button>
               ))}
             </div>
-            <span className="text-sm text-amex-on-navy tabular-nums">
+            <span className="text-sm text-inv-on-deep tabular-nums">
               {String(active + 1).padStart(2, '0')} / {String(HERO_SLIDES.length).padStart(2, '0')}
             </span>
           </div>
@@ -248,19 +249,19 @@ const FACTS = [
 ];
 
 export const FactsRow: React.FC = () => (
-  <section className="bg-white border-b border-amex-border">
+  <section className="bg-white border-b border-inv-border">
     <FadeGroup className={`${WRAP} py-8 sm:py-12`}>
       <dl className="grid grid-cols-2 lg:grid-cols-4 gap-y-6 sm:gap-y-8">
         {FACTS.map((fact, idx) => (
           <div
             key={fact.label}
             data-fade-item
-            className={idx > 0 ? 'lg:pl-8 lg:border-l lg:border-amex-border' : ''}
+            className={idx > 0 ? 'lg:pl-8 lg:border-l lg:border-inv-border' : ''}
           >
-            <dt className="text-[26px] sm:text-[32px] font-semibold text-amex-ink leading-none">
+            <dt className="text-[26px] sm:text-[32px] font-semibold text-inv-ink leading-none">
               <CountUp value={fact.value} />
             </dt>
-            <dd className="mt-2 text-sm text-amex-ink-muted max-w-[22ch]">{fact.label}</dd>
+            <dd className="mt-2 text-sm text-inv-ink-muted max-w-[22ch]">{fact.label}</dd>
           </div>
         ))}
       </dl>
@@ -298,7 +299,7 @@ const TAPE_CELLS: TapeCell[] = [
 const cellHref = (cell: TapeCell) => `${paths.category(cell.categorySlug)}?sub=${cell.slug}`;
 
 const CELL_BASE =
-  'group flex rounded-[8px] overflow-hidden transition-[transform,box-shadow] duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(0,23,90,0.16)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amex-blue';
+  'group flex rounded-[8px] overflow-hidden transition-[transform,box-shadow] duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(0,23,90,0.16)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue';
 
 export const TapeBento: React.FC = () => {
   const [lead, ...rest] = TAPE_CELLS;
@@ -306,13 +307,13 @@ export const TapeBento: React.FC = () => {
   const parallaxRef = useScrollParallax([{ selector: '[data-bento-photo]', yPercent: -5 }]);
 
   return (
-    <section className="bg-amex-surface-1" ref={parallaxRef}>
+    <section className="bg-inv-surface-1" ref={parallaxRef}>
       <div className={`${WRAP} py-10 sm:py-14 lg:py-24`}>
         <Fade className="max-w-[46ch]">
-          <span className="text-xs font-semibold uppercase tracking-[0.12em] text-amex-blue">
+          <span className="text-xs font-semibold uppercase tracking-[0.12em] text-inv-blue">
             Продукция
           </span>
-          <h2 className={`${H2} mt-3 text-amex-ink`}>Разделы лент</h2>
+          <h2 className={`${H2} mt-3 text-inv-ink`}>Разделы лент</h2>
         </Fade>
 
         <FadeGroup className="mt-6 sm:mt-10 grid grid-cols-1 md:grid-cols-6 gap-3 sm:gap-4 md:auto-rows-[196px]">
@@ -326,12 +327,12 @@ export const TapeBento: React.FC = () => {
                 aria-hidden
                 className="absolute left-0 top-0 w-full h-[110%] object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-amex-navy via-amex-navy/70 to-amex-navy/20" />
+              <div className="absolute inset-0 bg-gradient-to-t from-inv-deep via-inv-deep/70 to-inv-deep/20" />
               <div className="relative mt-auto p-5 lg:p-8">
                 <h3 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-white tracking-[-0.01em]">
                   {lead.name}
                 </h3>
-                <p className="mt-2 text-sm text-amex-on-navy tabular-nums">
+                <p className="mt-2 text-sm text-inv-on-deep tabular-nums">
                   {positions(lead.count)} в разделе
                 </p>
                 <span className="mt-4 sm:mt-5 inline-flex items-center gap-2 text-sm font-semibold text-white">
@@ -351,8 +352,8 @@ export const TapeBento: React.FC = () => {
               <div key={cell.slug} data-fade-item className={span}>
                 <Link
                   to={cellHref(cell)}
-                  className={`${CELL_BASE} h-full min-h-[104px] sm:min-h-[196px] items-center gap-4 p-4 sm:p-5 lg:p-6 border border-amex-border ${
-                    tinted ? 'bg-amex-surface-2' : 'bg-white'
+                  className={`${CELL_BASE} h-full min-h-[104px] sm:min-h-[196px] items-center gap-4 p-4 sm:p-5 lg:p-6 border border-inv-border ${
+                    tinted ? 'bg-inv-surface-2' : 'bg-white'
                   }`}
                 >
                   <img
@@ -363,14 +364,14 @@ export const TapeBento: React.FC = () => {
                     className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 shrink-0 object-contain rounded-[8px] bg-white"
                   />
                   <div className="min-w-0">
-                    <h3 className="text-lg font-semibold text-amex-ink leading-snug">
+                    <h3 className="text-lg font-semibold text-inv-ink leading-snug">
                       {cell.name}
                     </h3>
-                    <p className="mt-1.5 text-sm text-amex-ink-muted tabular-nums">
+                    <p className="mt-1.5 text-sm text-inv-ink-muted tabular-nums">
                       {positions(cell.count)}
                     </p>
                   </div>
-                  <ArrowRight className="w-5 h-5 ml-auto shrink-0 text-amex-blue transition-transform duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:translate-x-1" />
+                  <ArrowRight className="w-5 h-5 ml-auto shrink-0 text-inv-blue transition-transform duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:translate-x-1" />
                 </Link>
               </div>
             );
@@ -389,10 +390,10 @@ export const ProductRail: React.FC = () => (
   <section className="bg-white">
     <div className={`${WRAP} py-10 sm:py-14 lg:py-24`}>
       <Fade className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-        <h2 className={`${H2} text-amex-ink max-w-[24ch]`}>Ленты EUROBAND</h2>
+        <h2 className={`${H2} text-inv-ink max-w-[24ch]`}>Ленты EUROBAND</h2>
         <Link
           to={paths.catalog}
-          className="inline-flex items-center gap-2 min-h-11 sm:min-h-0 text-sm font-semibold text-amex-blue hover:text-amex-blue-pressed transition-colors duration-[120ms] whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amex-blue"
+          className="inline-flex items-center gap-2 min-h-11 sm:min-h-0 text-sm font-semibold text-inv-blue hover:text-inv-blue-pressed transition-colors duration-[120ms] whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
         >
           Весь каталог
           <ArrowRight className="w-4 h-4" />
@@ -408,7 +409,7 @@ export const ProductRail: React.FC = () => (
             <li key={product.id} data-fade-item className="w-[212px] sm:w-[248px] shrink-0 snap-start">
               <Link
                 to={paths.product(product)}
-                className="group flex flex-col h-full rounded-[8px] border border-amex-border bg-white overflow-hidden transition-[transform,box-shadow] duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(0,23,90,0.16)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amex-blue"
+                className="group flex flex-col h-full rounded-[8px] border border-inv-border bg-white overflow-hidden transition-[transform,box-shadow] duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(0,23,90,0.16)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
               >
                 <img
                   src={product.image}
@@ -416,12 +417,15 @@ export const ProductRail: React.FC = () => (
                   loading="lazy"
                   className="w-full h-[140px] sm:h-[176px] object-contain bg-white p-4"
                 />
-                <div className="flex flex-col flex-1 gap-2 p-4 sm:p-5 border-t border-amex-border-subtle">
-                  <span className="text-xs text-amex-ink-muted">{product.subcategoryName}</span>
-                  <h3 className="text-base font-semibold text-amex-ink leading-snug">
+                <div className="flex flex-col flex-1 gap-2 p-4 sm:p-5 border-t border-inv-border-subtle">
+                  <span className="self-start rounded-[4px] bg-inv-red px-2 py-0.5 text-[11px] font-semibold uppercase tracking-[0.04em] text-white">
+                    EUROBAND
+                  </span>
+                  <span className="text-xs text-inv-ink-muted">{product.subcategoryName}</span>
+                  <h3 className="text-base font-semibold text-inv-ink leading-snug">
                     {product.shortTitle}
                   </h3>
-                  <span className="mt-auto inline-flex items-center gap-1.5 text-sm font-semibold text-amex-blue">
+                  <span className="mt-auto inline-flex items-center gap-1.5 text-sm font-semibold text-inv-blue">
                     Характеристики
                     <ArrowUpRight className="w-4 h-4 transition-transform duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                   </span>
@@ -455,7 +459,7 @@ export const AboutBlock: React.FC = () => {
       >
         <Fade className="lg:col-span-6">
           <div className="relative pb-12 sm:pb-16">
-            <div className="w-[82%] h-[200px] sm:h-[320px] rounded-[8px] overflow-hidden border border-amex-border">
+            <div className="w-[82%] h-[200px] sm:h-[320px] rounded-[8px] overflow-hidden border border-inv-border">
               <img
                 data-about-scene
                 src={ABOUT_SCENE}
@@ -465,7 +469,7 @@ export const AboutBlock: React.FC = () => {
               />
             </div>
 
-            <div className="absolute right-0 bottom-0 w-[54%] h-[136px] sm:h-[200px] rounded-[8px] overflow-hidden border border-amex-border bg-white shadow-[0_6px_24px_rgba(0,23,90,0.16)]">
+            <div className="absolute right-0 bottom-0 w-[54%] h-[136px] sm:h-[200px] rounded-[8px] overflow-hidden border border-inv-border bg-white shadow-[0_6px_24px_rgba(0,23,90,0.16)]">
               <img
                 data-about-product
                 src={ABOUT_PRODUCT}
@@ -478,24 +482,30 @@ export const AboutBlock: React.FC = () => {
         </Fade>
 
         <Fade className="lg:col-span-6" delay={0.06}>
-          <h2 className={`${H2} text-amex-ink max-w-[20ch]`}>
+          <img
+            src={eurobandLogo}
+            alt="EUROBAND"
+            className="h-7 w-auto"
+          />
+
+          <h2 className={`${H2} mt-5 text-inv-ink max-w-[20ch]`}>
             Собственное производство в Минске
           </h2>
 
-          <p className="mt-5 sm:mt-6 text-base leading-[1.55] text-amex-ink-muted max-w-[60ch]">
+          <p className="mt-5 sm:mt-6 text-base leading-[1.55] text-inv-ink-muted max-w-[60ch]">
             Производим монтажные, бутилкаучуковые, саморасширяющиеся ПСУЛ и уплотнительные
             ленты ПЭС под маркой EUROBAND. По желанию клиента изготавливаем ленты нетипичных
             размеров на разных основах и подложках.
           </p>
 
-          <p className="mt-4 text-base leading-[1.55] text-amex-ink-muted max-w-[60ch]">
+          <p className="mt-4 text-base leading-[1.55] text-inv-ink-muted max-w-[60ch]">
             Сопутствующие материалы: пену, герметики, крепёж, инструмент и комплектующие для
             вентиляции поставляем напрямую от производителей.
           </p>
 
           <Link
             to={paths.about}
-            className="group mt-6 sm:mt-8 inline-flex items-center gap-2 min-h-11 text-sm font-semibold text-amex-blue hover:text-amex-blue-pressed transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amex-blue"
+            className="group mt-6 sm:mt-8 inline-flex items-center gap-2 min-h-11 text-sm font-semibold text-inv-blue hover:text-inv-blue-pressed transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
           >
             Подробнее о компании
             <ArrowRight className="w-4 h-4 transition-transform duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:translate-x-1" />
@@ -524,18 +534,18 @@ const VALUES = [
 ];
 
 export const ValuesBlock: React.FC = () => (
-  <section className="bg-amex-surface-1">
+  <section className="bg-inv-surface-1">
     <div className={`${WRAP} py-10 sm:py-14 lg:py-24 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16`}>
       <Fade className="lg:col-span-5">
         <div className="lg:sticky lg:top-24">
-          <h2 className={`${H2} text-amex-ink max-w-[16ch]`}>Работаем с 2009 года</h2>
+          <h2 className={`${H2} text-inv-ink max-w-[16ch]`}>Работаем с 2009 года</h2>
 
-          <p className="mt-5 sm:mt-6 text-base leading-[1.55] text-amex-ink-muted max-w-[46ch]">
+          <p className="mt-5 sm:mt-6 text-base leading-[1.55] text-inv-ink-muted max-w-[46ch]">
             За это время наладили собственное производство в Минске, подтвердили статус
             отечественного производителя и наработали репутацию надёжного поставщика.
           </p>
 
-          <p className="mt-4 text-base leading-[1.55] text-amex-ink-muted max-w-[46ch]">
+          <p className="mt-4 text-base leading-[1.55] text-inv-ink-muted max-w-[46ch]">
             Наши ленты применяются при монтаже окон и дверей, на фасадах, кровле и в системах
             вентиляции: там, где шов должен оставаться герметичным годами.
           </p>
@@ -543,11 +553,11 @@ export const ValuesBlock: React.FC = () => (
       </Fade>
 
       <FadeGroup className="lg:col-span-7" stagger={0.08}>
-        <ul className="divide-y divide-amex-border">
+        <ul className="divide-y divide-inv-border">
           {VALUES.map((value) => (
             <li key={value.title} data-fade-item className="py-5 sm:py-7 first:pt-0 last:pb-0">
-              <h3 className="text-xl font-semibold text-amex-ink">{value.title}</h3>
-              <p className="mt-2 text-base leading-[1.55] text-amex-ink-muted max-w-[52ch]">
+              <h3 className="text-xl font-semibold text-inv-ink">{value.title}</h3>
+              <p className="mt-2 text-base leading-[1.55] text-inv-ink-muted max-w-[52ch]">
                 {value.text}
               </p>
             </li>
@@ -561,12 +571,12 @@ export const ValuesBlock: React.FC = () => (
 /* ── 7. Тёмная полоса с документами ───────────────────────────────────── */
 
 export const DocumentsBand: React.FC = () => (
-  <section className="bg-amex-navy text-white">
+  <section className="bg-inv-deep text-white">
     <div className={`${WRAP} py-10 sm:py-14 lg:py-24`}>
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16">
         <Fade className="lg:col-span-5">
           <h2 className={`${H2} text-white`}>Документы на продукцию</h2>
-          <p className="mt-4 sm:mt-5 text-base leading-[1.55] text-amex-on-navy max-w-[46ch]">
+          <p className="mt-4 sm:mt-5 text-base leading-[1.55] text-inv-on-deep max-w-[46ch]">
             Сертификат продукции собственного производства, технические свидетельства
             и декларации о соответствии на каждый тип ленты.
           </p>
@@ -590,7 +600,7 @@ export const DocumentsBand: React.FC = () => (
                   loading="lazy"
                   className="w-full h-[142px] sm:h-[200px] object-cover object-top rounded-[8px] bg-white"
                 />
-                <figcaption className="mt-2 sm:mt-3 text-xs leading-relaxed text-amex-on-navy">
+                <figcaption className="mt-2 sm:mt-3 text-xs leading-relaxed text-inv-on-deep">
                   {cert.type}
                 </figcaption>
               </figure>
@@ -608,24 +618,24 @@ export const NewsList: React.FC = () => (
   <section className="bg-white">
     <div className={`${WRAP} py-10 sm:py-14 lg:py-24`}>
       <Fade>
-        <h2 className={`${H2} text-amex-ink`}>Новости</h2>
+        <h2 className={`${H2} text-inv-ink`}>Новости</h2>
       </Fade>
 
       <FadeGroup className="mt-6 sm:mt-8">
-        <ul className="divide-y divide-amex-border-subtle border-t border-amex-border-subtle">
+        <ul className="divide-y divide-inv-border-subtle border-t border-inv-border-subtle">
           {NEWS.slice(0, 3).map((item) => (
             <li key={item.id} data-fade-item>
               <Link
                 to={paths.newsArticle(item.id)}
-                className="group grid grid-cols-1 md:grid-cols-12 gap-1.5 md:gap-8 py-5 sm:py-6 items-baseline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amex-blue"
+                className="group grid grid-cols-1 md:grid-cols-12 gap-1.5 md:gap-8 py-5 sm:py-6 items-baseline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
               >
-                <span className="md:col-span-3 text-sm text-amex-ink-muted tabular-nums">
+                <span className="md:col-span-3 text-sm text-inv-ink-muted tabular-nums">
                   {item.date}
                 </span>
-                <h3 className="md:col-span-7 text-lg font-semibold text-amex-ink leading-snug group-hover:text-amex-blue transition-colors duration-[120ms]">
+                <h3 className="md:col-span-7 text-lg font-semibold text-inv-ink leading-snug group-hover:text-inv-blue transition-colors duration-[120ms]">
                   {item.title}
                 </h3>
-                <span className="md:col-span-2 text-sm text-amex-ink-muted md:text-right">
+                <span className="md:col-span-2 text-sm text-inv-ink-muted md:text-right">
                   {item.category}
                 </span>
               </Link>
@@ -637,7 +647,7 @@ export const NewsList: React.FC = () => (
       <Fade>
         <Link
           to={paths.news}
-          className="mt-6 sm:mt-8 inline-flex items-center gap-2 min-h-11 text-sm font-semibold text-amex-blue hover:text-amex-blue-pressed transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amex-blue"
+          className="mt-6 sm:mt-8 inline-flex items-center gap-2 min-h-11 text-sm font-semibold text-inv-blue hover:text-inv-blue-pressed transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
         >
           Все новости
           <ArrowRight className="w-4 h-4" />
@@ -650,7 +660,7 @@ export const NewsList: React.FC = () => (
 /* ── 9. Контакты и форма запроса ──────────────────────────────────────── */
 
 const FIELD =
-  'w-full min-h-11 px-3 py-2.5 rounded-[4px] border bg-white text-base text-amex-ink placeholder:text-amex-ink-muted transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-amex-blue';
+  'w-full min-h-11 px-3 py-2.5 rounded-[4px] border bg-white text-base text-inv-ink placeholder:text-inv-ink-muted transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-inv-blue';
 
 const OFFICES = [
   {
@@ -692,12 +702,12 @@ export const ContactSplit: React.FC = () => {
   };
 
   return (
-    <section id="zapros" className="bg-amex-surface-1 scroll-mt-20">
+    <section id="zapros" className="bg-inv-surface-1 scroll-mt-20">
       <div className={`${WRAP} py-10 sm:py-14 lg:py-24`}>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16">
           <Fade className="lg:col-span-5">
-            <h2 className={`${H2} text-amex-ink`}>Запросить расчёт</h2>
-            <p className="mt-4 sm:mt-5 text-base leading-[1.55] text-amex-ink-muted max-w-[46ch]">
+            <h2 className={`${H2} text-inv-ink`}>Запросить расчёт</h2>
+            <p className="mt-4 sm:mt-5 text-base leading-[1.55] text-inv-ink-muted max-w-[46ch]">
               Пришлём цену и сроки по вашему объёму. Нетиповую ширину и длину
               рассчитываем отдельно.
             </p>
@@ -705,8 +715,8 @@ export const ContactSplit: React.FC = () => {
             <div className="mt-8 space-y-6 sm:space-y-8">
               {OFFICES.map((office) => (
                 <div key={office.city}>
-                  <h3 className="text-sm font-semibold text-amex-ink">{office.city}</h3>
-                  <p className="mt-1.5 text-sm text-amex-ink-muted max-w-[36ch]">
+                  <h3 className="text-sm font-semibold text-inv-ink">{office.city}</h3>
+                  <p className="mt-1.5 text-sm text-inv-ink-muted max-w-[36ch]">
                     {office.address}
                   </p>
                   <div className="mt-1 sm:mt-2 flex flex-wrap gap-x-5 sm:gap-y-1">
@@ -714,7 +724,7 @@ export const ContactSplit: React.FC = () => {
                       <a
                         key={p}
                         href={telHref(p)}
-                        className="inline-flex items-center min-h-11 sm:min-h-0 text-sm font-semibold text-amex-blue hover:text-amex-blue-pressed transition-colors duration-[120ms] whitespace-nowrap"
+                        className="inline-flex items-center min-h-11 sm:min-h-0 text-sm font-semibold text-inv-blue hover:text-inv-blue-pressed transition-colors duration-[120ms] whitespace-nowrap"
                       >
                         {p}
                       </a>
@@ -724,10 +734,10 @@ export const ContactSplit: React.FC = () => {
               ))}
 
               <div>
-                <h3 className="text-sm font-semibold text-amex-ink">Почта</h3>
+                <h3 className="text-sm font-semibold text-inv-ink">Почта</h3>
                 <a
                   href="mailto:info@invit.by"
-                  className="mt-0.5 sm:mt-1.5 inline-flex items-center min-h-11 sm:min-h-0 text-sm font-semibold text-amex-blue hover:text-amex-blue-pressed transition-colors duration-[120ms]"
+                  className="mt-0.5 sm:mt-1.5 inline-flex items-center min-h-11 sm:min-h-0 text-sm font-semibold text-inv-blue hover:text-inv-blue-pressed transition-colors duration-[120ms]"
                 >
                   info@invit.by
                 </a>
@@ -736,20 +746,20 @@ export const ContactSplit: React.FC = () => {
           </Fade>
 
           <Fade className="lg:col-span-7" delay={0.06}>
-            <div className="bg-white border border-amex-border rounded-[8px] p-5 sm:p-6 lg:p-8">
+            <div className="bg-white border border-inv-border rounded-[8px] p-5 sm:p-6 lg:p-8">
               {status === 'done' ? (
                 <div className="flex flex-col items-start gap-4 py-6">
-                  <span className="flex items-center justify-center w-11 h-11 rounded-full bg-amex-success/10">
-                    <Check className="w-6 h-6 text-amex-success" />
+                  <span className="flex items-center justify-center w-11 h-11 rounded-full bg-inv-success/10">
+                    <Check className="w-6 h-6 text-inv-success" />
                   </span>
-                  <h3 className="text-xl font-semibold text-amex-ink">Заявка принята</h3>
-                  <p className="text-base text-amex-ink-muted max-w-[46ch]">
+                  <h3 className="text-xl font-semibold text-inv-ink">Заявка принята</h3>
+                  <p className="text-base text-inv-ink-muted max-w-[46ch]">
                     Перезвоним в рабочее время: пн-чт с 9:00 до 17:30, пт с 9:00 до 16:00.
                   </p>
                   <button
                     type="button"
                     onClick={() => setStatus('idle')}
-                    className="min-h-11 text-sm font-semibold text-amex-blue cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amex-blue"
+                    className="min-h-11 text-sm font-semibold text-inv-blue cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
                   >
                     Отправить ещё одну
                   </button>
@@ -757,7 +767,7 @@ export const ContactSplit: React.FC = () => {
               ) : (
                 <form onSubmit={submit} noValidate className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                   <div className="flex flex-col gap-2">
-                    <label htmlFor="v2-name" className="text-sm font-semibold text-amex-ink">
+                    <label htmlFor="v2-name" className="text-sm font-semibold text-inv-ink">
                       Имя
                     </label>
                     <input
@@ -766,12 +776,12 @@ export const ContactSplit: React.FC = () => {
                       onChange={(e) => setName(e.target.value)}
                       aria-invalid={Boolean(errors.name)}
                       aria-describedby={errors.name ? 'v2-name-error' : undefined}
-                      className={`${FIELD} ${errors.name ? 'border-amex-error' : 'border-amex-border'}`}
+                      className={`${FIELD} ${errors.name ? 'border-inv-error' : 'border-inv-border'}`}
                     />
                     {errors.name && (
                       <p
                         id="v2-name-error"
-                        className="flex items-center gap-1.5 text-sm text-amex-error"
+                        className="flex items-center gap-1.5 text-sm text-inv-error"
                       >
                         <AlertCircle className="w-4 h-4 shrink-0" />
                         {errors.name}
@@ -780,20 +790,20 @@ export const ContactSplit: React.FC = () => {
                   </div>
 
                   <div className="flex flex-col gap-2">
-                    <label htmlFor="v2-company" className="text-sm font-semibold text-amex-ink">
+                    <label htmlFor="v2-company" className="text-sm font-semibold text-inv-ink">
                       Компания
                     </label>
                     <input
                       id="v2-company"
                       value={company}
                       onChange={(e) => setCompany(e.target.value)}
-                      className={`${FIELD} border-amex-border`}
+                      className={`${FIELD} border-inv-border`}
                     />
-                    <p className="text-sm text-amex-ink-muted">Необязательно</p>
+                    <p className="text-sm text-inv-ink-muted">Необязательно</p>
                   </div>
 
                   <div className="flex flex-col gap-2 sm:col-span-2">
-                    <label htmlFor="v2-phone" className="text-sm font-semibold text-amex-ink">
+                    <label htmlFor="v2-phone" className="text-sm font-semibold text-inv-ink">
                       Телефон
                     </label>
                     <input
@@ -804,25 +814,25 @@ export const ContactSplit: React.FC = () => {
                       onChange={(e) => setPhone(e.target.value)}
                       aria-invalid={Boolean(errors.phone)}
                       aria-describedby={errors.phone ? 'v2-phone-error' : 'v2-phone-hint'}
-                      className={`${FIELD} ${errors.phone ? 'border-amex-error' : 'border-amex-border'}`}
+                      className={`${FIELD} ${errors.phone ? 'border-inv-error' : 'border-inv-border'}`}
                     />
                     {errors.phone ? (
                       <p
                         id="v2-phone-error"
-                        className="flex items-center gap-1.5 text-sm text-amex-error"
+                        className="flex items-center gap-1.5 text-sm text-inv-error"
                       >
                         <AlertCircle className="w-4 h-4 shrink-0" />
                         {errors.phone}
                       </p>
                     ) : (
-                      <p id="v2-phone-hint" className="text-sm text-amex-ink-muted">
+                      <p id="v2-phone-hint" className="text-sm text-inv-ink-muted">
                         Например, +375 29 000-00-00
                       </p>
                     )}
                   </div>
 
                   <div className="flex flex-col gap-2 sm:col-span-2">
-                    <label htmlFor="v2-task" className="text-sm font-semibold text-amex-ink">
+                    <label htmlFor="v2-task" className="text-sm font-semibold text-inv-ink">
                       Что нужно
                     </label>
                     <textarea
@@ -830,9 +840,9 @@ export const ContactSplit: React.FC = () => {
                       rows={3}
                       value={task}
                       onChange={(e) => setTask(e.target.value)}
-                      className={`${FIELD} border-amex-border resize-y`}
+                      className={`${FIELD} border-inv-border resize-y`}
                     />
-                    <p className="text-sm text-amex-ink-muted">
+                    <p className="text-sm text-inv-ink-muted">
                       Тип ленты, ширина и толщина, объём в метрах или рулонах.
                     </p>
                   </div>
@@ -841,7 +851,7 @@ export const ContactSplit: React.FC = () => {
                     <button
                       type="submit"
                       disabled={status === 'sending'}
-                      className="inline-flex items-center justify-center w-full sm:w-auto min-h-11 px-8 rounded-[4px] bg-amex-blue text-white text-sm font-semibold cursor-pointer transition-[background-color,transform] duration-[120ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:bg-amex-blue-hover active:bg-amex-blue-pressed active:scale-[0.98] disabled:opacity-70 disabled:cursor-wait focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amex-blue"
+                      className="inline-flex items-center justify-center w-full sm:w-auto min-h-11 px-8 rounded-[4px] bg-inv-blue text-white text-sm font-semibold cursor-pointer transition-[background-color,transform] duration-[120ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:bg-inv-blue-hover active:bg-inv-blue-pressed active:scale-[0.98] disabled:opacity-70 disabled:cursor-wait focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
                     >
                       {status === 'sending' ? 'Отправляем' : 'Запросить расчёт'}
                     </button>

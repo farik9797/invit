@@ -7,12 +7,13 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
  * Основной сайт остаётся на motion — библиотеки не смешиваются в одном дереве:
  * всё, что под /v2, анимирует только GSAP.
  *
- * Тайминг из дизайн-системы Amex: 240 мс, cubic-bezier(0.4, 0, 0.2, 1).
+ * Тайминг спокойный и одинаковый по всей странице: 240 мс,
+ * cubic-bezier(0.4, 0, 0.2, 1). Резких и пружинящих переходов не делаем.
  */
 gsap.registerPlugin(ScrollTrigger);
 
-export const AMEX_EASE = 'cubic-bezier(0.4, 0, 0.2, 1)';
-export const AMEX_DURATION = 0.24;
+export const MOTION_EASE = 'cubic-bezier(0.4, 0, 0.2, 1)';
+export const MOTION_DURATION = 0.24;
 
 /** Пользователь мог попросить систему не анимировать. Тогда просто ничего не двигаем. */
 export const prefersReducedMotion = () =>

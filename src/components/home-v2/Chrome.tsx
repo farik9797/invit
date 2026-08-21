@@ -4,7 +4,8 @@ import { Menu, X, Phone } from 'lucide-react';
 import invitLogo from '../../assets/logo/invit-color.svg';
 import invitLogoMono from '../../assets/logo/invit-mono.svg';
 import { paths } from '../../routes';
-import { gsap, AMEX_DURATION, AMEX_EASE, prefersReducedMotion } from './gsap';
+import { gsap, MOTION_DURATION, MOTION_EASE, prefersReducedMotion } from './gsap';
+import { MegaMenu, MOBILE_CATALOG_LINKS } from './MegaMenu';
 
 /*
  * Обвязка второго варианта главной. Вариант живёт отдельным маршрутом и не
@@ -37,9 +38,9 @@ export const Fade: React.FC<{
         {
           opacity: 1,
           y: 0,
-          duration: AMEX_DURATION,
+          duration: MOTION_DURATION,
           delay,
-          ease: AMEX_EASE,
+          ease: MOTION_EASE,
           scrollTrigger: { trigger: el, start: 'top 88%', once: true }
         }
       );
@@ -80,8 +81,8 @@ export const FadeGroup: React.FC<{
         {
           opacity: 1,
           y: 0,
-          duration: AMEX_DURATION,
-          ease: AMEX_EASE,
+          duration: MOTION_DURATION,
+          ease: MOTION_EASE,
           stagger,
           scrollTrigger: { trigger: el, start: 'top 88%', once: true }
         }
@@ -138,15 +139,15 @@ export const CountUp: React.FC<{ value: number }> = ({ value }) => {
   );
 };
 
+/** «Каталог» вынесен в мега-меню, поэтому в текстовом меню его нет. */
 const NAV = [
-  { label: 'Каталог', to: paths.catalog },
   { label: 'О компании', to: paths.about },
   { label: 'Документация', to: paths.certificates },
   { label: 'Новости', to: paths.news },
   { label: 'Контакты', to: paths.contacts }
 ];
 
-/** Синяя кнопка Amex: заливка #006FCF, белый текст, радиус 4px. */
+/** Основная кнопка: синий из палитры клиента, белый текст, радиус 4px. */
 export const BlueButton: React.FC<{
   href: string;
   children: React.ReactNode;
@@ -154,7 +155,7 @@ export const BlueButton: React.FC<{
 }> = ({ href, children, className = '' }) => (
   <a
     href={href}
-    className={`inline-flex items-center justify-center min-h-11 px-6 rounded-[4px] bg-amex-blue text-white text-sm font-semibold whitespace-nowrap transition-[background-color,transform] duration-[120ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:bg-amex-blue-hover active:bg-amex-blue-pressed active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amex-blue ${className}`}
+    className={`inline-flex items-center justify-center min-h-11 px-6 rounded-[4px] bg-inv-blue text-white text-sm font-semibold whitespace-nowrap transition-[background-color,transform] duration-[120ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:bg-inv-blue-hover active:bg-inv-blue-pressed active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue ${className}`}
   >
     {children}
   </a>
@@ -164,21 +165,23 @@ export const HeaderV2: React.FC = () => {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-30 bg-white border-b border-amex-border">
+    <header className="sticky top-0 z-30 bg-white border-b border-inv-border">
       <div className="max-w-[1400px] mx-auto px-4 lg:px-8 h-[68px] flex items-center justify-between gap-6">
         <Link
           to="/v2"
-          className="shrink-0 flex items-center min-h-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amex-blue"
+          className="shrink-0 flex items-center min-h-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
         >
           <img src={invitLogo} alt="ООО «ИНВИТ»" className="h-8 w-auto" />
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-7">
+        <MegaMenu />
+
+        <nav className="hidden lg:flex items-center gap-6">
           {NAV.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
-              className="text-sm text-amex-ink-muted hover:text-amex-blue transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amex-blue"
+              className="text-sm text-inv-ink-muted hover:text-inv-blue transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
             >
               {item.label}
             </NavLink>
@@ -188,7 +191,7 @@ export const HeaderV2: React.FC = () => {
         <div className="hidden lg:flex items-center gap-5 shrink-0">
           <a
             href="tel:+375296444979"
-            className="flex items-center gap-2 text-sm font-semibold text-amex-ink hover:text-amex-blue transition-colors duration-[120ms] whitespace-nowrap"
+            className="hidden xl:flex items-center gap-2 text-sm font-semibold text-inv-ink hover:text-inv-blue transition-colors duration-[120ms] whitespace-nowrap"
           >
             <Phone className="w-4 h-4" />
             +375 29 644-49-79
@@ -201,27 +204,44 @@ export const HeaderV2: React.FC = () => {
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-label={open ? 'Закрыть меню' : 'Открыть меню'}
-          className="lg:hidden w-11 h-11 -mr-2 flex items-center justify-center text-amex-ink cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amex-blue"
+          className="lg:hidden w-11 h-11 -mr-2 flex items-center justify-center text-inv-ink cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
         >
           {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
       </div>
 
       {open && (
-        <div className="lg:hidden border-t border-amex-border bg-white px-4 py-4 space-y-1">
+        <div className="lg:hidden border-t border-inv-border bg-white px-4 py-4 space-y-1">
+          <span className="block pt-1 pb-2 text-xs font-semibold uppercase tracking-[0.12em] text-inv-ink-muted">
+            Каталог товаров
+          </span>
+          {MOBILE_CATALOG_LINKS.map((item) => (
+            <Link
+              key={item.href}
+              to={item.href}
+              onClick={() => setOpen(false)}
+              className="flex items-center min-h-11 text-base font-semibold text-inv-ink"
+            >
+              {item.label}
+            </Link>
+          ))}
+
+          <span className="block pt-3 pb-2 text-xs font-semibold uppercase tracking-[0.12em] text-inv-ink-muted">
+            Разделы сайта
+          </span>
           {NAV.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
               onClick={() => setOpen(false)}
-              className="flex items-center min-h-11 text-base text-amex-ink"
+              className="flex items-center min-h-11 text-base text-inv-ink"
             >
               {item.label}
             </NavLink>
           ))}
           <a
             href="tel:+375296444979"
-            className="flex items-center min-h-11 text-base font-semibold text-amex-ink"
+            className="flex items-center min-h-11 text-base font-semibold text-inv-ink"
           >
             +375 29 644-49-79
           </a>
@@ -235,7 +255,7 @@ export const HeaderV2: React.FC = () => {
 };
 
 export const FooterV2: React.FC = () => (
-  <footer className="bg-amex-navy text-amex-on-navy">
+  <footer className="bg-inv-deep text-inv-on-deep">
     <div className="max-w-[1400px] mx-auto px-4 lg:px-8 py-10 sm:py-16 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
       <div className="space-y-4">
         <img

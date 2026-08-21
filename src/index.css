@@ -24,32 +24,40 @@
   --color-line: #e1e6e4;
 
   /*
-   * Вариант 2 главной страницы (маршрут /v2) — палитра и типографика
-   * American Express. Всё под префиксом amex-, чтобы не задеть основной сайт.
+   * Вариант 2 главной страницы (маршрут /v2). Палитра клиента: синий взят
+   * с действующего invit.by (#3F5B9E — фон активного пункта меню), красный —
+   * из логотипа EUROBAND. От нынешнего сайта отличается тем, что чёрно-серые
+   * плиты заменены на белый и холодные светлые подложки: не мрачно.
+   *
+   * Правило двух цветов: синий отвечает за действия (кнопки, ссылки, акценты),
+   * красный — только за марку EUROBAND и выбранный пункт каталога.
+   *
    * Benton Sans лицензионный, свободной веб-версии нет: стек честно
    * откатывается на Helvetica Neue / Helvetica / Arial.
    */
-  --font-amex: 'Benton Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-v2: 'Benton Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 
-  --color-amex-blue: #006fcf; /* кнопки, ссылки, акцент */
-  --color-amex-blue-hover: #1374d4;
-  --color-amex-blue-pressed: #00509e;
+  --color-inv-blue: #3f5b9e; /* кнопки, ссылки, акцент. Белый текст 6.6:1 */
+  --color-inv-blue-hover: #4a6bb4;
+  --color-inv-blue-pressed: #2f4a85;
 
-  --color-amex-navy: #00175a; /* тёмные премиальные поверхности */
-  --color-amex-navy-deep: #000c3d;
+  --color-inv-deep: #162c58; /* тёмные поверхности. Белый текст 13.7:1 */
+  --color-inv-deep-2: #0f2148;
 
-  --color-amex-ink: #1a1a1a;
-  --color-amex-ink-muted: #53565a;
-  --color-amex-ink-subdued: #86888c; /* только мелкий необязательный текст */
-  --color-amex-on-navy: #b7c3d9; /* вторичный текст на тёмном */
+  --color-inv-red: #d91920; /* марка EUROBAND и выбранный раздел. На белом 5.1:1 */
+  --color-inv-red-hover: #b31217;
 
-  --color-amex-surface-1: #f7f8f9;
-  --color-amex-surface-2: #ecedee;
-  --color-amex-border: #d5d9dc;
-  --color-amex-border-subtle: #ecedee;
+  --color-inv-ink: #1a1a1a;
+  --color-inv-ink-muted: #53565a;
+  --color-inv-on-deep: #b9c6e0; /* вторичный текст на тёмном */
 
-  --color-amex-success: #00875a;
-  --color-amex-error: #c52720;
+  --color-inv-surface-1: #f5f7fa;
+  --color-inv-surface-2: #eef1f6;
+  --color-inv-border: #dbe2ec;
+  --color-inv-border-subtle: #eef1f6;
+
+  --color-inv-success: #00875a;
+  --color-inv-error: #c52720;
 
   /* Совместимость со старой разметкой внутренних страниц */
   --color-brand-navy: #1c2422;
