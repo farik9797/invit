@@ -8,7 +8,7 @@ import { ProductContentBlocks } from '../components/ProductContentBlocks';
 import { CATEGORIES, PRODUCTS } from '../data/catalogData';
 import { useShop } from '../context/ShopContext';
 import { paths, productSlug } from '../routes';
-import { variantOptions, sortForListing } from '../lib/product';
+import { variantOptions, sortForListing, dedupeContentBlocks } from '../lib/product';
 import { ProductContent } from '../types';
 
 export const ProductPage: React.FC = () => {
@@ -45,6 +45,8 @@ export const ProductPage: React.FC = () => {
   const isAdded = shop.quoteCart.some((i) => i.product.id === product.id);
   const variants = variantOptions(product);
 
+  const contentBlocks = dedupeContentBlocks(content?.blocks ?? [], product.description);
+
   const gallery = content?.images.length
     ? content.images
     : [product.imageLarge || product.image].filter(Boolean);
@@ -66,21 +68,24 @@ export const ProductPage: React.FC = () => {
       <section className="max-w-[1340px] mx-auto px-5 py-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
           {/* Галерея */}
-          <div className="lg:col-span-5 space-y-3 lg:sticky lg:top-32 lg:self-start">
+          <div className="lg:col-span-4 space-y-3 lg:sticky lg:top-32 lg:self-start">
             <button
               onClick={() => setLightboxIndex(activePhoto)}
-              className="block w-full aspect-square bg-white border border-line rounded-xl overflow-hidden cursor-zoom-in hover:border-brand-sky transition-colors"
+              className="flex items-center justify-center w-full max-w-[420px] aspect-square bg-white border border-line rounded-xl overflow-hidden cursor-zoom-in hover:border-brand-sky transition-colors"
               aria-label="Открыть фото"
             >
+              {/* w-auto/h-auto: фото не растягивается выше своего разрешения */}
               <img
                 src={gallery[activePhoto]}
                 alt={product.title}
-                className="w-full h-full object-contain p-4"
+                width={500}
+                height={500}
+                className="w-auto h-auto max-w-full max-h-full object-contain p-4"
               />
             </button>
 
             {gallery.length > 1 && (
-              <div className="grid grid-cols-5 gap-2">
+              <div className="grid grid-cols-5 gap-2 max-w-[420px]">
                 {gallery.map((src, idx) => (
                   <button
                     key={src}
@@ -110,7 +115,7 @@ export const ProductPage: React.FC = () => {
           </div>
 
           {/* Заказ */}
-          <div className="lg:col-span-7 space-y-6">
+          <div className="lg:col-span-8 space-y-6">
             <div>
               <div className="flex flex-wrap items-center gap-2 mb-3">
                 {product.badge && (
@@ -208,9 +213,9 @@ export const ProductPage: React.FC = () => {
             </div>
 
             {/* Полное описание с сайта */}
-            {content?.blocks.length ? (
+            {contentBlocks.length ? (
               <ProductContentBlocks
-                blocks={content.blocks}
+                blocks={contentBlocks}
                 onImageClick={(src) => {
                   const idx = gallery.indexOf(src);
                   setLightboxIndex(idx >= 0 ? idx : 0);

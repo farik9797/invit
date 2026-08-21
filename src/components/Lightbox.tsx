@@ -74,7 +74,7 @@ export const Lightbox: React.FC<LightboxProps> = ({ images, index, alt, onClose,
         src={images[index]}
         alt={alt}
         onClick={(e) => e.stopPropagation()}
-        className="max-w-full max-h-full object-contain bg-white rounded-lg"
+        className="w-auto h-auto max-w-[92vw] max-h-[85vh] object-contain bg-white rounded-lg"
       />
 
       {images.length > 1 && (

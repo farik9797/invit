@@ -38,3 +38,39 @@ export const TAPE_SUBCATEGORIES = [
 ];
 
 export const isTape = (product: Product) => TAPE_SUBCATEGORIES.includes(product.subcategorySlug);
+
+/**
+ * Описание товара на invit.by дублируется: тот же абзац идёт и в кратком
+ * описании, и первым блоком в подробном. На странице товара это выглядит так,
+ * будто текст напечатали дважды. Убираем повтор и заголовок, который после
+ * этого остался бы пустым.
+ */
+export const dedupeContentBlocks = <T extends { kind: string }>(
+  blocks: T[],
+  description: string
+): T[] => {
+  const norm = (s: string) => s.replace(/\s+/g, ' ').trim().toLowerCase();
+  const target = norm(description);
+  if (!target) return blocks;
+
+  const isDuplicate = (b: T) => {
+    if (b.kind !== 'text') return false;
+    const text = norm((b as unknown as { text: string }).text);
+    if (!text) return true;
+    const head = 80;
+    return (
+      text === target ||
+      text.startsWith(target.slice(0, head)) ||
+      target.startsWith(text.slice(0, head))
+    );
+  };
+
+  const kept = blocks.filter((b) => !isDuplicate(b));
+
+  // Заголовок без содержимого до следующего заголовка больше не нужен
+  return kept.filter((b, idx) => {
+    if (b.kind !== 'heading') return true;
+    const next = kept[idx + 1];
+    return Boolean(next) && next.kind !== 'heading';
+  });
+};
