@@ -12,7 +12,7 @@ export const CATEGORIES: Category[] = [
     description: 'Ленты EUROBAND собственного производства — монтажные, ПСУЛ, бутилкаучуковые и уплотнительные ПЭС. Пена, герметики, крепёж и инструмент — прямые поставки.',
 
     iconName: 'Layers',
-    image: 'https://invit.by/image/cache/data/PES/lenta_pod_kontrrejku-208x208.jpg',
+    image: 'https://invit.by/image/data/PES/lenta_pod_kontrrejku.jpg',
     subcategories: [
       { id: 'montazhnye-lenty-dlya-okon', name: 'Монтажные ленты для окон', slug: 'montazhnye-lenty-dlya-okon', count: 4 },
       { id: 'samorasshiryayuschayasya-lenta-psul', name: 'Саморасширяющаяся лента ПСУЛ', slug: 'samorasshiryayuschayasya-lenta-psul', count: 1 },
@@ -34,7 +34,7 @@ export const CATEGORIES: Category[] = [
     description: 'Прямые поставки: фланцевый профиль, монтажные уголки, траверсы и крепёж для изготовления и монтажа воздуховодов. Собственного производства EUROBAND здесь только уплотнительные ленты.',
 
     iconName: 'Wind',
-    image: 'https://invit.by/image/cache/data/ventilation/traversa_profil%27_montazhnyj_20%D1%8530-208x208.jpg',
+    image: 'https://invit.by/image/data/ventilation/traversa_profil%27_montazhnyj_20%D1%8530.jpg',
     subcategories: [
       { id: 'flancevyy-profil-dlya-vozduhovodov', name: 'Фланцевый профиль для воздуховодов', slug: 'flancevyy-profil-dlya-vozduhovodov', count: 7 },
       { id: 'ugolki-montazhnye', name: 'Уголки монтажные', slug: 'ugolki-montazhnye', count: 6 },
@@ -1186,7 +1186,7 @@ export const PRODUCTS: Product[] = [
     subcategoryName: 'Кровельные уплотнители, клейкие ленты',
     division: 'windows',
     description: 'Уплотнительная лента ПЭС EUROBAND под контррейку изготовлена из полиэтиленовой пенки ППЭ толщиной 3 мм, имеющей сшитую замкнутоячеистую структуру. Клеевой слой, имеющийся на одной из сторон ленты, защищен антиадгезионной пленкой или бумагой. Плотная и однородная структура материала обеспечивает надёжное обжатие гвоздя, скобы или шурупа. Такая лента необходима для уплотнения мест соединения подкровельной гидроизоляционной мембраны с контррейкой. Лента надежно защищает от проникновения дождевой и талой воды в утеплитель через места крепления контробрешётки гвоздями на крышах с обычными углами наклона, на пологих скатах и крышах сложной формы с ендовами.',
-    image: 'https://invit.by/image/cache/data/PES/lenta_pod_kontrrejku-208x208.jpg',
+    image: 'https://invit.by/image/data/PES/lenta_pod_kontrrejku.jpg',
     imageLarge: 'https://invit.by/image/data/PES/lenta_pod_kontrrejku.jpg',
     badge: 'Собственное производство',
     features: [
@@ -4525,7 +4525,7 @@ export const PRODUCTS: Product[] = [
     division: 'hvac',
     description: '',
 
-    image: 'https://invit.by/image/cache/data/ventilation/traversa_profil%27_montazhnyj_20%D1%8530-208x208.jpg',
+    image: 'https://invit.by/image/data/ventilation/traversa_profil%27_montazhnyj_20%D1%8530.jpg',
     imageLarge: 'https://invit.by/image/data/ventilation/traversa_profil%27_montazhnyj_20%D1%8530.jpg',
     features: [],
     specs: [],

@@ -3,12 +3,13 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, ArrowUpRight, Check, AlertCircle, FileText } from 'lucide-react';
 import { CATEGORIES, CERTIFICATES, NEWS, PRODUCTS } from '../../data/catalogData';
 import { TAPE_SUBCATEGORIES } from '../../lib/product';
+import { productImage } from '../../lib/productImages';
 import { paths } from '../../routes';
 import { Fade, FadeGroup, CountUp, BlueButton } from './Chrome';
-import heroTape from '../../assets/hero/tape-application.jpg';
-import heroRoof from '../../assets/hero/roof-standing-seam.jpg';
-import heroSheets from '../../assets/hero/roof-profile-sheets.jpg';
-import heroSlab from '../../assets/hero/tape-slab-joint.jpg';
+import heroTape from '../../assets/hero/tape-application.webp';
+import heroRoof from '../../assets/hero/roof-standing-seam.webp';
+import heroSheets from '../../assets/hero/roof-profile-sheets.webp';
+import heroSlab from '../../assets/hero/tape-slab-joint.webp';
 import eurobandLogo from '../../assets/logo/euroband-color.svg';
 import { gsap, MOTION_DURATION, MOTION_EASE, prefersReducedMotion, useScrollParallax } from './gsap';
 
@@ -292,7 +293,7 @@ const TAPE_CELLS: TapeCell[] = [
     name: items[0]?.subcategoryName ?? slug,
     categorySlug: items[0]?.categorySlug ?? CATEGORIES[0].slug,
     count: items.length,
-    image: items[0]?.image ?? ''
+    image: items[0] ? productImage(items[0]) : ''
   };
 });
 
@@ -412,7 +413,7 @@ export const ProductRail: React.FC = () => (
                 className="group flex flex-col h-full rounded-[8px] border border-inv-border bg-white overflow-hidden transition-[transform,box-shadow] duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(0,23,90,0.16)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
               >
                 <img
-                  src={product.image}
+                  src={productImage(product)}
                   alt={product.shortTitle}
                   loading="lazy"
                   className="w-full h-[140px] sm:h-[176px] object-contain bg-white p-4"

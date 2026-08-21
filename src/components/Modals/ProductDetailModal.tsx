@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, Check, FileText, ShieldCheck, Layers, Plus, PhoneCall } from 'lucide-react';
 import { Product } from '../../types';
 import { variantOptions } from '../../lib/product';
+import { productImage } from '../../lib/productImages';
 
 interface ProductDetailModalProps {
   product: Product | null;
@@ -48,7 +49,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
             <div className="md:col-span-5 space-y-3">
               <div className="bg-surface-soft rounded-xl overflow-hidden border border-line h-60 flex items-center justify-center p-2">
                 <img
-                  src={product.image}
+                  src={productImage(product)}
                   alt={product.title}
                   className="w-full h-full object-cover rounded"
                 />

@@ -9,6 +9,7 @@ import { CATEGORIES, PRODUCTS } from '../data/catalogData';
 import { useShop } from '../context/ShopContext';
 import { paths, productSlug } from '../routes';
 import { variantOptions, sortForListing, dedupeContentBlocks } from '../lib/product';
+import { productGallery } from '../lib/productImages';
 import { ProductContent } from '../types';
 
 export const ProductPage: React.FC = () => {
@@ -47,9 +48,7 @@ export const ProductPage: React.FC = () => {
 
   const contentBlocks = dedupeContentBlocks(content?.blocks ?? [], product.description);
 
-  const gallery = content?.images.length
-    ? content.images
-    : [product.imageLarge || product.image].filter(Boolean);
+  const gallery = productGallery(product, content?.images ?? []);
 
   const related = sortForListing(
     PRODUCTS.filter((p) => p.subcategorySlug === product.subcategorySlug && p.id !== product.id)

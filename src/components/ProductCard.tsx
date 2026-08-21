@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FileText, Plus, Check, Eye } from 'lucide-react';
 import { Product } from '../types';
+import { productImage } from '../lib/productImages';
 import { Reveal } from './Reveal';
 import { paths } from '../routes';
 
@@ -37,11 +38,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   <div className="h-full bg-white rounded-xl border border-line hover:border-brand-green hover:-translate-y-1 hover:shadow-lg transition-[transform,box-shadow,border-color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col overflow-hidden group">
     {/* Изображение и бейджи */}
     <div className="relative h-44 bg-white overflow-hidden flex items-center justify-center p-4 border-b border-line">
-      {/* В сетке остаётся превью 208px: при object-contain оно рисуется примерно
-          в 176px, то есть не растягивается. Оригинал (500px) весит впятеро
-          больше и на страницу раздела добавил бы около 1,5 МБ. */}
       <img
-        src={product.image}
+        src={productImage(product)}
         alt={product.title}
         loading="lazy"
         className="w-full h-full object-contain group-hover:scale-[1.06] transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"

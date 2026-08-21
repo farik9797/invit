@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'motion/react';
 import { paths } from '../../routes';
-import roofStandingSeam from '../../assets/hero/roof-standing-seam.jpg';
-import tapeApplication from '../../assets/hero/tape-application.jpg';
-import roofProfileSheets from '../../assets/hero/roof-profile-sheets.jpg';
-import tapeSlabJoint from '../../assets/hero/tape-slab-joint.jpg';
+import roofStandingSeam from '../../assets/hero/roof-standing-seam.webp';
+import tapeApplication from '../../assets/hero/tape-application.webp';
+import roofProfileSheets from '../../assets/hero/roof-profile-sheets.webp';
+import tapeSlabJoint from '../../assets/hero/tape-slab-joint.webp';
 
 interface HeroProps {
   onOpenCallback: () => void;
