@@ -23,7 +23,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/70 backdrop-blur-sm overflow-y-auto">
-      <div className="relative bg-white rounded-xl max-w-3xl w-full shadow-lg border border-line overflow-hidden my-8">
+      <div className="relative bg-white rounded-xl max-w-[60rem] w-full shadow-lg border border-line overflow-hidden my-8">
         
         {/* Header */}
         <div className="bg-brand-blue text-white p-4 sm:p-5 flex items-center justify-between">
