@@ -1,0 +1,559 @@
+import React, { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowRight, ArrowUpRight, Check, AlertCircle, FileText } from 'lucide-react';
+import { CATEGORIES, CERTIFICATES, NEWS, PRODUCTS } from '../../data/catalogData';
+import { TAPE_SUBCATEGORIES } from '../../lib/product';
+import { paths } from '../../routes';
+import { Fade, BlueButton } from './Chrome';
+import heroTape from '../../assets/hero/tape-application.jpg';
+import heroRoof from '../../assets/hero/roof-standing-seam.jpg';
+
+const WRAP = 'max-w-[1400px] mx-auto px-4 lg:px-8';
+const H2 = 'text-3xl md:text-[40px] font-semibold tracking-[-0.01em] leading-[1.15]';
+
+/** Русское склонение после числа: 1 позиция, 2 позиции, 5 позиций. */
+const plural = (n: number, forms: [string, string, string]) => {
+  const mod100 = n % 100;
+  if (mod100 >= 11 && mod100 <= 14) return forms[2];
+  const mod10 = n % 10;
+  if (mod10 === 1) return forms[0];
+  if (mod10 >= 2 && mod10 <= 4) return forms[1];
+  return forms[2];
+};
+
+const positions = (n: number) => `${n} ${plural(n, ['позиция', 'позиции', 'позиций'])}`;
+
+/* ── 1. Герой: асимметричный сплит на тёмно-синем ─────────────────────── */
+
+export const HeroV2: React.FC = () => (
+  <section className="bg-amex-navy text-white">
+    <div className={`${WRAP} pt-16 lg:pt-24 pb-16 lg:pb-24`}>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+        <div className="lg:col-span-6">
+          <h1 className="text-4xl md:text-5xl lg:text-[52px] font-semibold tracking-[-0.01em] leading-[1.1]">
+            Уплотнительные ленты EUROBAND
+          </h1>
+
+          <p className="mt-6 text-lg leading-[1.55] text-amex-on-navy max-w-[44ch]">
+            Белорусский производитель с 2009 года. Уплотняем стыки в окнах, кровле,
+            сэндвич-панелях и вентиляции.
+          </p>
+
+          <div className="mt-10 flex flex-col sm:flex-row gap-3">
+            <BlueButton href="#zapros" className="w-full sm:w-auto">
+              Запросить расчёт
+            </BlueButton>
+            <Link
+              to={paths.catalog}
+              className="inline-flex items-center justify-center min-h-11 px-6 rounded-[4px] border border-white/40 text-white text-sm font-semibold whitespace-nowrap transition-[background-color,transform] duration-[120ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:bg-white/10 active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            >
+              Смотреть каталог
+            </Link>
+          </div>
+        </div>
+
+        <div className="lg:col-span-6">
+          <img
+            src={heroTape}
+            alt="Монтаж уплотнительной ленты EUROBAND на стыке"
+            width={1920}
+            height={1279}
+            className="w-full h-[280px] sm:h-[380px] lg:h-[460px] object-cover rounded-[8px]"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+);
+
+/* ── 2. Полоса фактов: четыре колонки, разделённые тонкой линией ──────── */
+
+const FACTS = [
+  { value: '2009', label: 'год основания компании' },
+  {
+    value: String(PRODUCTS.filter((p) => p.badge === 'Собственное производство').length),
+    label: 'лент собственного производства'
+  },
+  { value: String(PRODUCTS.length), label: 'позиций в каталоге' },
+  { value: String(CERTIFICATES.length), label: 'документов на продукцию' }
+];
+
+export const FactsRow: React.FC = () => (
+  <section className="bg-white border-b border-amex-border">
+    <div className={`${WRAP} py-12`}>
+      <dl className="grid grid-cols-2 lg:grid-cols-4 gap-y-8">
+        {FACTS.map((fact, idx) => (
+          <Fade
+            key={fact.label}
+            delay={idx * 0.04}
+            className={idx > 0 ? 'lg:pl-8 lg:border-l lg:border-amex-border' : ''}
+          >
+            <dt className="text-[32px] font-semibold text-amex-ink tabular-nums leading-none">
+              {fact.value}
+            </dt>
+            <dd className="mt-2 text-sm text-amex-ink-muted max-w-[22ch]">{fact.label}</dd>
+          </Fade>
+        ))}
+      </dl>
+    </div>
+  </section>
+);
+
+/* ── 3. Бенто разделов лент: пять ячеек, ровно по числу разделов ──────── */
+
+interface TapeCell {
+  slug: string;
+  name: string;
+  categorySlug: string;
+  count: number;
+  image: string;
+}
+
+/** Крупную ячейку отдаём самому большому разделу: под него есть кровельное фото. */
+const LEAD_SLUG = 'krovelnye-uplotniteli-kleykie-lenty';
+
+const TAPE_CELLS: TapeCell[] = [
+  LEAD_SLUG,
+  ...TAPE_SUBCATEGORIES.filter((slug) => slug !== LEAD_SLUG)
+].map((slug) => {
+  const items = PRODUCTS.filter((p) => p.subcategorySlug === slug);
+  return {
+    slug,
+    name: items[0]?.subcategoryName ?? slug,
+    categorySlug: items[0]?.categorySlug ?? CATEGORIES[0].slug,
+    count: items.length,
+    image: items[0]?.image ?? ''
+  };
+});
+
+const cellHref = (cell: TapeCell) => `${paths.category(cell.categorySlug)}?sub=${cell.slug}`;
+
+const CELL_BASE =
+  'group flex rounded-[8px] overflow-hidden transition-[transform,box-shadow] duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(0,23,90,0.16)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amex-blue';
+
+export const TapeBento: React.FC = () => {
+  const [lead, ...rest] = TAPE_CELLS;
+
+  return (
+    <section className="bg-amex-surface-1">
+      <div className={`${WRAP} py-16 lg:py-24`}>
+        <Fade className="max-w-[46ch]">
+          <span className="text-xs font-semibold uppercase tracking-[0.12em] text-amex-blue">
+            Продукция
+          </span>
+          <h2 className={`${H2} mt-3 text-amex-ink`}>Разделы лент</h2>
+        </Fade>
+
+        <div className="mt-10 grid grid-cols-1 md:grid-cols-6 gap-4 md:auto-rows-[196px]">
+          {/* Крупная ячейка с фото: задаёт ритм и не даёт сетке стать шестью белыми карточками */}
+          <Fade className="md:col-span-4 md:row-span-2" delay={0}>
+            <Link to={cellHref(lead)} className={`${CELL_BASE} relative h-full min-h-[280px]`}>
+              <img
+                src={heroRoof}
+                alt=""
+                aria-hidden
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-amex-navy via-amex-navy/70 to-amex-navy/20" />
+              <div className="relative mt-auto p-6 lg:p-8">
+                <h3 className="text-2xl lg:text-3xl font-semibold text-white tracking-[-0.01em]">
+                  {lead.name}
+                </h3>
+                <p className="mt-2 text-sm text-amex-on-navy tabular-nums">
+                  {positions(lead.count)} в разделе
+                </p>
+                <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-white">
+                  Открыть раздел
+                  <ArrowRight className="w-4 h-4 transition-transform duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:translate-x-1" />
+                </span>
+              </div>
+            </Link>
+          </Fade>
+
+          {rest.map((cell, idx) => {
+            // Первые две правые ячейки узкие, нижние две широкие: пять ячеек без пустот.
+            const span = idx < 2 ? 'md:col-span-2' : 'md:col-span-3';
+            const tinted = idx >= 2;
+
+            return (
+              <Fade key={cell.slug} className={span} delay={0.04 * (idx + 1)}>
+                <Link
+                  to={cellHref(cell)}
+                  className={`${CELL_BASE} h-full min-h-[196px] items-center gap-4 p-5 lg:p-6 border border-amex-border ${
+                    tinted ? 'bg-amex-surface-2' : 'bg-white'
+                  }`}
+                >
+                  <img
+                    src={cell.image}
+                    alt=""
+                    aria-hidden
+                    loading="lazy"
+                    className="w-20 h-20 lg:w-24 lg:h-24 shrink-0 object-contain rounded-[8px] bg-white"
+                  />
+                  <div className="min-w-0">
+                    <h3 className="text-lg font-semibold text-amex-ink leading-snug">
+                      {cell.name}
+                    </h3>
+                    <p className="mt-1.5 text-sm text-amex-ink-muted tabular-nums">
+                      {positions(cell.count)}
+                    </p>
+                  </div>
+                  <ArrowRight className="w-5 h-5 ml-auto shrink-0 text-amex-blue transition-transform duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:translate-x-1" />
+                </Link>
+              </Fade>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+/* ── 4. Лента товаров с горизонтальной прокруткой ─────────────────────── */
+
+const OWN_TAPES = PRODUCTS.filter((p) => p.badge === 'Собственное производство');
+
+export const ProductRail: React.FC = () => (
+  <section className="bg-white">
+    <div className={`${WRAP} py-16 lg:py-24`}>
+      <Fade className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <h2 className={`${H2} text-amex-ink max-w-[24ch]`}>Собственное производство EUROBAND</h2>
+        <Link
+          to={paths.catalog}
+          className="inline-flex items-center gap-2 text-sm font-semibold text-amex-blue hover:text-amex-blue-pressed transition-colors duration-[120ms] whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amex-blue"
+        >
+          Весь каталог
+          <ArrowRight className="w-4 h-4" />
+        </Link>
+      </Fade>
+
+      <div className="mt-10 -mx-4 lg:-mx-8 px-4 lg:px-8 overflow-x-auto snap-x snap-mandatory">
+        <ul className="flex gap-4 w-max pb-2">
+          {OWN_TAPES.map((product) => (
+            <li key={product.id} className="w-[248px] shrink-0 snap-start">
+              <Link
+                to={paths.product(product)}
+                className="group flex flex-col h-full rounded-[8px] border border-amex-border bg-white overflow-hidden transition-[transform,box-shadow] duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(0,23,90,0.16)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amex-blue"
+              >
+                <img
+                  src={product.image}
+                  alt={product.shortTitle}
+                  loading="lazy"
+                  className="w-full h-[176px] object-contain bg-white p-4"
+                />
+                <div className="flex flex-col flex-1 gap-2 p-5 border-t border-amex-border-subtle">
+                  <span className="text-xs text-amex-ink-muted">{product.subcategoryName}</span>
+                  <h3 className="text-base font-semibold text-amex-ink leading-snug">
+                    {product.shortTitle}
+                  </h3>
+                  <span className="mt-auto inline-flex items-center gap-1.5 text-sm font-semibold text-amex-blue">
+                    Характеристики
+                    <ArrowUpRight className="w-4 h-4 transition-transform duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </span>
+                </div>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+);
+
+/* ── 5. Тёмная полоса с документами ───────────────────────────────────── */
+
+export const DocumentsBand: React.FC = () => (
+  <section className="bg-amex-navy text-white">
+    <div className={`${WRAP} py-16 lg:py-24`}>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
+        <Fade className="lg:col-span-5">
+          <h2 className={`${H2} text-white`}>Документы на продукцию</h2>
+          <p className="mt-5 text-base leading-[1.55] text-amex-on-navy max-w-[46ch]">
+            Сертификат продукции собственного производства, технические свидетельства
+            и декларации о соответствии на каждый тип ленты.
+          </p>
+          <Link
+            to={paths.certificates}
+            className="mt-8 inline-flex items-center gap-2 min-h-11 text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          >
+            <FileText className="w-4 h-4" />
+            Все документы
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </Fade>
+
+        <div className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-4 gap-4">
+          {CERTIFICATES.slice(0, 4).map((cert, idx) => (
+            <Fade key={cert.id} delay={idx * 0.04}>
+              <figure className="h-full">
+                <img
+                  src={cert.image}
+                  alt={cert.title}
+                  loading="lazy"
+                  className="w-full h-[180px] sm:h-[200px] object-cover object-top rounded-[8px] bg-white"
+                />
+                <figcaption className="mt-3 text-xs leading-relaxed text-amex-on-navy">
+                  {cert.type}
+                </figcaption>
+              </figure>
+            </Fade>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+);
+
+/* ── 6. Новости: редакционный список ──────────────────────────────────── */
+
+export const NewsList: React.FC = () => (
+  <section className="bg-white">
+    <div className={`${WRAP} py-16 lg:py-24`}>
+      <Fade>
+        <h2 className={`${H2} text-amex-ink`}>Новости</h2>
+      </Fade>
+
+      <ul className="mt-8 divide-y divide-amex-border-subtle border-t border-amex-border-subtle">
+        {NEWS.slice(0, 3).map((item, idx) => (
+          <Fade key={item.id} delay={idx * 0.04}>
+            <li>
+              <Link
+                to={paths.newsArticle(item.id)}
+                className="group grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-8 py-6 items-baseline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amex-blue"
+              >
+                <span className="md:col-span-3 text-sm text-amex-ink-muted tabular-nums">
+                  {item.date}
+                </span>
+                <h3 className="md:col-span-7 text-lg font-semibold text-amex-ink leading-snug group-hover:text-amex-blue transition-colors duration-[120ms]">
+                  {item.title}
+                </h3>
+                <span className="md:col-span-2 text-sm text-amex-ink-muted md:text-right">
+                  {item.category}
+                </span>
+              </Link>
+            </li>
+          </Fade>
+        ))}
+      </ul>
+
+      <Fade>
+        <Link
+          to={paths.news}
+          className="mt-8 inline-flex items-center gap-2 min-h-11 text-sm font-semibold text-amex-blue hover:text-amex-blue-pressed transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amex-blue"
+        >
+          Все новости
+          <ArrowRight className="w-4 h-4" />
+        </Link>
+      </Fade>
+    </div>
+  </section>
+);
+
+/* ── 7. Контакты и форма запроса ──────────────────────────────────────── */
+
+const FIELD =
+  'w-full min-h-11 px-3 py-2.5 rounded-[4px] border bg-white text-base text-amex-ink placeholder:text-amex-ink-muted transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-amex-blue';
+
+const OFFICES = [
+  {
+    city: 'Минск',
+    address: 'Минский р-н, Сеницкий сельсовет, 84 (ТЦ «Сеница», оф. 9)',
+    phones: ['+375 29 644-49-79', '+375 17 343-77-36']
+  },
+  {
+    city: 'Солигорск',
+    address: 'ул. Строителей, 30, оф. 101',
+    phones: ['+375 174 32-50-22', '+375 29 644-42-70']
+  }
+];
+
+const telHref = (phone: string) => `tel:${phone.replace(/[^\d+]/g, '')}`;
+
+export const ContactSplit: React.FC = () => {
+  const [name, setName] = useState('');
+  const [company, setCompany] = useState('');
+  const [phone, setPhone] = useState('');
+  const [task, setTask] = useState('');
+  const [errors, setErrors] = useState<{ name?: string; phone?: string }>({});
+  const [status, setStatus] = useState<'idle' | 'sending' | 'done'>('idle');
+  const timer = useRef<number>();
+
+  useEffect(() => () => window.clearTimeout(timer.current), []);
+
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const next: { name?: string; phone?: string } = {};
+    if (!name.trim()) next.name = 'Укажите, как к вам обращаться';
+    if (phone.replace(/\D/g, '').length < 9) next.phone = 'Введите номер телефона полностью';
+    setErrors(next);
+    if (Object.keys(next).length) return;
+
+    // Бэкенда пока нет: заявка никуда не уходит, показываем подтверждение.
+    setStatus('sending');
+    timer.current = window.setTimeout(() => setStatus('done'), 600);
+  };
+
+  return (
+    <section id="zapros" className="bg-amex-surface-1 scroll-mt-20">
+      <div className={`${WRAP} py-16 lg:py-24`}>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
+          <Fade className="lg:col-span-5">
+            <h2 className={`${H2} text-amex-ink`}>Запросить расчёт</h2>
+            <p className="mt-5 text-base leading-[1.55] text-amex-ink-muted max-w-[46ch]">
+              Пришлём цену и сроки по вашему объёму. Нетиповую ширину и длину
+              рассчитываем отдельно.
+            </p>
+
+            <div className="mt-10 space-y-8">
+              {OFFICES.map((office) => (
+                <div key={office.city}>
+                  <h3 className="text-sm font-semibold text-amex-ink">{office.city}</h3>
+                  <p className="mt-1.5 text-sm text-amex-ink-muted max-w-[36ch]">
+                    {office.address}
+                  </p>
+                  <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1">
+                    {office.phones.map((p) => (
+                      <a
+                        key={p}
+                        href={telHref(p)}
+                        className="text-sm font-semibold text-amex-blue hover:text-amex-blue-pressed transition-colors duration-[120ms] whitespace-nowrap"
+                      >
+                        {p}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              ))}
+
+              <div>
+                <h3 className="text-sm font-semibold text-amex-ink">Почта</h3>
+                <a
+                  href="mailto:info@invit.by"
+                  className="mt-1.5 inline-block text-sm font-semibold text-amex-blue hover:text-amex-blue-pressed transition-colors duration-[120ms]"
+                >
+                  info@invit.by
+                </a>
+              </div>
+            </div>
+          </Fade>
+
+          <Fade className="lg:col-span-7" delay={0.06}>
+            <div className="bg-white border border-amex-border rounded-[8px] p-6 lg:p-8">
+              {status === 'done' ? (
+                <div className="flex flex-col items-start gap-4 py-6">
+                  <span className="flex items-center justify-center w-11 h-11 rounded-full bg-amex-success/10">
+                    <Check className="w-6 h-6 text-amex-success" />
+                  </span>
+                  <h3 className="text-xl font-semibold text-amex-ink">Заявка принята</h3>
+                  <p className="text-base text-amex-ink-muted max-w-[46ch]">
+                    Перезвоним в рабочее время: пн-чт с 9:00 до 17:30, пт с 9:00 до 16:00.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setStatus('idle')}
+                    className="min-h-11 text-sm font-semibold text-amex-blue cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amex-blue"
+                  >
+                    Отправить ещё одну
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={submit} noValidate className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div className="flex flex-col gap-2">
+                    <label htmlFor="v2-name" className="text-sm font-semibold text-amex-ink">
+                      Имя
+                    </label>
+                    <input
+                      id="v2-name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      aria-invalid={Boolean(errors.name)}
+                      aria-describedby={errors.name ? 'v2-name-error' : undefined}
+                      className={`${FIELD} ${errors.name ? 'border-amex-error' : 'border-amex-border'}`}
+                    />
+                    {errors.name && (
+                      <p
+                        id="v2-name-error"
+                        className="flex items-center gap-1.5 text-sm text-amex-error"
+                      >
+                        <AlertCircle className="w-4 h-4 shrink-0" />
+                        {errors.name}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <label htmlFor="v2-company" className="text-sm font-semibold text-amex-ink">
+                      Компания
+                    </label>
+                    <input
+                      id="v2-company"
+                      value={company}
+                      onChange={(e) => setCompany(e.target.value)}
+                      className={`${FIELD} border-amex-border`}
+                    />
+                    <p className="text-sm text-amex-ink-muted">Необязательно</p>
+                  </div>
+
+                  <div className="flex flex-col gap-2 sm:col-span-2">
+                    <label htmlFor="v2-phone" className="text-sm font-semibold text-amex-ink">
+                      Телефон
+                    </label>
+                    <input
+                      id="v2-phone"
+                      type="tel"
+                      inputMode="tel"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      aria-invalid={Boolean(errors.phone)}
+                      aria-describedby={errors.phone ? 'v2-phone-error' : 'v2-phone-hint'}
+                      className={`${FIELD} ${errors.phone ? 'border-amex-error' : 'border-amex-border'}`}
+                    />
+                    {errors.phone ? (
+                      <p
+                        id="v2-phone-error"
+                        className="flex items-center gap-1.5 text-sm text-amex-error"
+                      >
+                        <AlertCircle className="w-4 h-4 shrink-0" />
+                        {errors.phone}
+                      </p>
+                    ) : (
+                      <p id="v2-phone-hint" className="text-sm text-amex-ink-muted">
+                        Например, +375 29 000-00-00
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="flex flex-col gap-2 sm:col-span-2">
+                    <label htmlFor="v2-task" className="text-sm font-semibold text-amex-ink">
+                      Что нужно
+                    </label>
+                    <textarea
+                      id="v2-task"
+                      rows={4}
+                      value={task}
+                      onChange={(e) => setTask(e.target.value)}
+                      className={`${FIELD} border-amex-border resize-y`}
+                    />
+                    <p className="text-sm text-amex-ink-muted">
+                      Тип ленты, ширина и толщина, объём в метрах или рулонах.
+                    </p>
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <button
+                      type="submit"
+                      disabled={status === 'sending'}
+                      className="inline-flex items-center justify-center w-full sm:w-auto min-h-11 px-8 rounded-[4px] bg-amex-blue text-white text-sm font-semibold cursor-pointer transition-[background-color,transform] duration-[120ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:bg-amex-blue-hover active:bg-amex-blue-pressed active:scale-[0.98] disabled:opacity-70 disabled:cursor-wait focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amex-blue"
+                    >
+                      {status === 'sending' ? 'Отправляем' : 'Запросить расчёт'}
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
+          </Fade>
+        </div>
+      </div>
+    </section>
+  );
+};

@@ -3,6 +3,7 @@ import { Product } from './types';
 /** Единая точка правды по адресам страниц. */
 export const paths = {
   home: '/',
+  homeV2: '/v2',
   catalog: '/catalog',
   category: (slug: string) => `/catalog/${slug}`,
   product: (product: Product) => `/catalog/${product.categorySlug}/${productSlug(product)}`,

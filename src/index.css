@@ -23,6 +23,34 @@
   --color-surface-soft: #eef1f0; /* фон чередующихся секций */
   --color-line: #e1e6e4;
 
+  /*
+   * Вариант 2 главной страницы (маршрут /v2) — палитра и типографика
+   * American Express. Всё под префиксом amex-, чтобы не задеть основной сайт.
+   * Benton Sans лицензионный, свободной веб-версии нет: стек честно
+   * откатывается на Helvetica Neue / Helvetica / Arial.
+   */
+  --font-amex: 'Benton Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+  --color-amex-blue: #006fcf; /* кнопки, ссылки, акцент */
+  --color-amex-blue-hover: #1374d4;
+  --color-amex-blue-pressed: #00509e;
+
+  --color-amex-navy: #00175a; /* тёмные премиальные поверхности */
+  --color-amex-navy-deep: #000c3d;
+
+  --color-amex-ink: #1a1a1a;
+  --color-amex-ink-muted: #53565a;
+  --color-amex-ink-subdued: #86888c; /* только мелкий необязательный текст */
+  --color-amex-on-navy: #b7c3d9; /* вторичный текст на тёмном */
+
+  --color-amex-surface-1: #f7f8f9;
+  --color-amex-surface-2: #ecedee;
+  --color-amex-border: #d5d9dc;
+  --color-amex-border-subtle: #ecedee;
+
+  --color-amex-success: #00875a;
+  --color-amex-error: #c52720;
+
   /* Совместимость со старой разметкой внутренних страниц */
   --color-brand-navy: #1c2422;
   --color-brand-blue: #1fa85c;

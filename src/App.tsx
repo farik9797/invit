@@ -1,8 +1,10 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ShopProvider } from './context/ShopContext';
+import { paths } from './routes';
 import { Layout } from './components/Layout';
 import { HomePage } from './pages/HomePage';
+import { HomePageV2 } from './pages/HomePageV2';
 import { CatalogPage } from './pages/CatalogPage';
 import { CategoryPage } from './pages/CategoryPage';
 import { ProductPage } from './pages/ProductPage';
@@ -19,6 +21,9 @@ export default function App() {
       {/* basename берётся из base сборки: '/' в разработке, '/invit/' на GitHub Pages */}
       <BrowserRouter basename={import.meta.env.BASE_URL}>
         <Routes>
+          {/* Второй вариант главной: своя шапка и подвал, поэтому вне Layout */}
+          <Route path={paths.homeV2} element={<HomePageV2 />} />
+
           <Route element={<Layout />}>
             <Route path="/" element={<HomePage />} />
             <Route path="/catalog" element={<CatalogPage />} />
