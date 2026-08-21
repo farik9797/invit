@@ -4,12 +4,12 @@ import { ArrowRight, ArrowUpRight, Check, AlertCircle, FileText } from 'lucide-r
 import { CATEGORIES, CERTIFICATES, NEWS, PRODUCTS } from '../../data/catalogData';
 import { TAPE_SUBCATEGORIES } from '../../lib/product';
 import { paths } from '../../routes';
-import { Fade, BlueButton } from './Chrome';
+import { Fade, FadeGroup, CountUp, BlueButton } from './Chrome';
 import heroTape from '../../assets/hero/tape-application.jpg';
 import heroRoof from '../../assets/hero/roof-standing-seam.jpg';
 import heroSheets from '../../assets/hero/roof-profile-sheets.jpg';
 import heroSlab from '../../assets/hero/tape-slab-joint.jpg';
-import { gsap, AMEX_DURATION, AMEX_EASE, prefersReducedMotion } from './gsap';
+import { gsap, AMEX_DURATION, AMEX_EASE, prefersReducedMotion, useScrollParallax } from './gsap';
 
 const WRAP = 'max-w-[1400px] mx-auto px-4 lg:px-8';
 const H2 = 'text-3xl md:text-[40px] font-semibold tracking-[-0.01em] leading-[1.15]';
@@ -235,34 +235,36 @@ export const HeroV2: React.FC = () => {
 
 /* ── 2. Полоса фактов: четыре колонки, разделённые тонкой линией ──────── */
 
+const FOUNDED = 2009;
+
 const FACTS = [
-  { value: '2009', label: 'год основания компании' },
+  { value: new Date().getFullYear() - FOUNDED, label: 'лет на рынке' },
   {
-    value: String(PRODUCTS.filter((p) => p.badge === 'Собственное производство').length),
+    value: PRODUCTS.filter((p) => p.badge === 'Собственное производство').length,
     label: 'лент собственного производства'
   },
-  { value: String(PRODUCTS.length), label: 'позиций в каталоге' },
-  { value: String(CERTIFICATES.length), label: 'документов на продукцию' }
+  { value: PRODUCTS.length, label: 'позиций в каталоге' },
+  { value: CERTIFICATES.length, label: 'документов на продукцию' }
 ];
 
 export const FactsRow: React.FC = () => (
   <section className="bg-white border-b border-amex-border">
-    <div className={`${WRAP} py-12`}>
+    <FadeGroup className={`${WRAP} py-12`}>
       <dl className="grid grid-cols-2 lg:grid-cols-4 gap-y-8">
         {FACTS.map((fact, idx) => (
-          <Fade
+          <div
             key={fact.label}
-            delay={idx * 0.04}
+            data-fade-item
             className={idx > 0 ? 'lg:pl-8 lg:border-l lg:border-amex-border' : ''}
           >
-            <dt className="text-[32px] font-semibold text-amex-ink tabular-nums leading-none">
-              {fact.value}
+            <dt className="text-[32px] font-semibold text-amex-ink leading-none">
+              <CountUp value={fact.value} />
             </dt>
             <dd className="mt-2 text-sm text-amex-ink-muted max-w-[22ch]">{fact.label}</dd>
-          </Fade>
+          </div>
         ))}
       </dl>
-    </div>
+    </FadeGroup>
   </section>
 );
 
@@ -300,9 +302,11 @@ const CELL_BASE =
 
 export const TapeBento: React.FC = () => {
   const [lead, ...rest] = TAPE_CELLS;
+  // Кадр в крупной ячейке едет медленнее сетки: даёт глубину и связывает блок с прокруткой
+  const parallaxRef = useScrollParallax([{ selector: '[data-bento-photo]', yPercent: -5 }]);
 
   return (
-    <section className="bg-amex-surface-1">
+    <section className="bg-amex-surface-1" ref={parallaxRef}>
       <div className={`${WRAP} py-16 lg:py-24`}>
         <Fade className="max-w-[46ch]">
           <span className="text-xs font-semibold uppercase tracking-[0.12em] text-amex-blue">
@@ -311,15 +315,16 @@ export const TapeBento: React.FC = () => {
           <h2 className={`${H2} mt-3 text-amex-ink`}>Разделы лент</h2>
         </Fade>
 
-        <div className="mt-10 grid grid-cols-1 md:grid-cols-6 gap-4 md:auto-rows-[196px]">
+        <FadeGroup className="mt-10 grid grid-cols-1 md:grid-cols-6 gap-4 md:auto-rows-[196px]">
           {/* Крупная ячейка с фото: задаёт ритм и не даёт сетке стать шестью белыми карточками */}
-          <Fade className="md:col-span-4 md:row-span-2" delay={0}>
+          <div data-fade-item className="md:col-span-4 md:row-span-2">
             <Link to={cellHref(lead)} className={`${CELL_BASE} relative h-full min-h-[280px]`}>
               <img
+                data-bento-photo
                 src={heroRoof}
                 alt=""
                 aria-hidden
-                className="absolute inset-0 w-full h-full object-cover"
+                className="absolute left-0 top-0 w-full h-[110%] object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-amex-navy via-amex-navy/70 to-amex-navy/20" />
               <div className="relative mt-auto p-6 lg:p-8">
@@ -335,7 +340,7 @@ export const TapeBento: React.FC = () => {
                 </span>
               </div>
             </Link>
-          </Fade>
+          </div>
 
           {rest.map((cell, idx) => {
             // Первые две правые ячейки узкие, нижние две широкие: пять ячеек без пустот.
@@ -343,7 +348,7 @@ export const TapeBento: React.FC = () => {
             const tinted = idx >= 2;
 
             return (
-              <Fade key={cell.slug} className={span} delay={0.04 * (idx + 1)}>
+              <div key={cell.slug} data-fade-item className={span}>
                 <Link
                   to={cellHref(cell)}
                   className={`${CELL_BASE} h-full min-h-[196px] items-center gap-4 p-5 lg:p-6 border border-amex-border ${
@@ -367,10 +372,10 @@ export const TapeBento: React.FC = () => {
                   </div>
                   <ArrowRight className="w-5 h-5 ml-auto shrink-0 text-amex-blue transition-transform duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:translate-x-1" />
                 </Link>
-              </Fade>
+              </div>
             );
           })}
-        </div>
+        </FadeGroup>
       </div>
     </section>
   );
@@ -394,10 +399,13 @@ export const ProductRail: React.FC = () => (
         </Link>
       </Fade>
 
-      <div className="mt-10 -mx-4 lg:-mx-8 px-4 lg:px-8 overflow-x-auto snap-x snap-mandatory">
+      <FadeGroup
+        className="mt-10 -mx-4 lg:-mx-8 px-4 lg:px-8 overflow-x-auto snap-x snap-mandatory"
+        stagger={0.04}
+      >
         <ul className="flex gap-4 w-max pb-2">
           {OWN_TAPES.map((product) => (
-            <li key={product.id} className="w-[248px] shrink-0 snap-start">
+            <li key={product.id} data-fade-item className="w-[248px] shrink-0 snap-start">
               <Link
                 to={paths.product(product)}
                 className="group flex flex-col h-full rounded-[8px] border border-amex-border bg-white overflow-hidden transition-[transform,box-shadow] duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(0,23,90,0.16)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amex-blue"
@@ -422,12 +430,135 @@ export const ProductRail: React.FC = () => (
             </li>
           ))}
         </ul>
-      </div>
+      </FadeGroup>
     </div>
   </section>
 );
 
-/* ── 5. Тёмная полоса с документами ───────────────────────────────────── */
+/* ── 5. О компании: коллаж из двух фото и текст ───────────────────────── */
+
+const ABOUT_SCENE = 'https://invit.by/image/data/PES/montazh_lenty_pod_kontrrejku1.jpg';
+const ABOUT_PRODUCT =
+  'https://invit.by/image/data/GIL%20PIL/lenta_butilovaja_EUROBAND_LBA.png';
+
+export const AboutBlock: React.FC = () => {
+  // Фото и товар едут в разные стороны: коллаж перестаёт быть плоским
+  const parallaxRef = useScrollParallax([
+    { selector: '[data-about-scene]', yPercent: -5 },
+    { selector: '[data-about-product]', yPercent: 4 }
+  ]);
+
+  return (
+    <section className="bg-white" ref={parallaxRef}>
+      <div
+        className={`${WRAP} py-16 lg:py-24 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center`}
+      >
+        <Fade className="lg:col-span-6">
+          <div className="relative pb-14 sm:pb-16">
+            <div className="w-[82%] h-[240px] sm:h-[320px] rounded-[8px] overflow-hidden border border-amex-border">
+              <img
+                data-about-scene
+                src={ABOUT_SCENE}
+                alt="Монтаж уплотнительной ленты EUROBAND под контробрешётку кровли"
+                loading="lazy"
+                className="w-full h-[112%] object-cover"
+              />
+            </div>
+
+            <div className="absolute right-0 bottom-0 w-[54%] h-[160px] sm:h-[200px] rounded-[8px] overflow-hidden border border-amex-border bg-white shadow-[0_6px_24px_rgba(0,23,90,0.16)]">
+              <img
+                data-about-product
+                src={ABOUT_PRODUCT}
+                alt="Бутиловая лента EUROBAND ЛБА"
+                loading="lazy"
+                className="w-full h-full object-contain bg-white p-4"
+              />
+            </div>
+          </div>
+        </Fade>
+
+        <Fade className="lg:col-span-6" delay={0.06}>
+          <h2 className={`${H2} text-amex-ink max-w-[20ch]`}>
+            Производим ленты, остальное поставляем
+          </h2>
+
+          <p className="mt-6 text-base leading-[1.55] text-amex-ink-muted max-w-[60ch]">
+            Производим монтажные, бутилкаучуковые, саморасширяющиеся ПСУЛ и уплотнительные
+            ленты ПЭС под маркой EUROBAND. По желанию клиента изготавливаем ленты нетипичных
+            размеров на разных основах и подложках.
+          </p>
+
+          <p className="mt-4 text-base leading-[1.55] text-amex-ink-muted max-w-[60ch]">
+            Сопутствующие материалы: пену, герметики, крепёж, инструмент и комплектующие для
+            вентиляции поставляем напрямую от производителей.
+          </p>
+
+          <Link
+            to={paths.about}
+            className="group mt-8 inline-flex items-center gap-2 min-h-11 text-sm font-semibold text-amex-blue hover:text-amex-blue-pressed transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amex-blue"
+          >
+            Подробнее о компании
+            <ArrowRight className="w-4 h-4 transition-transform duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:translate-x-1" />
+          </Link>
+        </Fade>
+      </div>
+    </section>
+  );
+};
+
+/* ── 6. Принципы: закреплённый заголовок и список справа ──────────────── */
+
+const VALUES = [
+  {
+    title: 'Стабильное качество',
+    text: 'Характеристики ленты не плавают от партии к партии.'
+  },
+  {
+    title: 'Гибкая цена',
+    text: 'Считаем под объём и задачу, а не по общему прайсу.'
+  },
+  {
+    title: 'Долгие отношения',
+    text: 'Работаем с теми, кому нужен поставщик на годы, а не разовая поставка.'
+  }
+];
+
+export const ValuesBlock: React.FC = () => (
+  <section className="bg-amex-surface-1">
+    <div className={`${WRAP} py-16 lg:py-24 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16`}>
+      <Fade className="lg:col-span-5">
+        <div className="lg:sticky lg:top-24">
+          <h2 className={`${H2} text-amex-ink max-w-[16ch]`}>Работаем с 2009 года</h2>
+
+          <p className="mt-6 text-base leading-[1.55] text-amex-ink-muted max-w-[46ch]">
+            За это время наладили собственное производство в Минске, подтвердили статус
+            отечественного производителя и наработали репутацию надёжного поставщика.
+          </p>
+
+          <p className="mt-4 text-base leading-[1.55] text-amex-ink-muted max-w-[46ch]">
+            Наши ленты применяются при монтаже окон и дверей, на фасадах, кровле и в системах
+            вентиляции: там, где шов должен оставаться герметичным годами.
+          </p>
+        </div>
+      </Fade>
+
+      <FadeGroup className="lg:col-span-7" stagger={0.08}>
+        <ul className="divide-y divide-amex-border">
+          {VALUES.map((value) => (
+            <li key={value.title} data-fade-item className="py-7 first:pt-0 last:pb-0">
+              <h3 className="text-xl font-semibold text-amex-ink">{value.title}</h3>
+              <p className="mt-2 text-base leading-[1.55] text-amex-ink-muted max-w-[52ch]">
+                {value.text}
+              </p>
+            </li>
+          ))}
+        </ul>
+      </FadeGroup>
+    </div>
+  </section>
+);
+
+/* ── 7. Тёмная полоса с документами ───────────────────────────────────── */
 
 export const DocumentsBand: React.FC = () => (
   <section className="bg-amex-navy text-white">
@@ -449,9 +580,9 @@ export const DocumentsBand: React.FC = () => (
           </Link>
         </Fade>
 
-        <div className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-4 gap-4">
-          {CERTIFICATES.slice(0, 4).map((cert, idx) => (
-            <Fade key={cert.id} delay={idx * 0.04}>
+        <FadeGroup className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-4 gap-4">
+          {CERTIFICATES.slice(0, 4).map((cert) => (
+            <div key={cert.id} data-fade-item>
               <figure className="h-full">
                 <img
                   src={cert.image}
@@ -463,15 +594,15 @@ export const DocumentsBand: React.FC = () => (
                   {cert.type}
                 </figcaption>
               </figure>
-            </Fade>
+            </div>
           ))}
-        </div>
+        </FadeGroup>
       </div>
     </div>
   </section>
 );
 
-/* ── 6. Новости: редакционный список ──────────────────────────────────── */
+/* ── 8. Новости: редакционный список ──────────────────────────────────── */
 
 export const NewsList: React.FC = () => (
   <section className="bg-white">
@@ -480,10 +611,10 @@ export const NewsList: React.FC = () => (
         <h2 className={`${H2} text-amex-ink`}>Новости</h2>
       </Fade>
 
-      <ul className="mt-8 divide-y divide-amex-border-subtle border-t border-amex-border-subtle">
-        {NEWS.slice(0, 3).map((item, idx) => (
-          <Fade key={item.id} delay={idx * 0.04}>
-            <li>
+      <FadeGroup className="mt-8">
+        <ul className="divide-y divide-amex-border-subtle border-t border-amex-border-subtle">
+          {NEWS.slice(0, 3).map((item) => (
+            <li key={item.id} data-fade-item>
               <Link
                 to={paths.newsArticle(item.id)}
                 className="group grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-8 py-6 items-baseline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amex-blue"
@@ -499,9 +630,9 @@ export const NewsList: React.FC = () => (
                 </span>
               </Link>
             </li>
-          </Fade>
-        ))}
-      </ul>
+          ))}
+        </ul>
+      </FadeGroup>
 
       <Fade>
         <Link
@@ -516,7 +647,7 @@ export const NewsList: React.FC = () => (
   </section>
 );
 
-/* ── 7. Контакты и форма запроса ──────────────────────────────────────── */
+/* ── 9. Контакты и форма запроса ──────────────────────────────────────── */
 
 const FIELD =
   'w-full min-h-11 px-3 py-2.5 rounded-[4px] border bg-white text-base text-amex-ink placeholder:text-amex-ink-muted transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-amex-blue';

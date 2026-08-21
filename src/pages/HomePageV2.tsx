@@ -5,6 +5,8 @@ import {
   FactsRow,
   TapeBento,
   ProductRail,
+  AboutBlock,
+  ValuesBlock,
   DocumentsBand,
   NewsList,
   ContactSplit
@@ -33,6 +35,8 @@ export const HomePageV2: React.FC = () => {
         <FactsRow />
         <TapeBento />
         <ProductRail />
+        <AboutBlock />
+        <ValuesBlock />
         <DocumentsBand />
         <NewsList />
         <ContactSplit />

@@ -55,6 +55,89 @@ export const Fade: React.FC<{
   );
 };
 
+/**
+ * Лесенка появления для сеток и списков: один ScrollTrigger на всю группу,
+ * а не по одному на каждый элемент. Дети помечаются `data-fade-item`.
+ */
+export const FadeGroup: React.FC<{
+  children: React.ReactNode;
+  className?: string;
+  stagger?: number;
+}> = ({ children, className, stagger = 0.06 }) => {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el || prefersReducedMotion()) return;
+
+    const items = el.querySelectorAll('[data-fade-item]');
+    if (!items.length) return;
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        items,
+        { opacity: 0, y: 14 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: AMEX_DURATION,
+          ease: AMEX_EASE,
+          stagger,
+          scrollTrigger: { trigger: el, start: 'top 88%', once: true }
+        }
+      );
+    }, el);
+
+    return () => ctx.revert();
+  }, [stagger]);
+
+  return (
+    <div ref={ref} className={className}>
+      {children}
+    </div>
+  );
+};
+
+/**
+ * Число, которое досчитывается до своего значения, когда попадает в кадр.
+ * Нужно, чтобы взгляд цеплялся за цифры: на них держится вся секция фактов.
+ */
+export const CountUp: React.FC<{ value: number }> = ({ value }) => {
+  const ref = useRef<HTMLSpanElement>(null);
+
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el || prefersReducedMotion()) return;
+
+    el.textContent = '0';
+    const counter = { current: 0 };
+
+    const ctx = gsap.context(() => {
+      gsap.to(counter, {
+        current: value,
+        duration: 0.9,
+        ease: 'power2.out',
+        onUpdate: () => {
+          el.textContent = String(Math.round(counter.current));
+        },
+        scrollTrigger: { trigger: el, start: 'top 92%', once: true }
+      });
+    }, el);
+
+    return () => {
+      ctx.revert();
+      el.textContent = String(value);
+    };
+  }, [value]);
+
+  // Ширина зарезервирована под итоговое число, иначе строка дёргается при счёте
+  return (
+    <span ref={ref} className="inline-block tabular-nums" style={{ minWidth: `${String(value).length}ch` }}>
+      {value}
+    </span>
+  );
+};
+
 const NAV = [
   { label: 'Каталог', to: paths.catalog },
   { label: 'О компании', to: paths.about },
