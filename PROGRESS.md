@@ -52,15 +52,15 @@
 
 ### Фоны слайдера
 Лежат в `src/assets/hero/` (импортируются в `Hero.tsx`, бандлер сам ставит хеш в имя).
-Клиент присылает картинки из Gemini, я привожу их к 1920px progressive JPEG (PIL, LANCZOS,
-quality 82) — исходники по 3–4 МБ в репозиторий не кладём.
+Клиент присылает картинки из Gemini, я привожу их к 1920px **WebP quality 80**
+(PIL, LANCZOS) — исходники по 3–4 МБ в репозиторий не кладём.
 
 | Слайд | Файл | Примечание |
 |---|---|---|
-| 1. Общий | `roof-standing-seam.jpg` | |
-| 2. ВЛ(а)/ВЛ | `tape-application.jpg` | |
-| 3. ПСУЛ | `roof-profile-sheets.jpg` | |
-| 4. ПЭС | `tape-slab-joint.jpg` | обрезаны нижние 42% — там впечатанные подписи |
+| 1. Общий | `roof-standing-seam.webp` | |
+| 2. ВЛ(а)/ВЛ | `tape-application.webp` | |
+| 3. ПСУЛ | `roof-profile-sheets.webp` | |
+| 4. ПЭС | `tape-slab-joint.webp` | обрезаны нижние 42% — там впечатанные подписи |
 
 Все четыре фона локальные, ничего не тянется с invit.by.
 
