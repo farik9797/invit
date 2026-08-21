@@ -251,27 +251,39 @@ export const FooterV2: React.FC = () => (
 
       <div className="space-y-3 text-sm">
         <h2 className="text-white font-semibold">Разделы</h2>
-        {NAV.map((item) => (
-          <Link
-            key={item.to}
-            to={item.to}
-            className="block hover:text-white transition-colors duration-[120ms]"
-          >
-            {item.label}
-          </Link>
-        ))}
+        {/* На телефоне ссылки подвала тоже цель для пальца. Высоты 44px хватает
+            и как разделителя, поэтому вертикальные отступы там убраны. */}
+        <nav className="flex flex-col sm:gap-3">
+          {NAV.map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              className="flex items-center min-h-11 sm:min-h-0 hover:text-white transition-colors duration-[120ms]"
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
       </div>
 
       <div className="space-y-3 text-sm">
         <h2 className="text-white font-semibold">Реквизиты</h2>
         <p>УНП 192436058</p>
         <p>г. Минск, ул. Мясникова, 78, оф. 6</p>
-        <a href="mailto:info@invit.by" className="block hover:text-white transition-colors">
-          info@invit.by
-        </a>
-        <a href="tel:+375296444979" className="block hover:text-white transition-colors">
-          +375 29 644-49-79
-        </a>
+        <div className="flex flex-col sm:gap-3">
+          <a
+            href="mailto:info@invit.by"
+            className="flex items-center min-h-11 sm:min-h-0 hover:text-white transition-colors"
+          >
+            info@invit.by
+          </a>
+          <a
+            href="tel:+375296444979"
+            className="flex items-center min-h-11 sm:min-h-0 hover:text-white transition-colors"
+          >
+            +375 29 644-49-79
+          </a>
+        </div>
       </div>
     </div>
 
