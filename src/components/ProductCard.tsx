@@ -34,7 +34,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     .map((row) => ({ label: shortLabel(row.label), value: row.value }));
 
   return (
-  <div className="bg-white rounded-xl border border-line hover:border-brand-green hover:-translate-y-1 hover:shadow-lg transition-[transform,box-shadow,border-color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col justify-between overflow-hidden group">
+  <div className="h-full bg-white rounded-xl border border-line hover:border-brand-green hover:-translate-y-1 hover:shadow-lg transition-[transform,box-shadow,border-color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col overflow-hidden group">
     {/* Изображение и бейджи */}
     <div className="relative h-44 bg-white overflow-hidden flex items-center justify-center p-4 border-b border-line">
       <img
@@ -60,8 +60,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     </div>
 
     {/* Контент */}
-    <div className="p-4 flex-1 flex flex-col justify-between gap-3">
-      <div>
+    <div className="p-4 flex-1 flex flex-col gap-3">
+      <div className="flex-1">
         <div className="text-[11px] text-brand-blue mb-1 line-clamp-1">
           {product.subcategoryName}
         </div>
@@ -89,7 +89,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         </div>
       )}
 
-      <div className="grid grid-cols-2 gap-2 pt-1">
+      <div className="grid grid-cols-2 gap-2 pt-1 mt-auto">
         <Link
           to={paths.product(product)}
           className="border border-line hover:border-brand-sky text-ink text-xs font-semibold py-2.5 px-2 rounded-lg transition-[background-color,border-color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] active:scale-[0.98] flex items-center justify-center gap-1.5 cursor-pointer"
@@ -129,13 +129,22 @@ interface ProductGridProps {
   quoteItemsIds: string[];
   onQuickView: (product: Product) => void;
   onAddToQuote: (product: Product) => void;
+  /** Сколько карточек в ряду на широком экране. */
+  columns?: 3 | 4;
 }
+
+// Классы перечислены целиком: Tailwind не собирает имена по частям.
+const GRID_COLUMNS: Record<3 | 4, string> = {
+  3: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch',
+  4: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-stretch'
+};
 
 export const ProductGrid: React.FC<ProductGridProps> = ({
   products,
   quoteItemsIds,
   onQuickView,
-  onAddToQuote
+  onAddToQuote,
+  columns = 4
 }) => {
   if (products.length === 0) {
     return (
@@ -146,9 +155,9 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div className={GRID_COLUMNS[columns]}>
       {products.map((product, idx) => (
-        <Reveal key={product.id} delay={Math.min(idx * 0.06, 0.35)}>
+        <Reveal key={product.id} delay={Math.min(idx * 0.06, 0.35)} className="h-full">
           <ProductCard
             product={product}
             isAdded={quoteItemsIds.includes(product.id)}

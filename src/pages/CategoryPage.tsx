@@ -140,6 +140,7 @@ export const CategoryPage: React.FC = () => {
             </div>
 
             <ProductGrid
+              columns={3}
               products={products.slice(0, visible)}
               quoteItemsIds={shop.quoteCart.map((i) => i.product.id)}
               onQuickView={shop.openQuickView}
