@@ -30,6 +30,20 @@ const COMMON =
 
 const SLIDES = [
   {
+    // Кадр для блока «Уплотнительные ленты собственного производства».
+    // ВАЖНО: ИНВИТ — белорусский производитель, на упаковке должно быть
+    // «Сделано в Беларуси». Модели часто искажают буквы: если надпись вышла
+    // кривой, лучше просить упаковку вообще без текста.
+    file: 'about-factory.jpg',
+    prompt:
+      'Photorealistic wide shot of a bright modern factory floor producing adhesive sealing tape in Belarus: ' +
+      'a female operator in blue workwear and safety glasses at a rewinding machine handling a wide roll of dark grey ' +
+      'foam sealing tape, an extrusion line with a male operator behind her, shelves with rolls of tape, ' +
+      'stacked white cardboard boxes on the left with a clean printed label reading exactly "EUROBAND" ' +
+      'and below it in Russian "Сделано в Беларуси", crisp undistorted lettering, ' +
+      'daylight from ceiling lamps, realistic industrial interior, natural colours, no watermarks, no extra text anywhere else.'
+  },
+  {
     file: 'hero-production.jpg',
     prompt:
       'Interior of a modern industrial plant producing adhesive sealing tape: rows of large tape rolls ' +
