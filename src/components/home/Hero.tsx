@@ -4,7 +4,7 @@ import { motion, useReducedMotion } from 'motion/react';
 import { paths } from '../../routes';
 import roofStandingSeam from '../../assets/hero/roof-standing-seam.jpg';
 import tapeApplication from '../../assets/hero/tape-application.jpg';
-import roofProfileSheets from '../../assets/hero/roof-profile-sheets.jpg';
+import tapeSlabJoint from '../../assets/hero/tape-slab-joint.jpg';
 
 interface HeroProps {
   onOpenCallback: () => void;
@@ -53,7 +53,7 @@ const SLIDES: Slide[] = [
     lead: 'Для сэндвич-панелей, кровли и вентиляции —',
     accent: 'уплотнительные ленты ПЭС',
     text: 'Самоклеящиеся ленты из вспененного полиэтилена: звукоизоляция, герметизация стыков и межфланцевых соединений.',
-    image: roofProfileSheets,
+    image: tapeSlabJoint,
     href: `${paths.category('materialy-dlya-okon')}?sub=uplotnitelnye-lenty-pes-samokleyaschiesy`,
     cta: 'Ленты ПЭС'
   }
@@ -92,6 +92,9 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCallback }) => {
       ))}
       {/* Затемняем только левую половину под текстом, правая остаётся чистым фото */}
       <div className="absolute inset-0 bg-gradient-to-r from-ink/85 from-10% via-ink/45 via-45% to-transparent to-70%" />
+      {/* На телефоне текст лежит поверх всей ширины кадра — горизонтальной подложки
+          не хватает, добавляем вертикальную. На десктопе не нужна. */}
+      <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/40 via-40% to-ink/25 lg:hidden" />
 
       <div className="relative max-w-[1340px] mx-auto px-5 py-20 sm:py-28 lg:py-32">
         {/* Слайды лежат в одной ячейке грида: высота равна самому длинному */}
