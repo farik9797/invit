@@ -68,6 +68,36 @@
   --color-brand-graphite: #3f464c;
 }
 
+/*
+ * Каталог живёт в тех же компонентах, что и раньше, но под этим классом
+ * переменные бренда подменяются на клиентские: зелёный становится синим,
+ * тёмные плиты — тёмно-синими. Утилиты Tailwind 4 ссылаются на переменные
+ * (`background-color: var(--color-brand-green)`), поэтому подмена в области
+ * видимости перекрашивает всё поддерево без правки разметки.
+ */
+.theme-v2 {
+  --color-brand-green: #3f5b9e;
+  --color-brand-green-hover: #2f4a85;
+  --color-brand-green-soft: #eef1f6;
+
+  --color-brand-blue: #3f5b9e;
+  --color-brand-blue-hover: #2f4a85;
+  --color-brand-sky: #3f5b9e;
+  --color-brand-sky-soft: #eef1f6;
+  --color-brand-navy: #162c58;
+  --color-brand-graphite: #53565a;
+
+  --color-brand-red: #d91920;
+  --color-brand-red-hover: #b31217;
+  --color-brand-red-light: #d91920;
+
+  --color-ink: #1a1a1a;
+  --color-ink-soft: #162c58;
+  --color-surface: #ffffff;
+  --color-surface-soft: #f5f7fa;
+  --color-line: #dbe2ec;
+}
+
 html {
   scroll-behavior: smooth;
 }

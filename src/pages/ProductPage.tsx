@@ -164,9 +164,9 @@ export const ProductPage: React.FC = () => {
                     <button
                       key={option}
                       onClick={() => setVariant(option)}
-                      className={`px-3.5 py-2 rounded-lg text-xs border transition-colors cursor-pointer ${
+                      className={`inline-flex items-center min-h-11 px-3.5 rounded-lg text-xs border transition-colors cursor-pointer ${
                         variant === option
-                          ? 'bg-brand-blue text-white border-brand-blue font-semibold'
+                          ? 'bg-brand-red text-white border-brand-red font-semibold'
                           : 'bg-white text-ink/80 border-line hover:border-brand-sky'
                       }`}
                     >
@@ -182,7 +182,7 @@ export const ProductPage: React.FC = () => {
                   className={`flex-1 px-5 py-3.5 rounded-lg text-sm font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer ${
                     isAdded
                       ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
-                      : 'bg-brand-red hover:bg-brand-red-hover text-white'
+                      : 'bg-brand-blue hover:bg-brand-blue-hover text-white'
                   }`}
                 >
                   {isAdded ? <Check className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
@@ -193,7 +193,7 @@ export const ProductPage: React.FC = () => {
                   onClick={() => shop.openCallback(`Запрос по позиции: ${product.title}`)}
                   className="flex-1 px-5 py-3.5 rounded-lg border border-line text-ink text-sm font-semibold hover:border-brand-sky transition-colors flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  <Phone className="w-4 h-4 text-brand-red" />
+                  <Phone className="w-4 h-4 text-brand-blue" />
                   Уточнить цену
                 </button>
               </div>

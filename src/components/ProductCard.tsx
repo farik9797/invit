@@ -68,7 +68,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
         <Link
           to={paths.product(product)}
-          className="block text-sm font-semibold text-ink line-clamp-2 hover:text-brand-blue transition-colors leading-snug"
+          className="block min-h-11 sm:min-h-0 text-sm font-semibold text-ink line-clamp-2 hover:text-brand-blue transition-colors leading-snug"
         >
           {product.title}
         </Link>
@@ -92,7 +92,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       <div className="grid grid-cols-2 gap-2 pt-1 mt-auto">
         <Link
           to={paths.product(product)}
-          className="border border-line hover:border-brand-sky text-ink text-xs font-semibold py-2.5 px-2 rounded-lg transition-[background-color,border-color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] active:scale-[0.98] flex items-center justify-center gap-1.5 cursor-pointer"
+          className="border border-line hover:border-brand-sky text-ink text-xs font-semibold min-h-11 py-2.5 px-2 rounded-lg transition-[background-color,border-color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] active:scale-[0.98] flex items-center justify-center gap-1.5 cursor-pointer"
         >
           <FileText className="w-3.5 h-3.5 text-ink/40" />
           <span>Подробнее</span>
@@ -100,7 +100,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
         <button
           onClick={() => onAddToQuote(product)}
-          className={`text-xs font-semibold py-2.5 px-2 rounded-lg transition-[background-color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] active:scale-[0.98] flex items-center justify-center gap-1.5 cursor-pointer ${
+          className={`text-xs font-semibold min-h-11 py-2.5 px-2 rounded-lg transition-[background-color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] active:scale-[0.98] flex items-center justify-center gap-1.5 cursor-pointer ${
             isAdded
               ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
               : 'bg-brand-blue hover:bg-brand-blue-hover text-white'

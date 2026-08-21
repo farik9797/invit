@@ -56,7 +56,7 @@ export const CatalogPage: React.FC = () => {
                       <Link
                         key={sub.id}
                         to={`${paths.category(cat.slug)}?sub=${sub.slug}`}
-                        className="flex items-center justify-between py-1.5 text-xs text-ink/80 hover:text-brand-blue transition-colors border-b border-line"
+                        className="flex items-center justify-between min-h-11 sm:min-h-0 py-1.5 text-xs text-ink/80 hover:text-brand-blue transition-colors border-b border-line"
                       >
                         <span className="truncate">{sub.name}</span>
                         <span className="text-[10px] text-ink/45 font-mono ml-2">{sub.count}</span>
@@ -92,7 +92,7 @@ export const CatalogPage: React.FC = () => {
             </div>
             <Link
               to={paths.contacts}
-              className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-brand-blue hover:text-brand-blue-hover transition-colors"
+              className="inline-flex items-center gap-2 min-h-11 sm:min-h-0 text-xs font-semibold uppercase tracking-wide text-brand-blue hover:text-brand-blue-hover transition-colors"
             >
               <span>Запросить полный прайс-лист</span>
               <ArrowRight className="w-4 h-4" />

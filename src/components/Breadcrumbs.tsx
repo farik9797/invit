@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { ChevronRight, Home } from 'lucide-react';
 import { paths } from '../routes';
 
@@ -8,10 +8,16 @@ export interface Crumb {
   to?: string;
 }
 
-export const Breadcrumbs: React.FC<{ items: Crumb[] }> = ({ items }) => (
+export const Breadcrumbs: React.FC<{ items: Crumb[] }> = ({ items }) => {
+  // Каталог живёт в синей обвязке варианта 2, поэтому и «Главная» из него
+  // ведёт на синюю главную, а не на зелёную.
+  const { pathname } = useLocation();
+  const home = pathname.startsWith('/catalog') ? paths.homeV2 : paths.home;
+
+  return (
   <nav aria-label="Хлебные крошки" className="bg-surface-soft border-b border-line">
     <div className="max-w-[1340px] mx-auto px-5 py-3 flex items-center gap-1.5 text-xs text-ink/55 flex-wrap">
-      <Link to={paths.home} className="hover:text-brand-blue transition-colors flex items-center gap-1">
+      <Link to={home} className="min-h-11 sm:min-h-0 hover:text-brand-blue transition-colors flex items-center gap-1">
         <Home className="w-3.5 h-3.5" />
         <span>Главная</span>
       </Link>
@@ -19,7 +25,7 @@ export const Breadcrumbs: React.FC<{ items: Crumb[] }> = ({ items }) => (
         <React.Fragment key={idx}>
           <ChevronRight className="w-3.5 h-3.5 text-ink/45 shrink-0" />
           {item.to ? (
-            <Link to={item.to} className="hover:text-brand-blue transition-colors">
+            <Link to={item.to} className="inline-flex items-center min-h-11 sm:min-h-0 hover:text-brand-blue transition-colors">
               {item.label}
             </Link>
           ) : (
@@ -29,7 +35,8 @@ export const Breadcrumbs: React.FC<{ items: Crumb[] }> = ({ items }) => (
       ))}
     </div>
   </nav>
-);
+  );
+};
 
 /** Шапка внутренней страницы: заголовок и подзаголовок под крошками. */
 export const PageHeading: React.FC<{

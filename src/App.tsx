@@ -10,6 +10,11 @@ import { HomePage } from './pages/HomePage';
 const HomePageV2 = lazy(() =>
   import('./pages/HomePageV2').then((m) => ({ default: m.HomePageV2 }))
 );
+const LayoutV2 = lazy(() =>
+  import('./components/home-v2/LayoutV2').then((m) => ({ default: m.LayoutV2 }))
+);
+
+const v2Fallback = <div className="min-h-screen bg-white" />;
 import { CatalogPage } from './pages/CatalogPage';
 import { CategoryPage } from './pages/CategoryPage';
 import { ProductPage } from './pages/ProductPage';
@@ -29,18 +34,18 @@ export default function App() {
           {/* Второй вариант главной: своя шапка и подвал, поэтому вне Layout */}
           <Route
             path={paths.homeV2}
-            element={
-              <Suspense fallback={<div className="min-h-screen bg-white" />}>
-                <HomePageV2 />
-              </Suspense>
-            }
+            element={<Suspense fallback={v2Fallback}>{<HomePageV2 />}</Suspense>}
           />
 
-          <Route element={<Layout />}>
-            <Route path="/" element={<HomePage />} />
+          {/* Каталог переведён в синий с красным: своя обвязка и класс theme-v2 */}
+          <Route element={<Suspense fallback={v2Fallback}>{<LayoutV2 />}</Suspense>}>
             <Route path="/catalog" element={<CatalogPage />} />
             <Route path="/catalog/:categorySlug" element={<CategoryPage />} />
             <Route path="/catalog/:categorySlug/:productSlug" element={<ProductPage />} />
+          </Route>
+
+          <Route element={<Layout />}>
+            <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/certificates" element={<CertificatesPage />} />
             <Route path="/news" element={<NewsPage />} />

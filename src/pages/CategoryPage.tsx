@@ -52,9 +52,9 @@ export const CategoryPage: React.FC = () => {
             <div className="flex gap-2 w-max pb-1">
               <button
                 onClick={() => selectSub(null)}
-                className={`px-3.5 py-2 rounded-lg text-xs whitespace-nowrap border transition-colors cursor-pointer ${
+                className={`inline-flex items-center min-h-11 px-3.5 rounded-lg text-xs whitespace-nowrap border transition-colors cursor-pointer ${
                   !activeSub
-                    ? 'bg-brand-blue text-white border-brand-blue font-semibold'
+                    ? 'bg-brand-red text-white border-brand-red font-semibold'
                     : 'bg-white text-ink/80 border-line'
                 }`}
               >
@@ -68,9 +68,9 @@ export const CategoryPage: React.FC = () => {
                   <button
                     key={sub.id}
                     onClick={() => selectSub(sub.slug)}
-                    className={`px-3.5 py-2 rounded-lg text-xs whitespace-nowrap border transition-colors cursor-pointer ${
+                    className={`inline-flex items-center min-h-11 px-3.5 rounded-lg text-xs whitespace-nowrap border transition-colors cursor-pointer ${
                       activeSub === sub.slug
-                        ? 'bg-brand-blue text-white border-brand-blue font-semibold'
+                        ? 'bg-brand-red text-white border-brand-red font-semibold'
                         : 'bg-white text-ink/80 border-line'
                     }`}
                   >
@@ -90,7 +90,7 @@ export const CategoryPage: React.FC = () => {
                 <button
                   onClick={() => selectSub(null)}
                   className={`w-full text-left px-3 py-2 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
-                    !activeSub ? 'bg-brand-sky-soft text-brand-blue' : 'text-ink/80 hover:bg-surface-soft'
+                    !activeSub ? 'bg-brand-sky-soft text-brand-red' : 'text-ink/80 hover:bg-surface-soft'
                   }`}
                 >
                   Все позиции ({categoryProducts.length})
@@ -107,7 +107,7 @@ export const CategoryPage: React.FC = () => {
                       onClick={() => selectSub(sub.slug)}
                       className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs transition-colors cursor-pointer ${
                         activeSub === sub.slug
-                          ? 'bg-brand-sky-soft text-brand-blue font-bold'
+                          ? 'bg-brand-sky-soft text-brand-red font-bold'
                           : 'text-ink/70 hover:bg-surface-soft'
                       }`}
                     >
@@ -132,7 +132,7 @@ export const CategoryPage: React.FC = () => {
               {activeSub && (
                 <button
                   onClick={() => selectSub(null)}
-                  className="text-xs font-bold text-brand-red hover:text-brand-red-hover transition-colors cursor-pointer"
+                  className="inline-flex items-center min-h-11 sm:min-h-0 text-xs font-bold text-brand-red hover:text-brand-red-hover transition-colors cursor-pointer"
                 >
                   Сбросить фильтр ✕
                 </button>
