@@ -4,6 +4,7 @@ import { motion, useReducedMotion } from 'motion/react';
 import { paths } from '../../routes';
 import roofStandingSeam from '../../assets/hero/roof-standing-seam.jpg';
 import tapeApplication from '../../assets/hero/tape-application.jpg';
+import roofProfileSheets from '../../assets/hero/roof-profile-sheets.jpg';
 import tapeSlabJoint from '../../assets/hero/tape-slab-joint.jpg';
 
 interface HeroProps {
@@ -44,7 +45,7 @@ const SLIDES: Slide[] = [
     lead: 'Защита стыков от воды, шума и холода —',
     accent: 'саморасширяющаяся лента ПСУЛ',
     text: 'Предварительно сжатая уплотнительная лента. Соответствует ТКП 45-3.02-223-2010 и ГОСТ 30971-2002.',
-    image: 'https://invit.by/image/data/PSUL/psul-dlja-brusa.jpg',
+    image: roofProfileSheets,
     href: `${paths.category('materialy-dlya-okon')}?sub=samorasshiryayuschayasya-lenta-psul`,
     cta: 'Лента ПСУЛ'
   },
