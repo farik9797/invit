@@ -174,12 +174,8 @@ export const FooterV2: React.FC = () => (
     </div>
 
     <div className="border-t border-white/15">
-      <div className="max-w-[1400px] mx-auto px-4 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm">
+      <div className="max-w-[1400px] mx-auto px-4 lg:px-8 py-5 text-sm">
         <span>© 2009-2026 ООО «ИНВИТ». Все права защищены.</span>
-        {/* Служебная ссылка на время согласования дизайна. Перед сдачей убрать. */}
-        <Link to={paths.home} className="text-white underline underline-offset-4">
-          Открыть вариант 1
-        </Link>
       </div>
     </div>
   </footer>
