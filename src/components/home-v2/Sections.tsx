@@ -389,7 +389,7 @@ export const ProductRail: React.FC = () => (
   <section className="bg-white">
     <div className={`${WRAP} py-16 lg:py-24`}>
       <Fade className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-        <h2 className={`${H2} text-amex-ink max-w-[24ch]`}>Собственное производство EUROBAND</h2>
+        <h2 className={`${H2} text-amex-ink max-w-[24ch]`}>Ленты EUROBAND</h2>
         <Link
           to={paths.catalog}
           className="inline-flex items-center gap-2 text-sm font-semibold text-amex-blue hover:text-amex-blue-pressed transition-colors duration-[120ms] whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amex-blue"
@@ -479,7 +479,7 @@ export const AboutBlock: React.FC = () => {
 
         <Fade className="lg:col-span-6" delay={0.06}>
           <h2 className={`${H2} text-amex-ink max-w-[20ch]`}>
-            Производим ленты, остальное поставляем
+            Собственное производство в Минске
           </h2>
 
           <p className="mt-6 text-base leading-[1.55] text-amex-ink-muted max-w-[60ch]">
