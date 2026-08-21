@@ -55,7 +55,7 @@ export const CategoryPage: React.FC = () => {
                 className={`px-3.5 py-2 rounded-lg text-xs whitespace-nowrap border transition-colors cursor-pointer ${
                   !activeSub
                     ? 'bg-brand-blue text-white border-brand-blue font-semibold'
-                    : 'bg-white text-brand-navy/80 border-line'
+                    : 'bg-white text-ink/80 border-line'
                 }`}
               >
                 Все ({categoryProducts.length})
@@ -71,7 +71,7 @@ export const CategoryPage: React.FC = () => {
                     className={`px-3.5 py-2 rounded-lg text-xs whitespace-nowrap border transition-colors cursor-pointer ${
                       activeSub === sub.slug
                         ? 'bg-brand-blue text-white border-brand-blue font-semibold'
-                        : 'bg-white text-brand-navy/80 border-line'
+                        : 'bg-white text-ink/80 border-line'
                     }`}
                   >
                     {sub.name} <span className="opacity-60">{subCount}</span>
@@ -90,7 +90,7 @@ export const CategoryPage: React.FC = () => {
                 <button
                   onClick={() => selectSub(null)}
                   className={`w-full text-left px-3 py-2 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
-                    !activeSub ? 'bg-brand-sky-soft text-brand-blue' : 'text-brand-navy/80 hover:bg-surface-soft'
+                    !activeSub ? 'bg-brand-sky-soft text-brand-blue' : 'text-ink/80 hover:bg-surface-soft'
                   }`}
                 >
                   Все позиции ({categoryProducts.length})
@@ -108,11 +108,11 @@ export const CategoryPage: React.FC = () => {
                       className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs transition-colors cursor-pointer ${
                         activeSub === sub.slug
                           ? 'bg-brand-sky-soft text-brand-blue font-bold'
-                          : 'text-brand-navy/70 hover:bg-surface-soft'
+                          : 'text-ink/70 hover:bg-surface-soft'
                       }`}
                     >
                       <span className="truncate text-left">{sub.name}</span>
-                      <span className="text-[10px] text-brand-navy/45 font-mono ml-2">
+                      <span className="text-[10px] text-ink/45 font-mono ml-2">
                         {subCount}
                       </span>
                     </button>
@@ -125,8 +125,8 @@ export const CategoryPage: React.FC = () => {
           {/* Товары */}
           <div className="lg:col-span-9 space-y-5">
             <div className="flex items-center justify-between gap-3 flex-wrap">
-              <span className="text-xs text-brand-navy/55">
-                Показано позиций: <strong className="text-brand-navy">{products.length}</strong>
+              <span className="text-xs text-ink/55">
+                Показано позиций: <strong className="text-ink">{products.length}</strong>
                 {activeSubName && <span className="ml-1">в подразделе «{activeSubName}»</span>}
               </span>
               {activeSub && (
@@ -149,7 +149,7 @@ export const CategoryPage: React.FC = () => {
               <div className="flex justify-center pt-2">
                 <button
                   onClick={() => setVisible((v) => v + PAGE_SIZE)}
-                  className="px-6 py-3 rounded-xl border border-line bg-white text-brand-navy font-bold text-sm hover:bg-surface-soft transition-colors cursor-pointer"
+                  className="px-6 py-3 rounded-xl border border-line bg-white text-ink font-bold text-sm hover:bg-surface-soft transition-colors cursor-pointer"
                 >
                   Показать ещё ({products.length - visible})
                 </button>

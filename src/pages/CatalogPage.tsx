@@ -36,11 +36,11 @@ export const CatalogPage: React.FC = () => {
               >
                 <div className="relative h-44 overflow-hidden">
                   <img src={cat.image} alt={cat.name} className="w-full h-full object-cover" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/90 to-brand-navy/20" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-ink/90 to-ink/20" />
                   <div className="absolute bottom-4 left-5 right-5 text-white">
                     <div className="flex items-center gap-2 mb-1">
                       <Icon className="w-4 h-4 text-brand-red-light" />
-                      <span className="text-[11px] font-bold  text-brand-navy/40">
+                      <span className="text-[11px] font-bold  text-ink/40">
                         {count} позиций
                       </span>
                     </div>
@@ -49,17 +49,17 @@ export const CatalogPage: React.FC = () => {
                 </div>
 
                 <div className="p-5 flex-1 flex flex-col justify-between gap-4">
-                  <p className="text-xs text-brand-navy/70 leading-relaxed">{cat.description}</p>
+                  <p className="text-xs text-ink/70 leading-relaxed">{cat.description}</p>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1">
                     {cat.subcategories.map((sub) => (
                       <Link
                         key={sub.id}
                         to={`${paths.category(cat.slug)}?sub=${sub.slug}`}
-                        className="flex items-center justify-between py-1.5 text-xs text-brand-navy/80 hover:text-brand-blue transition-colors border-b border-line"
+                        className="flex items-center justify-between py-1.5 text-xs text-ink/80 hover:text-brand-blue transition-colors border-b border-line"
                       >
                         <span className="truncate">{sub.name}</span>
-                        <span className="text-[10px] text-brand-navy/45 font-mono ml-2">{sub.count}</span>
+                        <span className="text-[10px] text-ink/45 font-mono ml-2">{sub.count}</span>
                       </Link>
                     ))}
                   </div>
@@ -86,7 +86,7 @@ export const CatalogPage: React.FC = () => {
               <div className="text-xs font-bold  text-brand-red mb-1.5">
                 Собственное производство
               </div>
-              <h2 className="text-xl sm:text-2xl font-bold text-brand-navy tracking-tight">
+              <h2 className="text-xl sm:text-2xl font-bold text-ink tracking-tight">
                 Продукция под маркой EUROBAND
               </h2>
             </div>

@@ -10,10 +10,10 @@ export const CertificatesStrip: React.FC = () => (
     <div className="max-w-[1340px] mx-auto px-5">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-8">
         <div>
-          <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-brand-red">
+          <span className="text-xs font-semibold text-brand-green">
             Документы
           </span>
-          <h2 className="mt-2 text-2xl font-bold text-brand-navy tracking-tight">
+          <h2 className="mt-2 text-2xl font-bold text-ink tracking-tight">
             Качество подтверждено
           </h2>
         </div>
@@ -42,7 +42,7 @@ export const CertificatesStrip: React.FC = () => (
                 className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
               />
             </div>
-            <span className="mt-3 block text-xs text-brand-navy/70 leading-snug line-clamp-2">
+            <span className="mt-3 block text-xs text-ink/70 leading-snug line-clamp-2">
               {cert.title}
             </span>
           </Link>

@@ -23,16 +23,16 @@ export const NewsArticlePage: React.FC = () => {
             <span className="bg-brand-red text-white text-[10px] font-bold uppercase px-2.5 py-1 rounded-md">
               {article.category}
             </span>
-            <span className="flex items-center gap-1.5 text-xs text-brand-navy/55 font-semibold">
+            <span className="flex items-center gap-1.5 text-xs text-ink/55 font-semibold">
               <Calendar className="w-3.5 h-3.5 text-brand-red" />
               {article.date}
             </span>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-bold text-brand-navy tracking-tight leading-snug">
+          <h1 className="text-2xl sm:text-3xl font-bold text-ink tracking-tight leading-snug">
             {article.title}
           </h1>
-          <p className="text-base text-brand-navy/70 leading-relaxed font-medium">{article.summary}</p>
+          <p className="text-base text-ink/70 leading-relaxed font-medium">{article.summary}</p>
         </div>
 
         <img
@@ -41,7 +41,7 @@ export const NewsArticlePage: React.FC = () => {
           className="w-full max-h-96 object-contain bg-white rounded-xl border border-line p-4"
         />
 
-        <div className="text-sm text-brand-navy/80 leading-relaxed space-y-4">
+        <div className="text-sm text-ink/80 leading-relaxed space-y-4">
           {article.content.split('\n').map((paragraph, idx) => (
             <p key={idx}>{paragraph}</p>
           ))}
@@ -59,7 +59,7 @@ export const NewsArticlePage: React.FC = () => {
       {others.length > 0 && (
         <section className="py-12 bg-white border-t border-line">
           <div className="max-w-[900px] mx-auto px-5 space-y-5">
-            <h2 className="text-lg font-bold text-brand-navy tracking-tight">Другие новости</h2>
+            <h2 className="text-lg font-bold text-ink tracking-tight">Другие новости</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               {others.map((n) => (
                 <Link
@@ -73,8 +73,8 @@ export const NewsArticlePage: React.FC = () => {
                     className="w-20 h-20 object-contain bg-white border border-line rounded-xl shrink-0 p-1.5"
                   />
                   <div className="min-w-0 space-y-1">
-                    <span className="text-[11px] text-brand-navy/45 font-semibold">{n.date}</span>
-                    <span className="block text-xs font-semibold text-brand-navy group-hover:text-brand-blue transition-colors line-clamp-3 leading-snug">
+                    <span className="text-[11px] text-ink/45 font-semibold">{n.date}</span>
+                    <span className="block text-xs font-semibold text-ink group-hover:text-brand-blue transition-colors line-clamp-3 leading-snug">
                       {n.title}
                     </span>
                   </div>

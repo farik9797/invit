@@ -19,11 +19,11 @@ export const CertificatesSection: React.FC<CertificatesSectionProps> = ({ onSele
               <ShieldCheck className="w-4 h-4 text-brand-red" />
               <span>Официальная декларация & Гарантия СТБ</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-brand-navy tracking-tight">
+            <h2 className="text-2xl sm:text-3xl font-bold text-ink tracking-tight">
               Сертификаты качества продукции EUROBAND
             </h2>
           </div>
-          <p className="text-xs sm:text-sm text-brand-navy/70 max-w-md">
+          <p className="text-xs sm:text-sm text-ink/70 max-w-md">
             Вся продукция ООО «ИНВИТ» под маркой EUROBAND имеет необходимые документы по качеству:
             технические свидетельства, декларации о соответствии, сертификат продукции собственного
             производства и паспорта качества.
@@ -46,7 +46,7 @@ export const CertificatesSection: React.FC<CertificatesSectionProps> = ({ onSele
                   loading="lazy"
                   className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500 rounded"
                 />
-                <div className="absolute inset-0 bg-brand-navy/10 group-hover:bg-brand-navy/35 transition-colors flex items-center justify-center">
+                <div className="absolute inset-0 bg-ink/10 group-hover:bg-ink/35 transition-colors flex items-center justify-center">
                   <span className="bg-brand-blue text-white text-[11px] font-bold px-3 py-1.5 rounded-lg shadow uppercase flex items-center gap-1 group-hover:bg-brand-red group-hover:text-white transition-colors">
                     <ExternalLink className="w-3.5 h-3.5" />
                     <span>Просмотр</span>
@@ -60,16 +60,16 @@ export const CertificatesSection: React.FC<CertificatesSectionProps> = ({ onSele
                   <span className="text-[10px] font-semibold text-brand-blue  block">
                     {cert.type}
                   </span>
-                  <h3 className="text-xs font-semibold text-brand-navy line-clamp-2 mt-0.5 group-hover:text-brand-blue transition-colors">
+                  <h3 className="text-xs font-semibold text-ink line-clamp-2 mt-0.5 group-hover:text-brand-blue transition-colors">
                     {cert.title}
                   </h3>
                 </div>
 
-                <div className="pt-2 border-t border-line text-[11px] text-brand-navy/55 space-y-1">
+                <div className="pt-2 border-t border-line text-[11px] text-ink/55 space-y-1">
                   {cert.issuedBy && (
                     <div className="flex justify-between">
                       <span>Выдан:</span>
-                      <span className="font-semibold text-brand-navy/80 truncate max-w-[120px]">
+                      <span className="font-semibold text-ink/80 truncate max-w-[120px]">
                         {cert.issuedBy}
                       </span>
                     </div>
@@ -80,8 +80,8 @@ export const CertificatesSection: React.FC<CertificatesSectionProps> = ({ onSele
                       <span className="font-bold text-emerald-700">до {cert.validUntil}</span>
                     </div>
                   ) : (
-                    <div className="flex items-center gap-1.5 text-brand-navy/55">
-                      <FileText className="w-3.5 h-3.5 text-brand-navy/45" />
+                    <div className="flex items-center gap-1.5 text-ink/55">
+                      <FileText className="w-3.5 h-3.5 text-ink/45" />
                       <span>Открыть скан документа</span>
                     </div>
                   )}
@@ -92,20 +92,20 @@ export const CertificatesSection: React.FC<CertificatesSectionProps> = ({ onSele
         </div>
 
         {/* Logos & Quality Standards Trust Strip */}
-        <div className="mt-10 p-6 bg-white rounded-xl border border-line shadow-sm flex flex-wrap items-center justify-around gap-6 text-brand-navy/45">
-          <div className="flex items-center gap-2 font-bold text-brand-navy/80 text-sm">
+        <div className="mt-10 p-6 bg-white rounded-xl border border-line shadow-sm flex flex-wrap items-center justify-around gap-6 text-ink/45">
+          <div className="flex items-center gap-2 font-bold text-ink/80 text-sm">
             <Award className="w-5 h-5 text-brand-red" />
             <span>Сертификат собственного производства</span>
           </div>
-          <div className="flex items-center gap-2 font-bold text-brand-navy/80 text-sm">
+          <div className="flex items-center gap-2 font-bold text-ink/80 text-sm">
             <ShieldCheck className="w-5 h-5 text-brand-blue" />
             <span>Свидетельство технической компетентности</span>
           </div>
-          <div className="flex items-center gap-2 font-bold text-brand-navy/80 text-sm">
+          <div className="flex items-center gap-2 font-bold text-ink/80 text-sm">
             <FileText className="w-5 h-5 text-brand-blue" />
             <span>Технические свидетельства</span>
           </div>
-          <div className="flex items-center gap-2 font-bold text-brand-navy/80 text-sm">
+          <div className="flex items-center gap-2 font-bold text-ink/80 text-sm">
             <CheckCircle className="w-5 h-5 text-emerald-600" />
             <span>Декларации о соответствии</span>
           </div>

@@ -1,26 +1,35 @@
 @import "tailwindcss";
 
 /*
- * Фирменные цвета взяты из логотипов ИНВИТ и EUROBAND (brand/*.ai).
- * Палитра светлая: белый фон, тёмно-синий текст, синий из знака ИНВИТ как акцент,
- * красный EUROBAND — только на действиях (кнопки, бейдж производства).
+ * Палитра и ритм взяты с действующего сайта компании invit.belinfo.by:
+ * зелёный акцент, почти чёрные секции, чередование белого и светло-серого.
+ * Красный EUROBAND остаётся — это цвет торговой марки на упаковке и логотипе.
  */
 @theme {
   --font-sans: 'Onest', ui-sans-serif, system-ui, sans-serif;
 
-  --color-brand-blue: #1f7ab8; /* синий ИНВИТ — ссылки, акценты */
-  --color-brand-blue-hover: #17679c;
-  --color-brand-sky: #3d90cd; /* синий прямо из знака — иконки, подложки */
-  --color-brand-sky-soft: #eaf4fb; /* светлая подложка того же синего */
-  --color-brand-navy: #35485b; /* тёмный из логотипа ИНВИТ — текст, подвал */
-  --color-brand-graphite: #3f464c; /* «BAND» из логотипа EUROBAND */
-  --color-brand-red: #d91920; /* «EURO» из логотипа EUROBAND — CTA */
+  --color-brand-green: #1fa85c; /* акцент: кнопки, ссылки, подчёркивания */
+  --color-brand-green-hover: #17874a;
+  --color-brand-green-soft: #e8f5ee; /* светлая подложка того же зелёного */
+
+  --color-ink: #1c2422; /* тёмные секции и подвал */
+  --color-ink-soft: #2a3532; /* карточки внутри тёмных секций */
+
+  --color-brand-red: #d91920; /* «EURO» из логотипа EUROBAND */
   --color-brand-red-hover: #b71219;
-  --color-brand-red-light: #f0575d; /* акцентный текст на тёмном фоне */
+  --color-brand-red-light: #f0575d;
 
   --color-surface: #ffffff;
-  --color-surface-soft: #f4f7fa; /* фон чередующихся секций */
-  --color-line: #e2e8ef; /* границы */
+  --color-surface-soft: #eef1f0; /* фон чередующихся секций */
+  --color-line: #e1e6e4;
+
+  /* Совместимость со старой разметкой внутренних страниц */
+  --color-brand-navy: #1c2422;
+  --color-brand-blue: #1fa85c;
+  --color-brand-blue-hover: #17874a;
+  --color-brand-sky: #1fa85c;
+  --color-brand-sky-soft: #e8f5ee;
+  --color-brand-graphite: #3f464c;
 }
 
 html {
@@ -29,7 +38,7 @@ html {
 
 body {
   font-family: var(--font-sans);
-  color: var(--color-brand-navy);
+  color: var(--color-ink);
   background: var(--color-surface);
 }
 

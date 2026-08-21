@@ -114,7 +114,7 @@ export const ProductPage: React.FC = () => {
             <div>
               <div className="flex flex-wrap items-center gap-2 mb-3">
                 {product.badge && (
-                  <span className="bg-brand-red text-white text-[10px] font-semibold uppercase tracking-wide px-2 py-1 rounded">
+                  <span className="bg-brand-green text-white text-[10px] font-semibold uppercase tracking-wide px-2 py-1 rounded">
                     {product.badge}
                   </span>
                 )}
@@ -126,11 +126,11 @@ export const ProductPage: React.FC = () => {
                 </Link>
               </div>
 
-              <h1 className="text-2xl sm:text-3xl font-bold text-brand-navy tracking-tight leading-snug">
+              <h1 className="text-2xl sm:text-3xl font-bold text-ink tracking-tight leading-snug">
                 {product.title}
               </h1>
               {product.description && (
-                <p className="text-sm text-brand-navy/70 mt-4 leading-relaxed">
+                <p className="text-sm text-ink/70 mt-4 leading-relaxed">
                   {product.description}
                 </p>
               )}
@@ -139,14 +139,14 @@ export const ProductPage: React.FC = () => {
             {/* Характеристики */}
             {product.specs.length > 0 && (
               <div className="border border-line rounded-xl overflow-hidden">
-                <div className="bg-surface-soft px-4 py-2.5 text-xs font-semibold text-brand-navy">
+                <div className="bg-surface-soft px-4 py-2.5 text-xs font-semibold text-ink">
                   Технические характеристики
                 </div>
                 <dl className="divide-y divide-line text-sm">
                   {product.specs.map((spec) => (
                     <div key={spec.label} className="flex justify-between gap-6 px-4 py-3">
-                      <dt className="text-brand-navy/60">{spec.label}</dt>
-                      <dd className="font-semibold text-brand-navy text-right">{spec.value}</dd>
+                      <dt className="text-ink/60">{spec.label}</dt>
+                      <dd className="font-semibold text-ink text-right">{spec.value}</dd>
                     </div>
                   ))}
                 </dl>
@@ -156,7 +156,7 @@ export const ProductPage: React.FC = () => {
             {/* Типоразмер и действия */}
             <div className="border border-line rounded-xl p-5 space-y-4">
               <div className="space-y-2.5">
-                <span className="block text-xs font-semibold text-brand-navy">
+                <span className="block text-xs font-semibold text-ink">
                   Типоразмер для расчёта сметы
                 </span>
                 <div className="flex flex-wrap gap-2">
@@ -167,7 +167,7 @@ export const ProductPage: React.FC = () => {
                       className={`px-3.5 py-2 rounded-lg text-xs border transition-colors cursor-pointer ${
                         variant === option
                           ? 'bg-brand-blue text-white border-brand-blue font-semibold'
-                          : 'bg-white text-brand-navy/80 border-line hover:border-brand-sky'
+                          : 'bg-white text-ink/80 border-line hover:border-brand-sky'
                       }`}
                     >
                       {option}
@@ -191,14 +191,14 @@ export const ProductPage: React.FC = () => {
 
                 <button
                   onClick={() => shop.openCallback(`Запрос по позиции: ${product.title}`)}
-                  className="flex-1 px-5 py-3.5 rounded-lg border border-line text-brand-navy text-sm font-semibold hover:border-brand-sky transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                  className="flex-1 px-5 py-3.5 rounded-lg border border-line text-ink text-sm font-semibold hover:border-brand-sky transition-colors flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Phone className="w-4 h-4 text-brand-red" />
                   Уточнить цену
                 </button>
               </div>
 
-              <p className="flex items-start gap-2 text-xs text-brand-navy/50">
+              <p className="flex items-start gap-2 text-xs text-ink/50">
                 <ShieldCheck className="w-4 h-4 text-brand-sky shrink-0" />
                 Документы по качеству предоставляем с каждой партией —{' '}
                 <Link to={paths.certificates} className="text-brand-blue hover:underline">
@@ -225,7 +225,7 @@ export const ProductPage: React.FC = () => {
       {related.length > 0 && (
         <section className="py-14 bg-surface-soft border-t border-line">
           <div className="max-w-[1340px] mx-auto px-5 space-y-6">
-            <h2 className="text-xl font-bold text-brand-navy tracking-tight">
+            <h2 className="text-xl font-bold text-ink tracking-tight">
               Другие позиции раздела
             </h2>
             <ProductGrid

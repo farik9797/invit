@@ -11,7 +11,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({ certificate,
   if (!certificate) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-navy/80 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/80 backdrop-blur-sm">
       <div className="relative bg-white rounded-xl max-w-xl w-full shadow-lg border border-line overflow-hidden">
         
         {/* Header */}
@@ -41,15 +41,15 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({ certificate,
           </div>
 
           <div>
-            <h3 className="text-base font-semibold text-brand-navy leading-snug">
+            <h3 className="text-base font-semibold text-ink leading-snug">
               {certificate.title}
             </h3>
             {(certificate.issuedBy || certificate.validUntil) && (
-              <div className="mt-2 p-3 bg-surface-soft border border-line rounded-lg text-xs space-y-1 text-brand-navy/70">
+              <div className="mt-2 p-3 bg-surface-soft border border-line rounded-lg text-xs space-y-1 text-ink/70">
                 {certificate.issuedBy && (
                   <div className="flex justify-between">
                     <span>Орган сертификации:</span>
-                    <span className="font-bold text-brand-navy">{certificate.issuedBy}</span>
+                    <span className="font-bold text-ink">{certificate.issuedBy}</span>
                   </div>
                 )}
                 {certificate.validUntil && (
@@ -75,7 +75,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({ certificate,
 
             <button
               onClick={onClose}
-              className="px-4 py-2 bg-surface-soft hover:bg-surface-soft text-brand-navy font-semibold text-sm rounded-lg cursor-pointer"
+              className="px-4 py-2 bg-surface-soft hover:bg-surface-soft text-ink font-semibold text-sm rounded-lg cursor-pointer"
             >
               Закрыть
             </button>

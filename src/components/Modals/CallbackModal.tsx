@@ -22,7 +22,7 @@ export const CallbackModal: React.FC<CallbackModalProps> = ({ isOpen, onClose, c
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-navy/70 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/70 backdrop-blur-sm">
       <div className="relative bg-white rounded-xl max-w-md w-full shadow-lg border border-line overflow-hidden">
         
         {/* Header */}
@@ -46,10 +46,10 @@ export const CallbackModal: React.FC<CallbackModalProps> = ({ isOpen, onClose, c
           {submitted ? (
             <div className="py-6 text-center space-y-3">
               <CheckCircle2 className="w-12 h-12 text-emerald-600 mx-auto" />
-              <h3 className="text-lg font-bold text-brand-navy">
+              <h3 className="text-lg font-bold text-ink">
                 Заявка принята!
               </h3>
-              <p className="text-xs text-brand-navy/70">
+              <p className="text-xs text-ink/70">
                 Специалист ООО «ИНВИТ» перезвонит вам в течение 10 минут.
               </p>
               <button
@@ -64,12 +64,12 @@ export const CallbackModal: React.FC<CallbackModalProps> = ({ isOpen, onClose, c
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4 text-xs">
-              <p className="text-brand-navy/70 text-xs leading-relaxed">
+              <p className="text-ink/70 text-xs leading-relaxed">
                 Оставьте контактный номер телефона для консультации по выбору лент EUROBAND и согласованию оптовых скидок.
               </p>
 
               <div>
-                <label className="block font-bold text-brand-navy/80 mb-1">
+                <label className="block font-bold text-ink/80 mb-1">
                   Ваше имя:
                 </label>
                 <input
@@ -78,12 +78,12 @@ export const CallbackModal: React.FC<CallbackModalProps> = ({ isOpen, onClose, c
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Анатолий"
-                  className="w-full p-2.5 bg-surface-soft border border-line rounded-lg text-brand-navy font-medium"
+                  className="w-full p-2.5 bg-surface-soft border border-line rounded-lg text-ink font-medium"
                 />
               </div>
 
               <div>
-                <label className="block font-bold text-brand-navy/80 mb-1">
+                <label className="block font-bold text-ink/80 mb-1">
                   Номер телефона <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -92,12 +92,12 @@ export const CallbackModal: React.FC<CallbackModalProps> = ({ isOpen, onClose, c
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="+375 (29) 000-00-00"
-                  className="w-full p-2.5 bg-surface-soft border border-line rounded-lg text-brand-navy font-medium text-sm"
+                  className="w-full p-2.5 bg-surface-soft border border-line rounded-lg text-ink font-medium text-sm"
                 />
               </div>
 
               <div>
-                <label className="block font-bold text-brand-navy/80 mb-1">
+                <label className="block font-bold text-ink/80 mb-1">
                   Комментарий / Запрос:
                 </label>
                 <textarea
@@ -105,7 +105,7 @@ export const CallbackModal: React.FC<CallbackModalProps> = ({ isOpen, onClose, c
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
                   placeholder="Например: заказать прайс или консультацию по ПСУЛ..."
-                  className="w-full p-2.5 bg-surface-soft border border-line rounded-lg text-brand-navy font-medium"
+                  className="w-full p-2.5 bg-surface-soft border border-line rounded-lg text-ink font-medium"
                 ></textarea>
               </div>
 

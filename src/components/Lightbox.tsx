@@ -32,7 +32,7 @@ export const Lightbox: React.FC<LightboxProps> = ({ images, index, alt, onClose,
 
   return (
     <div
-      className="fixed inset-0 z-60 bg-brand-navy/95 flex items-center justify-center p-4 sm:p-10"
+      className="fixed inset-0 z-60 bg-ink/95 flex items-center justify-center p-4 sm:p-10"
       onClick={onClose}
       role="dialog"
       aria-modal="true"

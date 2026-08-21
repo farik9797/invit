@@ -29,7 +29,7 @@ export const Layout: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-surface-soft text-brand-navy font-sans antialiased selection:bg-brand-blue selection:text-white flex flex-col">
+    <div className="min-h-screen bg-surface-soft text-ink font-sans antialiased selection:bg-brand-blue selection:text-white flex flex-col">
       <ScrollToTopOnNavigate />
 
       <TopBar />
@@ -51,11 +51,11 @@ export const Layout: React.FC = () => {
         {showBackToTop && (
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="pointer-events-auto bg-brand-navy hover:bg-brand-navy/90 text-white p-3.5 rounded-full shadow-lg flex items-center justify-center border-2 border-white/80 transition-all transform hover:scale-110 cursor-pointer group backdrop-blur"
+            className="pointer-events-auto bg-ink hover:bg-ink/90 text-white p-3.5 rounded-full shadow-lg flex items-center justify-center border-2 border-white/80 transition-all transform hover:scale-110 cursor-pointer group backdrop-blur"
             title="Наверх"
             aria-label="Наверх"
           >
-            <ChevronUp className="w-5 h-5 text-brand-red-light group-hover:-translate-y-0.5 transition-transform" />
+            <ChevronUp className="w-5 h-5 text-brand-green group-hover:-translate-y-0.5 transition-transform" />
           </button>
         )}
 
@@ -67,7 +67,7 @@ export const Layout: React.FC = () => {
           >
             <div className="relative">
               <ShoppingBag className="w-5 h-5 text-white" />
-              <span className="absolute -top-2 -right-2 bg-brand-red text-white font-bold text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
+              <span className="absolute -top-2 -right-2 bg-brand-green text-white font-bold text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
                 {shop.quoteCart.length}
               </span>
             </div>
@@ -79,10 +79,10 @@ export const Layout: React.FC = () => {
 
         <button
           onClick={() => shop.openCallback('Быстрый звонок с плавающей кнопки')}
-          className="pointer-events-auto bg-brand-red hover:bg-brand-red-hover text-white p-4 rounded-full shadow-lg flex items-center justify-center border-2 border-white transition-all transform hover:scale-110 cursor-pointer group relative"
+          className="pointer-events-auto bg-brand-green hover:bg-brand-green-hover text-white p-4 rounded-full shadow-lg flex items-center justify-center border-2 border-white transition-all transform hover:scale-110 cursor-pointer group relative"
           title="Заказать обратный звонок"
         >
-          <span className="absolute inset-0 rounded-full bg-brand-red opacity-40 animate-ping"></span>
+          <span className="absolute inset-0 rounded-full bg-brand-green opacity-40 animate-ping"></span>
           <PhoneCall className="w-6 h-6 relative z-10 text-white" />
         </button>
       </div>

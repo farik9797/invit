@@ -41,9 +41,9 @@ export const ContactsPage: React.FC = () => (
             key={office.city}
             className="bg-white rounded-xl border border-line shadow-xs p-6 space-y-4"
           >
-            <h2 className="text-lg font-bold text-brand-navy tracking-tight">{office.city}</h2>
+            <h2 className="text-lg font-bold text-ink tracking-tight">{office.city}</h2>
 
-            <div className="flex items-start gap-2.5 text-sm text-brand-navy/70">
+            <div className="flex items-start gap-2.5 text-sm text-ink/70">
               <MapPin className="w-4 h-4 text-brand-red shrink-0 mt-0.5" />
               <span>{office.address}</span>
             </div>
@@ -54,16 +54,16 @@ export const ContactsPage: React.FC = () => (
                   <Phone className="w-4 h-4 text-brand-red shrink-0" />
                   <a
                     href={phone.href}
-                    className="font-bold text-brand-navy hover:text-brand-blue transition-colors whitespace-nowrap"
+                    className="font-bold text-ink hover:text-brand-blue transition-colors whitespace-nowrap"
                   >
                     {phone.label}
                   </a>
-                  {phone.note && <span className="text-xs text-brand-navy/45">({phone.note})</span>}
+                  {phone.note && <span className="text-xs text-ink/45">({phone.note})</span>}
                 </div>
               ))}
             </div>
 
-            <div className="flex items-start gap-2.5 text-xs text-brand-navy/55">
+            <div className="flex items-start gap-2.5 text-xs text-ink/55">
               <Clock className="w-4 h-4 shrink-0 mt-0.5" />
               <span>{office.hours.join(' · ')}</span>
             </div>
@@ -72,7 +72,7 @@ export const ContactsPage: React.FC = () => (
       </div>
 
       <div className="mt-6 bg-brand-sky-soft border border-line rounded-xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div className="flex items-center gap-2.5 text-sm text-brand-navy/80">
+        <div className="flex items-center gap-2.5 text-sm text-ink/80">
           <Mail className="w-4 h-4 text-brand-blue shrink-0" />
           <span>
             Заявки и вопросы —{' '}
@@ -81,7 +81,7 @@ export const ContactsPage: React.FC = () => (
             </a>
           </span>
         </div>
-        <span className="text-xs text-brand-navy/55">ООО «ИНВИТ» · EUROBAND — собственная торговая марка</span>
+        <span className="text-xs text-ink/55">ООО «ИНВИТ» · EUROBAND — собственная торговая марка</span>
       </div>
     </section>
 

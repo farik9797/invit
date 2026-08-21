@@ -44,14 +44,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       />
 
       {product.badge && (
-        <span className="absolute top-3 left-3 bg-brand-red text-white text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded">
+        <span className="absolute top-3 left-3 bg-brand-green text-white text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded">
           {product.badge}
         </span>
       )}
 
       <button
         onClick={() => onQuickView(product)}
-        className="absolute inset-0 bg-brand-navy/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-semibold gap-1.5 cursor-pointer"
+        className="absolute inset-0 bg-ink/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-semibold gap-1.5 cursor-pointer"
       >
         <Eye className="w-4 h-4" />
         <span>Быстрый просмотр</span>
@@ -67,12 +67,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
         <Link
           to={paths.product(product)}
-          className="block text-sm font-semibold text-brand-navy line-clamp-2 hover:text-brand-blue transition-colors leading-snug"
+          className="block text-sm font-semibold text-ink line-clamp-2 hover:text-brand-blue transition-colors leading-snug"
         >
           {product.title}
         </Link>
 
-        <p className="text-xs text-brand-navy/55 line-clamp-2 mt-1.5 leading-relaxed">
+        <p className="text-xs text-ink/55 line-clamp-2 mt-1.5 leading-relaxed">
           {product.description}
         </p>
       </div>
@@ -81,8 +81,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         <div className="bg-surface-soft p-3 rounded-lg text-[11px] space-y-1">
           {highlights.map((row) => (
             <div key={row.label} className="flex justify-between gap-2">
-              <span className="text-brand-navy/45 truncate">{row.label}</span>
-              <span className="font-semibold text-brand-navy whitespace-nowrap shrink-0">{row.value}</span>
+              <span className="text-ink/45 truncate">{row.label}</span>
+              <span className="font-semibold text-ink whitespace-nowrap shrink-0">{row.value}</span>
             </div>
           ))}
         </div>
@@ -91,9 +91,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       <div className="grid grid-cols-2 gap-2 pt-1">
         <Link
           to={paths.product(product)}
-          className="border border-line hover:border-brand-sky text-brand-navy text-xs font-semibold py-2.5 px-2 rounded-lg transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+          className="border border-line hover:border-brand-sky text-ink text-xs font-semibold py-2.5 px-2 rounded-lg transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
         >
-          <FileText className="w-3.5 h-3.5 text-brand-navy/40" />
+          <FileText className="w-3.5 h-3.5 text-ink/40" />
           <span>Подробнее</span>
         </Link>
 
@@ -138,7 +138,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
 }) => {
   if (products.length === 0) {
     return (
-      <div className="py-16 text-center text-sm text-brand-navy/60 bg-surface-soft rounded-xl border border-line">
+      <div className="py-16 text-center text-sm text-ink/60 bg-surface-soft rounded-xl border border-line">
         В этом разделе пока нет позиций. Напишите нам — подберём аналог под ваш проект.
       </div>
     );

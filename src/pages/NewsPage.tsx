@@ -34,17 +34,17 @@ export const NewsPage: React.FC = () => (
 
             <div className="p-5 flex-1 flex flex-col justify-between gap-3">
               <div className="space-y-2">
-                <div className="flex items-center gap-1.5 text-[11px] text-brand-navy/45 font-semibold">
+                <div className="flex items-center gap-1.5 text-[11px] text-ink/45 font-semibold">
                   <Calendar className="w-3.5 h-3.5 text-brand-red" />
                   <span>{article.date}</span>
                 </div>
                 <Link
                   to={paths.newsArticle(article.id)}
-                  className="block text-sm font-semibold text-brand-navy hover:text-brand-blue transition-colors leading-snug"
+                  className="block text-sm font-semibold text-ink hover:text-brand-blue transition-colors leading-snug"
                 >
                   {article.title}
                 </Link>
-                <p className="text-xs text-brand-navy/55 leading-relaxed line-clamp-3">
+                <p className="text-xs text-ink/55 leading-relaxed line-clamp-3">
                   {article.summary}
                 </p>
               </div>

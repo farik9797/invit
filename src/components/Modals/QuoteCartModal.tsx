@@ -32,7 +32,7 @@ export const QuoteCartModal: React.FC<QuoteCartModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-navy/70 backdrop-blur-sm overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/70 backdrop-blur-sm overflow-y-auto">
       <div className="relative bg-white rounded-xl max-w-2xl w-full shadow-lg border border-line overflow-hidden my-8">
         
         {/* Header */}
@@ -56,10 +56,10 @@ export const QuoteCartModal: React.FC<QuoteCartModalProps> = ({
           {submitted ? (
             <div className="py-10 text-center space-y-4">
               <CheckCircle2 className="w-16 h-16 text-emerald-600 mx-auto" />
-              <h3 className="text-xl font-bold text-brand-navy">
+              <h3 className="text-xl font-bold text-ink">
                 Смета КП успешно отправлена в отдел продаж!
               </h3>
-              <p className="text-brand-navy/70 text-xs max-w-md mx-auto">
+              <p className="text-ink/70 text-xs max-w-md mx-auto">
                 Менеджер ООО «ИНВИТ» подготовит дифференцированный оптовый расчет и вышлет его на указный телефон в ближайшее время.
               </p>
               <button
@@ -75,11 +75,11 @@ export const QuoteCartModal: React.FC<QuoteCartModalProps> = ({
             </div>
           ) : items.length === 0 ? (
             <div className="py-12 text-center space-y-3">
-              <FileSpreadsheet className="w-12 h-12 text-brand-navy/40 mx-auto" />
-              <h3 className="text-base font-bold text-brand-navy/80">
+              <FileSpreadsheet className="w-12 h-12 text-ink/40 mx-auto" />
+              <h3 className="text-base font-bold text-ink/80">
                 Ваша смета пока пуста
               </h3>
-              <p className="text-xs text-brand-navy/55 max-w-xs mx-auto">
+              <p className="text-xs text-ink/55 max-w-xs mx-auto">
                 Нажмите «В прайс КП» в карточках каталога, чтобы сформировать список нужных материалов.
               </p>
             </div>
@@ -96,10 +96,10 @@ export const QuoteCartModal: React.FC<QuoteCartModalProps> = ({
                     />
 
                     <div className="flex-1 min-w-0">
-                      <span className="font-mono text-[10px] text-brand-navy/45 block font-bold">
+                      <span className="font-mono text-[10px] text-ink/45 block font-bold">
                         {product.subcategoryName}
                       </span>
-                      <h4 className="font-bold text-brand-navy truncate">
+                      <h4 className="font-bold text-ink truncate">
                         {product.title}
                       </h4>
                       <span className="text-brand-blue text-[11px] font-semibold">
@@ -116,11 +116,11 @@ export const QuoteCartModal: React.FC<QuoteCartModalProps> = ({
                         onChange={(e) => onUpdateQuantity(product.id, Math.max(1, parseInt(e.target.value) || 1))}
                         className="w-16 p-1.5 text-center font-bold border border-line rounded text-xs"
                       />
-                      <span className="text-[10px] text-brand-navy/45 font-semibold">рул/шт</span>
+                      <span className="text-[10px] text-ink/45 font-semibold">рул/шт</span>
 
                       <button
                         onClick={() => onRemoveItem(product.id)}
-                        className="p-1 text-brand-navy/45 hover:text-red-600 transition-colors"
+                        className="p-1 text-ink/45 hover:text-red-600 transition-colors"
                         title="Удалить из сметы"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -132,7 +132,7 @@ export const QuoteCartModal: React.FC<QuoteCartModalProps> = ({
 
               {/* Form Input */}
               <form onSubmit={handleSubmitQuote} className="space-y-3 bg-surface-soft p-4 rounded-xl border border-line text-xs">
-                <h4 className="font-semibold text-brand-navy uppercase">
+                <h4 className="font-semibold text-ink uppercase">
                   Контактные данные для получения расчета:
                 </h4>
 
@@ -142,7 +142,7 @@ export const QuoteCartModal: React.FC<QuoteCartModalProps> = ({
                     placeholder="Компания / ИП"
                     value={companyName}
                     onChange={(e) => setCompanyName(e.target.value)}
-                    className="p-2.5 bg-white border border-line rounded-lg text-brand-navy font-medium"
+                    className="p-2.5 bg-white border border-line rounded-lg text-ink font-medium"
                   />
                   <input
                     type="tel"
@@ -150,7 +150,7 @@ export const QuoteCartModal: React.FC<QuoteCartModalProps> = ({
                     placeholder="Телефон для связи *"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="p-2.5 bg-white border border-line rounded-lg text-brand-navy font-medium"
+                    className="p-2.5 bg-white border border-line rounded-lg text-ink font-medium"
                   />
                 </div>
 

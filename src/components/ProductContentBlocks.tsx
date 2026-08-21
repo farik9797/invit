@@ -14,7 +14,7 @@ export const ProductContentBlocks: React.FC<Props> = ({ blocks, onImageClick }) 
         return (
           <h2
             key={idx}
-            className="text-lg font-semibold text-brand-navy pt-3 first:pt-0 tracking-tight"
+            className="text-lg font-semibold text-ink pt-3 first:pt-0 tracking-tight"
           >
             {block.text}
           </h2>
@@ -23,7 +23,7 @@ export const ProductContentBlocks: React.FC<Props> = ({ blocks, onImageClick }) 
 
       if (block.kind === 'text') {
         return (
-          <p key={idx} className="text-sm text-brand-navy/75 leading-relaxed">
+          <p key={idx} className="text-sm text-ink/75 leading-relaxed">
             {block.text}
           </p>
         );
@@ -33,7 +33,7 @@ export const ProductContentBlocks: React.FC<Props> = ({ blocks, onImageClick }) 
         return (
           <ul key={idx} className="space-y-2">
             {block.items.map((item, i) => (
-              <li key={i} className="flex gap-2.5 text-sm text-brand-navy/75 leading-relaxed">
+              <li key={i} className="flex gap-2.5 text-sm text-ink/75 leading-relaxed">
                 <span className="mt-2 w-1.5 h-1.5 rounded-full bg-brand-sky shrink-0" />
                 <span>{item}</span>
               </li>
@@ -52,7 +52,7 @@ export const ProductContentBlocks: React.FC<Props> = ({ blocks, onImageClick }) 
                     {block.headers.map((header, i) => (
                       <th
                         key={i}
-                        className="px-3 py-2.5 font-medium text-brand-navy/60 align-bottom"
+                        className="px-3 py-2.5 font-medium text-ink/60 align-bottom"
                       >
                         {header}
                       </th>
@@ -66,7 +66,7 @@ export const ProductContentBlocks: React.FC<Props> = ({ blocks, onImageClick }) 
                         <td
                           key={cIdx}
                           className={`px-3 py-2.5 ${
-                            cIdx === 0 ? 'font-semibold text-brand-navy' : 'text-brand-navy/75'
+                            cIdx === 0 ? 'font-semibold text-ink' : 'text-ink/75'
                           }`}
                         >
                           {cell}

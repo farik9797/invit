@@ -1,9 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Phone } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Hero } from '../components/home/Hero';
-import { Facts } from '../components/home/Facts';
 import { CategoryTiles } from '../components/home/CategoryTiles';
+import { AboutIntro } from '../components/home/AboutIntro';
+import { SinceBlock } from '../components/home/SinceBlock';
+import { NewsGrid } from '../components/home/NewsGrid';
+import { ContactBanner } from '../components/home/ContactBanner';
 import { CertificatesStrip } from '../components/home/CertificatesStrip';
 import { ProductGrid } from '../components/ProductCard';
 import { PRODUCTS } from '../data/catalogData';
@@ -22,25 +25,23 @@ export const HomePage: React.FC = () => {
   return (
     <>
       <Hero onOpenCallback={() => shop.openCallback('Запрос расчёта с главной')} />
-      <Facts />
+
+      {/* Сразу после главного экрана — категории, следом товары */}
       <CategoryTiles />
 
-      {/* Товары — сразу после категорий */}
-      <section className="py-16 sm:py-20 bg-surface-soft border-t border-line">
+      <section className="py-16 sm:py-24 bg-surface-soft">
         <div className="max-w-[1340px] mx-auto px-5">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
             <div>
-              <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-brand-red">
-                Продукция
-              </span>
-              <h2 className="mt-2 text-2xl sm:text-3xl font-bold text-brand-navy tracking-tight">
+              <span className="text-xs font-semibold text-brand-green">Продукция</span>
+              <h2 className="mt-2 text-3xl sm:text-4xl font-bold text-ink tracking-tight">
                 Ленты нашего производства
               </h2>
             </div>
 
             <Link
               to={paths.catalog}
-              className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-blue hover:text-brand-blue-hover transition-colors"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-brand-green hover:text-brand-green-hover transition-colors"
             >
               Весь каталог
               <ArrowRight className="w-4 h-4" />
@@ -56,37 +57,11 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
+      <AboutIntro />
+      <SinceBlock />
+      <NewsGrid />
+      <ContactBanner />
       <CertificatesStrip />
-
-      {/* Короткий призыв — без длинных описаний */}
-      <section className="py-16 bg-surface">
-        <div className="max-w-[1340px] mx-auto px-5 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-          <div>
-            <h2 className="text-2xl font-bold text-brand-navy tracking-tight">
-              Рассчитаем цену под ваш объём
-            </h2>
-            <p className="mt-2 text-sm text-brand-navy/60">
-              Пришлите список позиций — подготовим коммерческое предложение.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-3">
-            <Link
-              to={paths.contacts}
-              className="bg-brand-red hover:bg-brand-red-hover text-white text-sm font-semibold px-6 py-3.5 rounded-lg transition-colors"
-            >
-              Запросить КП
-            </Link>
-            <a
-              href="tel:+375296444979"
-              className="inline-flex items-center gap-2 border border-line hover:border-brand-sky text-brand-navy text-sm font-semibold px-6 py-3.5 rounded-lg transition-colors whitespace-nowrap"
-            >
-              <Phone className="w-4 h-4 text-brand-red" />
-              +375 (29) 644-49-79
-            </a>
-          </div>
-        </div>
-      </section>
     </>
   );
 };
