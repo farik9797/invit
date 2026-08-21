@@ -83,6 +83,27 @@ export const ContactsPage: React.FC = () => (
         </div>
         <span className="text-xs text-ink/55">ООО «ИНВИТ» · EUROBAND — собственная торговая марка</span>
       </div>
+
+      {/* Реквизиты для договоров и счетов */}
+      <div className="mt-6 bg-white border border-line rounded-xl p-6">
+        <h2 className="text-sm font-semibold text-ink">Реквизиты</h2>
+        <dl className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-5 text-sm">
+          <div>
+            <dt className="text-xs text-ink/55">Полное наименование</dt>
+            <dd className="mt-1 text-ink">
+              Общество с ограниченной ответственностью «ИНВИТ»
+            </dd>
+          </div>
+          <div>
+            <dt className="text-xs text-ink/55">УНП</dt>
+            <dd className="mt-1 font-semibold text-ink">192436058</dd>
+          </div>
+          <div>
+            <dt className="text-xs text-ink/55">Юридический адрес</dt>
+            <dd className="mt-1 text-ink">г. Минск, ул. Мясникова, 78, оф. 6</dd>
+          </div>
+        </dl>
+      </div>
     </section>
 
     <QuoteFormSection />

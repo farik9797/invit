@@ -47,7 +47,18 @@ export const Footer: React.FC<FooterProps> = ({ onOpenCallback }) => (
           <p className="text-xs leading-relaxed">
             Сопутствующие материалы поставляем напрямую от производителей.
           </p>
-          {/* TODO: клиент подтвердит УНП, юридический адрес и расчётный счёт — добавить сюда */}
+
+          <dl className="pt-2 space-y-2 text-xs">
+            <div>
+              <dt className="text-white/80">УНП</dt>
+              <dd>192436058</dd>
+            </div>
+            <div>
+              <dt className="text-white/80">Юридический адрес</dt>
+              <dd>г. Минск, ул. Мясникова, 78, оф. 6</dd>
+            </div>
+          </dl>
+          {/* Расчётный счёт клиент пока не давал — добавить сюда, когда пришлёт */}
         </div>
 
         {/* Адрес */}
