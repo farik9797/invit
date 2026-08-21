@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'motion/react';
 import { paths } from '../../routes';
+import roofStandingSeam from '../../assets/hero/roof-standing-seam.jpg';
+import tapeApplication from '../../assets/hero/tape-application.jpg';
+import roofProfileSheets from '../../assets/hero/roof-profile-sheets.jpg';
 
 interface HeroProps {
   onOpenCallback: () => void;
@@ -23,7 +26,7 @@ const SLIDES: Slide[] = [
     lead: 'Производим уплотнительные и герметизирующие',
     accent: 'ленты EUROBAND',
     text: 'Белорусский производитель с 2009 года. Изготовим ленты нетипичных размеров под ваш проект.',
-    image: 'https://invit.by/image/data/PES/montazh_lenty_pod_kontrrejku1.jpg',
+    image: roofStandingSeam,
     href: paths.catalog,
     cta: 'Смотреть каталог'
   },
@@ -32,7 +35,7 @@ const SLIDES: Slide[] = [
     lead: 'Внутренний слой монтажного шва —',
     accent: 'пароизоляционные ленты ВЛ(а) и ВЛ',
     text: 'Металлизированная плёнка с нетканым полотном, две монтажные полосы: акрил и бутилкаучук. Пять типоразмеров по ширине.',
-    image: 'https://invit.by/image/data/ventilation/tpl_lenta_montazh.jpg',
+    image: tapeApplication,
     href: `${paths.category('materialy-dlya-okon')}?sub=montazhnye-lenty-dlya-okon`,
     cta: 'Монтажные ленты'
   },
@@ -50,7 +53,7 @@ const SLIDES: Slide[] = [
     lead: 'Для сэндвич-панелей, кровли и вентиляции —',
     accent: 'уплотнительные ленты ПЭС',
     text: 'Самоклеящиеся ленты из вспененного полиэтилена: звукоизоляция, герметизация стыков и межфланцевых соединений.',
-    image: 'https://invit.by/image/data/PES/montazh_sendvich_panel.jpg',
+    image: roofProfileSheets,
     href: `${paths.category('materialy-dlya-okon')}?sub=uplotnitelnye-lenty-pes-samokleyaschiesy`,
     cta: 'Ленты ПЭС'
   }
