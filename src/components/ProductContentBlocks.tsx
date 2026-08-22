@@ -6,10 +6,35 @@ interface Props {
   onImageClick: (src: string) => void;
 }
 
+/** После группировки одиночных `image` не остаётся — только `gallery`. */
+type Group = Exclude<ContentBlock, { kind: 'image' }> | { kind: 'gallery'; images: string[] };
+
+/**
+ * Идущие подряд иллюстрации собираем в одну группу: по три в ряд они читаются
+ * как набор, а не как лента на всю ширину. Заодно каждая уменьшается примерно
+ * до 255px и перестаёт растягиваться выше своего разрешения.
+ */
+const groupImages = (blocks: ContentBlock[]): Group[] => {
+  const out: Group[] = [];
+
+  for (const block of blocks) {
+    const last = out[out.length - 1];
+    if (block.kind === 'image' && last && last.kind === 'gallery') {
+      last.images.push(block.src);
+    } else if (block.kind === 'image') {
+      out.push({ kind: 'gallery', images: [block.src] });
+    } else {
+      out.push(block);
+    }
+  }
+
+  return out;
+};
+
 /** Описание товара как на invit.by: заголовки, абзацы, списки, таблицы и иллюстрации. */
 export const ProductContentBlocks: React.FC<Props> = ({ blocks, onImageClick }) => (
   <div className="space-y-5">
-    {blocks.map((block, idx) => {
+    {groupImages(blocks).map((block, idx) => {
       if (block.kind === 'heading') {
         return (
           <h2
@@ -81,14 +106,32 @@ export const ProductContentBlocks: React.FC<Props> = ({ blocks, onImageClick }) 
         );
       }
 
+      // Одиночная иллюстрация в сетке из трёх смотрелась бы огрызком рядом
+      // с двумя пустыми колонками, поэтому её показываем отдельно и не шире 420px.
+      const alone = block.images.length === 1;
+
       return (
-        <button
+        <div
           key={idx}
-          onClick={() => onImageClick(block.src)}
-          className="block w-full border border-line rounded-xl overflow-hidden bg-white hover:border-brand-sky transition-colors cursor-zoom-in"
+          className={alone ? '' : 'grid grid-cols-2 sm:grid-cols-3 gap-3'}
         >
-          <img src={block.src} alt="" loading="lazy" className="w-full h-auto" />
-        </button>
+          {block.images.map((src) => (
+            <button
+              key={src}
+              onClick={() => onImageClick(src)}
+              className={`aspect-4/3 flex items-center justify-center border border-line rounded-xl overflow-hidden bg-white hover:border-brand-sky transition-colors cursor-zoom-in ${
+                alone ? 'w-full max-w-[420px]' : ''
+              }`}
+            >
+              <img
+                src={src}
+                alt=""
+                loading="lazy"
+                className="w-full h-full object-contain p-2"
+              />
+            </button>
+          ))}
+        </div>
       );
     })}
   </div>
