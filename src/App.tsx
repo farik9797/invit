@@ -2,7 +2,6 @@ import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ShopProvider } from './context/ShopContext';
 import { paths } from './routes';
-import { Layout } from './components/Layout';
 import { HomePage } from './pages/HomePage';
 
 // Второй вариант главной тянет за собой GSAP. Грузим его отдельным чанком,
@@ -37,15 +36,13 @@ export default function App() {
             element={<Suspense fallback={v2Fallback}>{<HomePageV2 />}</Suspense>}
           />
 
-          {/* Каталог переведён в синий с красным: своя обвязка и класс theme-v2 */}
+          {/* Весь сайт в синем с красным: обвязка варианта 2 и класс theme-v2,
+              который подменяет переменные бренда (см. src/index.css) */}
           <Route element={<Suspense fallback={v2Fallback}>{<LayoutV2 />}</Suspense>}>
+            <Route path="/" element={<HomePage />} />
             <Route path="/catalog" element={<CatalogPage />} />
             <Route path="/catalog/:categorySlug" element={<CategoryPage />} />
             <Route path="/catalog/:categorySlug/:productSlug" element={<ProductPage />} />
-          </Route>
-
-          <Route element={<Layout />}>
-            <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/certificates" element={<CertificatesPage />} />
             <Route path="/news" element={<NewsPage />} />

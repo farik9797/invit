@@ -22,7 +22,7 @@ export const LayoutV2: React.FC = () => {
 
   return (
     <div className="theme-v2 font-v2 min-h-screen flex flex-col bg-white text-inv-ink antialiased selection:bg-inv-blue selection:text-white">
-      <HeaderV2 />
+      <HeaderV2 onRequest={() => shop.openCallback('Запрос из шапки')} />
 
       <main className="flex-1">
         <Outlet />

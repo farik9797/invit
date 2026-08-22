@@ -147,28 +147,38 @@ const NAV = [
   { label: 'Контакты', to: paths.contacts }
 ];
 
-/** Основная кнопка: синий из палитры клиента, белый текст, радиус 4px. */
+const BLUE_BUTTON =
+  'inline-flex items-center justify-center min-h-11 px-6 rounded-[4px] bg-inv-blue text-white text-sm font-semibold whitespace-nowrap cursor-pointer transition-[background-color,transform] duration-[120ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:bg-inv-blue-hover active:bg-inv-blue-pressed active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue';
+
+/**
+ * Основная кнопка: синий из палитры клиента, белый текст, радиус 4px.
+ * На главной варианта 2 ведёт якорем к форме, на остальных страницах формы
+ * нет, поэтому там передаётся `onClick` и открывается модалка звонка.
+ */
 export const BlueButton: React.FC<{
-  href: string;
+  href?: string;
+  onClick?: () => void;
   children: React.ReactNode;
   className?: string;
-}> = ({ href, children, className = '' }) => (
-  <a
-    href={href}
-    className={`inline-flex items-center justify-center min-h-11 px-6 rounded-[4px] bg-inv-blue text-white text-sm font-semibold whitespace-nowrap transition-[background-color,transform] duration-[120ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:bg-inv-blue-hover active:bg-inv-blue-pressed active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue ${className}`}
-  >
-    {children}
-  </a>
-);
+}> = ({ href, onClick, children, className = '' }) =>
+  onClick ? (
+    <button type="button" onClick={onClick} className={`${BLUE_BUTTON} ${className}`}>
+      {children}
+    </button>
+  ) : (
+    <a href={href} className={`${BLUE_BUTTON} ${className}`}>
+      {children}
+    </a>
+  );
 
-export const HeaderV2: React.FC = () => {
+export const HeaderV2: React.FC<{ onRequest?: () => void }> = ({ onRequest }) => {
   const [open, setOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-30 bg-white border-b border-inv-border">
       <div className="max-w-[1400px] mx-auto px-4 lg:px-8 h-[68px] flex items-center justify-between gap-6">
         <Link
-          to="/v2"
+          to={paths.home}
           className="shrink-0 flex items-center min-h-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
         >
           <img src={invitLogo} alt="ООО «ИНВИТ»" className="h-8 w-auto" />
@@ -196,7 +206,9 @@ export const HeaderV2: React.FC = () => {
             <Phone className="w-4 h-4" />
             +375 29 644-49-79
           </a>
-          <BlueButton href="#zapros">Запросить расчёт</BlueButton>
+          <BlueButton href="#zapros" onClick={onRequest}>
+            Запросить расчёт
+          </BlueButton>
         </div>
 
         <button
@@ -245,7 +257,11 @@ export const HeaderV2: React.FC = () => {
           >
             +375 29 644-49-79
           </a>
-          <BlueButton href="#zapros" className="w-full mt-2">
+          <BlueButton
+            href="#zapros"
+            onClick={onRequest && (() => { setOpen(false); onRequest(); })}
+            className="w-full mt-2"
+          >
             Запросить расчёт
           </BlueButton>
         </div>
