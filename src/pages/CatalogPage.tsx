@@ -6,6 +6,7 @@ import { ProductGrid } from '../components/ProductCard';
 import { CATEGORIES, PRODUCTS } from '../data/catalogData';
 import { useShop } from '../context/ShopContext';
 import { paths } from '../routes';
+import { categoryBanner } from '../lib/productImages';
 
 /** Витрина собственного производства — вместо простыни из всех позиций. */
 const OWN_PRODUCTION = PRODUCTS.filter((p) => p.badge === 'Собственное производство').slice(0, 8);
@@ -35,12 +36,19 @@ export const CatalogPage: React.FC = () => {
                 className="bg-white rounded-xl border border-line shadow-xs overflow-hidden flex flex-col"
               >
                 <div className="relative h-44 overflow-hidden">
-                  <img src={cat.image} alt={cat.name} className="w-full h-full object-cover" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-ink/90 to-ink/20" />
+                  <img
+                    src={categoryBanner(cat.slug, cat.image)}
+                    alt={cat.name}
+                    width={1280}
+                    height={352}
+                    className="w-full h-full object-cover"
+                  />
+                  {/* Заливка слева направо: текст на тёмном, фото справа остаётся чистым */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-ink/90 from-20% via-ink/55 via-55% to-ink/10" />
                   <div className="absolute bottom-4 left-5 right-5 text-white">
                     <div className="flex items-center gap-2 mb-1">
                       <Icon className="w-4 h-4 text-brand-red-light" />
-                      <span className="text-[11px] font-bold  text-ink/40">
+                      <span className="text-[11px] font-bold text-white/75">
                         {count} позиций
                       </span>
                     </div>

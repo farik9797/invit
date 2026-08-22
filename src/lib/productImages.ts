@@ -1,4 +1,6 @@
 import { Product } from '../types';
+import windowsBanner from '../assets/categories/windows.webp';
+import ventilationBanner from '../assets/categories/ventilyaciya.webp';
 
 /**
  * Фото товаров лежат у нас, а не тянутся с invit.by.
@@ -38,3 +40,17 @@ export const productGallery = (product: Product, extra: string[]) => {
   const main = productImage(product);
   return [main, ...extra.slice(1)];
 };
+
+/**
+ * Баннеры разделов каталога. Собраны локально в 1280x352 (двойной размер бокса),
+ * потому что на invit.by картинок такой ширины нет: раздел окон это кадр из фото
+ * героя, вентиляция собрана из товарного снимка на белом — сцены для неё
+ * у клиента просто не существует.
+ */
+const CATEGORY_BANNERS: Record<string, string> = {
+  'materialy-dlya-okon': windowsBanner,
+  ventilyaciya: ventilationBanner
+};
+
+export const categoryBanner = (slug: string, fallback: string) =>
+  CATEGORY_BANNERS[slug] ?? fallback;
