@@ -141,13 +141,19 @@ export const MegaMenu: React.FC = () => {
                         onMouseEnter={() => setActive(idx)}
                         onFocus={() => setActive(idx)}
                         aria-current={isActive}
-                        className={`flex items-center justify-between gap-3 min-h-11 px-5 text-sm transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-inv-blue ${
+                        className={`flex items-center gap-3 min-h-11 px-5 text-sm transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-inv-blue ${
                           isActive
                             ? 'bg-white text-inv-red font-semibold'
                             : 'text-inv-ink hover:text-inv-red'
                         }`}
                       >
-                        {item.label}
+                        <SectionIcon
+                          slug={item.id}
+                          className={`w-[18px] h-[18px] shrink-0 ${
+                            isActive ? 'text-inv-red' : 'text-inv-blue'
+                          }`}
+                        />
+                        <span className="flex-1">{item.label}</span>
                         <ChevronRight className="w-4 h-4 shrink-0 opacity-60" />
                       </Link>
                     </li>

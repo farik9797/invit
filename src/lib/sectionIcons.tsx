@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  AppWindow,
   Blinds,
   Bolt,
   Boxes,
@@ -10,6 +11,7 @@ import {
   HardHat,
   Layers,
   PaintRoller,
+  Ribbon,
   Scroll,
   Shield,
   Spool,
@@ -53,8 +55,10 @@ const BY_SUBCATEGORY: Record<string, IconComponent> = {
 };
 
 const BY_CATEGORY: Record<string, IconComponent> = {
-  'materialy-dlya-okon': Layers,
-  ventilyaciya: Wind
+  'materialy-dlya-okon': AppWindow,
+  ventilyaciya: Wind,
+  // Раздел мега-меню, которого нет в каталоге: только ленты собственного производства
+  tapes: Ribbon
 };
 
 /** Иконка подраздела, а если такого нет — общий знак каталога. */

@@ -1,11 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useParams, useSearchParams, Navigate } from 'react-router-dom';
-import { Search, X, ChevronRight } from 'lucide-react';
+import { Search, X, ChevronRight, Boxes } from 'lucide-react';
 import { Breadcrumbs } from '../components/Breadcrumbs';
 import { ProductGrid } from '../components/ProductCard';
 import { CATEGORIES, PRODUCTS } from '../data/catalogData';
 import { useShop } from '../context/ShopContext';
 import { sortForListing } from '../lib/product';
+import { SectionIcon } from '../lib/sectionIcons';
 import { paths } from '../routes';
 
 /*
@@ -115,13 +116,14 @@ export const CatalogPage: React.FC = () => {
                 <nav className="p-2">
                   <Link
                     to={paths.catalog}
-                    className={`flex items-center justify-between gap-3 min-h-11 px-3 rounded-[4px] text-sm transition-colors duration-[120ms] ${
+                    className={`flex items-center gap-2.5 min-h-11 px-2.5 rounded-[4px] text-sm transition-colors duration-[120ms] ${
                       !category
                         ? 'bg-inv-surface-1 text-inv-red font-semibold'
                         : 'text-inv-ink hover:text-inv-blue'
                     }`}
                   >
-                    Все позиции
+                    <Boxes className="w-[18px] h-[18px] shrink-0 text-inv-blue" />
+                    <span className="flex-1">Все позиции</span>
                     <span className="text-xs text-inv-ink-muted tabular-nums">
                       {PRODUCTS.length}
                     </span>
@@ -134,12 +136,18 @@ export const CatalogPage: React.FC = () => {
                       <div key={cat.id} className="mt-1">
                         <Link
                           to={paths.category(cat.slug)}
-                          className={`flex items-center justify-between gap-3 min-h-11 px-3 rounded-[4px] text-sm transition-colors duration-[120ms] ${
+                          className={`flex items-center gap-2.5 min-h-11 px-2.5 rounded-[4px] text-sm transition-colors duration-[120ms] ${
                             isOpen
                               ? 'bg-inv-surface-1 text-inv-red font-semibold'
                               : 'text-inv-ink hover:text-inv-blue'
                           }`}
                         >
+                          <SectionIcon
+                            slug={cat.slug}
+                            className={`w-[18px] h-[18px] shrink-0 ${
+                              isOpen ? 'text-inv-red' : 'text-inv-blue'
+                            }`}
+                          />
                           <span className="flex-1">{cat.name}</span>
                           <span className="text-xs text-inv-ink-muted tabular-nums">
                             {countIn(cat.slug)}
@@ -161,12 +169,18 @@ export const CatalogPage: React.FC = () => {
                                   onClick={() =>
                                     selectSub(activeSub === sub.slug ? null : sub.slug)
                                   }
-                                  className={`w-full flex items-center justify-between gap-3 min-h-11 pl-4 pr-3 text-left text-sm cursor-pointer transition-colors duration-[120ms] ${
+                                  className={`w-full flex items-center gap-2.5 min-h-11 pl-2 pr-2.5 text-left text-sm cursor-pointer transition-colors duration-[120ms] ${
                                     activeSub === sub.slug
                                       ? 'text-inv-red font-semibold'
                                       : 'text-inv-ink-muted hover:text-inv-blue'
                                   }`}
                                 >
+                                  <SectionIcon
+                                    slug={sub.slug}
+                                    className={`w-4 h-4 shrink-0 ${
+                                      activeSub === sub.slug ? 'text-inv-red' : 'text-inv-blue'
+                                    }`}
+                                  />
                                   <span className="flex-1 leading-snug">{sub.name}</span>
                                   <span className="text-xs tabular-nums">
                                     {countInSub(sub.slug)}
