@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'motion/react';
 import { paths } from '../../routes';
+import eurobandLight from '../../assets/logo/euroband-light.svg';
 import roofStandingSeam from '../../assets/hero/roof-standing-seam.webp';
 import tapeApplication from '../../assets/hero/tape-application.webp';
 import roofProfileSheets from '../../assets/hero/roof-profile-sheets.webp';
@@ -24,8 +25,8 @@ interface Slide {
 const SLIDES: Slide[] = [
   {
     id: 'about',
-    lead: 'Производим уплотнительные и герметизирующие',
-    accent: 'ленты EUROBAND',
+    lead: 'Уплотнительные и герметизирующие',
+    accent: 'ленты',
     text: 'Белорусский производитель с 2009 года. Изготовим ленты нетипичных размеров под ваш проект.',
     image: roofStandingSeam,
     href: paths.catalog,
@@ -98,6 +99,13 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCallback }) => {
       <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/40 via-40% to-ink/25 lg:hidden" />
 
       <div className="relative max-w-[1340px] mx-auto px-5 py-20 sm:py-28 lg:py-32">
+        {/* Марка стоит над слайдами и не меняется: ленты у всех слайдов одни */}
+        <img
+          src={eurobandLight}
+          alt="EUROBAND"
+          className="h-6 sm:h-7 lg:h-8 w-auto mb-6 lg:mb-8"
+        />
+
         {/* Слайды лежат в одной ячейке грида: высота равна самому длинному */}
         <div className="grid max-w-3xl">
           {SLIDES.map((slide, idx) => {

@@ -11,6 +11,7 @@ import heroRoof from '../../assets/hero/roof-standing-seam.webp';
 import heroSheets from '../../assets/hero/roof-profile-sheets.webp';
 import heroSlab from '../../assets/hero/tape-slab-joint.webp';
 import eurobandLogo from '../../assets/logo/euroband-color.svg';
+import eurobandLight from '../../assets/logo/euroband-light.svg';
 import { gsap, MOTION_DURATION, MOTION_EASE, prefersReducedMotion, useScrollParallax } from './gsap';
 
 const WRAP = 'max-w-[1400px] mx-auto px-4 lg:px-8';
@@ -42,7 +43,7 @@ interface HeroSlide {
 const HERO_SLIDES: HeroSlide[] = [
   {
     id: 'about',
-    title: 'Уплотнительные ленты EUROBAND',
+    title: 'Уплотнительные и герметизирующие ленты',
     text: 'Белорусский производитель с 2009 года. Уплотняем стыки в окнах, кровле, сэндвич-панелях и вентиляции.',
     image: heroRoof,
     href: paths.catalog,
@@ -158,6 +159,13 @@ export const HeroV2: React.FC = () => {
         <div className="absolute inset-0 bg-gradient-to-t from-inv-deep/90 via-inv-deep/55 via-45% to-inv-deep/30 lg:hidden" />
 
         <div className="relative px-5 sm:px-10 lg:px-16 pt-10 pb-8 lg:pt-24 lg:pb-16">
+          {/* Марка стоит над слайдами и не меняется: ленты у всех слайдов одни */}
+          <img
+            src={eurobandLight}
+            alt="EUROBAND"
+            className="h-6 sm:h-7 lg:h-8 w-auto mb-6 lg:mb-8"
+          />
+
           {/* Слайды в одной ячейке грида: высота карточки не прыгает при смене */}
           <div className="grid max-w-3xl">
             {HERO_SLIDES.map((slide, idx) => {
