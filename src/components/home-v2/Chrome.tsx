@@ -2,7 +2,6 @@ import React, { useLayoutEffect, useRef, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { Menu, X, Phone } from 'lucide-react';
 import invitLogo from '../../assets/logo/invit-color.svg';
-import invitLogoMono from '../../assets/logo/invit-mono.svg';
 import { paths } from '../../routes';
 import { gsap, MOTION_DURATION, MOTION_EASE, prefersReducedMotion } from './gsap';
 import { MegaMenu, MOBILE_CATALOG_LINKS } from './MegaMenu';
@@ -139,12 +138,19 @@ export const CountUp: React.FC<{ value: number }> = ({ value }) => {
   );
 };
 
-/** «Каталог» вынесен в мега-меню, поэтому в текстовом меню его нет. */
+/** «Каталог» вынесен в мега-меню, поэтому в текстовом меню шапки его нет. */
 const NAV = [
   { label: 'О компании', to: paths.about },
   { label: 'Документация', to: paths.certificates },
   { label: 'Новости', to: paths.news },
   { label: 'Контакты', to: paths.contacts }
+];
+
+/** В подвале мега-меню нет, поэтому там перечисляем все разделы сайта. */
+const FOOTER_NAV = [
+  { label: 'Главная', to: paths.home },
+  { label: 'Каталог', to: paths.catalog },
+  ...NAV
 ];
 
 const BLUE_BUTTON =
@@ -274,11 +280,9 @@ export const FooterV2: React.FC = () => (
   <footer className="bg-inv-deep text-inv-on-deep">
     <div className="max-w-[1400px] mx-auto px-4 lg:px-8 py-10 sm:py-16 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
       <div className="space-y-4">
-        <img
-          src={invitLogoMono}
-          alt="ООО «ИНВИТ»"
-          className="h-8 w-auto brightness-0 invert"
-        />
+        <Link to={paths.home} className="inline-flex items-center min-h-11">
+          <img src={invitLogo} alt="ООО «ИНВИТ»" className="h-8 w-auto" />
+        </Link>
         <p className="text-sm leading-relaxed max-w-xs">
           Белорусский производитель уплотнительных и герметизирующих лент EUROBAND.
           Сопутствующие материалы поставляем напрямую от производителей.
@@ -290,7 +294,7 @@ export const FooterV2: React.FC = () => (
         {/* На телефоне ссылки подвала тоже цель для пальца. Высоты 44px хватает
             и как разделителя, поэтому вертикальные отступы там убраны. */}
         <nav className="flex flex-col sm:gap-3">
-          {NAV.map((item) => (
+          {FOOTER_NAV.map((item) => (
             <Link
               key={item.to}
               to={item.to}

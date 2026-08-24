@@ -1,10 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FileText, Plus, Check, Eye } from 'lucide-react';
+import { ArrowRight, Plus, Check } from 'lucide-react';
 import { Product } from '../types';
 import { productImage } from '../lib/productImages';
 import { Reveal } from './Reveal';
 import { paths } from '../routes';
+
+/*
+ * Карточка товара обычного магазинного вида (референс прислал клиент):
+ * фото, раздел мелким капсом, заголовок, короткое описание, действие.
+ *
+ * Раньше в карточке была ещё таблица из двух характеристик — она делала
+ * карточки разной высоты и повторяла то, что и так есть на странице товара.
+ */
 
 interface ProductCardProps {
   product: Product;
@@ -16,116 +24,71 @@ interface ProductCardProps {
 export const ProductCard: React.FC<ProductCardProps> = ({
   product,
   isAdded,
-  onQuickView,
   onAddToQuote
-}) => {
-  // Два коротких факта: характеристики с сайта, иначе шапка размерного ряда.
-  // Длинные лабораторные формулировки в карточку не влезают — обрезаем по запятой.
-  const shortLabel = (label: string) => label.split(',')[0].trim().slice(0, 34);
-  const highlights = (
-    product.specs.length
-      ? product.specs.map((s) => ({ label: s.label, value: s.value }))
-      : (product.sizes?.headers.slice(1, 3).map((header, idx) => ({
-          label: header,
-          value: product.sizes!.rows[0]?.[idx + 1] ?? '—'
-        })) ?? [])
-  )
-    .filter((row) => row.value.length < 40)
-    .slice(0, 2)
-    .map((row) => ({ label: shortLabel(row.label), value: row.value }));
-
-  return (
-  <div className="h-full bg-white rounded-xl border border-line hover:border-brand-green hover:-translate-y-1 hover:shadow-lg transition-[transform,box-shadow,border-color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col overflow-hidden group">
-    {/* Изображение и бейджи */}
-    <div className="relative h-44 bg-white overflow-hidden flex items-center justify-center p-4 border-b border-line">
+}) => (
+  <div className="h-full flex flex-col rounded-[8px] border border-inv-border bg-white overflow-hidden group transition-[transform,box-shadow] duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(22,44,88,0.16)]">
+    <Link
+      to={paths.product(product)}
+      className="relative block h-48 bg-white p-4 border-b border-inv-border-subtle focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-inv-blue"
+    >
       <img
         src={productImage(product)}
         alt={product.title}
         loading="lazy"
-        className="w-full h-full object-contain group-hover:scale-[1.06] transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
+        className="w-full h-full object-contain transition-transform duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:scale-[1.04]"
       />
 
       {product.badge && (
-        <span className="absolute top-3 left-3 bg-brand-green text-white text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded">
+        <span className="absolute top-3 left-3 rounded-[4px] bg-inv-red px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.04em] text-white">
           {product.badge}
         </span>
       )}
+    </Link>
 
-      <button
-        onClick={() => onQuickView(product)}
-        className="absolute inset-0 bg-ink/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-semibold gap-1.5 cursor-pointer"
+    <div className="flex flex-1 flex-col p-4 sm:p-5">
+      <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-inv-blue line-clamp-1">
+        {product.subcategoryName}
+      </span>
+
+      <Link
+        to={paths.product(product)}
+        className="mt-2 block text-[15px] font-semibold text-inv-ink leading-snug line-clamp-2 hover:text-inv-blue transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
       >
-        <Eye className="w-4 h-4" />
-        <span>Быстрый просмотр</span>
-      </button>
-    </div>
+        {product.title}
+      </Link>
 
-    {/* Контент */}
-    <div className="p-4 flex-1 flex flex-col gap-3">
-      <div className="flex-1">
-        <div className="text-[11px] text-brand-blue mb-1 line-clamp-1">
-          {product.subcategoryName}
-        </div>
-
-        <Link
-          to={paths.product(product)}
-          className="block min-h-11 sm:min-h-0 text-sm font-semibold text-ink line-clamp-2 hover:text-brand-blue transition-colors leading-snug"
-        >
-          {product.title}
-        </Link>
-
-        {product.description && (
-          <p className="text-xs text-ink/55 line-clamp-2 mt-1.5 leading-relaxed">
-            {product.description}
-          </p>
-        )}
-      </div>
-
-      {highlights.length > 0 && (
-        <div className="bg-surface-soft p-3 rounded-lg text-[11px] space-y-1">
-          {highlights.map((row) => (
-            <div key={row.label} className="flex justify-between gap-2">
-              <span className="text-ink/45 truncate">{row.label}</span>
-              <span className="font-semibold text-ink whitespace-nowrap shrink-0">{row.value}</span>
-            </div>
-          ))}
-        </div>
+      {product.description && (
+        <p className="mt-2 text-sm leading-relaxed text-inv-ink-muted line-clamp-3">
+          {product.description}
+        </p>
       )}
 
-      <div className="grid grid-cols-2 gap-2 pt-1 mt-auto">
+      <div className="mt-auto pt-4 flex items-center justify-between gap-3">
         <Link
           to={paths.product(product)}
-          className="border border-line hover:border-brand-sky text-ink text-xs font-semibold min-h-11 py-2.5 px-2 rounded-lg transition-[background-color,border-color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] active:scale-[0.98] flex items-center justify-center gap-1.5 cursor-pointer"
+          className="inline-flex items-center gap-1.5 min-h-11 text-sm font-semibold text-inv-blue hover:text-inv-blue-pressed transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
         >
-          <FileText className="w-3.5 h-3.5 text-ink/40" />
-          <span>Подробнее</span>
+          Подробнее
+          <ArrowRight className="w-4 h-4 transition-transform duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:translate-x-0.5" />
         </Link>
 
         <button
+          type="button"
           onClick={() => onAddToQuote(product)}
-          className={`text-xs font-semibold min-h-11 py-2.5 px-2 rounded-lg transition-[background-color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] active:scale-[0.98] flex items-center justify-center gap-1.5 cursor-pointer ${
+          aria-label={isAdded ? 'Уже в смете' : 'Добавить в смету'}
+          className={`inline-flex items-center gap-1.5 min-h-11 px-3 rounded-[4px] text-sm font-semibold cursor-pointer transition-[background-color,transform] duration-[120ms] active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue ${
             isAdded
-              ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
-              : 'bg-brand-blue hover:bg-brand-blue-hover text-white'
+              ? 'bg-inv-surface-2 text-inv-ink'
+              : 'bg-inv-surface-1 text-inv-ink hover:bg-inv-surface-2'
           }`}
         >
-          {isAdded ? (
-            <>
-              <Check className="w-3.5 h-3.5" />
-              <span>В смете</span>
-            </>
-          ) : (
-            <>
-              <Plus className="w-3.5 h-3.5" />
-              <span>В смету</span>
-            </>
-          )}
+          {isAdded ? <Check className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+          <span className="hidden sm:inline">{isAdded ? 'В смете' : 'В смету'}</span>
         </button>
       </div>
     </div>
   </div>
-  );
-};
+);
 
 interface ProductGridProps {
   products: Product[];
@@ -138,8 +101,8 @@ interface ProductGridProps {
 
 // Классы перечислены целиком: Tailwind не собирает имена по частям.
 const GRID_COLUMNS: Record<3 | 4, string> = {
-  3: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch',
-  4: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-stretch'
+  3: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 items-stretch',
+  4: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 items-stretch'
 };
 
 export const ProductGrid: React.FC<ProductGridProps> = ({
@@ -151,8 +114,8 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
 }) => {
   if (products.length === 0) {
     return (
-      <div className="py-16 text-center text-sm text-ink/60 bg-surface-soft rounded-xl border border-line">
-        В этом разделе пока нет позиций. Напишите нам — подберём аналог под ваш проект.
+      <div className="py-16 text-center text-sm text-inv-ink-muted bg-inv-surface-1 rounded-[8px] border border-inv-border">
+        В этом разделе пока нет позиций. Напишите нам, подберём аналог под ваш проект.
       </div>
     );
   }
@@ -160,7 +123,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
   return (
     <div className={GRID_COLUMNS[columns]}>
       {products.map((product, idx) => (
-        <Reveal key={product.id} delay={Math.min(idx * 0.06, 0.35)} className="h-full">
+        <Reveal key={product.id} delay={Math.min(idx * 0.04, 0.24)} className="h-full">
           <ProductCard
             product={product}
             isAdded={quoteItemsIds.includes(product.id)}

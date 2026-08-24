@@ -21,7 +21,6 @@ const ProductPage = lazy(() =>
 
 const v2Fallback = <div className="min-h-screen bg-white" />;
 import { CatalogPage } from './pages/CatalogPage';
-import { CategoryPage } from './pages/CategoryPage';
 import { AboutPage } from './pages/AboutPage';
 import { CertificatesPage } from './pages/CertificatesPage';
 import { NewsPage } from './pages/NewsPage';
@@ -46,7 +45,7 @@ export default function App() {
           <Route element={<Suspense fallback={v2Fallback}>{<LayoutV2 />}</Suspense>}>
             <Route path="/" element={<HomePage />} />
             <Route path="/catalog" element={<CatalogPage />} />
-            <Route path="/catalog/:categorySlug" element={<CategoryPage />} />
+            <Route path="/catalog/:categorySlug" element={<CatalogPage />} />
             <Route
               path="/catalog/:categorySlug/:productSlug"
               element={<Suspense fallback={v2Fallback}>{<ProductPage />}</Suspense>}
