@@ -28,11 +28,14 @@ const plural = (n: number) => {
 const COLUMNS: Record<number, string> = {
   3: 'lg:grid-cols-3',
   4: 'lg:grid-cols-4',
-  5: 'lg:grid-cols-5'
+  5: 'lg:grid-cols-5',
+  6: 'lg:grid-cols-6'
 };
 
+/* Раскладку подбираем так, чтобы последний ряд не оставался с одной плиткой.
+   Шесть подразделов вентиляции клиент попросил ставить одной строкой. */
 const columnsFor = (count: number) =>
-  COLUMNS[count % 5 === 0 ? 5 : count % 4 === 0 ? 4 : 3];
+  COLUMNS[count === 6 ? 6 : count % 5 === 0 ? 5 : count % 4 === 0 ? 4 : 3];
 
 const GROUPS = CATEGORIES.map((category) => ({
   slug: category.slug,
