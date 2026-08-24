@@ -15,7 +15,7 @@ import { paths } from '../routes';
  */
 
 const WRAP = 'max-w-[1400px] mx-auto px-4 lg:px-8';
-const H2 = 'text-2xl sm:text-3xl md:text-[40px] font-semibold tracking-[-0.01em] leading-[1.15]';
+const H2 = 'text-2xl sm:text-3xl md:text-[32px] xl:text-[40px] font-semibold tracking-[-0.01em] leading-[1.15]';
 const SECTION = 'py-10 sm:py-14 lg:py-24';
 
 const OFFICES = [

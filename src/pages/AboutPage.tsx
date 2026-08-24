@@ -20,7 +20,7 @@ import heroTape from '../assets/hero/tape-application.webp';
  */
 
 const WRAP = 'max-w-[1400px] mx-auto px-4 lg:px-8';
-const H2 = 'text-2xl sm:text-3xl md:text-[40px] font-semibold tracking-[-0.01em] leading-[1.15]';
+const H2 = 'text-2xl sm:text-3xl md:text-[32px] xl:text-[40px] font-semibold tracking-[-0.01em] leading-[1.15]';
 const SECTION = 'py-10 sm:py-14 lg:py-24';
 
 const FOUNDED = 2009;
@@ -136,7 +136,7 @@ export const AboutPage: React.FC = () => {
       <section className="bg-white">
         <div className={`${WRAP} ${SECTION} grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center`}>
           <Fade className="lg:col-span-6">
-            <h2 className={`${H2} text-inv-ink max-w-[20ch]`}>Что мы производим сами</h2>
+            <h2 className={`${H2} text-inv-ink`}>Что мы производим сами</h2>
 
             <p className="mt-5 sm:mt-6 text-base leading-[1.55] text-inv-ink-muted max-w-[60ch]">
               Строительные клейкие ленты и уплотнители из синтетических материалов, в том
@@ -187,7 +187,7 @@ export const AboutPage: React.FC = () => {
         <div className={`${WRAP} ${SECTION} grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16`}>
           <Fade className="lg:col-span-5">
             <div className="lg:sticky lg:top-24">
-              <h2 className={`${H2} text-inv-ink max-w-[16ch]`}>Производство и отгрузка</h2>
+              <h2 className={`${H2} text-inv-ink`}>Производство и отгрузка</h2>
               <p className="mt-5 sm:mt-6 text-base leading-[1.55] text-inv-ink-muted max-w-[46ch]">
                 Режем ленты под задачу заказчика и держим ходовые позиции на складе.
                 Нетиповой размер считаем отдельно.

@@ -30,7 +30,7 @@ import {
 
 const WRAP = "max-w-[1400px] mx-auto px-4 lg:px-8";
 const H2 =
-  "text-2xl sm:text-3xl md:text-[40px] font-semibold tracking-[-0.01em] leading-[1.15]";
+  "text-2xl sm:text-3xl md:text-[32px] xl:text-[40px] font-semibold tracking-[-0.01em] leading-[1.15]";
 
 /** Русское склонение после числа: 1 позиция, 2 позиции, 5 позиций. */
 const plural = (n: number, forms: [string, string, string]) => {
@@ -534,7 +534,7 @@ export const AboutBlock: React.FC = () => {
         <Fade className="lg:col-span-6" delay={0.06}>
           <img src={eurobandLogo} alt="EUROBAND" className="h-7 w-auto" />
 
-          <h2 className={`${H2} mt-5 text-inv-ink max-w-[20ch]`}>
+          <h2 className={`${H2} mt-5 text-inv-ink`}>
             Собственное производство в Минске
           </h2>
 
@@ -587,9 +587,7 @@ export const ValuesBlock: React.FC = () => (
     >
       <Fade className="lg:col-span-5">
         <div className="lg:sticky lg:top-24">
-          <h2 className={`${H2} text-inv-ink max-w-[16ch]`}>
-            Работаем с 2009 года
-          </h2>
+          <h2 className={`${H2} text-inv-ink`}>Работаем с 2009 года</h2>
 
           <p className="mt-5 sm:mt-6 text-base leading-[1.55] text-inv-ink-muted max-w-[46ch]">
             За это время наладили собственное производство в Минске, подтвердили
