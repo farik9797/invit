@@ -1,21 +1,34 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { ArrowRight, ArrowUpRight, Check, AlertCircle, FileText } from 'lucide-react';
-import { CATEGORIES, CERTIFICATES, NEWS, PRODUCTS } from '../../data/catalogData';
-import { TAPE_SUBCATEGORIES } from '../../lib/product';
-import { productImage } from '../../lib/productImages';
-import { paths } from '../../routes';
-import { Fade, FadeGroup, CountUp, BlueButton } from './Chrome';
-import heroTape from '../../assets/hero/tape-application.webp';
-import heroRoof from '../../assets/hero/roof-standing-seam.webp';
-import heroSheets from '../../assets/hero/roof-profile-sheets.webp';
-import heroSlab from '../../assets/hero/tape-slab-joint.webp';
-import eurobandLogo from '../../assets/logo/euroband-color.svg';
-import eurobandLight from '../../assets/logo/euroband-light.svg';
-import { gsap, MOTION_DURATION, MOTION_EASE, prefersReducedMotion, useScrollParallax } from './gsap';
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
+import { ArrowRight, ArrowUpRight, FileText } from "lucide-react";
+import {
+  CATEGORIES,
+  CERTIFICATES,
+  NEWS,
+  PRODUCTS,
+} from "../../data/catalogData";
+import { TAPE_SUBCATEGORIES } from "../../lib/product";
+import { productImage } from "../../lib/productImages";
+import { paths } from "../../routes";
+import { Fade, FadeGroup, CountUp, BlueButton } from "./Chrome";
+import { RequestForm } from "./RequestForm";
+import heroTape from "../../assets/hero/tape-application.webp";
+import heroRoof from "../../assets/hero/roof-standing-seam.webp";
+import heroSheets from "../../assets/hero/roof-profile-sheets.webp";
+import heroSlab from "../../assets/hero/tape-slab-joint.webp";
+import eurobandLogo from "../../assets/logo/euroband-color.svg";
+import eurobandLight from "../../assets/logo/euroband-light.svg";
+import {
+  gsap,
+  MOTION_DURATION,
+  MOTION_EASE,
+  prefersReducedMotion,
+  useScrollParallax,
+} from "./gsap";
 
-const WRAP = 'max-w-[1400px] mx-auto px-4 lg:px-8';
-const H2 = 'text-2xl sm:text-3xl md:text-[40px] font-semibold tracking-[-0.01em] leading-[1.15]';
+const WRAP = "max-w-[1400px] mx-auto px-4 lg:px-8";
+const H2 =
+  "text-2xl sm:text-3xl md:text-[40px] font-semibold tracking-[-0.01em] leading-[1.15]";
 
 /** Русское склонение после числа: 1 позиция, 2 позиции, 5 позиций. */
 const plural = (n: number, forms: [string, string, string]) => {
@@ -27,7 +40,8 @@ const plural = (n: number, forms: [string, string, string]) => {
   return forms[2];
 };
 
-const positions = (n: number) => `${n} ${plural(n, ['позиция', 'позиции', 'позиций'])}`;
+const positions = (n: number) =>
+  `${n} ${plural(n, ["позиция", "позиции", "позиций"])}`;
 
 /* ── 1. Герой: слайдер в скруглённой карточке на 95vw ─────────────────── */
 
@@ -42,37 +56,37 @@ interface HeroSlide {
 
 const HERO_SLIDES: HeroSlide[] = [
   {
-    id: 'about',
-    title: 'Уплотнительные и герметизирующие ленты',
-    text: 'Белорусский производитель с 2009 года. Уплотняем стыки в окнах, кровле, сэндвич-панелях и вентиляции.',
+    id: "about",
+    title: "Уплотнительные и герметизирующие ленты",
+    text: "Белорусский производитель с 2009 года. Уплотняем стыки в окнах, кровле, сэндвич-панелях и вентиляции.",
     image: heroRoof,
     href: paths.catalog,
-    cta: 'Смотреть каталог'
+    cta: "Смотреть каталог",
   },
   {
-    id: 'vla',
-    title: 'Пароизоляционные ленты ВЛ(а) и ВЛ',
-    text: 'Внутренний слой монтажного шва: металлизированная плёнка с нетканым полотном, пять типоразмеров по ширине.',
+    id: "vla",
+    title: "Пароизоляционные ленты ВЛ(а) и ВЛ",
+    text: "Внутренний слой монтажного шва: металлизированная плёнка с нетканым полотном, пять типоразмеров по ширине.",
     image: heroTape,
-    href: `${paths.category('materialy-dlya-okon')}?sub=montazhnye-lenty-dlya-okon`,
-    cta: 'Монтажные ленты'
+    href: `${paths.category("materialy-dlya-okon")}?sub=montazhnye-lenty-dlya-okon`,
+    cta: "Монтажные ленты",
   },
   {
-    id: 'psul',
-    title: 'Саморасширяющаяся лента ПСУЛ',
-    text: 'Защита стыков от воды, шума и холода. Соответствует ТКП 45-3.02-223-2010 и ГОСТ 30971-2002.',
+    id: "psul",
+    title: "Саморасширяющаяся лента ПСУЛ",
+    text: "Защита стыков от воды, шума и холода. Соответствует ТКП 45-3.02-223-2010 и ГОСТ 30971-2002.",
     image: heroSheets,
-    href: `${paths.category('materialy-dlya-okon')}?sub=samorasshiryayuschayasya-lenta-psul`,
-    cta: 'Лента ПСУЛ'
+    href: `${paths.category("materialy-dlya-okon")}?sub=samorasshiryayuschayasya-lenta-psul`,
+    cta: "Лента ПСУЛ",
   },
   {
-    id: 'pes',
-    title: 'Уплотнительные ленты ПЭС',
-    text: 'Самоклеящиеся ленты из вспененного полиэтилена для сэндвич-панелей, кровли и межфланцевых соединений.',
+    id: "pes",
+    title: "Уплотнительные ленты ПЭС",
+    text: "Самоклеящиеся ленты из вспененного полиэтилена для сэндвич-панелей, кровли и межфланцевых соединений.",
     image: heroSlab,
-    href: `${paths.category('materialy-dlya-okon')}?sub=uplotnitelnye-lenty-pes-samokleyaschiesy`,
-    cta: 'Ленты ПЭС'
-  }
+    href: `${paths.category("materialy-dlya-okon")}?sub=uplotnitelnye-lenty-pes-samokleyaschiesy`,
+    cta: "Ленты ПЭС",
+  },
 ];
 
 const HERO_DURATION = 7000;
@@ -88,7 +102,7 @@ export const HeroV2: React.FC = () => {
     if (paused || prefersReducedMotion()) return;
     const timer = window.setTimeout(
       () => setActive((prev) => (prev + 1) % HERO_SLIDES.length),
-      HERO_DURATION
+      HERO_DURATION,
     );
     return () => window.clearTimeout(timer);
   }, [active, paused]);
@@ -104,9 +118,13 @@ export const HeroV2: React.FC = () => {
             opacity: 1,
             duration: reduced ? 0 : MOTION_DURATION,
             delay: reduced ? 0 : 0.2,
-            ease: MOTION_EASE
+            ease: MOTION_EASE,
           })
-        : gsap.to(el, { opacity: 0, duration: reduced ? 0 : 0.16, ease: 'none' });
+        : gsap.to(el, {
+            opacity: 0,
+            duration: reduced ? 0 : 0.16,
+            ease: "none",
+          });
     });
     // Именно kill, а не revert: revert вернул бы прозрачность к исходной и мигал бы.
     return () => tweens.forEach((tween) => tween?.kill());
@@ -119,10 +137,15 @@ export const HeroV2: React.FC = () => {
     if (!card || prefersReducedMotion()) return;
 
     const ctx = gsap.context(() => {
-      gsap.to('[data-hero-photo]', {
+      gsap.to("[data-hero-photo]", {
         yPercent: -6,
-        ease: 'none',
-        scrollTrigger: { trigger: card, start: 'top top', end: 'bottom top', scrub: true }
+        ease: "none",
+        scrollTrigger: {
+          trigger: card,
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        },
       });
     }, card);
 
@@ -148,7 +171,7 @@ export const HeroV2: React.FC = () => {
             alt=""
             aria-hidden
             className={`absolute left-0 top-0 w-full h-[112%] object-cover transition-opacity duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)] ${
-              idx === active ? 'opacity-100' : 'opacity-0'
+              idx === active ? "opacity-100" : "opacity-0"
             }`}
           />
         ))}
@@ -181,7 +204,7 @@ export const HeroV2: React.FC = () => {
                   style={{ opacity: idx === 0 ? 1 : 0 }}
                   // min-w-0: у элемента грида min-width равен auto, и длинное слово
                   // в заголовке распирало слайд шире карточки на телефоне.
-                  className={`col-start-1 row-start-1 min-w-0 ${isActive ? '' : 'pointer-events-none'}`}
+                  className={`col-start-1 row-start-1 min-w-0 ${isActive ? "" : "pointer-events-none"}`}
                 >
                   {idx === 0 ? (
                     <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[52px] font-semibold tracking-[-0.01em] leading-[1.1]">
@@ -227,14 +250,15 @@ export const HeroV2: React.FC = () => {
                 >
                   <span
                     className={`h-1 w-full rounded-[4px] transition-colors duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] ${
-                      idx === active ? 'bg-inv-blue' : 'bg-white/35'
+                      idx === active ? "bg-inv-blue" : "bg-white/35"
                     }`}
                   />
                 </button>
               ))}
             </div>
             <span className="text-sm text-inv-on-deep tabular-nums">
-              {String(active + 1).padStart(2, '0')} / {String(HERO_SLIDES.length).padStart(2, '0')}
+              {String(active + 1).padStart(2, "0")} /{" "}
+              {String(HERO_SLIDES.length).padStart(2, "0")}
             </span>
           </div>
         </div>
@@ -248,13 +272,14 @@ export const HeroV2: React.FC = () => {
 const FOUNDED = 2009;
 
 const FACTS = [
-  { value: new Date().getFullYear() - FOUNDED, label: 'лет на рынке' },
+  { value: new Date().getFullYear() - FOUNDED, label: "лет на рынке" },
   {
-    value: PRODUCTS.filter((p) => p.badge === 'Собственное производство').length,
-    label: 'лент собственного производства'
+    value: PRODUCTS.filter((p) => p.badge === "Собственное производство")
+      .length,
+    label: "лент собственного производства",
   },
-  { value: PRODUCTS.length, label: 'позиций в каталоге' },
-  { value: CERTIFICATES.length, label: 'документов на продукцию' }
+  { value: PRODUCTS.length, label: "позиций в каталоге" },
+  { value: CERTIFICATES.length, label: "документов на продукцию" },
 ];
 
 export const FactsRow: React.FC = () => (
@@ -265,12 +290,16 @@ export const FactsRow: React.FC = () => (
           <div
             key={fact.label}
             data-fade-item
-            className={idx > 0 ? 'lg:pl-8 lg:border-l lg:border-inv-border' : ''}
+            className={
+              idx > 0 ? "lg:pl-8 lg:border-l lg:border-inv-border" : ""
+            }
           >
             <dt className="text-[26px] sm:text-[32px] font-semibold text-inv-ink leading-none">
               <CountUp value={fact.value} />
             </dt>
-            <dd className="mt-2 text-sm text-inv-ink-muted max-w-[22ch]">{fact.label}</dd>
+            <dd className="mt-2 text-sm text-inv-ink-muted max-w-[22ch]">
+              {fact.label}
+            </dd>
           </div>
         ))}
       </dl>
@@ -289,11 +318,11 @@ interface TapeCell {
 }
 
 /** Крупную ячейку отдаём самому большому разделу: под него есть кровельное фото. */
-const LEAD_SLUG = 'krovelnye-uplotniteli-kleykie-lenty';
+const LEAD_SLUG = "krovelnye-uplotniteli-kleykie-lenty";
 
 const TAPE_CELLS: TapeCell[] = [
   LEAD_SLUG,
-  ...TAPE_SUBCATEGORIES.filter((slug) => slug !== LEAD_SLUG)
+  ...TAPE_SUBCATEGORIES.filter((slug) => slug !== LEAD_SLUG),
 ].map((slug) => {
   const items = PRODUCTS.filter((p) => p.subcategorySlug === slug);
   return {
@@ -301,19 +330,22 @@ const TAPE_CELLS: TapeCell[] = [
     name: items[0]?.subcategoryName ?? slug,
     categorySlug: items[0]?.categorySlug ?? CATEGORIES[0].slug,
     count: items.length,
-    image: items[0] ? productImage(items[0]) : ''
+    image: items[0] ? productImage(items[0]) : "",
   };
 });
 
-const cellHref = (cell: TapeCell) => `${paths.category(cell.categorySlug)}?sub=${cell.slug}`;
+const cellHref = (cell: TapeCell) =>
+  `${paths.category(cell.categorySlug)}?sub=${cell.slug}`;
 
 const CELL_BASE =
-  'group flex rounded-[8px] overflow-hidden transition-[transform,box-shadow] duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(0,23,90,0.16)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue';
+  "group flex rounded-[8px] overflow-hidden transition-[transform,box-shadow] duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(0,23,90,0.16)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue";
 
 export const TapeBento: React.FC = () => {
   const [lead, ...rest] = TAPE_CELLS;
   // Кадр в крупной ячейке едет медленнее сетки: даёт глубину и связывает блок с прокруткой
-  const parallaxRef = useScrollParallax([{ selector: '[data-bento-photo]', yPercent: -5 }]);
+  const parallaxRef = useScrollParallax([
+    { selector: "[data-bento-photo]", yPercent: -5 },
+  ]);
 
   return (
     <section className="bg-inv-surface-1" ref={parallaxRef}>
@@ -328,7 +360,10 @@ export const TapeBento: React.FC = () => {
         <FadeGroup className="mt-6 sm:mt-10 grid grid-cols-1 md:grid-cols-6 gap-3 sm:gap-4 md:auto-rows-[196px]">
           {/* Крупная ячейка с фото: задаёт ритм и не даёт сетке стать шестью белыми карточками */}
           <div data-fade-item className="md:col-span-4 md:row-span-2">
-            <Link to={cellHref(lead)} className={`${CELL_BASE} relative h-full min-h-[210px] sm:min-h-[280px]`}>
+            <Link
+              to={cellHref(lead)}
+              className={`${CELL_BASE} relative h-full min-h-[210px] sm:min-h-[280px]`}
+            >
               <img
                 data-bento-photo
                 src={heroRoof}
@@ -354,7 +389,7 @@ export const TapeBento: React.FC = () => {
 
           {rest.map((cell, idx) => {
             // Первые две правые ячейки узкие, нижние две широкие: пять ячеек без пустот.
-            const span = idx < 2 ? 'md:col-span-2' : 'md:col-span-3';
+            const span = idx < 2 ? "md:col-span-2" : "md:col-span-3";
             const tinted = idx >= 2;
 
             return (
@@ -362,7 +397,7 @@ export const TapeBento: React.FC = () => {
                 <Link
                   to={cellHref(cell)}
                   className={`${CELL_BASE} h-full min-h-[104px] sm:min-h-[196px] items-center gap-4 p-4 sm:p-5 lg:p-6 border border-inv-border ${
-                    tinted ? 'bg-inv-surface-2' : 'bg-white'
+                    tinted ? "bg-inv-surface-2" : "bg-white"
                   }`}
                 >
                   <img
@@ -393,7 +428,9 @@ export const TapeBento: React.FC = () => {
 
 /* ── 4. Лента товаров с горизонтальной прокруткой ─────────────────────── */
 
-const OWN_TAPES = PRODUCTS.filter((p) => p.badge === 'Собственное производство');
+const OWN_TAPES = PRODUCTS.filter(
+  (p) => p.badge === "Собственное производство",
+);
 
 export const ProductRail: React.FC = () => (
   <section className="bg-white">
@@ -415,7 +452,11 @@ export const ProductRail: React.FC = () => (
       >
         <ul className="flex gap-4 w-max pb-2">
           {OWN_TAPES.map((product) => (
-            <li key={product.id} data-fade-item className="w-[212px] sm:w-[248px] shrink-0 snap-start">
+            <li
+              key={product.id}
+              data-fade-item
+              className="w-[212px] sm:w-[248px] shrink-0 snap-start"
+            >
               <Link
                 to={paths.product(product)}
                 className="group flex flex-col h-full rounded-[8px] border border-inv-border bg-white overflow-hidden transition-[transform,box-shadow] duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(0,23,90,0.16)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
@@ -430,7 +471,9 @@ export const ProductRail: React.FC = () => (
                   <span className="self-start rounded-[4px] bg-inv-red px-2 py-0.5 text-[11px] font-semibold uppercase tracking-[0.04em] text-white">
                     EUROBAND
                   </span>
-                  <span className="text-xs text-inv-ink-muted">{product.subcategoryName}</span>
+                  <span className="text-xs text-inv-ink-muted">
+                    {product.subcategoryName}
+                  </span>
                   <h3 className="text-base font-semibold text-inv-ink leading-snug">
                     {product.shortTitle}
                   </h3>
@@ -450,15 +493,16 @@ export const ProductRail: React.FC = () => (
 
 /* ── 5. О компании: коллаж из двух фото и текст ───────────────────────── */
 
-const ABOUT_SCENE = 'https://invit.by/image/data/PES/montazh_lenty_pod_kontrrejku1.jpg';
+const ABOUT_SCENE =
+  "https://invit.by/image/data/PES/montazh_lenty_pod_kontrrejku1.jpg";
 const ABOUT_PRODUCT =
-  'https://invit.by/image/data/GIL%20PIL/lenta_butilovaja_EUROBAND_LBA.png';
+  "https://invit.by/image/data/GIL%20PIL/lenta_butilovaja_EUROBAND_LBA.png";
 
 export const AboutBlock: React.FC = () => {
   // Фото и товар едут в разные стороны: коллаж перестаёт быть плоским
   const parallaxRef = useScrollParallax([
-    { selector: '[data-about-scene]', yPercent: -5 },
-    { selector: '[data-about-product]', yPercent: 4 }
+    { selector: "[data-about-scene]", yPercent: -5 },
+    { selector: "[data-about-product]", yPercent: 4 },
   ]);
 
   return (
@@ -491,25 +535,22 @@ export const AboutBlock: React.FC = () => {
         </Fade>
 
         <Fade className="lg:col-span-6" delay={0.06}>
-          <img
-            src={eurobandLogo}
-            alt="EUROBAND"
-            className="h-7 w-auto"
-          />
+          <img src={eurobandLogo} alt="EUROBAND" className="h-7 w-auto" />
 
           <h2 className={`${H2} mt-5 text-inv-ink max-w-[20ch]`}>
             Собственное производство в Минске
           </h2>
 
           <p className="mt-5 sm:mt-6 text-base leading-[1.55] text-inv-ink-muted max-w-[60ch]">
-            Производим монтажные, бутилкаучуковые, саморасширяющиеся ПСУЛ и уплотнительные
-            ленты ПЭС под маркой EUROBAND. По желанию клиента изготавливаем ленты нетипичных
-            размеров на разных основах и подложках.
+            Производим монтажные, бутилкаучуковые, саморасширяющиеся ПСУЛ и
+            уплотнительные ленты ПЭС под маркой EUROBAND. По желанию клиента
+            изготавливаем ленты нетипичных размеров на разных основах и
+            подложках.
           </p>
 
           <p className="mt-4 text-base leading-[1.55] text-inv-ink-muted max-w-[60ch]">
-            Сопутствующие материалы: пену, герметики, крепёж, инструмент и комплектующие для
-            вентиляции поставляем напрямую от производителей.
+            Сопутствующие материалы: пену, герметики, крепёж, инструмент и
+            комплектующие для вентиляции поставляем напрямую от производителей.
           </p>
 
           <Link
@@ -529,34 +570,40 @@ export const AboutBlock: React.FC = () => {
 
 const VALUES = [
   {
-    title: 'Стабильное качество',
-    text: 'Характеристики ленты не плавают от партии к партии.'
+    title: "Стабильное качество",
+    text: "Характеристики ленты не плавают от партии к партии.",
   },
   {
-    title: 'Гибкая цена',
-    text: 'Считаем под объём и задачу, а не по общему прайсу.'
+    title: "Гибкая цена",
+    text: "Считаем под объём и задачу, а не по общему прайсу.",
   },
   {
-    title: 'Долгие отношения',
-    text: 'Работаем с теми, кому нужен поставщик на годы, а не разовая поставка.'
-  }
+    title: "Долгие отношения",
+    text: "Работаем с теми, кому нужен поставщик на годы, а не разовая поставка.",
+  },
 ];
 
 export const ValuesBlock: React.FC = () => (
   <section className="bg-inv-surface-1">
-    <div className={`${WRAP} py-10 sm:py-14 lg:py-24 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16`}>
+    <div
+      className={`${WRAP} py-10 sm:py-14 lg:py-24 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16`}
+    >
       <Fade className="lg:col-span-5">
         <div className="lg:sticky lg:top-24">
-          <h2 className={`${H2} text-inv-ink max-w-[16ch]`}>Работаем с 2009 года</h2>
+          <h2 className={`${H2} text-inv-ink max-w-[16ch]`}>
+            Работаем с 2009 года
+          </h2>
 
           <p className="mt-5 sm:mt-6 text-base leading-[1.55] text-inv-ink-muted max-w-[46ch]">
-            За это время наладили собственное производство в Минске, подтвердили статус
-            отечественного производителя и наработали репутацию надёжного поставщика.
+            За это время наладили собственное производство в Минске, подтвердили
+            статус отечественного производителя и наработали репутацию надёжного
+            поставщика.
           </p>
 
           <p className="mt-4 text-base leading-[1.55] text-inv-ink-muted max-w-[46ch]">
-            Наши ленты применяются при монтаже окон и дверей, на фасадах, кровле и в системах
-            вентиляции: там, где шов должен оставаться герметичным годами.
+            Наши ленты применяются при монтаже окон и дверей, на фасадах, кровле
+            и в системах вентиляции: там, где шов должен оставаться герметичным
+            годами.
           </p>
         </div>
       </Fade>
@@ -564,8 +611,14 @@ export const ValuesBlock: React.FC = () => (
       <FadeGroup className="lg:col-span-7" stagger={0.08}>
         <ul className="divide-y divide-inv-border">
           {VALUES.map((value) => (
-            <li key={value.title} data-fade-item className="py-5 sm:py-7 first:pt-0 last:pb-0">
-              <h3 className="text-xl font-semibold text-inv-ink">{value.title}</h3>
+            <li
+              key={value.title}
+              data-fade-item
+              className="py-5 sm:py-7 first:pt-0 last:pb-0"
+            >
+              <h3 className="text-xl font-semibold text-inv-ink">
+                {value.title}
+              </h3>
               <p className="mt-2 text-base leading-[1.55] text-inv-ink-muted max-w-[52ch]">
                 {value.text}
               </p>
@@ -586,8 +639,8 @@ export const DocumentsBand: React.FC = () => (
         <Fade className="lg:col-span-5">
           <h2 className={`${H2} text-white`}>Документы на продукцию</h2>
           <p className="mt-4 sm:mt-5 text-base leading-[1.55] text-inv-on-deep max-w-[46ch]">
-            Сертификат продукции собственного производства, технические свидетельства
-            и декларации о соответствии на каждый тип ленты.
+            Сертификат продукции собственного производства, технические
+            свидетельства и декларации о соответствии на каждый тип ленты.
           </p>
           <Link
             to={paths.certificates}
@@ -668,209 +721,73 @@ export const NewsList: React.FC = () => (
 
 /* ── 9. Контакты и форма запроса ──────────────────────────────────────── */
 
-const FIELD =
-  'w-full min-h-11 px-3 py-2.5 rounded-[4px] border bg-white text-base text-inv-ink placeholder:text-inv-ink-muted transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-inv-blue';
-
 const OFFICES = [
   {
-    city: 'Минск',
-    address: 'Минский р-н, Сеницкий сельсовет, 84 (ТЦ «Сеница», оф. 9)',
-    phones: ['+375 29 644-49-79', '+375 17 343-77-36']
+    city: "Минск",
+    address: "Минский р-н, Сеницкий сельсовет, 84 (ТЦ «Сеница», оф. 9)",
+    phones: ["+375 29 644-49-79", "+375 17 343-77-36"],
   },
   {
-    city: 'Солигорск',
-    address: 'ул. Строителей, 30, оф. 101',
-    phones: ['+375 174 32-50-22', '+375 29 644-42-70']
-  }
+    city: "Солигорск",
+    address: "ул. Строителей, 30, оф. 101",
+    phones: ["+375 174 32-50-22", "+375 29 644-42-70"],
+  },
 ];
 
-const telHref = (phone: string) => `tel:${phone.replace(/[^\d+]/g, '')}`;
+const telHref = (phone: string) => `tel:${phone.replace(/[^\d+]/g, "")}`;
 
-export const ContactSplit: React.FC = () => {
-  const [name, setName] = useState('');
-  const [company, setCompany] = useState('');
-  const [phone, setPhone] = useState('');
-  const [task, setTask] = useState('');
-  const [errors, setErrors] = useState<{ name?: string; phone?: string }>({});
-  const [status, setStatus] = useState<'idle' | 'sending' | 'done'>('idle');
-  const timer = useRef<number>();
+export const ContactSplit: React.FC = () => (
+  <section id="zapros" className="bg-inv-surface-1 scroll-mt-20">
+    <div className={`${WRAP} py-10 sm:py-14 lg:py-24`}>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16">
+        <Fade className="lg:col-span-5">
+          <h2 className={`${H2} text-inv-ink`}>Запросить расчёт</h2>
+          <p className="mt-4 sm:mt-5 text-base leading-[1.55] text-inv-ink-muted max-w-[46ch]">
+            Пришлём цену и сроки по вашему объёму. Нетиповую ширину и длину
+            рассчитываем отдельно.
+          </p>
 
-  useEffect(() => () => window.clearTimeout(timer.current), []);
-
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const next: { name?: string; phone?: string } = {};
-    if (!name.trim()) next.name = 'Укажите, как к вам обращаться';
-    if (phone.replace(/\D/g, '').length < 9) next.phone = 'Введите номер телефона полностью';
-    setErrors(next);
-    if (Object.keys(next).length) return;
-
-    // Бэкенда пока нет: заявка никуда не уходит, показываем подтверждение.
-    setStatus('sending');
-    timer.current = window.setTimeout(() => setStatus('done'), 600);
-  };
-
-  return (
-    <section id="zapros" className="bg-inv-surface-1 scroll-mt-20">
-      <div className={`${WRAP} py-10 sm:py-14 lg:py-24`}>
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16">
-          <Fade className="lg:col-span-5">
-            <h2 className={`${H2} text-inv-ink`}>Запросить расчёт</h2>
-            <p className="mt-4 sm:mt-5 text-base leading-[1.55] text-inv-ink-muted max-w-[46ch]">
-              Пришлём цену и сроки по вашему объёму. Нетиповую ширину и длину
-              рассчитываем отдельно.
-            </p>
-
-            <div className="mt-8 space-y-6 sm:space-y-8">
-              {OFFICES.map((office) => (
-                <div key={office.city}>
-                  <h3 className="text-sm font-semibold text-inv-ink">{office.city}</h3>
-                  <p className="mt-1.5 text-sm text-inv-ink-muted max-w-[36ch]">
-                    {office.address}
-                  </p>
-                  <div className="mt-1 sm:mt-2 flex flex-wrap gap-x-5 sm:gap-y-1">
-                    {office.phones.map((p) => (
-                      <a
-                        key={p}
-                        href={telHref(p)}
-                        className="inline-flex items-center min-h-11 sm:min-h-0 text-sm font-semibold text-inv-blue hover:text-inv-blue-pressed transition-colors duration-[120ms] whitespace-nowrap"
-                      >
-                        {p}
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              ))}
-
-              <div>
-                <h3 className="text-sm font-semibold text-inv-ink">Почта</h3>
-                <a
-                  href="mailto:info@invit.by"
-                  className="mt-0.5 sm:mt-1.5 inline-flex items-center min-h-11 sm:min-h-0 text-sm font-semibold text-inv-blue hover:text-inv-blue-pressed transition-colors duration-[120ms]"
-                >
-                  info@invit.by
-                </a>
-              </div>
-            </div>
-          </Fade>
-
-          <Fade className="lg:col-span-7" delay={0.06}>
-            <div className="bg-white border border-inv-border rounded-[8px] p-5 sm:p-6 lg:p-8">
-              {status === 'done' ? (
-                <div className="flex flex-col items-start gap-4 py-6">
-                  <span className="flex items-center justify-center w-11 h-11 rounded-full bg-inv-success/10">
-                    <Check className="w-6 h-6 text-inv-success" />
-                  </span>
-                  <h3 className="text-xl font-semibold text-inv-ink">Заявка принята</h3>
-                  <p className="text-base text-inv-ink-muted max-w-[46ch]">
-                    Перезвоним в рабочее время: пн-чт с 9:00 до 17:30, пт с 9:00 до 16:00.
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => setStatus('idle')}
-                    className="min-h-11 text-sm font-semibold text-inv-blue cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
-                  >
-                    Отправить ещё одну
-                  </button>
-                </div>
-              ) : (
-                <form onSubmit={submit} noValidate className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
-                  <div className="flex flex-col gap-2">
-                    <label htmlFor="v2-name" className="text-sm font-semibold text-inv-ink">
-                      Имя
-                    </label>
-                    <input
-                      id="v2-name"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      aria-invalid={Boolean(errors.name)}
-                      aria-describedby={errors.name ? 'v2-name-error' : undefined}
-                      className={`${FIELD} ${errors.name ? 'border-inv-error' : 'border-inv-border'}`}
-                    />
-                    {errors.name && (
-                      <p
-                        id="v2-name-error"
-                        className="flex items-center gap-1.5 text-sm text-inv-error"
-                      >
-                        <AlertCircle className="w-4 h-4 shrink-0" />
-                        {errors.name}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="flex flex-col gap-2">
-                    <label htmlFor="v2-company" className="text-sm font-semibold text-inv-ink">
-                      Компания
-                    </label>
-                    <input
-                      id="v2-company"
-                      value={company}
-                      onChange={(e) => setCompany(e.target.value)}
-                      className={`${FIELD} border-inv-border`}
-                    />
-                    <p className="text-sm text-inv-ink-muted">Необязательно</p>
-                  </div>
-
-                  <div className="flex flex-col gap-2 sm:col-span-2">
-                    <label htmlFor="v2-phone" className="text-sm font-semibold text-inv-ink">
-                      Телефон
-                    </label>
-                    <input
-                      id="v2-phone"
-                      type="tel"
-                      inputMode="tel"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      aria-invalid={Boolean(errors.phone)}
-                      aria-describedby={errors.phone ? 'v2-phone-error' : 'v2-phone-hint'}
-                      className={`${FIELD} ${errors.phone ? 'border-inv-error' : 'border-inv-border'}`}
-                    />
-                    {errors.phone ? (
-                      <p
-                        id="v2-phone-error"
-                        className="flex items-center gap-1.5 text-sm text-inv-error"
-                      >
-                        <AlertCircle className="w-4 h-4 shrink-0" />
-                        {errors.phone}
-                      </p>
-                    ) : (
-                      <p id="v2-phone-hint" className="text-sm text-inv-ink-muted">
-                        Например, +375 29 000-00-00
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="flex flex-col gap-2 sm:col-span-2">
-                    <label htmlFor="v2-task" className="text-sm font-semibold text-inv-ink">
-                      Что нужно
-                    </label>
-                    <textarea
-                      id="v2-task"
-                      rows={3}
-                      value={task}
-                      onChange={(e) => setTask(e.target.value)}
-                      className={`${FIELD} border-inv-border resize-y`}
-                    />
-                    <p className="text-sm text-inv-ink-muted">
-                      Тип ленты, ширина и толщина, объём в метрах или рулонах.
-                    </p>
-                  </div>
-
-                  <div className="sm:col-span-2">
-                    <button
-                      type="submit"
-                      disabled={status === 'sending'}
-                      className="inline-flex items-center justify-center w-full sm:w-auto min-h-11 px-8 rounded-[4px] bg-inv-blue text-white text-sm font-semibold cursor-pointer transition-[background-color,transform] duration-[120ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:bg-inv-blue-hover active:bg-inv-blue-pressed active:scale-[0.98] disabled:opacity-70 disabled:cursor-wait focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
+          <div className="mt-8 space-y-6 sm:space-y-8">
+            {OFFICES.map((office) => (
+              <div key={office.city}>
+                <h3 className="text-sm font-semibold text-inv-ink">
+                  {office.city}
+                </h3>
+                <p className="mt-1.5 text-sm text-inv-ink-muted max-w-[36ch]">
+                  {office.address}
+                </p>
+                <div className="mt-1 sm:mt-2 flex flex-wrap gap-x-5 sm:gap-y-1">
+                  {office.phones.map((p) => (
+                    <a
+                      key={p}
+                      href={telHref(p)}
+                      className="inline-flex items-center min-h-11 sm:min-h-0 text-sm font-semibold text-inv-blue hover:text-inv-blue-pressed transition-colors duration-[120ms] whitespace-nowrap"
                     >
-                      {status === 'sending' ? 'Отправляем' : 'Запросить расчёт'}
-                    </button>
-                  </div>
-                </form>
-              )}
+                      {p}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            ))}
+
+            <div>
+              <h3 className="text-sm font-semibold text-inv-ink">Почта</h3>
+              <a
+                href="mailto:info@invit.by"
+                className="mt-0.5 sm:mt-1.5 inline-flex items-center min-h-11 sm:min-h-0 text-sm font-semibold text-inv-blue hover:text-inv-blue-pressed transition-colors duration-[120ms]"
+              >
+                info@invit.by
+              </a>
             </div>
-          </Fade>
-        </div>
+          </div>
+        </Fade>
+
+        <Fade className="lg:col-span-7" delay={0.06}>
+          <div className="bg-white border border-inv-border rounded-[8px] p-5 sm:p-6 lg:p-8">
+            <RequestForm idPrefix="glavnaya" />
+          </div>
+        </Fade>
       </div>
-    </section>
-  );
-};
+    </div>
+  </section>
+);
