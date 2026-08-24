@@ -4,18 +4,18 @@ import {
   mdiAngleRight,
   mdiArrowExpandVertical,
   mdiBottleTonic,
-  mdiCurrentDc,
   mdiFan,
   mdiHomeRoof,
   mdiLayersTriple,
   mdiNut,
   mdiPackageVariantClosed,
-  mdiPaperRoll,
   mdiScrewMachineFlatTop,
   mdiSpray,
+  mdiSticker,
   mdiTableRow,
   mdiTapeMeasure,
   mdiTextureBox,
+  mdiTire,
   mdiToolbox,
   mdiVectorRectangle,
   mdiViewGrid,
@@ -42,7 +42,7 @@ import {
 
 const BY_SUBCATEGORY: Record<string, string> = {
   // Материалы для монтажа окон
-  'montazhnye-lenty-dlya-okon': mdiPaperRoll,
+  'montazhnye-lenty-dlya-okon': mdiTapeMeasure,
   'samorasshiryayuschayasya-lenta-psul': mdiArrowExpandVertical,
   'pena-montazhnaya-ochistitel-dlya-peny': mdiSpray,
   'germetiki-kleya-himiya-smazki': mdiBottleTonic,
@@ -50,7 +50,7 @@ const BY_SUBCATEGORY: Record<string, string> = {
   'krovelnye-uplotniteli-kleykie-lenty': mdiHomeRoof,
   'uplotnitelnye-lenty-pes-samokleyaschiesy': mdiLayersTriple,
   'instrument-sizy': mdiToolbox,
-  'uplotnitel-rezinovyy-d-p-e': mdiCurrentDc,
+  'uplotnitel-rezinovyy-d-p-e': mdiTire,
   'penopolietilen-ppe-rulonnaya-izolyaciya': mdiTextureBox,
 
   // Комплектующие для вентиляции
@@ -58,7 +58,7 @@ const BY_SUBCATEGORY: Record<string, string> = {
   'ugolki-montazhnye': mdiAngleRight,
   'krepezhnye-detali-dlya-vozduhovodov': mdiNut,
   'profil-montazhnyy-traversa': mdiTableRow,
-  'lenty-uplotnitelnye-samokleyaschiesya': mdiTapeMeasure,
+  'lenty-uplotnitelnye-samokleyaschiesya': mdiSticker,
   'elementy-osnascheniya-vozduhovodov': mdiFan
 };
 
