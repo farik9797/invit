@@ -2,12 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { paths } from '../../routes';
 import { Reveal } from '../Reveal';
+import lentaPeBanner from '../../assets/content/lenta-pe-euroband-1092x337-ce0e49.webp';
 
 /** Широкое фото с тёмной карточкой-обращением поверх — блок с invit.belinfo.by. */
 export const ContactBanner: React.FC = () => (
   <section className="relative bg-ink">
     <img
-      src="https://invit.by/image/cache/data/slides/lenta_pe_euroband-1092x337.jpg"
+      src={lentaPeBanner}
       alt=""
       aria-hidden
       className="absolute inset-0 w-full h-full object-cover opacity-45"

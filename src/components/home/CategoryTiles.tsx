@@ -5,6 +5,7 @@ import { CATEGORIES, PRODUCTS } from '../../data/catalogData';
 import { paths } from '../../routes';
 import { TAPE_SUBCATEGORIES } from '../../lib/product';
 import { Reveal, RevealGroup } from '../Reveal';
+import { productImage } from '../../lib/productImages';
 
 interface Tile {
   name: string;
@@ -23,7 +24,7 @@ const buildTiles = (slugs: string[]): Tile[] =>
       return {
         name: sub.name,
         count: items.length,
-        image: items[0].image,
+        image: productImage(items[0]),
         href: `${paths.category(category.slug)}?sub=${sub.slug}`
       };
     })

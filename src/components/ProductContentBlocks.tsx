@@ -1,5 +1,6 @@
 import React from 'react';
 import { ContentBlock } from '../types';
+import { contentImage } from '../lib/contentImages';
 
 interface Props {
   blocks: ContentBlock[];
@@ -124,7 +125,7 @@ export const ProductContentBlocks: React.FC<Props> = ({ blocks, onImageClick }) 
               }`}
             >
               <img
-                src={src}
+                src={contentImage(src)}
                 alt=""
                 loading="lazy"
                 className="w-full h-full object-contain p-2"

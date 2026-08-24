@@ -4,6 +4,7 @@ import { ArrowRight } from 'lucide-react';
 import { CERTIFICATES } from '../../data/catalogData';
 import { paths } from '../../routes';
 import { RevealGroup } from '../Reveal';
+import { certificateImage } from '../../lib/productImages';
 
 /** Компактная полоса документов вместо большой секции с карточками. */
 export const CertificatesStrip: React.FC = () => (
@@ -37,7 +38,7 @@ export const CertificatesStrip: React.FC = () => (
           >
             <div className="aspect-3/4 overflow-hidden rounded-lg bg-white">
               <img
-                src={cert.image}
+                src={certificateImage(cert.id, cert.image)}
                 alt={cert.title}
                 loading="lazy"
                 className="w-full h-full object-contain group-hover:scale-[1.06] transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"

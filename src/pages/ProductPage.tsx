@@ -9,7 +9,7 @@ import { CATEGORIES, PRODUCTS } from '../data/catalogData';
 import { useShop } from '../context/ShopContext';
 import { paths, productSlug } from '../routes';
 import { variantOptions, sortForListing, dedupeContentBlocks } from '../lib/product';
-import { productGallery } from '../lib/productImages';
+import { productGallery } from '../lib/contentImages';
 import { ProductContent } from '../types';
 
 export const ProductPage: React.FC = () => {

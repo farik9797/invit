@@ -8,7 +8,9 @@ import {
   PRODUCTS,
 } from "../../data/catalogData";
 import { TAPE_SUBCATEGORIES } from "../../lib/product";
-import { productImage } from "../../lib/productImages";
+import { productImage, certificateImage } from "../../lib/productImages";
+import aboutScene from "../../assets/content/montazh-lenty-pod-kontrrejku1-a5c80f.webp";
+import aboutProduct from "../../assets/content/lenta-butilovaja-euroband-lba-3e2afd.webp";
 import { paths } from "../../routes";
 import { Fade, FadeGroup, CountUp, BlueButton } from "./Chrome";
 import { RequestForm } from "./RequestForm";
@@ -493,11 +495,6 @@ export const ProductRail: React.FC = () => (
 
 /* ── 5. О компании: коллаж из двух фото и текст ───────────────────────── */
 
-const ABOUT_SCENE =
-  "https://invit.by/image/data/PES/montazh_lenty_pod_kontrrejku1.jpg";
-const ABOUT_PRODUCT =
-  "https://invit.by/image/data/GIL%20PIL/lenta_butilovaja_EUROBAND_LBA.png";
-
 export const AboutBlock: React.FC = () => {
   // Фото и товар едут в разные стороны: коллаж перестаёт быть плоским
   const parallaxRef = useScrollParallax([
@@ -515,7 +512,7 @@ export const AboutBlock: React.FC = () => {
             <div className="w-[82%] h-[200px] sm:h-[320px] rounded-[8px] overflow-hidden border border-inv-border">
               <img
                 data-about-scene
-                src={ABOUT_SCENE}
+                src={aboutScene}
                 alt="Монтаж уплотнительной ленты EUROBAND под контробрешётку кровли"
                 loading="lazy"
                 className="w-full h-[112%] object-cover"
@@ -525,7 +522,7 @@ export const AboutBlock: React.FC = () => {
             <div className="absolute right-0 bottom-0 w-[54%] h-[136px] sm:h-[200px] rounded-[8px] overflow-hidden border border-inv-border bg-white shadow-[0_6px_24px_rgba(0,23,90,0.16)]">
               <img
                 data-about-product
-                src={ABOUT_PRODUCT}
+                src={aboutProduct}
                 alt="Бутиловая лента EUROBAND ЛБА"
                 loading="lazy"
                 className="w-full h-full object-contain bg-white p-4"
@@ -657,7 +654,7 @@ export const DocumentsBand: React.FC = () => (
             <div key={cert.id} data-fade-item>
               <figure className="h-full">
                 <img
-                  src={cert.image}
+                  src={certificateImage(cert.id, cert.image)}
                   alt={cert.title}
                   loading="lazy"
                   className="w-full h-[142px] sm:h-[200px] object-cover object-top rounded-[8px] bg-white"

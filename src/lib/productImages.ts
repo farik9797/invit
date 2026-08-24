@@ -32,14 +32,6 @@ const fileName = (id: string) =>
 export const productImage = (product: Product) =>
   BY_NAME[fileName(product.id)] ?? product.imageLarge ?? product.image;
 
-/**
- * Галерея: первым кадром идёт локальное фото, остальные иллюстрации
- * остаются на invit.by и грузятся лениво.
- */
-export const productGallery = (product: Product, extra: string[]) => {
-  const main = productImage(product);
-  return [main, ...extra.slice(1)];
-};
 
 /**
  * Баннеры разделов каталога. Собраны локально в 1280x352 (двойной размер бокса),

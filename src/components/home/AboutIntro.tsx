@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { paths } from '../../routes';
 import { Reveal } from '../Reveal';
+import lentaVlaBanner from '../../assets/content/lenta-vla-euroband-pil-1092x337-175bdb.webp';
+import lentaVlaRoll from '../../assets/content/lenta-euroband-vla-cfc107.webp';
 
 /** Коллаж из двух фото слева и текст справа — композиция с invit.belinfo.by. */
 export const AboutIntro: React.FC = () => (
@@ -13,14 +15,14 @@ export const AboutIntro: React.FC = () => (
         <div className="relative">
           <div className="w-[78%] border border-line bg-white overflow-hidden">
             <img
-              src="https://invit.by/image/cache/data/slides/lenta_vla_euroband_pil-1092x337.jpg"
+              src={lentaVlaBanner}
               alt="Производство лент EUROBAND"
               className="w-full h-56 sm:h-72 object-cover"
             />
           </div>
           <div className="w-[62%] absolute -bottom-8 right-0 border-4 border-white bg-white shadow-lg">
             <img
-              src="https://invit.by/image/data/GIL%20PIL/lenta_euroband_%20vla.jpg"
+              src={lentaVlaRoll}
               alt="Рулоны ленты EUROBAND ВЛ(а)"
               loading="lazy"
               className="w-full h-40 sm:h-52 object-contain bg-white p-3"

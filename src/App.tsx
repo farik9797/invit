@@ -13,10 +13,15 @@ const LayoutV2 = lazy(() =>
   import('./components/home-v2/LayoutV2').then((m) => ({ default: m.LayoutV2 }))
 );
 
+// Страница товара тянет карту из 257 иллюстраций и ссылки на все локальные
+// файлы. Грузим её отдельным чанком, иначе это уезжает в основной бандл.
+const ProductPage = lazy(() =>
+  import('./pages/ProductPage').then((m) => ({ default: m.ProductPage }))
+);
+
 const v2Fallback = <div className="min-h-screen bg-white" />;
 import { CatalogPage } from './pages/CatalogPage';
 import { CategoryPage } from './pages/CategoryPage';
-import { ProductPage } from './pages/ProductPage';
 import { AboutPage } from './pages/AboutPage';
 import { CertificatesPage } from './pages/CertificatesPage';
 import { NewsPage } from './pages/NewsPage';
@@ -42,7 +47,10 @@ export default function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/catalog" element={<CatalogPage />} />
             <Route path="/catalog/:categorySlug" element={<CategoryPage />} />
-            <Route path="/catalog/:categorySlug/:productSlug" element={<ProductPage />} />
+            <Route
+              path="/catalog/:categorySlug/:productSlug"
+              element={<Suspense fallback={v2Fallback}>{<ProductPage />}</Suspense>}
+            />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/certificates" element={<CertificatesPage />} />
             <Route path="/news" element={<NewsPage />} />
