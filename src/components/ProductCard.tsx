@@ -52,7 +52,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
       <Link
         to={paths.product(product)}
-        className="mt-2 block text-[15px] font-semibold text-inv-ink leading-snug line-clamp-2 hover:text-inv-blue transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
+        className="mt-2 block min-h-11 sm:min-h-0 text-[15px] font-semibold text-inv-ink leading-snug line-clamp-2 hover:text-inv-blue transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
       >
         {product.title}
       </Link>

@@ -33,7 +33,7 @@ export const ContactBanner: React.FC = () => (
               <dd>
                 <a
                   href="tel:+375296444979"
-                  className="font-semibold text-ink hover:text-brand-blue transition-colors whitespace-nowrap"
+                  className="inline-flex items-center min-h-11 sm:min-h-0 font-semibold text-ink hover:text-brand-blue transition-colors whitespace-nowrap"
                 >
                   +375 29 644-49-79
                 </a>
@@ -49,7 +49,7 @@ export const ContactBanner: React.FC = () => (
               <dd>
                 <a
                   href="mailto:info@invit.by"
-                  className="font-semibold text-ink hover:text-brand-blue transition-colors"
+                  className="inline-flex items-center min-h-11 sm:min-h-0 font-semibold text-ink hover:text-brand-blue transition-colors"
                 >
                   info@invit.by
                 </a>
