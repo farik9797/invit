@@ -5274,7 +5274,7 @@ export const NEWS: NewsArticle[] = [
     sourceUrl: 'https://invit.by/sertifikat-beltpp-2014'
   },
   {
-    id: 'news&news_id=2',
+    id: 'rasshirenie-skladskoj-programmy',
     title: 'Внимание! Расширение складской программы.',
     date: '28 августа 2014',
     category: 'Новости',

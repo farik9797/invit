@@ -20,11 +20,11 @@ export const NewsArticlePage: React.FC = () => {
       <article className="max-w-[900px] mx-auto px-5 py-8 space-y-6">
         <div className="space-y-3">
           <div className="flex items-center gap-3 flex-wrap">
-            <span className="bg-brand-red text-white text-[10px] font-bold uppercase px-2.5 py-1 rounded-md">
+            <span className="rounded-[4px] border border-line bg-surface-soft px-2.5 py-1 text-xs font-semibold text-ink">
               {article.category}
             </span>
-            <span className="flex items-center gap-1.5 text-xs text-ink/55 font-semibold">
-              <Calendar className="w-3.5 h-3.5 text-brand-red" />
+            <span className="flex items-center gap-1.5 text-sm text-ink/55 tabular-nums">
+              <Calendar className="w-4 h-4" />
               {article.date}
             </span>
           </div>
@@ -32,14 +32,8 @@ export const NewsArticlePage: React.FC = () => {
           <h1 className="text-2xl sm:text-3xl font-bold text-ink tracking-tight leading-snug">
             {article.title}
           </h1>
-          <p className="text-base text-ink/70 leading-relaxed font-medium">{article.summary}</p>
-        </div>
 
-        <img
-          src={article.image}
-          alt={article.title}
-          className="w-full max-h-96 object-contain bg-white rounded-xl border border-line p-4"
-        />
+        </div>
 
         <div className="text-sm text-ink/80 leading-relaxed space-y-4">
           {article.content.split('\n').map((paragraph, idx) => (

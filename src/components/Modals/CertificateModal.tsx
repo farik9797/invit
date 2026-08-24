@@ -1,6 +1,7 @@
 import React from 'react';
 import { X, Award, ExternalLink, ShieldCheck, Download } from 'lucide-react';
 import { CertificateItem } from '../../types';
+import { certificateImage } from '../../lib/productImages';
 
 interface CertificateModalProps {
   certificate: CertificateItem | null;
@@ -34,7 +35,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({ certificate,
         <div className="p-6 space-y-4">
           <div className="bg-white rounded-xl overflow-hidden border border-line h-[420px] flex items-center justify-center p-2">
             <img
-              src={certificate.imageFull || certificate.image}
+              src={certificateImage(certificate.id, certificate.imageFull || certificate.image)}
               alt={certificate.title}
               className="w-full h-full object-contain rounded"
             />
@@ -64,7 +65,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({ certificate,
 
           <div className="pt-2 flex justify-between items-center gap-2">
             <a
-              href={certificate.imageFull || certificate.image}
+              href={certificateImage(certificate.id, certificate.imageFull || certificate.image)}
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-blue hover:text-brand-blue-hover transition-colors"

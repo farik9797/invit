@@ -54,3 +54,21 @@ const CATEGORY_BANNERS: Record<string, string> = {
 
 export const categoryBanner = (slug: string, fallback: string) =>
   CATEGORY_BANNERS[slug] ?? fallback;
+
+/**
+ * Сканы документов тоже лежат у нас: они висели на invit.by, и когда сайт
+ * клиента был недоступен, страница документации превращалась в пустые рамки.
+ * Оригиналы 700x700, пережаты в WebP quality 80 (по 50 КБ вместо 150-200).
+ */
+const CERT_FILES = import.meta.glob('../assets/certificates/*.webp', {
+  eager: true,
+  query: '?url',
+  import: 'default'
+}) as Record<string, string>;
+
+const CERTS: Record<string, string> = {};
+for (const [path, url] of Object.entries(CERT_FILES)) {
+  CERTS[path.split('/').pop()!.replace(/\.webp$/, '')] = url;
+}
+
+export const certificateImage = (id: string, fallback: string) => CERTS[id] ?? fallback;
