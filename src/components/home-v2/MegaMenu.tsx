@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Menu, ChevronDown, ChevronRight } from 'lucide-react';
 import { CATEGORIES, PRODUCTS } from '../../data/catalogData';
 import { TAPE_SUBCATEGORIES } from '../../lib/product';
+import { productImage } from '../../lib/productImages';
 import { paths } from '../../routes';
 
 /*
@@ -15,6 +16,8 @@ import { paths } from '../../routes';
 interface MenuGroup {
   name: string;
   href: string;
+  /** Фото первого товара работает иконкой раздела: снимки на белом. */
+  image: string;
   items: { title: string; href: string }[];
 }
 
@@ -32,14 +35,18 @@ const ownFirst = (a: { badge?: string }, b: { badge?: string }) =>
   (a.badge === 'Собственное производство' ? 0 : 1) -
   (b.badge === 'Собственное производство' ? 0 : 1);
 
-const groupFor = (categorySlug: string, subSlug: string, name: string): MenuGroup => ({
-  name,
-  href: `${paths.category(categorySlug)}?sub=${subSlug}`,
-  items: PRODUCTS.filter((p) => p.subcategorySlug === subSlug)
-    .sort(ownFirst)
-    .slice(0, ITEMS_PER_GROUP)
-    .map((p) => ({ title: p.shortTitle, href: paths.product(p) }))
-});
+const groupFor = (categorySlug: string, subSlug: string, name: string): MenuGroup => {
+  const items = PRODUCTS.filter((p) => p.subcategorySlug === subSlug).sort(ownFirst);
+
+  return {
+    name,
+    href: `${paths.category(categorySlug)}?sub=${subSlug}`,
+    image: items[0] ? productImage(items[0]) : '',
+    items: items
+      .slice(0, ITEMS_PER_GROUP)
+      .map((p) => ({ title: p.shortTitle, href: paths.product(p) }))
+  };
+};
 
 const subName = (slug: string) =>
   PRODUCTS.find((p) => p.subcategorySlug === slug)?.subcategoryName ?? slug;
@@ -155,9 +162,18 @@ export const MegaMenu: React.FC = () => {
                     <div key={group.href} className="break-inside-avoid mb-6">
                       <Link
                         to={group.href}
-                        className="block text-sm font-semibold text-inv-blue hover:text-inv-blue-pressed transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
+                        className="flex items-center gap-2.5 text-sm font-semibold text-inv-blue hover:text-inv-blue-pressed transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
                       >
-                        {group.name}
+                        {group.image && (
+                          <img
+                            src={group.image}
+                            alt=""
+                            aria-hidden
+                            loading="lazy"
+                            className="w-9 h-9 shrink-0 rounded-[4px] border border-inv-border bg-white object-contain p-1"
+                          />
+                        )}
+                        <span className="leading-snug">{group.name}</span>
                       </Link>
 
                       <ul className="mt-2 space-y-1">
