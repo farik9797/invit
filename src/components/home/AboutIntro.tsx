@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { paths } from '../../routes';
 import { Reveal } from '../Reveal';
-import lentaVlaBanner from '../../assets/content/lenta-vla-euroband-pil-1092x337-175bdb.webp';
+import montazhPhoto from '../../assets/content/montazh-lenty-pod-kontrrejku1-a5c80f.webp';
 import lentaVlaRoll from '../../assets/content/lenta-euroband-vla-cfc107.webp';
 
 /** Коллаж из двух фото слева и текст справа — композиция с invit.belinfo.by. */
@@ -15,8 +15,8 @@ export const AboutIntro: React.FC = () => (
         <div className="relative">
           <div className="w-[78%] border border-line bg-white overflow-hidden">
             <img
-              src={lentaVlaBanner}
-              alt="Производство лент EUROBAND"
+              src={montazhPhoto}
+              alt="Монтаж уплотнительной ленты EUROBAND под контробрешётку"
               className="w-full h-56 sm:h-72 object-cover"
             />
           </div>
@@ -56,7 +56,7 @@ export const AboutIntro: React.FC = () => (
 
           <Link
             to={paths.about}
-            className="group mt-7 inline-flex items-center gap-2 text-sm font-semibold text-brand-green hover:text-brand-green-hover transition-colors"
+            className="group mt-7 inline-flex items-center gap-2 min-h-11 sm:min-h-0 text-sm font-semibold text-brand-green hover:text-brand-green-hover transition-colors"
           >
             Подробнее о компании
             <ArrowRight className="w-4 h-4 transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-1" />

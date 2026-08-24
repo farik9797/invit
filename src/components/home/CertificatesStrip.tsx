@@ -22,7 +22,7 @@ export const CertificatesStrip: React.FC = () => (
 
         <Link
           to={paths.certificates}
-          className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-blue hover:text-brand-blue-hover transition-colors"
+          className="inline-flex items-center gap-1.5 min-h-11 sm:min-h-0 text-sm font-semibold text-brand-blue hover:text-brand-blue-hover transition-colors"
         >
           Все документы
           <ArrowRight className="w-4 h-4" />

@@ -76,7 +76,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCallback }) => {
 
   return (
     <section
-      className="relative bg-ink overflow-hidden"
+      className="relative bg-brand-navy overflow-hidden"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -170,10 +170,14 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCallback }) => {
                 onClick={() => setActive(idx)}
                 aria-label={`Слайд ${idx + 1}`}
                 aria-current={idx === active}
-                className={`h-1.5 rounded-full cursor-pointer transition-[width,background-color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                  idx === active ? 'w-10 bg-brand-green' : 'w-4 bg-white/25 hover:bg-white/50'
-                }`}
-              />
+                className="h-11 flex items-center cursor-pointer"
+              >
+                <span
+                  className={`block h-1.5 rounded-full transition-[width,background-color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                    idx === active ? 'w-10 bg-brand-green' : 'w-4 bg-white/25 hover:bg-white/50'
+                  }`}
+                />
+              </button>
             ))}
           </div>
 

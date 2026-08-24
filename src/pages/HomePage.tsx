@@ -41,7 +41,7 @@ export const HomePage: React.FC = () => {
 
             <Link
               to={paths.catalog}
-              className="inline-flex items-center gap-2 text-sm font-semibold text-brand-green hover:text-brand-green-hover transition-colors"
+              className="inline-flex items-center gap-2 min-h-11 sm:min-h-0 text-sm font-semibold text-brand-green hover:text-brand-green-hover transition-colors"
             >
               Весь каталог
               <ArrowRight className="w-4 h-4" />

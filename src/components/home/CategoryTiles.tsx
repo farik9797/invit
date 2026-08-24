@@ -93,26 +93,27 @@ export const CategoryTiles: React.FC = () => (
           </span>
         </div>
 
-        <div className="flex flex-wrap gap-2">
+        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8">
           {RELATED.map((item) => (
-            <Link
-              key={item.href}
-              to={item.href}
-              className="inline-flex items-center gap-2 border border-line hover:border-brand-green hover:text-brand-green rounded-lg px-3.5 py-2 text-xs text-ink/80 transition-[color,border-color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px"
-            >
-              {item.name}
-              <span className="text-ink/40">{item.count}</span>
-            </Link>
+            <li key={item.href} className="border-b border-line">
+              <Link
+                to={item.href}
+                className="flex items-center justify-between gap-3 min-h-11 py-2 text-sm text-ink/80 hover:text-brand-blue transition-colors"
+              >
+                <span className="truncate">{item.name}</span>
+                <span className="text-xs text-ink/40 tabular-nums shrink-0">{item.count}</span>
+              </Link>
+            </li>
           ))}
+        </ul>
 
-          <Link
-            to={paths.catalog}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-brand-blue hover:text-brand-blue-hover transition-colors"
-          >
-            Весь каталог
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
+        <Link
+          to={paths.catalog}
+          className="mt-6 inline-flex items-center gap-1.5 min-h-11 sm:min-h-0 text-sm font-semibold text-brand-blue hover:text-brand-blue-hover transition-colors"
+        >
+          Весь каталог
+          <ArrowRight className="w-4 h-4" />
+        </Link>
       </div>
     </div>
   </section>

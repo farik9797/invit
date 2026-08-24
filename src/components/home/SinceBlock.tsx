@@ -1,5 +1,18 @@
 import React from 'react';
 import { Reveal } from '../Reveal';
+import { CERTIFICATES, PRODUCTS } from '../../data/catalogData';
+
+const FOUNDED = 2009;
+
+/** Числа считаются по данным каталога, руками их менять не надо. */
+const FACTS = [
+  { value: new Date().getFullYear() - FOUNDED, label: 'лет на рынке' },
+  {
+    value: PRODUCTS.filter((p) => p.badge === 'Собственное производство').length,
+    label: 'лент своего производства'
+  },
+  { value: CERTIFICATES.length, label: 'документов на продукцию' }
+];
 
 const VALUES = [
   'качество продукции и стабильность характеристик от партии к партии;',
@@ -8,8 +21,10 @@ const VALUES = [
 ];
 
 /**
- * Светлый текстовый блок слева и тёмная карточка справа, поверх — крупная
- * полупрозрачная надпись с годом. Композиция повторяет invit.belinfo.by.
+ * Светлый текстовый блок слева и тёмно-синяя карточка справа.
+ * Раньше поверх лежала огромная выцветшая надпись «работаем с 2009 г» —
+ * приём из середины десятых, к тому же дублировавший заголовок. Вместо неё
+ * три числа, которые считаются по каталогу.
  */
 export const SinceBlock: React.FC = () => (
   <section className="relative bg-surface-soft overflow-hidden">
@@ -31,22 +46,27 @@ export const SinceBlock: React.FC = () => (
             вентиляции — там, где шов должен оставаться герметичным годами.
           </p>
 
-          {/* Крупная фоновая надпись */}
-          <div
-            aria-hidden
-            className="hidden sm:block mt-12 text-4xl lg:text-5xl font-bold tracking-tight select-none"
-          >
-            <span className="text-ink/10">работаем с </span>
-            <span className="text-brand-green/25">2009 г</span>
-          </div>
+          <dl className="mt-10 grid grid-cols-3 gap-4 sm:gap-6 max-w-lg">
+            {FACTS.map((fact, idx) => (
+              <div
+                key={fact.label}
+                className={idx > 0 ? 'pl-4 sm:pl-6 border-l border-line' : ''}
+              >
+                <dt className="text-2xl sm:text-3xl font-bold text-ink tabular-nums leading-none">
+                  {fact.value}
+                </dt>
+                <dd className="mt-1.5 text-xs text-ink/55 leading-snug">{fact.label}</dd>
+              </div>
+            ))}
+          </dl>
         </div>
       </Reveal>
 
       {/* Тёмная карточка */}
       <Reveal delay={0.12} className="h-full">
         <div className="h-full lg:-mr-5">
-          <div className="h-full bg-ink text-white/70 p-8 sm:p-12 lg:py-24">
-            <h3 className="text-xl sm:text-2xl font-bold text-brand-green">Для нас важны:</h3>
+          <div className="h-full bg-brand-navy text-white/75 p-8 sm:p-12 lg:py-24">
+            <h3 className="text-xl sm:text-2xl font-bold text-white">Для нас важны:</h3>
             <ul className="mt-6 space-y-4 text-sm sm:text-base leading-relaxed">
               {VALUES.map((value) => (
                 <li key={value}>{value}</li>

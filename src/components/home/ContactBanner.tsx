@@ -2,13 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { paths } from '../../routes';
 import { Reveal } from '../Reveal';
-import lentaPeBanner from '../../assets/content/lenta-pe-euroband-1092x337-ce0e49.webp';
+import bannerPhoto from '../../assets/hero/roof-profile-sheets.webp';
 
 /** Широкое фото с тёмной карточкой-обращением поверх — блок с invit.belinfo.by. */
 export const ContactBanner: React.FC = () => (
-  <section className="relative bg-ink">
+  <section className="relative bg-brand-navy">
     <img
-      src={lentaPeBanner}
+      src={bannerPhoto}
       alt=""
       aria-hidden
       className="absolute inset-0 w-full h-full object-cover opacity-45"
@@ -16,13 +16,13 @@ export const ContactBanner: React.FC = () => (
 
     <div className="relative max-w-[1340px] mx-auto px-5 py-16 sm:py-24 flex lg:justify-end">
       <Reveal>
-        <div className="bg-ink/95 backdrop-blur-sm p-8 sm:p-12 max-w-xl">
+        <div className="bg-brand-navy/95 backdrop-blur-sm p-8 sm:p-12 max-w-xl">
           <p className="text-sm sm:text-base text-white/70 leading-relaxed">
             Если у вас есть вопросы по ассортименту, нужны нестандартные размеры или расчёт объёма —
             напишите нам. Подберём ленту под задачу и подготовим коммерческое предложение.
           </p>
 
-          <p className="mt-6 text-xl sm:text-2xl font-bold text-brand-green">
+          <p className="mt-6 text-xl sm:text-2xl font-bold text-white">
             Спасибо, что выбрали нас!
           </p>
 
