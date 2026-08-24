@@ -100,7 +100,8 @@ export const CategoryTiles: React.FC = () => (
                 <span className="flex h-24 sm:h-28 items-center justify-center bg-surface-soft text-brand-blue">
                   <SectionIcon
                     slug={tile.slug}
-                    className="w-10 h-10 sm:w-12 sm:h-12 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.08]"
+                    size={48}
+                    className="w-11 h-11 sm:w-12 sm:h-12 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.08]"
                   />
                 </span>
 

@@ -58,7 +58,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     <div className={`flex flex-1 flex-col ${compact ? 'p-3' : 'p-4 sm:p-5'}`}>
       {/* Линейная пиктограмма раздела — как на tbmmarket.by */}
       <span className="flex items-center gap-2 text-inv-blue">
-        <SectionIcon slug={product.subcategorySlug} className="w-4 h-4 shrink-0" />
+        <SectionIcon slug={product.subcategorySlug} size={16} className="w-4 h-4 shrink-0" />
         <span className="text-[11px] font-semibold uppercase tracking-[0.08em] line-clamp-1">
           {product.subcategoryName}
         </span>

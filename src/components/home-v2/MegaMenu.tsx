@@ -149,7 +149,8 @@ export const MegaMenu: React.FC = () => {
                       >
                         <SectionIcon
                           slug={item.id}
-                          className={`w-[18px] h-[18px] shrink-0 ${
+                          size={20}
+                          className={`w-5 h-5 shrink-0 ${
                             isActive ? 'text-inv-red' : 'text-inv-blue'
                           }`}
                         />
@@ -170,8 +171,8 @@ export const MegaMenu: React.FC = () => {
                         to={group.href}
                         className="flex items-center gap-2.5 text-sm font-semibold text-inv-blue hover:text-inv-blue-pressed transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
                       >
-                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[4px] border border-inv-border bg-white">
-                          <SectionIcon slug={group.slug} className="w-5 h-5" />
+                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[4px] border border-inv-border bg-white">
+                          <SectionIcon slug={group.slug} size={28} className="w-7 h-7" />
                         </span>
                         <span className="leading-snug">{group.name}</span>
                       </Link>

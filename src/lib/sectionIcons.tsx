@@ -30,7 +30,12 @@ import {
  * в наборе нет, лучше поставить второй набор, чем чертить путь вручную.
  */
 
-type IconComponent = React.ComponentType<{ className?: string; strokeWidth?: number }>;
+type IconComponent = React.ComponentType<{
+  className?: string;
+  size?: number;
+  strokeWidth?: number;
+  absoluteStrokeWidth?: boolean;
+}>;
 
 const BY_SUBCATEGORY: Record<string, IconComponent> = {
   // Материалы для монтажа окон
@@ -61,11 +66,34 @@ const BY_CATEGORY: Record<string, IconComponent> = {
   tapes: Ribbon
 };
 
-/** Иконка подраздела, а если такого нет — общий знак каталога. */
-export const SectionIcon: React.FC<{ slug: string; className?: string }> = ({
-  slug,
-  className = 'w-5 h-5'
-}) => {
+/*
+ * Иконка подраздела, а если такого нет — общий знак каталога.
+ *
+ * `size` — сетка, в которой рисуется знак (атрибуты width/height у svg).
+ * На резкость это не влияет: SVG векторный и на любом размере остаётся
+ * чётким. Влияет другое — толщина линии. Она задаётся в единицах viewBox 24,
+ * поэтому на крупной иконке масштабируется вместе со знаком и штрих
+ * становится жирным: 1.5 при 48px даёт 3px реальной линии.
+ *
+ * Поэтому у крупных знаков включаем `absoluteStrokeWidth` — lucide пересчитает
+ * штрих так, чтобы он остался ~1.75px независимо от размера. Мелкие
+ * (16-20px) оставляем как были: там абсолютный штрих, наоборот, жирнит.
+ */
+const BIG = 32;
+
+export const SectionIcon: React.FC<{
+  slug: string;
+  className?: string;
+  size?: number;
+}> = ({ slug, className = 'w-5 h-5', size = 24 }) => {
   const Icon = BY_SUBCATEGORY[slug] ?? BY_CATEGORY[slug] ?? Boxes;
-  return <Icon className={className} strokeWidth={1.5} />;
+
+  return (
+    <Icon
+      className={className}
+      size={size}
+      strokeWidth={size >= BIG ? 1.75 : 1.5}
+      absoluteStrokeWidth={size >= BIG}
+    />
+  );
 };

@@ -122,7 +122,7 @@ export const CatalogPage: React.FC = () => {
                         : 'text-inv-ink hover:text-inv-blue'
                     }`}
                   >
-                    <Boxes className="w-[18px] h-[18px] shrink-0 text-inv-blue" />
+                    <Boxes size={20} className="w-5 h-5 shrink-0 text-inv-blue" />
                     <span className="flex-1">Все позиции</span>
                     <span className="text-xs text-inv-ink-muted tabular-nums">
                       {PRODUCTS.length}
@@ -144,7 +144,8 @@ export const CatalogPage: React.FC = () => {
                         >
                           <SectionIcon
                             slug={cat.slug}
-                            className={`w-[18px] h-[18px] shrink-0 ${
+                            size={20}
+                            className={`w-5 h-5 shrink-0 ${
                               isOpen ? 'text-inv-red' : 'text-inv-blue'
                             }`}
                           />
@@ -177,7 +178,8 @@ export const CatalogPage: React.FC = () => {
                                 >
                                   <SectionIcon
                                     slug={sub.slug}
-                                    className={`w-4 h-4 shrink-0 ${
+                                    size={18}
+                                    className={`w-[18px] h-[18px] shrink-0 ${
                                       activeSub === sub.slug ? 'text-inv-red' : 'text-inv-blue'
                                     }`}
                                   />
