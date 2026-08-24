@@ -247,7 +247,7 @@ export const CatalogPage: React.FC = () => {
                 <>
                   <div className="mt-6">
                     <ProductGrid
-                      columns={6}
+                      columns={3}
                       products={products.slice(0, visible)}
                       quoteItemsIds={shop.quoteCart.map((i) => i.product.id)}
                       onQuickView={shop.openQuickView}

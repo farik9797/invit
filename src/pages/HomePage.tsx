@@ -17,7 +17,7 @@ import { paths } from '../routes';
 /** На главной показываем только ленты собственного производства. */
 const OWN_TAPES = PRODUCTS.filter(
   (p) => isTape(p) && p.badge === 'Собственное производство'
-).slice(0, 8);
+).slice(0, 12);
 
 export const HomePage: React.FC = () => {
   const shop = useShop();
@@ -53,6 +53,7 @@ export const HomePage: React.FC = () => {
             quoteItemsIds={shop.quoteCart.map((i) => i.product.id)}
             onQuickView={shop.openQuickView}
             onAddToQuote={shop.addToQuote}
+            columns={6}
           />
         </div>
       </section>
