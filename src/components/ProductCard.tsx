@@ -20,17 +20,22 @@ interface ProductCardProps {
   isAdded: boolean;
   onQuickView: (product: Product) => void;
   onAddToQuote: (product: Product) => void;
+  /** Плотная версия для сетки по шесть в ряд: карточка около 150px шириной. */
+  compact?: boolean;
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({
   product,
   isAdded,
-  onAddToQuote
+  onAddToQuote,
+  compact = false
 }) => (
   <div className="h-full flex flex-col rounded-[8px] border border-inv-border bg-white overflow-hidden group transition-[transform,box-shadow] duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(22,44,88,0.16)]">
     <Link
       to={paths.product(product)}
-      className="relative block h-48 bg-white p-4 border-b border-inv-border-subtle focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-inv-blue"
+      className={`relative block bg-white border-b border-inv-border-subtle focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-inv-blue ${
+        compact ? 'h-32 p-3' : 'h-48 p-4'
+      }`}
     >
       <img
         src={productImage(product)}
@@ -40,13 +45,17 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       />
 
       {product.badge && (
-        <span className="absolute top-3 left-3 rounded-[4px] bg-inv-red px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.04em] text-white">
-          {product.badge}
+        <span
+          className={`absolute top-2 left-2 rounded-[4px] bg-inv-red px-2 py-0.5 font-semibold uppercase tracking-[0.04em] text-white ${
+            compact ? 'text-[9px]' : 'top-3 left-3 text-[10px]'
+          }`}
+        >
+          {compact ? 'EUROBAND' : product.badge}
         </span>
       )}
     </Link>
 
-    <div className="flex flex-1 flex-col p-4 sm:p-5">
+    <div className={`flex flex-1 flex-col ${compact ? 'p-3' : 'p-4 sm:p-5'}`}>
       {/* Линейная пиктограмма раздела — как на tbmmarket.by */}
       <span className="flex items-center gap-2 text-inv-blue">
         <SectionIcon slug={product.subcategorySlug} className="w-4 h-4 shrink-0" />
@@ -57,21 +66,29 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
       <Link
         to={paths.product(product)}
-        className="mt-2 block min-h-11 sm:min-h-0 text-[15px] font-semibold text-inv-ink leading-snug line-clamp-2 hover:text-inv-blue transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
+        className={`mt-2 min-h-11 sm:min-h-0 font-semibold text-inv-ink leading-snug line-clamp-2 hover:text-inv-blue transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue ${
+          compact ? 'text-[13px]' : 'text-[15px]'
+        }`}
       >
         {product.title}
       </Link>
 
       {product.description && (
-        <p className="mt-2 text-sm leading-relaxed text-inv-ink-muted line-clamp-3">
+        <p
+          className={`mt-2 leading-relaxed text-inv-ink-muted ${
+            compact ? 'text-xs line-clamp-2' : 'text-sm line-clamp-3'
+          }`}
+        >
           {product.description}
         </p>
       )}
 
-      <div className="mt-auto pt-4 flex items-center justify-between gap-3">
+      <div className={`mt-auto flex items-center justify-between gap-2 ${compact ? 'pt-3' : 'pt-4'}`}>
         <Link
           to={paths.product(product)}
-          className="inline-flex items-center gap-1.5 min-h-11 text-sm font-semibold text-inv-blue hover:text-inv-blue-pressed transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
+          className={`inline-flex items-center gap-1.5 min-h-11 font-semibold text-inv-blue hover:text-inv-blue-pressed transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue ${
+            compact ? 'text-[13px]' : 'text-sm'
+          }`}
         >
           Подробнее
           <ArrowRight className="w-4 h-4 transition-transform duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:translate-x-0.5" />
@@ -88,7 +105,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           }`}
         >
           {isAdded ? <Check className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
-          <span className="hidden sm:inline">{isAdded ? 'В смете' : 'В смету'}</span>
+          {!compact && <span className="hidden sm:inline">{isAdded ? 'В смете' : 'В смету'}</span>}
         </button>
       </div>
     </div>
@@ -101,13 +118,14 @@ interface ProductGridProps {
   onQuickView: (product: Product) => void;
   onAddToQuote: (product: Product) => void;
   /** Сколько карточек в ряду на широком экране. */
-  columns?: 3 | 4;
+  columns?: 3 | 4 | 6;
 }
 
 // Классы перечислены целиком: Tailwind не собирает имена по частям.
-const GRID_COLUMNS: Record<3 | 4, string> = {
+const GRID_COLUMNS: Record<3 | 4 | 6, string> = {
   3: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 items-stretch',
-  4: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 items-stretch'
+  4: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 items-stretch',
+  6: 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 sm:gap-4 items-stretch'
 };
 
 export const ProductGrid: React.FC<ProductGridProps> = ({
@@ -134,6 +152,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
             isAdded={quoteItemsIds.includes(product.id)}
             onQuickView={onQuickView}
             onAddToQuote={onAddToQuote}
+            compact={columns === 6}
           />
         </Reveal>
       ))}

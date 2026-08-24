@@ -12,7 +12,7 @@ import {
   PaintRoller,
   Scroll,
   Shield,
-  Spline,
+  Spool,
   SprayCan,
   SquareStack,
   StretchHorizontal,
@@ -40,7 +40,7 @@ const BY_SUBCATEGORY: Record<string, IconComponent> = {
   'krovelnye-uplotniteli-kleykie-lenty': Shield,
   'uplotnitelnye-lenty-pes-samokleyaschiesy': Layers,
   'instrument-sizy': HardHat,
-  'uplotnitel-rezinovyy-d-p-e': Spline,
+  'uplotnitel-rezinovyy-d-p-e': Spool,
   'penopolietilen-ppe-rulonnaya-izolyaciya': SquareStack,
 
   // Комплектующие для вентиляции
