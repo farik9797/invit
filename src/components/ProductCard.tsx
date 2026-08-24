@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Plus, Check } from 'lucide-react';
 import { Product } from '../types';
 import { productImage } from '../lib/productImages';
+import { SectionIcon } from '../lib/sectionIcons';
 import { Reveal } from './Reveal';
 import { paths } from '../routes';
 
@@ -46,8 +47,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     </Link>
 
     <div className="flex flex-1 flex-col p-4 sm:p-5">
-      <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-inv-blue line-clamp-1">
-        {product.subcategoryName}
+      {/* Линейная пиктограмма раздела — как на tbmmarket.by */}
+      <span className="flex items-center gap-2 text-inv-blue">
+        <SectionIcon slug={product.subcategorySlug} className="w-4 h-4 shrink-0" />
+        <span className="text-[11px] font-semibold uppercase tracking-[0.08em] line-clamp-1">
+          {product.subcategoryName}
+        </span>
       </span>
 
       <Link

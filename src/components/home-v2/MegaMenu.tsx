@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Menu, ChevronDown, ChevronRight } from 'lucide-react';
 import { CATEGORIES, PRODUCTS } from '../../data/catalogData';
 import { TAPE_SUBCATEGORIES } from '../../lib/product';
-import { productImage } from '../../lib/productImages';
+import { SectionIcon } from '../../lib/sectionIcons';
 import { paths } from '../../routes';
 
 /*
@@ -16,8 +16,8 @@ import { paths } from '../../routes';
 interface MenuGroup {
   name: string;
   href: string;
-  /** Фото первого товара работает иконкой раздела: снимки на белом. */
-  image: string;
+  /** Слаг нужен, чтобы подобрать линейную иконку раздела. */
+  slug: string;
   items: { title: string; href: string }[];
 }
 
@@ -41,7 +41,7 @@ const groupFor = (categorySlug: string, subSlug: string, name: string): MenuGrou
   return {
     name,
     href: `${paths.category(categorySlug)}?sub=${subSlug}`,
-    image: items[0] ? productImage(items[0]) : '',
+    slug: subSlug,
     items: items
       .slice(0, ITEMS_PER_GROUP)
       .map((p) => ({ title: p.shortTitle, href: paths.product(p) }))
@@ -164,15 +164,9 @@ export const MegaMenu: React.FC = () => {
                         to={group.href}
                         className="flex items-center gap-2.5 text-sm font-semibold text-inv-blue hover:text-inv-blue-pressed transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
                       >
-                        {group.image && (
-                          <img
-                            src={group.image}
-                            alt=""
-                            aria-hidden
-                            loading="lazy"
-                            className="w-9 h-9 shrink-0 rounded-[4px] border border-inv-border bg-white object-contain p-1"
-                          />
-                        )}
+                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[4px] border border-inv-border bg-white">
+                          <SectionIcon slug={group.slug} className="w-5 h-5" />
+                        </span>
                         <span className="leading-snug">{group.name}</span>
                       </Link>
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { CATEGORIES, PRODUCTS } from '../../data/catalogData';
-import { productImage } from '../../lib/productImages';
+import { SectionIcon } from '../../lib/sectionIcons';
 import { paths } from '../../routes';
 import { Reveal, RevealGroup } from '../Reveal';
 
@@ -10,12 +10,9 @@ import { Reveal, RevealGroup } from '../Reveal';
  * Категории на главной.
  *
  * Пробовали две крупные карточки с описанием и списком подразделов в две
- * колонки — клиент сказал, что читается тяжело, и попросил «иконками либо
- * картинками просто». Поэтому здесь плитки: картинка, название, счётчик.
- * Ни описаний, ни вложенных списков.
- *
- * Картинка — фото первого товара подраздела, у нас они локальные и на белом,
- * поэтому работают как иконки.
+ * колонки — клиент сказал, что читается тяжело. Потом ставили фото товаров.
+ * В итоге клиент прислал tbmmarket.by: там линейные пиктограммы, их и ставим.
+ * Плитка = иконка, название, счётчик. Ни описаний, ни вложенных списков.
  */
 
 const plural = (n: number) => {
@@ -41,15 +38,11 @@ const GROUPS = CATEGORIES.map((category) => ({
   slug: category.slug,
   name: category.name,
   count: PRODUCTS.filter((p) => p.categorySlug === category.slug).length,
-  tiles: category.subcategories.map((sub) => {
-    const items = PRODUCTS.filter((p) => p.subcategorySlug === sub.slug);
-    return {
-      slug: sub.slug,
-      name: sub.name,
-      count: items.length,
-      image: items[0] ? productImage(items[0]) : ''
-    };
-  })
+  tiles: category.subcategories.map((sub) => ({
+    slug: sub.slug,
+    name: sub.name,
+    count: PRODUCTS.filter((p) => p.subcategorySlug === sub.slug).length
+  }))
 }));
 
 export const CategoryTiles: React.FC = () => (
@@ -101,13 +94,10 @@ export const CategoryTiles: React.FC = () => (
                 to={`${paths.category(group.slug)}?sub=${tile.slug}`}
                 className="group flex h-full flex-col rounded-xl border border-line bg-white overflow-hidden transition-[transform,box-shadow,border-color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:border-brand-blue hover:shadow-lg"
               >
-                <span className="block h-24 sm:h-28 bg-white p-3">
-                  <img
-                    src={tile.image}
-                    alt=""
-                    aria-hidden
-                    loading="lazy"
-                    className="h-full w-full object-contain transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.06]"
+                <span className="flex h-24 sm:h-28 items-center justify-center bg-surface-soft text-brand-blue">
+                  <SectionIcon
+                    slug={tile.slug}
+                    className="w-10 h-10 sm:w-12 sm:h-12 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.08]"
                   />
                 </span>
 
