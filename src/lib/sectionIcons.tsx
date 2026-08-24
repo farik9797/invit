@@ -1,99 +1,93 @@
 import React from 'react';
 import {
-  AppWindow,
-  Blinds,
-  Bolt,
-  Boxes,
-  Cylinder,
-  Drill,
-  Fan,
-  Frame,
-  HardHat,
-  Layers,
-  PaintRoller,
-  Ribbon,
-  Scroll,
-  Shield,
-  Spool,
-  SprayCan,
-  SquareStack,
-  StretchHorizontal,
-  Wind
-} from 'lucide-react';
+  mdiAirFilter,
+  mdiAngleRight,
+  mdiArrowExpandVertical,
+  mdiBottleTonic,
+  mdiCurrentDc,
+  mdiFan,
+  mdiHomeRoof,
+  mdiLayersTriple,
+  mdiNut,
+  mdiPackageVariantClosed,
+  mdiPaperRoll,
+  mdiScrewMachineFlatTop,
+  mdiSpray,
+  mdiTableRow,
+  mdiTapeMeasure,
+  mdiTextureBox,
+  mdiToolbox,
+  mdiVectorRectangle,
+  mdiViewGrid,
+  mdiWindowClosedVariant
+} from '@mdi/js';
 
 /*
- * Иконки разделов каталога — линейные пиктограммы, как на tbmmarket.by,
- * который прислал клиент как образец.
+ * Иконки разделов каталога.
  *
- * Берём из lucide-react, он уже в зависимостях. Рисовать SVG руками нельзя:
- * получится набор разной толщины и посадки. Если понадобится знак, которого
- * в наборе нет, лучше поставить второй набор, чем чертить путь вручную.
+ * Клиент прислал свой invit.by: там у разделов не абстрактные знаки, а сами
+ * предметы — рулон, баллон пены, туба герметика, саморез, гайка, вентилятор.
+ * Отсюда два требования: предметность и заливка (у них силуэты, не контуры).
+ * Прежний линейный набор из lucide по мотивам tbmmarket.by этому не отвечал.
+ *
+ * Иконки самого invit.by взять нельзя: это спрайт 25x425 px, шестнадцать
+ * знаков по 25px. Растр такого размера на нашей плитке 48px даст кашу.
+ *
+ * Поэтому Material Design Icons (`@mdi/js`) — это только строки `d`, без
+ * рантайма, в сборку попадают лишь перечисленные ниже. Заливка вместо штриха
+ * заодно снимает вопрос толщины линии на крупных размерах.
+ *
+ * Рисовать SVG руками нельзя: путь по памяти рендерится мусором.
  */
 
-type IconComponent = React.ComponentType<{
-  className?: string;
-  size?: number;
-  strokeWidth?: number;
-  absoluteStrokeWidth?: boolean;
-}>;
-
-const BY_SUBCATEGORY: Record<string, IconComponent> = {
+const BY_SUBCATEGORY: Record<string, string> = {
   // Материалы для монтажа окон
-  'montazhnye-lenty-dlya-okon': Scroll,
-  'samorasshiryayuschayasya-lenta-psul': StretchHorizontal,
-  'pena-montazhnaya-ochistitel-dlya-peny': SprayCan,
-  'germetiki-kleya-himiya-smazki': PaintRoller,
-  'krepezh-dlya-okon-krovli-fasadov': Bolt,
-  'krovelnye-uplotniteli-kleykie-lenty': Shield,
-  'uplotnitelnye-lenty-pes-samokleyaschiesy': Layers,
-  'instrument-sizy': HardHat,
-  'uplotnitel-rezinovyy-d-p-e': Spool,
-  'penopolietilen-ppe-rulonnaya-izolyaciya': SquareStack,
+  'montazhnye-lenty-dlya-okon': mdiPaperRoll,
+  'samorasshiryayuschayasya-lenta-psul': mdiArrowExpandVertical,
+  'pena-montazhnaya-ochistitel-dlya-peny': mdiSpray,
+  'germetiki-kleya-himiya-smazki': mdiBottleTonic,
+  'krepezh-dlya-okon-krovli-fasadov': mdiScrewMachineFlatTop,
+  'krovelnye-uplotniteli-kleykie-lenty': mdiHomeRoof,
+  'uplotnitelnye-lenty-pes-samokleyaschiesy': mdiLayersTriple,
+  'instrument-sizy': mdiToolbox,
+  'uplotnitel-rezinovyy-d-p-e': mdiCurrentDc,
+  'penopolietilen-ppe-rulonnaya-izolyaciya': mdiTextureBox,
 
   // Комплектующие для вентиляции
-  'flancevyy-profil-dlya-vozduhovodov': Frame,
-  'ugolki-montazhnye': Blinds,
-  'krepezhnye-detali-dlya-vozduhovodov': Drill,
-  'profil-montazhnyy-traversa': Cylinder,
-  'lenty-uplotnitelnye-samokleyaschiesya': Scroll,
-  'elementy-osnascheniya-vozduhovodov': Fan
+  'flancevyy-profil-dlya-vozduhovodov': mdiVectorRectangle,
+  'ugolki-montazhnye': mdiAngleRight,
+  'krepezhnye-detali-dlya-vozduhovodov': mdiNut,
+  'profil-montazhnyy-traversa': mdiTableRow,
+  'lenty-uplotnitelnye-samokleyaschiesya': mdiTapeMeasure,
+  'elementy-osnascheniya-vozduhovodov': mdiFan
 };
 
-const BY_CATEGORY: Record<string, IconComponent> = {
-  'materialy-dlya-okon': AppWindow,
-  ventilyaciya: Wind,
+const BY_CATEGORY: Record<string, string> = {
+  'materialy-dlya-okon': mdiWindowClosedVariant,
+  ventilyaciya: mdiAirFilter,
   // Раздел мега-меню, которого нет в каталоге: только ленты собственного производства
-  tapes: Ribbon
+  tapes: mdiPackageVariantClosed
 };
 
-/*
- * Иконка подраздела, а если такого нет — общий знак каталога.
+/**
+ * Иконка подраздела, а если такого нет — общий знак каталога (`all` в дереве).
  *
- * `size` — сетка, в которой рисуется знак (атрибуты width/height у svg).
- * На резкость это не влияет: SVG векторный и на любом размере остаётся
- * чётким. Влияет другое — толщина линии. Она задаётся в единицах viewBox 24,
- * поэтому на крупной иконке масштабируется вместе со знаком и штрих
- * становится жирным: 1.5 при 48px даёт 3px реальной линии.
- *
- * Поэтому у крупных знаков включаем `absoluteStrokeWidth` — lucide пересчитает
- * штрих так, чтобы он остался ~1.75px независимо от размера. Мелкие
- * (16-20px) оставляем как были: там абсолютный штрих, наоборот, жирнит.
+ * `size` задаёт сетку знака (атрибуты svg). На резкость он не влияет: SVG
+ * векторный. Держим его равным размеру в классе — иначе CSS ужмёт знак.
  */
-const BIG = 32;
-
 export const SectionIcon: React.FC<{
   slug: string;
   className?: string;
   size?: number;
-}> = ({ slug, className = 'w-5 h-5', size = 24 }) => {
-  const Icon = BY_SUBCATEGORY[slug] ?? BY_CATEGORY[slug] ?? Boxes;
-
-  return (
-    <Icon
-      className={className}
-      size={size}
-      strokeWidth={size >= BIG ? 1.75 : 1.5}
-      absoluteStrokeWidth={size >= BIG}
-    />
-  );
-};
+}> = ({ slug, className = 'w-5 h-5', size = 24 }) => (
+  <svg
+    viewBox="0 0 24 24"
+    width={size}
+    height={size}
+    className={className}
+    aria-hidden="true"
+    focusable="false"
+  >
+    <path fill="currentColor" d={BY_SUBCATEGORY[slug] ?? BY_CATEGORY[slug] ?? mdiViewGrid} />
+  </svg>
+);

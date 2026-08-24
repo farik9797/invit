@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useParams, useSearchParams, Navigate } from 'react-router-dom';
-import { Search, X, ChevronRight, Boxes } from 'lucide-react';
+import { Search, X, ChevronRight } from 'lucide-react';
 import { Breadcrumbs } from '../components/Breadcrumbs';
 import { ProductGrid } from '../components/ProductCard';
 import { CATEGORIES, PRODUCTS } from '../data/catalogData';
@@ -122,7 +122,7 @@ export const CatalogPage: React.FC = () => {
                         : 'text-inv-ink hover:text-inv-blue'
                     }`}
                   >
-                    <Boxes size={20} className="w-5 h-5 shrink-0 text-inv-blue" />
+                    <SectionIcon slug="all" size={20} className="w-5 h-5 shrink-0 text-inv-blue" />
                     <span className="flex-1">Все позиции</span>
                     <span className="text-xs text-inv-ink-muted tabular-nums">
                       {PRODUCTS.length}
