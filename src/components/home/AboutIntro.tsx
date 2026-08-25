@@ -3,37 +3,33 @@ import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { paths } from '../../routes';
 import { Reveal } from '../Reveal';
-import montazhPhoto from '../../assets/content/montazh-lenty-pod-kontrrejku1-a5c80f.webp';
-import lentaVlaRoll from '../../assets/content/lenta-euroband-vla-cfc107.webp';
+import productionShop from '../../assets/about/production-shop.webp';
 
-/** Коллаж из двух фото слева и текст справа — композиция с invit.belinfo.by. */
+/*
+ * Фото цеха слева, текст справа.
+ *
+ * Раньше слева был коллаж из двух снимков со смещением. Клиент прислал кадр
+ * своего производства и попросил поставить его — коллаж из монтажа и рулона
+ * рядом с текстом «собственного производства» смотрелся слабее, чем сам цех.
+ */
 export const AboutIntro: React.FC = () => (
   <section className="py-16 sm:py-24 bg-surface">
     <div className="max-w-[1340px] mx-auto px-5 grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-      {/* Коллаж */}
+      {/* Фото цеха */}
       <Reveal>
-        <div className="relative">
-          <div className="w-[78%] border border-line bg-white overflow-hidden">
-            <img
-              src={montazhPhoto}
-              alt="Монтаж уплотнительной ленты EUROBAND под контробрешётку"
-              className="w-full h-56 sm:h-72 object-cover"
-            />
-          </div>
-          <div className="w-[62%] absolute -bottom-8 right-0 border-4 border-white bg-white shadow-lg">
-            <img
-              src={lentaVlaRoll}
-              alt="Рулоны ленты EUROBAND ВЛ(а)"
-              loading="lazy"
-              className="w-full h-40 sm:h-52 object-contain bg-white p-3"
-            />
-          </div>
+        <div className="rounded-[8px] border border-line bg-white overflow-hidden">
+          <img
+            src={productionShop}
+            alt="Производство уплотнительных лент EUROBAND: намотка и экструзия"
+            loading="lazy"
+            className="w-full h-64 sm:h-80 lg:h-[420px] object-cover"
+          />
         </div>
       </Reveal>
 
       {/* Текст */}
       <Reveal delay={0.12}>
-        <div className="pt-10 lg:pt-0">
+        <div className="xl:pr-24">
           <span className="text-xs font-semibold text-brand-green">
             Общество с ограниченной ответственностью «ИНВИТ»
           </span>
