@@ -27,6 +27,10 @@ SLUGS = {
 CLIENT = pathlib.Path(__file__).resolve().parents[2] / 'src/assets/sections'
 have = {f.stem for f in CLIENT.glob('*.webp')} if CLIENT.exists() else set()
 
+# Резиновый уплотнитель в спрайте нарисован овалом: в мелком размере он
+# читается как рулон ленты и сливается с ПСУЛ. Для него взят знак из MDI.
+have.add('uplotnitel-rezinovyy-d-p-e')
+
 entries = []
 for k, slug in SLUGS.items():
     if slug in have:

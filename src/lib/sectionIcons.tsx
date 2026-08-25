@@ -1,6 +1,11 @@
 import React from 'react';
-import { mdiAirFilter, mdiPackageVariantClosed, mdiViewGrid, mdiWindowClosedVariant } from '@mdi/js';
-import { SPRITE_ICONS } from './sectionIconPaths';
+import {
+  mdiAirFilter,
+  mdiPackageVariantClosed,
+  mdiTire,
+  mdiViewGrid,
+  mdiWindowClosedVariant
+} from '@mdi/js';
 
 /*
  * Иконки разделов каталога.
@@ -11,10 +16,11 @@ import { SPRITE_ICONS } from './sectionIconPaths';
  * пропорции у оригиналов разные (75x87, 112x59), а в сетке знаки должны быть
  * одного кегля.
  *
- * Клиент прислал 14 знаков из наших 16. Для герметиков и резинового
- * уплотнителя знака нет — там остаётся вариант, векторизованный из спрайта
- * invit.by (`sectionIconPaths.ts`). Для двух категорий и раздела меню
- * «Ленты EUROBAND» знаков нет вовсе — там Material Design Icons.
+ * Знаки клиента закрывают пятнадцать подразделов из шестнадцати. Исключение —
+ * «Уплотнитель резиновый D, P, E»: в его архиве такого нет, а вариант из
+ * спрайта читался как ещё один рулон ленты и сливался с ПСУЛ. Там шина из
+ * Material Design Icons. Оттуда же знаки для двух категорий и раздела меню
+ * «Ленты EUROBAND» — их в архиве тоже нет.
  *
  * Цвет у всех знаков одинаковый тёмно-серый: растр перекрасить нельзя, а
  * разнобой «часть синие, часть серые» был бы заметнее, чем отсутствие
@@ -39,6 +45,11 @@ const BY_SLUG: Record<string, string> = Object.fromEntries(
     url
   ])
 );
+
+/** Подразделы без знака в архиве клиента. */
+const BY_SUBCATEGORY: Record<string, string> = {
+  'uplotnitel-rezinovyy-d-p-e': mdiTire
+};
 
 const BY_CATEGORY: Record<string, string> = {
   'materialy-dlya-okon': mdiWindowClosedVariant,
@@ -74,27 +85,6 @@ export const SectionIcon: React.FC<{
     );
   }
 
-  const sprite = SPRITE_ICONS[slug];
-
-  if (sprite) {
-    return (
-      <svg
-        viewBox={sprite.viewBox}
-        width={size}
-        height={size}
-        className={className}
-        aria-hidden="true"
-        focusable="false"
-      >
-        {sprite.layers.map((layer, i) => (
-          <g key={i} transform={layer.t}>
-            <path fill={INK} fillOpacity={layer.o} d={layer.d} />
-          </g>
-        ))}
-      </svg>
-    );
-  }
-
   return (
     <svg
       viewBox="0 0 24 24"
@@ -104,7 +94,7 @@ export const SectionIcon: React.FC<{
       aria-hidden="true"
       focusable="false"
     >
-      <path fill={INK} d={BY_CATEGORY[slug] ?? mdiViewGrid} />
+      <path fill={INK} d={BY_SUBCATEGORY[slug] ?? BY_CATEGORY[slug] ?? mdiViewGrid} />
     </svg>
   );
 };
