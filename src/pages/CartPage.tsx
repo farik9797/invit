@@ -30,6 +30,7 @@ export const CartPage: React.FC = () => {
   const [phone, setPhone] = useState('');
   const [note, setNote] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [confirmClear, setConfirmClear] = useState(false);
 
   const total = items.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -113,7 +114,7 @@ export const CartPage: React.FC = () => {
                           src={productImage(product)}
                           alt={product.title}
                           loading="lazy"
-                          className="w-16 h-16 object-contain bg-white rounded-[4px] border border-inv-border-subtle p-1"
+                          className="w-20 h-20 sm:w-24 sm:h-24 object-contain bg-white rounded-[4px] border border-inv-border-subtle p-1.5"
                         />
                       </Link>
 
@@ -180,13 +181,37 @@ export const CartPage: React.FC = () => {
                     Продолжить выбор
                   </Link>
 
-                  <button
-                    type="button"
-                    onClick={shop.clearQuoteCart}
-                    className="inline-flex items-center min-h-11 text-sm text-inv-ink-muted hover:text-inv-red transition-colors cursor-pointer"
-                  >
-                    Очистить корзину
-                  </button>
+                  {confirmClear ? (
+                    <span className="flex items-center gap-2 text-sm">
+                      <span className="text-inv-ink-muted">Удалить все позиции?</span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          shop.clearQuoteCart();
+                          setConfirmClear(false);
+                        }}
+                        className="inline-flex items-center min-h-11 px-4 rounded-[4px] bg-inv-red hover:brightness-95 text-white font-semibold transition-[filter] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-red"
+                      >
+                        Да, удалить
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setConfirmClear(false)}
+                        className="inline-flex items-center min-h-11 px-3 text-inv-ink-muted hover:text-inv-ink transition-colors cursor-pointer"
+                      >
+                        Отмена
+                      </button>
+                    </span>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setConfirmClear(true)}
+                      className="inline-flex items-center gap-2 min-h-11 px-4 rounded-[4px] border border-inv-border text-sm font-semibold text-inv-ink-muted hover:text-inv-red hover:border-inv-red transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-red"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                      Очистить корзину
+                    </button>
+                  )}
                 </div>
               </div>
 
