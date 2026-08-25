@@ -187,9 +187,8 @@ const CartButton: React.FC<{ className?: string }> = ({ className = '' }) => {
   const count = shop.quoteCart.length;
 
   return (
-    <button
-      type="button"
-      onClick={shop.openQuoteCart}
+    <Link
+      to={paths.cart}
       aria-label={count ? `Корзина, позиций: ${count}` : 'Корзина пуста'}
       className={`relative flex items-center justify-center w-11 h-11 rounded-[4px] text-inv-ink hover:text-inv-blue hover:bg-inv-surface-1 transition-colors duration-[120ms] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue ${className}`}
     >
@@ -199,7 +198,7 @@ const CartButton: React.FC<{ className?: string }> = ({ className = '' }) => {
           {count}
         </span>
       )}
-    </button>
+    </Link>
   );
 };
 

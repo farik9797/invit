@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 import { PhoneCall, ShoppingBag, ChevronUp } from 'lucide-react';
 import { TopBar } from './TopBar';
 import { Header } from './Header';
 import { Footer } from './Footer';
 import { ProductDetailModal } from './Modals/ProductDetailModal';
-import { QuoteCartModal } from './Modals/QuoteCartModal';
 import { CallbackModal } from './Modals/CallbackModal';
 import { useShop } from '../context/ShopContext';
+import { paths } from '../routes';
 
 /** Прокрутка страницы наверх при переходе по маршруту. */
 const ScrollToTopOnNavigate: React.FC = () => {
@@ -35,7 +35,6 @@ export const Layout: React.FC = () => {
       <TopBar />
       <Header
         onOpenCallback={() => shop.openCallback()}
-        onOpenQuoteCart={shop.openQuoteCart}
         quoteCount={shop.quoteCart.length}
         onSelectProduct={shop.openQuickView}
       />
@@ -60,8 +59,8 @@ export const Layout: React.FC = () => {
         )}
 
         {shop.quoteCart.length > 0 && (
-          <button
-            onClick={shop.openQuoteCart}
+          <Link
+            to={paths.cart}
             className="pointer-events-auto bg-brand-blue hover:bg-brand-blue-hover text-white p-3.5 rounded-full shadow-lg flex items-center gap-2 border-2 border-white transition-all transform hover:scale-105 cursor-pointer group"
             title="Открыть корзину"
           >
@@ -74,7 +73,7 @@ export const Layout: React.FC = () => {
             <span className="text-xs font-bold uppercase tracking-wider hidden sm:inline pr-1">
               Корзина ({shop.quoteCart.length})
             </span>
-          </button>
+          </Link>
         )}
 
         <button
@@ -97,15 +96,6 @@ export const Layout: React.FC = () => {
             ? shop.quoteCart.some((i) => i.product.id === shop.quickViewProduct!.id)
             : false
         }
-      />
-
-      <QuoteCartModal
-        isOpen={shop.isQuoteCartOpen}
-        onClose={shop.closeQuoteCart}
-        items={shop.quoteCart}
-        onRemoveItem={shop.removeFromQuote}
-        onUpdateQuantity={shop.updateQuoteQty}
-        onClearCart={shop.clearQuoteCart}
       />
 
       <CallbackModal

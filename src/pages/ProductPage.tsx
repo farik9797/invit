@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Navigate, Link } from 'react-router-dom';
-import { Check, Plus, Minus, Phone, Download, ShieldCheck } from 'lucide-react';
+import { Check, Plus, Minus, Phone, Download, ShieldCheck, ShoppingCart } from 'lucide-react';
 import { Breadcrumbs } from '../components/Breadcrumbs';
 import { ProductGrid } from '../components/ProductCard';
 import { Lightbox } from '../components/Lightbox';
@@ -11,6 +11,15 @@ import { paths, productSlug } from '../routes';
 import { variantOptions, sortForListing, dedupeContentBlocks } from '../lib/product';
 import { productGallery } from '../lib/contentImages';
 import { ProductContent } from '../types';
+
+const sizeWord = (n: number) => {
+  const mod100 = n % 100;
+  if (mod100 >= 11 && mod100 <= 14) return 'размеров';
+  const mod10 = n % 10;
+  if (mod10 === 1) return 'размер';
+  if (mod10 >= 2 && mod10 <= 4) return 'размера';
+  return 'размеров';
+};
 
 export const ProductPage: React.FC = () => {
   const { productSlug: slug } = useParams();
@@ -44,7 +53,11 @@ export const ProductPage: React.FC = () => {
   if (!product) return <Navigate to={paths.catalog} replace />;
 
   const category = CATEGORIES.find((c) => c.slug === product.categorySlug);
-  const isAdded = shop.quoteCart.some((i) => i.product.id === product.id);
+  // У товара размерный ряд, и каждый типоразмер попадает в корзину отдельной
+  // строкой: покупателю обычно нужны две-три ширины одной ленты.
+  const inCart = shop.quoteCart.filter((i) => i.product.id === product.id);
+  const isAdded = inCart.length > 0;
+  const addedThisSize = inCart.find((i) => i.selectedWidth === variant);
   const variants = variantOptions(product);
 
   const contentBlocks = dedupeContentBlocks(content?.blocks ?? [], product.description);
@@ -163,21 +176,39 @@ export const ProductPage: React.FC = () => {
               <div className="space-y-2.5">
                 <span className="block text-xs font-semibold text-ink">
                   Типоразмер
+                  <span className="ml-2 font-normal text-ink/50">
+                    можно заказать несколько размеров
+                  </span>
                 </span>
                 <div className="flex flex-wrap gap-2">
-                  {variants.map((option) => (
-                    <button
-                      key={option}
-                      onClick={() => setVariant(option)}
-                      className={`inline-flex items-center min-h-11 px-3.5 rounded-lg text-xs border transition-colors cursor-pointer ${
-                        variant === option
-                          ? 'bg-brand-red text-white border-brand-red font-semibold'
-                          : 'bg-white text-ink/80 border-line hover:border-brand-sky'
-                      }`}
-                    >
-                      {option}
-                    </button>
-                  ))}
+                  {variants.map((option) => {
+                    const already = inCart.find((i) => i.selectedWidth === option);
+
+                    return (
+                      <button
+                        key={option}
+                        onClick={() => setVariant(option)}
+                        aria-pressed={variant === option}
+                        className={`inline-flex items-center gap-1.5 min-h-11 px-3.5 rounded-lg text-xs border transition-colors cursor-pointer ${
+                          variant === option
+                            ? 'bg-brand-red text-white border-brand-red font-semibold'
+                            : 'bg-white text-ink/80 border-line hover:border-brand-sky'
+                        }`}
+                      >
+                        {option}
+                        {already && (
+                          <span
+                            className={`inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full text-[10px] font-semibold tabular-nums ${
+                              variant === option ? 'bg-white/25 text-white' : 'bg-brand-blue text-white'
+                            }`}
+                            title={`В корзине: ${already.quantity}`}
+                          >
+                            {already.quantity}
+                          </span>
+                        )}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -218,13 +249,13 @@ export const ProductPage: React.FC = () => {
                 <button
                   onClick={() => shop.addToQuote(product, variant, qty)}
                   className={`flex-1 px-5 py-3.5 rounded-lg text-sm font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer ${
-                    isAdded
+                    addedThisSize
                       ? 'bg-brand-navy hover:bg-brand-navy/90 text-white'
                       : 'bg-brand-blue hover:bg-brand-blue-hover text-white'
                   }`}
                 >
-                  {isAdded ? <Check className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
-                  {isAdded ? 'Добавлено в корзину' : 'Добавить в корзину'}
+                  {addedThisSize ? <Check className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+                  {addedThisSize ? 'Добавить ещё' : 'Добавить в корзину'}
                 </button>
 
                 <button
@@ -235,6 +266,16 @@ export const ProductPage: React.FC = () => {
                   Уточнить цену
                 </button>
               </div>
+
+              {isAdded && (
+                <Link
+                  to={paths.cart}
+                  className="flex items-center justify-center gap-2 min-h-11 rounded-lg border border-brand-blue text-brand-blue text-sm font-semibold hover:bg-brand-blue/5 transition-colors"
+                >
+                  <ShoppingCart className="w-4 h-4" />
+                  В корзине {inCart.length} {sizeWord(inCart.length)} — перейти
+                </Link>
+              )}
 
               <p className="flex items-start gap-2 text-xs text-ink/50">
                 <ShieldCheck className="w-4 h-4 text-brand-sky shrink-0" />

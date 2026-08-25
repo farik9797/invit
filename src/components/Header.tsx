@@ -9,7 +9,6 @@ import { MegaMenu } from './MegaMenu';
 
 interface HeaderProps {
   onOpenCallback: () => void;
-  onOpenQuoteCart: () => void;
   quoteCount: number;
   onSelectProduct: (product: Product) => void;
 }
@@ -36,7 +35,6 @@ const NavUnderline: React.FC<{ active: boolean }> = ({ active }) => (
 
 export const Header: React.FC<HeaderProps> = ({
   onOpenCallback,
-  onOpenQuoteCart,
   quoteCount,
   onSelectProduct
 }) => {
@@ -105,8 +103,8 @@ export const Header: React.FC<HeaderProps> = ({
             <Search className="w-5 h-5" />
           </button>
 
-          <button
-            onClick={onOpenQuoteCart}
+          <Link
+            to={paths.cart}
             className="relative self-center p-2.5 text-ink/70 hover:text-brand-green transition-colors cursor-pointer"
             title="Корзина"
           >
@@ -116,7 +114,7 @@ export const Header: React.FC<HeaderProps> = ({
                 {quoteCount}
               </span>
             )}
-          </button>
+          </Link>
 
           {/* Зелёная кнопка во всю высоту шапки — как на invit.belinfo.by */}
           <Link

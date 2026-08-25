@@ -3,7 +3,6 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { PhoneCall } from 'lucide-react';
 import { HeaderV2, FooterV2 } from './Chrome';
 import { ProductDetailModal } from '../Modals/ProductDetailModal';
-import { QuoteCartModal } from '../Modals/QuoteCartModal';
 import { CallbackModal } from '../Modals/CallbackModal';
 import { useShop } from '../../context/ShopContext';
 
@@ -48,15 +47,6 @@ export const LayoutV2: React.FC = () => {
             ? shop.quoteCart.some((i) => i.product.id === shop.quickViewProduct!.id)
             : false
         }
-      />
-
-      <QuoteCartModal
-        isOpen={shop.isQuoteCartOpen}
-        onClose={shop.closeQuoteCart}
-        items={shop.quoteCart}
-        onRemoveItem={shop.removeFromQuote}
-        onUpdateQuantity={shop.updateQuoteQty}
-        onClearCart={shop.clearQuoteCart}
       />
 
       <CallbackModal
