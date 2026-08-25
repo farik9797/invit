@@ -17,6 +17,8 @@ interface Slide {
   accent: string;
   text: string;
   image: string;
+  /** Показать кадр целиком, не обрезая: нужно там, где в кадре есть схема. */
+  whole?: boolean;
   href: string;
   cta: string;
 }
@@ -37,6 +39,7 @@ const SLIDES: Slide[] = [
     accent: 'межфланцевая лента ПЭС',
     text: 'Уплотнение стыков плит, панелей и металлоконструкций самоклеящейся лентой из вспененного полиэтилена.',
     image: tapeSlabJoint,
+    whole: true,
     href: `${paths.category('materialy-dlya-okon')}?sub=uplotnitelnye-lenty-pes-samokleyaschiesy`,
     cta: 'Ленты ПЭС'
   },
@@ -77,9 +80,13 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCallback }) => {
           src={slide.image}
           alt=""
           aria-hidden
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
-            idx === active ? 'opacity-90' : 'opacity-0'
-          }`}
+          // Кадр со схемой («защита от воды», «звукоизоляция», «теплоизоляция»)
+          // на десктопе показываем целиком: обрезка по высоте уводила подписи
+          // за край. На телефоне оставляем обрезку — вписанный кадр там
+          // сжимается в узкую полосу, и подписи всё равно не прочитать.
+          className={`absolute inset-0 w-full h-full transition-opacity duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
+            slide.whole ? 'object-cover lg:object-contain lg:object-right-bottom' : 'object-cover'
+          } ${idx === active ? 'opacity-90' : 'opacity-0'}`}
         />
       ))}
       {/* Затемняем только левую половину под текстом, правая остаётся чистым фото */}

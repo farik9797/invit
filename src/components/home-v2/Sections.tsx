@@ -51,6 +51,10 @@ interface HeroSlide {
   title: string;
   text: string;
   image: string;
+  /** Куда прижимать кадр при обрезке. По умолчанию центр. */
+  focus?: string;
+  /** Показать кадр целиком, не обрезая: нужно там, где в кадре есть схема. */
+  whole?: boolean;
   href: string;
   cta: string;
 }
@@ -69,6 +73,7 @@ const HERO_SLIDES: HeroSlide[] = [
     title: "Защита от воды, шума и холода",
     text: "Межфланцевая уплотнительная лента ПЭС в стыках плит, панелей и металлоконструкций.",
     image: heroSlab,
+    whole: true,
     href: `${paths.category("materialy-dlya-okon")}?sub=uplotnitelnye-lenty-pes-samokleyaschiesy`,
     cta: "Ленты ПЭС",
   },
@@ -159,13 +164,16 @@ export const HeroV2: React.FC = () => {
         {HERO_SLIDES.map((slide, idx) => (
           <img
             key={slide.id}
-            data-hero-photo
             src={slide.image}
             alt=""
             aria-hidden
-            className={`absolute left-0 top-0 w-full h-[112%] object-cover transition-opacity duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)] ${
-              idx === active ? "opacity-100" : "opacity-0"
-            }`}
+            style={{ objectPosition: slide.focus ?? "center" }}
+            // Кадр со схемой показываем целиком и без параллакса: он бы уводил
+            // подписи за нижний край карточки.
+            {...(slide.whole ? {} : { "data-hero-photo": true })}
+            className={`absolute left-0 top-0 w-full transition-opacity duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)] ${
+              slide.whole ? "h-full object-contain object-right-bottom" : "h-[112%] object-cover"
+            } ${idx === active ? "opacity-100" : "opacity-0"}`}
           />
         ))}
 
