@@ -22,7 +22,7 @@ export const AboutIntro: React.FC = () => (
             src={productionShop}
             alt="Производство уплотнительных лент EUROBAND: намотка и экструзия"
             loading="lazy"
-            className="w-full h-64 sm:h-80 lg:h-[420px] object-cover"
+            className="w-full h-64 sm:h-80 lg:h-[420px] object-cover object-left"
           />
         </div>
       </Reveal>
