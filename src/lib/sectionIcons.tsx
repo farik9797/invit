@@ -1,71 +1,29 @@
 import React from 'react';
-import {
-  mdiAirFilter,
-  mdiAngleRight,
-  mdiArrowExpandVertical,
-  mdiBottleTonic,
-  mdiFan,
-  mdiHomeRoof,
-  mdiLayersTriple,
-  mdiNut,
-  mdiPackageVariantClosed,
-  mdiScrewMachineFlatTop,
-  mdiSpray,
-  mdiSticker,
-  mdiTableRow,
-  mdiTapeMeasure,
-  mdiTextureBox,
-  mdiTire,
-  mdiToolbox,
-  mdiVectorRectangle,
-  mdiViewGrid,
-  mdiWindowClosedVariant
-} from '@mdi/js';
+import { mdiAirFilter, mdiPackageVariantClosed, mdiViewGrid, mdiWindowClosedVariant } from '@mdi/js';
+import { SPRITE_ICONS } from './sectionIconPaths';
 
 /*
  * Иконки разделов каталога.
  *
- * Клиент прислал свой invit.by: там у разделов не абстрактные знаки, а сами
- * предметы — рулон, баллон пены, туба герметика, саморез, гайка, вентилятор.
- * Отсюда два требования: предметность и заливка (у них силуэты, не контуры).
- * Прежний линейный набор из lucide по мотивам tbmmarket.by этому не отвечал.
+ * Знаки подразделов — **собственные иконки клиента** с invit.by. Там они лежат
+ * растровым спрайтом 25x425 (шестнадцать штук по 25x25), и в таком виде на
+ * плитке 48px превращались бы в кашу. Поэтому спрайт векторизован: ячейку
+ * увеличивали, размывали и трассировали potrace в два тоновых слоя — тёмный
+ * корпус и светлый торец. Объём знака сохранился, масштабируется без потерь.
+ * Результат лежит в `sectionIconPaths.ts`, он генерируется скриптом.
  *
- * Иконки самого invit.by взять нельзя: это спрайт 25x425 px, шестнадцать
- * знаков по 25px. Растр такого размера на нашей плитке 48px даст кашу.
+ * Оба слоя красятся `currentColor`, светлый — с прозрачностью, поэтому знак
+ * подхватывает цвет текста: синий обычно, красный у выбранного пункта.
  *
- * Поэтому Material Design Icons (`@mdi/js`) — это только строки `d`, без
- * рантайма, в сборку попадают лишь перечисленные ниже. Заливка вместо штриха
- * заодно снимает вопрос толщины линии на крупных размерах.
+ * У двух категорий и у раздела меню «Ленты EUROBAND» своих знаков в спрайте
+ * нет — там остаются Material Design Icons.
  *
  * Рисовать SVG руками нельзя: путь по памяти рендерится мусором.
  */
 
-const BY_SUBCATEGORY: Record<string, string> = {
-  // Материалы для монтажа окон
-  'montazhnye-lenty-dlya-okon': mdiTapeMeasure,
-  'samorasshiryayuschayasya-lenta-psul': mdiArrowExpandVertical,
-  'pena-montazhnaya-ochistitel-dlya-peny': mdiSpray,
-  'germetiki-kleya-himiya-smazki': mdiBottleTonic,
-  'krepezh-dlya-okon-krovli-fasadov': mdiScrewMachineFlatTop,
-  'krovelnye-uplotniteli-kleykie-lenty': mdiHomeRoof,
-  'uplotnitelnye-lenty-pes-samokleyaschiesy': mdiLayersTriple,
-  'instrument-sizy': mdiToolbox,
-  'uplotnitel-rezinovyy-d-p-e': mdiTire,
-  'penopolietilen-ppe-rulonnaya-izolyaciya': mdiTextureBox,
-
-  // Комплектующие для вентиляции
-  'flancevyy-profil-dlya-vozduhovodov': mdiVectorRectangle,
-  'ugolki-montazhnye': mdiAngleRight,
-  'krepezhnye-detali-dlya-vozduhovodov': mdiNut,
-  'profil-montazhnyy-traversa': mdiTableRow,
-  'lenty-uplotnitelnye-samokleyaschiesya': mdiSticker,
-  'elementy-osnascheniya-vozduhovodov': mdiFan
-};
-
 const BY_CATEGORY: Record<string, string> = {
   'materialy-dlya-okon': mdiWindowClosedVariant,
   ventilyaciya: mdiAirFilter,
-  // Раздел мега-меню, которого нет в каталоге: только ленты собственного производства
   tapes: mdiPackageVariantClosed
 };
 
@@ -79,15 +37,38 @@ export const SectionIcon: React.FC<{
   slug: string;
   className?: string;
   size?: number;
-}> = ({ slug, className = 'w-5 h-5', size = 24 }) => (
-  <svg
-    viewBox="0 0 24 24"
-    width={size}
-    height={size}
-    className={className}
-    aria-hidden="true"
-    focusable="false"
-  >
-    <path fill="currentColor" d={BY_SUBCATEGORY[slug] ?? BY_CATEGORY[slug] ?? mdiViewGrid} />
-  </svg>
-);
+}> = ({ slug, className = 'w-5 h-5', size = 24 }) => {
+  const sprite = SPRITE_ICONS[slug];
+
+  if (sprite) {
+    return (
+      <svg
+        viewBox={sprite.viewBox}
+        width={size}
+        height={size}
+        className={className}
+        aria-hidden="true"
+        focusable="false"
+      >
+        {sprite.layers.map((layer, i) => (
+          <g key={i} transform={layer.t}>
+            <path fill="currentColor" fillOpacity={layer.o} d={layer.d} />
+          </g>
+        ))}
+      </svg>
+    );
+  }
+
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width={size}
+      height={size}
+      className={className}
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path fill="currentColor" d={BY_CATEGORY[slug] ?? mdiViewGrid} />
+    </svg>
+  );
+};
