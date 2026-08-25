@@ -4,9 +4,8 @@ import { motion, useReducedMotion } from 'motion/react';
 import { paths } from '../../routes';
 import eurobandLight from '../../assets/logo/euroband-light.svg';
 import roofStandingSeam from '../../assets/hero/roof-standing-seam.webp';
-import tapeApplication from '../../assets/hero/tape-application.webp';
-import roofProfileSheets from '../../assets/hero/roof-profile-sheets.webp';
 import tapeSlabJoint from '../../assets/hero/tape-slab-joint.webp';
+import floorDamperTape from '../../assets/hero/floor-damper-tape.webp';
 
 interface HeroProps {
   onOpenCallback: () => void;
@@ -33,29 +32,20 @@ const SLIDES: Slide[] = [
     cta: 'Смотреть каталог'
   },
   {
-    id: 'vla',
-    lead: 'Внутренний слой монтажного шва —',
-    accent: 'пароизоляционные ленты ВЛ(а) и ВЛ',
-    text: 'Металлизированная плёнка с нетканым полотном, две монтажные полосы: акрил и бутилкаучук. Пять типоразмеров по ширине.',
-    image: tapeApplication,
-    href: `${paths.category('materialy-dlya-okon')}?sub=montazhnye-lenty-dlya-okon`,
-    cta: 'Монтажные ленты'
-  },
-  {
-    id: 'psul',
-    lead: 'Защита стыков от воды, шума и холода —',
-    accent: 'саморасширяющаяся лента ПСУЛ',
-    text: 'Предварительно сжатая уплотнительная лента. Соответствует ТКП 45-3.02-223-2010 и ГОСТ 30971-2002.',
-    image: roofProfileSheets,
-    href: `${paths.category('materialy-dlya-okon')}?sub=samorasshiryayuschayasya-lenta-psul`,
-    cta: 'Лента ПСУЛ'
-  },
-  {
-    id: 'pes',
-    lead: 'Для сэндвич-панелей, кровли и вентиляции —',
-    accent: 'уплотнительные ленты ПЭС',
-    text: 'Самоклеящиеся ленты из вспененного полиэтилена: звукоизоляция, герметизация стыков и межфланцевых соединений.',
+    id: 'joint',
+    lead: 'Защита от воды, шума и холода —',
+    accent: 'межфланцевая лента ПЭС',
+    text: 'Уплотнение стыков плит, панелей и металлоконструкций самоклеящейся лентой из вспененного полиэтилена.',
     image: tapeSlabJoint,
+    href: `${paths.category('materialy-dlya-okon')}?sub=uplotnitelnye-lenty-pes-samokleyaschiesy`,
+    cta: 'Ленты ПЭС'
+  },
+  {
+    id: 'floor',
+    lead: 'По периметру стяжки —',
+    accent: 'демпферная лента',
+    text: 'Компенсирует расширение стяжки и отсекает ударный шум от стен и перегородок.',
+    image: floorDamperTape,
     href: `${paths.category('materialy-dlya-okon')}?sub=uplotnitelnye-lenty-pes-samokleyaschiesy`,
     cta: 'Ленты ПЭС'
   }

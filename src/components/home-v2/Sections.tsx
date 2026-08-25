@@ -14,10 +14,9 @@ import aboutProduct from "../../assets/content/lenta-butilovaja-euroband-lba-3e2
 import { paths } from "../../routes";
 import { Fade, FadeGroup, CountUp, BlueButton } from "./Chrome";
 import { RequestForm } from "./RequestForm";
-import heroTape from "../../assets/hero/tape-application.webp";
 import heroRoof from "../../assets/hero/roof-standing-seam.webp";
-import heroSheets from "../../assets/hero/roof-profile-sheets.webp";
 import heroSlab from "../../assets/hero/tape-slab-joint.webp";
+import heroFloor from "../../assets/hero/floor-damper-tape.webp";
 import eurobandLogo from "../../assets/logo/euroband-color.svg";
 import eurobandLight from "../../assets/logo/euroband-light.svg";
 import {
@@ -66,26 +65,18 @@ const HERO_SLIDES: HeroSlide[] = [
     cta: "Смотреть каталог",
   },
   {
-    id: "vla",
-    title: "Пароизоляционные ленты ВЛ(а) и ВЛ",
-    text: "Внутренний слой монтажного шва: металлизированная плёнка с нетканым полотном, пять типоразмеров по ширине.",
-    image: heroTape,
-    href: `${paths.category("materialy-dlya-okon")}?sub=montazhnye-lenty-dlya-okon`,
-    cta: "Монтажные ленты",
-  },
-  {
-    id: "psul",
-    title: "Саморасширяющаяся лента ПСУЛ",
-    text: "Защита стыков от воды, шума и холода. Соответствует ТКП 45-3.02-223-2010 и ГОСТ 30971-2002.",
-    image: heroSheets,
-    href: `${paths.category("materialy-dlya-okon")}?sub=samorasshiryayuschayasya-lenta-psul`,
-    cta: "Лента ПСУЛ",
-  },
-  {
-    id: "pes",
-    title: "Уплотнительные ленты ПЭС",
-    text: "Самоклеящиеся ленты из вспененного полиэтилена для сэндвич-панелей, кровли и межфланцевых соединений.",
+    id: "joint",
+    title: "Защита от воды, шума и холода",
+    text: "Межфланцевая уплотнительная лента ПЭС в стыках плит, панелей и металлоконструкций.",
     image: heroSlab,
+    href: `${paths.category("materialy-dlya-okon")}?sub=uplotnitelnye-lenty-pes-samokleyaschiesy`,
+    cta: "Ленты ПЭС",
+  },
+  {
+    id: "floor",
+    title: "Демпферная лента для стяжки пола",
+    text: "Компенсирует расширение стяжки и отсекает ударный шум по периметру помещения.",
+    image: heroFloor,
     href: `${paths.category("materialy-dlya-okon")}?sub=uplotnitelnye-lenty-pes-samokleyaschiesy`,
     cta: "Ленты ПЭС",
   },
