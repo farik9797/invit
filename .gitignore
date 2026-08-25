@@ -12,3 +12,4 @@ password.md
 
 # local Claude Code settings
 .claude/settings.local.json
+scripts/sprite/out/

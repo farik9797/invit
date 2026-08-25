@@ -22,8 +22,15 @@ SLUGS = {
     15: 'elementy-osnascheniya-vozduhovodov'
 }
 
+# Клиент прислал готовые знаки для большинства разделов — для них
+# натрассированный вариант в сборке не нужен. Оставляем только то, чего нет.
+CLIENT = pathlib.Path(__file__).resolve().parents[2] / 'src/assets/sections'
+have = {f.stem for f in CLIENT.glob('*.webp')} if CLIENT.exists() else set()
+
 entries = []
 for k, slug in SLUGS.items():
+    if slug in have:
+        continue
     svg = pathlib.Path(f'out/cell-{k:02d}.svg').read_text()
     vb = re.search(r'viewBox="([^"]+)"', svg).group(1)
     layers = []
@@ -39,6 +46,9 @@ ts = '''/* Сгенерировано из спрайта invit.by (catalog/view
  * Спрайт — растр 25x425: шестнадцать знаков по 25x25. Ячейку увеличивали,
  * размывали и трассировали potrace в два тоновых слоя (тёмный корпус и
  * светлый торец), поэтому знак остаётся объёмным и масштабируется без потерь.
+ *
+ * Здесь остались только разделы, для которых клиент **не** прислал готовый
+ * знак в `src/assets/sections/`. Остальные векторы в сборку не тянем.
  *
  * Соответствие «ячейка -> раздел» взято из их CSS: класс `.icoNN` со сдвигом
  * фона, где NN - 61 = номер ячейки.
