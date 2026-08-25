@@ -82,7 +82,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
               {/* Width Configuration Picker */}
               <div className="p-3 bg-surface-soft rounded-xl border border-line space-y-2">
                 <label className="font-semibold text-ink block text-xs">
-                  Типоразмер для расчёта сметы:
+                  Типоразмер:
                 </label>
                 <div className="flex flex-wrap gap-1.5">
                   {widthOptions.map((w) => (
@@ -158,7 +158,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
               className="flex-1 sm:flex-initial px-5 py-2.5 rounded-lg bg-brand-blue hover:bg-brand-blue-hover text-white font-semibold text-sm shadow transition-all flex items-center justify-center gap-1.5 cursor-pointer"
             >
               <Plus className="w-4 h-4 text-white" />
-              <span>Добавить в смету КП</span>
+              <span>Добавить в корзину</span>
             </button>
           </div>
         </div>

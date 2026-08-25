@@ -97,7 +97,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         <button
           type="button"
           onClick={() => onAddToQuote(product)}
-          aria-label={isAdded ? 'Уже в смете' : 'Добавить в смету'}
+          aria-label={isAdded ? 'Уже в корзине' : 'Добавить в корзину'}
           className={`inline-flex items-center gap-1.5 min-h-11 px-3 rounded-[4px] text-sm font-semibold cursor-pointer transition-[background-color,transform] duration-[120ms] active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue ${
             isAdded
               ? 'bg-inv-surface-2 text-inv-ink'
@@ -105,7 +105,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           }`}
         >
           {isAdded ? <Check className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
-          {!compact && <span className="hidden sm:inline">{isAdded ? 'В смете' : 'В смету'}</span>}
+          {!compact && <span className="hidden sm:inline">{isAdded ? 'В корзине' : 'В корзину'}</span>}
         </button>
       </div>
     </div>

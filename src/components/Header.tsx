@@ -108,7 +108,7 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             onClick={onOpenQuoteCart}
             className="relative self-center p-2.5 text-ink/70 hover:text-brand-green transition-colors cursor-pointer"
-            title="Смета КП"
+            title="Корзина"
           >
             <ShoppingBag className="w-5 h-5" />
             {quoteCount > 0 && (

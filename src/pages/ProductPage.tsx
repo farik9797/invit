@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Navigate, Link } from 'react-router-dom';
-import { Check, Plus, Phone, Download, ShieldCheck } from 'lucide-react';
+import { Check, Plus, Minus, Phone, Download, ShieldCheck } from 'lucide-react';
 import { Breadcrumbs } from '../components/Breadcrumbs';
 import { ProductGrid } from '../components/ProductCard';
 import { Lightbox } from '../components/Lightbox';
@@ -22,6 +22,7 @@ export const ProductPage: React.FC = () => {
   const [variant, setVariant] = useState('');
   const [activePhoto, setActivePhoto] = useState(0);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [qty, setQty] = useState(1);
 
   // Полное описание и галерея грузятся отдельным чанком — только на этой странице.
   useEffect(() => {
@@ -161,7 +162,7 @@ export const ProductPage: React.FC = () => {
             <div className="border border-line rounded-xl p-5 space-y-4">
               <div className="space-y-2.5">
                 <span className="block text-xs font-semibold text-ink">
-                  Типоразмер для расчёта сметы
+                  Типоразмер
                 </span>
                 <div className="flex flex-wrap gap-2">
                   {variants.map((option) => (
@@ -180,17 +181,50 @@ export const ProductPage: React.FC = () => {
                 </div>
               </div>
 
+              {/* Сколько добавить: клиент просил класть в корзину несколько сразу */}
+              <div className="flex items-center gap-3">
+                <span className="text-xs font-semibold text-ink">Количество</span>
+                <div className="flex items-center rounded-lg border border-line overflow-hidden">
+                  <button
+                    type="button"
+                    onClick={() => setQty((v) => Math.max(1, v - 1))}
+                    aria-label="Убавить количество"
+                    disabled={qty <= 1}
+                    className="flex items-center justify-center w-11 h-11 text-ink hover:bg-surface-soft disabled:opacity-40 disabled:cursor-default transition-colors cursor-pointer"
+                  >
+                    <Minus className="w-4 h-4" />
+                  </button>
+                  <input
+                    type="number"
+                    min={1}
+                    value={qty}
+                    onChange={(e) => setQty(Math.max(1, Math.round(Number(e.target.value) || 1)))}
+                    aria-label="Количество"
+                    className="w-14 h-11 text-center text-sm font-semibold text-ink border-x border-line tabular-nums focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand-blue"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setQty((v) => v + 1)}
+                    aria-label="Прибавить количество"
+                    className="flex items-center justify-center w-11 h-11 text-ink hover:bg-surface-soft transition-colors cursor-pointer"
+                  >
+                    <Plus className="w-4 h-4" />
+                  </button>
+                </div>
+                <span className="text-xs text-ink/50">рул. / шт.</span>
+              </div>
+
               <div className="flex flex-col sm:flex-row gap-3">
                 <button
-                  onClick={() => shop.addToQuote(product, variant)}
+                  onClick={() => shop.addToQuote(product, variant, qty)}
                   className={`flex-1 px-5 py-3.5 rounded-lg text-sm font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer ${
                     isAdded
-                      ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                      ? 'bg-brand-navy hover:bg-brand-navy/90 text-white'
                       : 'bg-brand-blue hover:bg-brand-blue-hover text-white'
                   }`}
                 >
                   {isAdded ? <Check className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
-                  {isAdded ? 'Добавлено в смету' : 'Добавить в смету'}
+                  {isAdded ? 'Добавлено в корзину' : 'Добавить в корзину'}
                 </button>
 
                 <button

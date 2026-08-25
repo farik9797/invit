@@ -46,7 +46,7 @@ export const Layout: React.FC = () => {
 
       <Footer onOpenCallback={() => shop.openCallback()} />
 
-      {/* Плавающие кнопки: наверх / смета / обратный звонок */}
+      {/* Плавающие кнопки: наверх / корзина / обратный звонок */}
       <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-3 pointer-events-none">
         {showBackToTop && (
           <button
@@ -63,7 +63,7 @@ export const Layout: React.FC = () => {
           <button
             onClick={shop.openQuoteCart}
             className="pointer-events-auto bg-brand-blue hover:bg-brand-blue-hover text-white p-3.5 rounded-full shadow-lg flex items-center gap-2 border-2 border-white transition-all transform hover:scale-105 cursor-pointer group"
-            title="Открыть смету КП"
+            title="Открыть корзину"
           >
             <div className="relative">
               <ShoppingBag className="w-5 h-5 text-white" />
@@ -72,7 +72,7 @@ export const Layout: React.FC = () => {
               </span>
             </div>
             <span className="text-xs font-bold uppercase tracking-wider hidden sm:inline pr-1">
-              Смета КП ({shop.quoteCart.length})
+              Корзина ({shop.quoteCart.length})
             </span>
           </button>
         )}

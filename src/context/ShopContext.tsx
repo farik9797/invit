@@ -3,12 +3,15 @@ import { Product, QuoteCartItem } from '../types';
 import { defaultVariant } from '../lib/product';
 
 /**
- * Общее состояние магазина: смета КП и модалки, которые нужны на любой странице.
+ * Общее состояние магазина: корзина и модалки, которые нужны на любой странице.
  * Живёт над роутером, поэтому корзина не сбрасывается при переходах.
+ *
+ * Внутренние имена остались от «сметы КП» (quoteCart, addToQuote) — в интерфейсе
+ * это корзина, переименование полей ничего бы не дало, кроме большого диффа.
  */
 interface ShopContextValue {
   quoteCart: QuoteCartItem[];
-  addToQuote: (product: Product, width?: string) => void;
+  addToQuote: (product: Product, width?: string, qty?: number) => void;
   removeFromQuote: (productId: string) => void;
   updateQuoteQty: (productId: string, qty: number) => void;
   clearQuoteCart: () => void;
@@ -36,19 +39,21 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [callbackNote, setCallbackNote] = useState('');
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
 
-  const addToQuote = (product: Product, width?: string) => {
+  const addToQuote = (product: Product, width?: string, qty = 1) => {
     const selectedWidth = width || defaultVariant(product);
+    const amount = Math.max(1, Math.round(qty));
+
     setQuoteCart((prev) => {
       const existingIndex = prev.findIndex((item) => item.product.id === product.id);
       if (existingIndex > -1) {
         const updated = [...prev];
         updated[existingIndex] = {
           ...updated[existingIndex],
-          quantity: updated[existingIndex].quantity + 1
+          quantity: updated[existingIndex].quantity + amount
         };
         return updated;
       }
-      return [...prev, { product, selectedWidth, quantity: 10 }];
+      return [...prev, { product, selectedWidth, quantity: amount }];
     });
     setIsQuoteCartOpen(true);
   };
