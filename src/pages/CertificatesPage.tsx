@@ -74,7 +74,7 @@ export const CertificatesPage: React.FC = () => {
           className={groupIdx % 2 ? 'bg-inv-surface-1' : 'bg-white'}
         >
           <div className={`${WRAP} ${SECTION}`}>
-            <Fade className="flex items-baseline justify-between gap-4 flex-wrap">
+            <Fade className="flex items-baseline justify-between gap-4 flex-wrap md:pr-24 xl:pr-28">
               <h2 className="text-2xl sm:text-3xl font-semibold text-inv-ink tracking-[-0.01em]">
                 {group.title}
               </h2>

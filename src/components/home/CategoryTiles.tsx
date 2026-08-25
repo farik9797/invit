@@ -73,7 +73,7 @@ export const CategoryTiles: React.FC = () => (
       {GROUPS.map((group) => (
         <div key={group.slug} className="mt-10">
           <Reveal>
-            <div className="flex items-baseline justify-between gap-4 pb-3 border-b border-line">
+            <div className="flex items-baseline justify-between gap-4 pb-3 border-b border-line md:pr-24 xl:pr-28">
               <h3 className="text-base sm:text-lg font-semibold text-ink">
                 <Link
                   to={paths.category(group.slug)}

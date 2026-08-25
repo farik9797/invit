@@ -205,7 +205,8 @@ const CartButton: React.FC<{ className?: string }> = ({ className = '' }) => {
 
 /**
  * Знак «Лучший строительный продукт года 2013» — закреплён у правого края,
- * по центру по вертикали.
+ * чуть ниже центра (62% высоты окна): ровно по центру он попадал на строку с
+ * заголовком раздела и закрывал счётчик документов на `/certificates`.
  *
  * Картинка вырезана из слайдера invit.by (отдельного файла у клиента нет):
  * круглая маска, увеличение втрое и лёгкая резкость, см. `scripts/award/`.
@@ -220,7 +221,7 @@ export const AwardBadge: React.FC = () => (
     alt="Лучший строительный продукт года 2013"
     width={96}
     height={96}
-    className="fixed right-2 md:right-4 xl:right-6 top-1/2 -translate-y-1/2 z-20 w-14 md:w-20 xl:w-24 h-auto pointer-events-none select-none drop-shadow-[0_4px_14px_rgba(22,44,88,0.22)]"
+    className="fixed right-2 md:right-4 xl:right-6 top-[62%] -translate-y-1/2 z-20 w-14 md:w-20 xl:w-24 h-auto pointer-events-none select-none drop-shadow-[0_4px_14px_rgba(22,44,88,0.22)]"
   />
 );
 
