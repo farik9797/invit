@@ -1,8 +1,9 @@
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { Menu, X, Phone } from 'lucide-react';
+import { Menu, X, Phone, ShoppingCart } from 'lucide-react';
 import invitLogo from '../../assets/logo/invit-color.svg';
 import { paths } from '../../routes';
+import { useShop } from '../../context/ShopContext';
 import { gsap, MOTION_DURATION, MOTION_EASE, prefersReducedMotion } from './gsap';
 import { MegaMenu, MOBILE_CATALOG_LINKS } from './MegaMenu';
 
@@ -177,6 +178,31 @@ export const BlueButton: React.FC<{
     </a>
   );
 
+/**
+ * Иконка корзины со счётчиком. Добавление в корзину ничего не открывает —
+ * покупатель видит, что счётчик вырос, и заходит сюда, когда собрал заказ.
+ */
+const CartButton: React.FC<{ className?: string }> = ({ className = '' }) => {
+  const shop = useShop();
+  const count = shop.quoteCart.length;
+
+  return (
+    <button
+      type="button"
+      onClick={shop.openQuoteCart}
+      aria-label={count ? `Корзина, позиций: ${count}` : 'Корзина пуста'}
+      className={`relative flex items-center justify-center w-11 h-11 rounded-[4px] text-inv-ink hover:text-inv-blue hover:bg-inv-surface-1 transition-colors duration-[120ms] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue ${className}`}
+    >
+      <ShoppingCart className="w-5 h-5" />
+      {count > 0 && (
+        <span className="absolute top-1 right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-inv-red text-white text-[11px] font-semibold leading-[18px] text-center tabular-nums">
+          {count}
+        </span>
+      )}
+    </button>
+  );
+};
+
 export const HeaderV2: React.FC<{ onRequest?: () => void }> = ({ onRequest }) => {
   const [open, setOpen] = useState(false);
 
@@ -212,20 +238,27 @@ export const HeaderV2: React.FC<{ onRequest?: () => void }> = ({ onRequest }) =>
             <Phone className="w-4 h-4" />
             +375 29 644-49-79
           </a>
+          <CartButton />
+
           <BlueButton href="#zapros" onClick={onRequest}>
             Запросить расчёт
           </BlueButton>
         </div>
+
+        {/* На узком экране корзина остаётся видимой, рядом с бургером */}
+        <div className="flex items-center gap-1 lg:hidden">
+          <CartButton />
 
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-label={open ? 'Закрыть меню' : 'Открыть меню'}
-          className="lg:hidden w-11 h-11 -mr-2 flex items-center justify-center text-inv-ink cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
+          className="w-11 h-11 -mr-2 flex items-center justify-center text-inv-ink cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
         >
           {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
+        </div>
       </div>
 
       {open && (

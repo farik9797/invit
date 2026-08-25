@@ -55,7 +55,9 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       return [...prev, { product, selectedWidth, quantity: amount }];
     });
-    setIsQuoteCartOpen(true);
+    // Модалку намеренно не открываем: счётчик у иконки в шапке и подпись
+    // «В корзине» на кнопке — достаточная обратная связь. Форма заказа живёт
+    // внутри корзины, её открывает сам покупатель.
   };
 
   const value: ShopContextValue = {

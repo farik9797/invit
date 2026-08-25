@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
 import { HeaderV2, FooterV2 } from '../components/home-v2/Chrome';
+import { QuoteCartModal } from '../components/Modals/QuoteCartModal';
+import { useShop } from '../context/ShopContext';
 import {
   HeroV2,
   FactsRow,
@@ -25,6 +27,8 @@ import {
  * нынешнем invit.by, здесь нет намеренно.
  */
 export const HomePageV2: React.FC = () => {
+  const shop = useShop();
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -44,6 +48,15 @@ export const HomePageV2: React.FC = () => {
         <ContactSplit />
       </main>
       <FooterV2 />
+
+      <QuoteCartModal
+        isOpen={shop.isQuoteCartOpen}
+        onClose={shop.closeQuoteCart}
+        items={shop.quoteCart}
+        onRemoveItem={shop.removeFromQuote}
+        onUpdateQuantity={shop.updateQuoteQty}
+        onClearCart={shop.clearQuoteCart}
+      />
     </div>
   );
 };
