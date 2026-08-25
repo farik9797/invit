@@ -12,7 +12,22 @@ import { Reveal, RevealGroup } from '../Reveal';
  * см. newsCovers.ts — настоящих фото к событиям у клиента нет.
  */
 
-const excerpt = (article: (typeof NEWS)[number]) => article.content.split('\n')[0];
+/**
+ * Анонс карточки: 250 знаков, обрезка по границе слова, дальше многоточие.
+ *
+ * `summary` в данных обрезан на полуслове ещё при выгрузке, поэтому берём
+ * первый абзац `content` — он заканчивается точкой — и подрезаем его сами.
+ */
+const LIMIT = 250;
+
+const excerpt = (article: (typeof NEWS)[number]) => {
+  const text = article.content.split('\n')[0].trim();
+  if (text.length <= LIMIT) return text;
+
+  const cut = text.slice(0, LIMIT);
+  const lastSpace = cut.lastIndexOf(' ');
+  return `${cut.slice(0, lastSpace > LIMIT - 40 ? lastSpace : LIMIT).replace(/[.,;:!?\s]+$/, '')}…`;
+};
 
 export const NewsGrid: React.FC = () => (
   <section className="py-16 sm:py-24 bg-surface">

@@ -11,14 +11,26 @@ import { paths } from '../routes';
  * Формат карточек клиент выбрал по референсу: обложка, дата, заголовок,
  * короткое описание. Обложки подбираются по теме заметки (см. newsCovers.ts) —
  * настоящих фотографий к событиям у клиента нет.
- *
- * `summary` в данных обрезан на полуслове ещё при выгрузке, поэтому анонс
- * берём из первого абзаца `content`: он заканчивается точкой.
  */
 
 const WRAP = 'max-w-[1400px] mx-auto px-4 lg:px-8';
 
-const excerpt = (article: (typeof NEWS)[number]) => article.content.split('\n')[0];
+/**
+ * Анонс карточки: 250 знаков, обрезка по границе слова, дальше многоточие.
+ *
+ * `summary` в данных обрезан на полуслове ещё при выгрузке, поэтому берём
+ * первый абзац `content` — он заканчивается точкой — и подрезаем его сами.
+ */
+const LIMIT = 250;
+
+const excerpt = (article: (typeof NEWS)[number]) => {
+  const text = article.content.split('\n')[0].trim();
+  if (text.length <= LIMIT) return text;
+
+  const cut = text.slice(0, LIMIT);
+  const lastSpace = cut.lastIndexOf(' ');
+  return `${cut.slice(0, lastSpace > LIMIT - 40 ? lastSpace : LIMIT).replace(/[.,;:!?\s]+$/, '')}…`;
+};
 
 export const NewsPage: React.FC = () => (
   <>
@@ -69,7 +81,7 @@ export const NewsPage: React.FC = () => (
                     {article.title}
                   </span>
 
-                  <span className="mt-2 block text-sm leading-relaxed text-inv-ink-muted line-clamp-3">
+                  <span className="mt-2 block text-sm leading-relaxed text-inv-ink-muted">
                     {excerpt(article)}
                   </span>
 
