@@ -65,7 +65,7 @@ export const NewsGrid: React.FC = () => (
                   {article.title}
                 </span>
 
-                <span className="mt-2 block text-xs leading-relaxed text-ink/60 line-clamp-3">
+                <span className="mt-2 block text-xs leading-relaxed text-ink/60">
                   {excerpt(article)}
                 </span>
               </span>
