@@ -211,8 +211,8 @@ const CartButton: React.FC<{ className?: string }> = ({ className = '' }) => {
  * круглая маска, увеличение втрое и лёгкая резкость, см. `scripts/award/`.
  *
  * Ссылки нет намеренно: самого диплома среди документов на сайте пока нет,
- * и клик уводил бы в раздел, где его не найти. На узком экране не показываем —
- * знак закрывал бы содержимое.
+ * и клик уводил бы в раздел, где его не найти. Клики он не перехватывает
+ * (`pointer-events-none`), поэтому на телефоне не мешает нажимать под собой.
  */
 export const AwardBadge: React.FC = () => (
   <img
@@ -220,7 +220,7 @@ export const AwardBadge: React.FC = () => (
     alt="Лучший строительный продукт года 2013"
     width={96}
     height={96}
-    className="hidden md:block fixed right-4 xl:right-6 top-1/2 -translate-y-1/2 z-20 w-20 xl:w-24 h-auto pointer-events-none select-none drop-shadow-[0_4px_14px_rgba(22,44,88,0.22)]"
+    className="fixed right-2 md:right-4 xl:right-6 top-1/2 -translate-y-1/2 z-20 w-14 md:w-20 xl:w-24 h-auto pointer-events-none select-none drop-shadow-[0_4px_14px_rgba(22,44,88,0.22)]"
   />
 );
 
