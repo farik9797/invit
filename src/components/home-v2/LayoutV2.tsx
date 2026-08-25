@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { PhoneCall } from 'lucide-react';
-import { HeaderV2, FooterV2 } from './Chrome';
+import { HeaderV2, FooterV2, AwardBadge } from './Chrome';
 import { ProductDetailModal } from '../Modals/ProductDetailModal';
 import { CallbackModal } from '../Modals/CallbackModal';
 import { useShop } from '../../context/ShopContext';
@@ -28,6 +28,8 @@ export const LayoutV2: React.FC = () => {
       </main>
 
       <FooterV2 />
+
+      <AwardBadge />
 
       <button
         onClick={() => shop.openCallback('Запрос из каталога')}

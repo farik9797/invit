@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { HeaderV2, FooterV2 } from '../components/home-v2/Chrome';
+import { HeaderV2, FooterV2, AwardBadge } from '../components/home-v2/Chrome';
 import {
   HeroV2,
   FactsRow,
@@ -44,6 +44,8 @@ export const HomePageV2: React.FC = () => {
         <ContactSplit />
       </main>
       <FooterV2 />
+
+      <AwardBadge />
     </div>
   );
 };
