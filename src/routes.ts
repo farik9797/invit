@@ -8,6 +8,8 @@ export const paths = {
   category: (slug: string) => `/catalog/${slug}`,
   product: (product: Product) => `/catalog/${product.categorySlug}/${productSlug(product)}`,
   about: '/about',
+  // Архив: первая версия страницы, сохранена для сравнения
+  aboutOld: '/about-old',
   certificates: '/certificates',
   news: '/news',
   newsArticle: (id: string) => `/news/${id}`,

@@ -19,6 +19,12 @@ const ProductPage = lazy(() =>
   import('./pages/ProductPage').then((m) => ({ default: m.ProductPage }))
 );
 
+// Архив старой страницы «О компании». Тянет ту же карту иллюстраций, поэтому
+// тоже отдельным чанком: страница сравнения, а не рабочая.
+const AboutOldPage = lazy(() =>
+  import('./pages/AboutOldPage').then((m) => ({ default: m.AboutOldPage }))
+);
+
 const v2Fallback = <div className="min-h-screen bg-white" />;
 import { CatalogPage } from './pages/CatalogPage';
 import { AboutPage } from './pages/AboutPage';
@@ -52,6 +58,11 @@ export default function App() {
               element={<Suspense fallback={v2Fallback}>{<ProductPage />}</Suspense>}
             />
             <Route path="/about" element={<AboutPage />} />
+            {/* Архив прежней версии, по просьбе клиента */}
+            <Route
+              path="/about-old"
+              element={<Suspense fallback={v2Fallback}>{<AboutOldPage />}</Suspense>}
+            />
             <Route path="/certificates" element={<CertificatesPage />} />
             <Route path="/news" element={<NewsPage />} />
             <Route path="/news/:newsId" element={<NewsArticlePage />} />
