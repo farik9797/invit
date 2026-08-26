@@ -131,11 +131,6 @@ export const ProductPage: React.FC = () => {
           <div className="lg:col-span-8 space-y-6">
             <div>
               <div className="flex flex-wrap items-center gap-2 mb-3">
-                {product.badge && (
-                  <span className="bg-brand-green text-white text-[10px] font-semibold uppercase tracking-wide px-2 py-1 rounded">
-                    {product.badge}
-                  </span>
-                )}
                 <Link
                   to={`${paths.category(product.categorySlug)}?sub=${product.subcategorySlug}`}
                   className="text-[11px] text-brand-blue hover:text-brand-blue-hover transition-colors"

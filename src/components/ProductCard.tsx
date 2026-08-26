@@ -33,7 +33,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   <div className="h-full flex flex-col rounded-[8px] border border-inv-border bg-white overflow-hidden group transition-[transform,box-shadow] duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(22,44,88,0.16)]">
     <Link
       to={paths.product(product)}
-      className={`relative block bg-white border-b border-inv-border-subtle focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-inv-blue ${
+      className={`block bg-white border-b border-inv-border-subtle focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-inv-blue ${
         compact ? 'h-32 p-3' : 'h-48 p-4'
       }`}
     >
@@ -43,16 +43,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         loading="lazy"
         className="w-full h-full object-contain transition-transform duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:scale-[1.04]"
       />
-
-      {product.badge && (
-        <span
-          className={`absolute top-2 left-2 rounded-[4px] bg-inv-red px-2 py-0.5 font-semibold uppercase tracking-[0.04em] text-white ${
-            compact ? 'text-[9px]' : 'top-3 left-3 text-[10px]'
-          }`}
-        >
-          {compact ? 'EUROBAND' : product.badge}
-        </span>
-      )}
     </Link>
 
     <div className={`flex flex-1 flex-col ${compact ? 'p-3' : 'p-4 sm:p-5'}`}>
