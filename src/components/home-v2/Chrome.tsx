@@ -5,6 +5,7 @@ import invitLogo from '../../assets/logo/invit-color.svg';
 import award2013 from '../../assets/awards/award-2013.webp';
 import viberIcon from '../../assets/icons/viber.svg';
 import { paths } from '../../routes';
+import { COMPANY, REQUISITES } from '../../data/company';
 import { useShop } from '../../context/ShopContext';
 import { gsap, MOTION_DURATION, MOTION_EASE, prefersReducedMotion } from './gsap';
 import { MegaMenu, MOBILE_CATALOG_LINKS } from './MegaMenu';
@@ -591,22 +592,31 @@ export const FooterV2: React.FC = () => (
         </nav>
       </div>
 
-      <div className="space-y-3 text-sm">
+      <div className="space-y-3 text-sm pr-20 sm:pr-0 xl:pr-24">
         <h2 className="text-white font-semibold">Реквизиты</h2>
-        <p>УНП 600500616</p>
-        <p>Минский р-н, Сеницкий с/с, 84, каб. 9</p>
-        <div className="flex flex-col sm:gap-3">
+
+        {/* Полный список: клиент попросил не отправлять за ними на другую страницу */}
+        <dl className="space-y-1.5 text-[13px] leading-relaxed">
+          {REQUISITES.map(([label, value]) => (
+            <div key={label}>
+              <dt className="text-white/55">{label}</dt>
+              <dd className="text-inv-on-deep break-words">{value}</dd>
+            </div>
+          ))}
+        </dl>
+
+        <div className="flex flex-col sm:gap-3 pt-1">
           <a
-            href="mailto:info@invit.by"
+            href={`mailto:${COMPANY.email}`}
             className="flex items-center min-h-11 sm:min-h-0 hover:text-white transition-colors"
           >
-            info@invit.by
+            {COMPANY.email}
           </a>
           <a
             href="tel:+375296444979"
             className="flex items-center min-h-11 sm:min-h-0 hover:text-white transition-colors"
           >
-            +375 29 644-49-79
+            {COMPANY.phoneMinsk}
           </a>
         </div>
       </div>

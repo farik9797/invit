@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, FileText, MapPin, Award, Check } from 'lucide-react';
 import { Breadcrumbs } from '../components/Breadcrumbs';
 import { AddressMap, OFFICE_COORDS } from '../components/AddressMap';
+import { REQUISITES } from '../data/company';
 import { Fade, FadeGroup, CountUp } from '../components/home-v2/Chrome';
 import { CERTIFICATES, PRODUCTS } from '../data/catalogData';
 import { productImage } from '../lib/productImages';
@@ -114,18 +115,6 @@ const SERVICE = [
       'Технические свидетельства, декларации о соответствии, отказные письма и паспорта качества — при отгрузке.'
     ]
   }
-];
-
-/** Реквизиты приведены к тому, что опубликовано на invit.by/about. */
-const REQUISITES = [
-  ['Полное наименование', 'Общество с ограниченной ответственностью «ИНВИТ»'],
-  ['УНП', '600500616'],
-  ['ОКПО', '29040090'],
-  ['Юридический адрес', 'РБ, 223710, Минская обл., г. Солигорск, ул. Строителей, 30, каб. 101'],
-  ['Минское подразделение', 'РБ, 223056, Минский р-н, Сеницкий сельсовет, 84, каб. 9'],
-  ['IBAN', 'BY41PJCB30121005041000000933'],
-  ['Банк', 'Доп. офис 115/4 «Приорбанк» ОАО, BIC PJCBBY2X'],
-  ['Адрес банка', 'РБ, 223710, Минская обл., г. Солигорск, ул. Козлова, 37']
 ];
 
 const TABS = ['О компании', 'Где применяют', 'Поставки и сервис'] as const;
