@@ -555,7 +555,7 @@ export const FooterV2: React.FC = () => (
 
     <div className="border-t border-white/15">
       <div className="max-w-[1400px] mx-auto px-4 lg:px-8 py-5 text-sm">
-        <span>© 2009-2026 ООО «ИНВИТ». Все права защищены.</span>
+        <span>© 2001-2026 ООО «ИНВИТ». Все права защищены.</span>
       </div>
     </div>
   </footer>

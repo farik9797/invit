@@ -159,7 +159,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenCallback }) => (
     <div className="border-t border-white/10">
       <div className="max-w-[1340px] mx-auto px-5 py-5 flex flex-col md:flex-row justify-between items-center gap-3 text-xs text-white/40">
         <span>
-          © 2009–2026 Общество с ограниченной ответственностью «ИНВИТ». Все права защищены.
+          © 2001–2026 Общество с ограниченной ответственностью «ИНВИТ». Все права защищены.
         </span>
         <span>EUROBAND — собственная торговая марка</span>
       </div>
