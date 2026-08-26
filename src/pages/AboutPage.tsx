@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, FileText, MapPin, Award, Check } from 'lucide-react';
 import { Breadcrumbs } from '../components/Breadcrumbs';
+import { AddressMap, OFFICE_COORDS } from '../components/AddressMap';
 import { Fade, FadeGroup, CountUp } from '../components/home-v2/Chrome';
 import { CERTIFICATES, PRODUCTS } from '../data/catalogData';
 import { productImage } from '../lib/productImages';
@@ -551,6 +552,21 @@ export const AboutPage: React.FC = () => {
               </Link>
             </div>
           </FadeGroup>
+
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+            <AddressMap
+              lat={OFFICE_COORDS.minsk.lat}
+              lon={OFFICE_COORDS.minsk.lon}
+              title="Минск"
+              address="Минский район, Сеницкий сельсовет, 84 — ТЦ «Сеница», офис 9"
+            />
+            <AddressMap
+              lat={OFFICE_COORDS.soligorsk.lat}
+              lon={OFFICE_COORDS.soligorsk.lon}
+              title="Солигорск"
+              address="улица Строителей, 30, офис 101"
+            />
+          </div>
         </div>
       </section>
     </>

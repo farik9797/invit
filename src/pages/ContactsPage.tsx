@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Phone, Mail, Clock, ArrowRight } from 'lucide-react';
+import { AddressMap, OFFICE_COORDS } from '../components/AddressMap';
 import { Breadcrumbs } from '../components/Breadcrumbs';
 import { Fade, FadeGroup } from '../components/home-v2/Chrome';
 import { RequestForm } from '../components/home-v2/RequestForm';
@@ -22,6 +23,7 @@ const OFFICES = [
   {
     city: 'Минск',
     address: 'Минский район, Сеницкий сельсовет, 84 (ТЦ «Сеница», офис 9)',
+    coords: OFFICE_COORDS.minsk,
     phones: [
       { label: '+375 29 644-49-79', note: 'многоканальный' },
       { label: '+375 17 343-77-36' }
@@ -31,6 +33,7 @@ const OFFICES = [
   {
     city: 'Солигорск',
     address: '223701, улица Строителей, 30, офис 101',
+    coords: OFFICE_COORDS.soligorsk,
     phones: [
       { label: '+375 174 32-50-22' },
       { label: '+375 174 25-22-25' },
@@ -136,6 +139,14 @@ export const ContactsPage: React.FC = () => (
                 <Clock className="w-4 h-4 shrink-0 mt-0.5" />
                 <span>{office.hours.join(' · ')}</span>
               </p>
+
+              <AddressMap
+                lat={office.coords.lat}
+                lon={office.coords.lon}
+                title={office.city}
+                address={office.address}
+                className="mt-5"
+              />
             </div>
           ))}
         </FadeGroup>
