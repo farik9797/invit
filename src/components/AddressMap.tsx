@@ -24,8 +24,16 @@ interface AddressMapProps {
   address: string;
   /** Насколько широкий кусок карты показывать: меньше — крупнее. */
   span?: number;
+  /** Высота окна карты. На контактах карта основная, поэтому там `tall`. */
+  size?: 'default' | 'tall';
   className?: string;
 }
+
+/** Классы перечислены целиком: Tailwind не собирает имена по частям. */
+const MAP_HEIGHT = {
+  default: 'h-[220px] sm:h-[280px]',
+  tall: 'h-[300px] sm:h-[380px] lg:h-[440px]'
+};
 
 export const AddressMap: React.FC<AddressMapProps> = ({
   lat,
@@ -33,6 +41,7 @@ export const AddressMap: React.FC<AddressMapProps> = ({
   title,
   address,
   span = 0.008,
+  size = 'default',
   className = ''
 }) => {
   // Чем меньше span, тем крупнее план: пересчитываем его в уровень зума Яндекса
@@ -47,7 +56,7 @@ export const AddressMap: React.FC<AddressMapProps> = ({
         src={embed}
         title={`Карта: ${title}`}
         loading="lazy"
-        className="w-full h-[220px] sm:h-[280px] border-0"
+        className={`w-full border-0 ${MAP_HEIGHT[size]}`}
       />
 
       <div className="flex flex-wrap items-start justify-between gap-3 p-4 border-t border-inv-border">

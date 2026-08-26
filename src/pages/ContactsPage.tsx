@@ -145,6 +145,7 @@ export const ContactsPage: React.FC = () => (
                 lon={office.coords.lon}
                 title={office.city}
                 address={office.address}
+                size="tall"
                 className="mt-5"
               />
             </div>
