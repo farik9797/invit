@@ -2,12 +2,14 @@ import React from 'react';
 import { MapPin, ExternalLink } from 'lucide-react';
 
 /*
- * Карта адреса на OpenStreetMap.
+ * Карта адреса на Яндекс.Картах — их попросил клиент.
  *
- * Взят именно OSM, а не Яндекс или Google: их встраиваемые карты ставят свои
- * cookie, а в политике конфиденциальности у нас написано, что сайт этого не
- * делает. OSM обходится без ключа и без рекламных счётчиков — грузятся только
- * тайлы карты.
+ * Виджет `map-widget/v1` не требует ключа и API-скрипта: обычный фрейм с
+ * координатами и меткой. Ставили сначала OpenStreetMap, но белорусскому
+ * покупателю привычнее Яндекс, и на нём есть панорамы и организации.
+ *
+ * **Виджет ставит cookie Яндекса** — в отличие от OSM. Это отражено в политике
+ * конфиденциальности, менять её обратно без карты нельзя.
  *
  * Координаты найдены геокодером по адресам клиента, а не поставлены на глаз:
  * ТЦ «Сеница» — 53.8357, 27.5052; Солигорск, Строителей 30 — 52.7942, 27.5370.
@@ -33,9 +35,11 @@ export const AddressMap: React.FC<AddressMapProps> = ({
   span = 0.008,
   className = ''
 }) => {
-  const bbox = [lon - span, lat - span / 2, lon + span, lat + span / 2].join(',');
-  const embed = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat},${lon}`;
-  const full = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=17/${lat}/${lon}`;
+  // Чем меньше span, тем крупнее план: пересчитываем его в уровень зума Яндекса
+  const zoom = span <= 0.004 ? 18 : span <= 0.008 ? 17 : 16;
+  const point = `${lon},${lat}`;
+  const embed = `https://yandex.by/map-widget/v1/?ll=${point}&z=${zoom}&pt=${point},pm2rdm`;
+  const full = `https://yandex.by/maps/?ll=${point}&z=${zoom}&pt=${point}`;
 
   return (
     <div className={`rounded-[8px] border border-inv-border bg-white overflow-hidden ${className}`}>
