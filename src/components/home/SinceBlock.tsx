@@ -2,7 +2,7 @@ import React from 'react';
 import { Reveal } from '../Reveal';
 import { CERTIFICATES, PRODUCTS } from '../../data/catalogData';
 
-const FOUNDED = 2009;
+const FOUNDED = 2001;
 
 /** Числа считаются по данным каталога, руками их менять не надо. */
 const FACTS = [
@@ -33,7 +33,7 @@ export const SinceBlock: React.FC = () => (
       <Reveal>
         <div className="relative z-10 py-16 sm:py-24 lg:pr-16">
           <h2 className="text-2xl sm:text-3xl font-bold text-ink tracking-tight leading-tight">
-            Мы работаем на рынке строительных лент и уплотнителей с 2009 года.
+            Мы работаем на рынке строительных лент и уплотнителей с 2001 года.
           </h2>
 
           <p className="mt-6 text-sm sm:text-base text-ink/70 leading-relaxed">

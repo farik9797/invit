@@ -50,11 +50,11 @@ export const Footer: React.FC<FooterProps> = ({ onOpenCallback }) => (
           <dl className="pt-2 space-y-2 text-xs">
             <div>
               <dt className="text-white/80">УНП</dt>
-              <dd>192436058</dd>
+              <dd>600500616</dd>
             </div>
             <div>
               <dt className="text-white/80">Юридический адрес</dt>
-              <dd>г. Минск, ул. Мясникова, 78, оф. 6</dd>
+              <dd>Минская обл., г. Солигорск, ул. Строителей, 30, каб. 101</dd>
             </div>
           </dl>
           {/* Расчётный счёт клиент пока не давал — добавить сюда, когда пришлёт */}

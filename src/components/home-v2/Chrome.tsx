@@ -213,18 +213,25 @@ const CartButton: React.FC<{ className?: string }> = ({ className = '' }) => {
  * Картинка вырезана из слайдера invit.by (отдельного файла у клиента нет):
  * круглая маска, увеличение втрое и лёгкая резкость, см. `scripts/award/`.
  *
- * Ссылки нет намеренно: самого диплома среди документов на сайте пока нет,
- * и клик уводил бы в раздел, где его не найти. Клики он не перехватывает
- * (`pointer-events-none`), поэтому на телефоне не мешает нажимать под собой.
+ * Ведёт на страницу о самой награде — там текст конкурса и скан диплома.
+ * Раньше знак был некликабельным: диплома на сайте не было, и клик уводил бы
+ * в раздел, где его не найти.
  */
 export const AwardBadge: React.FC = () => (
-  <img
-    src={award2013}
-    alt="Лучший строительный продукт года 2013"
-    width={96}
-    height={96}
-    className="fixed right-2 md:right-4 xl:right-6 top-[62%] -translate-y-1/2 z-20 w-14 md:w-20 xl:w-24 h-auto pointer-events-none select-none drop-shadow-[0_4px_14px_rgba(22,44,88,0.22)]"
-  />
+  <Link
+    to={paths.bestProduct}
+    aria-label="Лучший строительный продукт года 2013 — подробнее"
+    style={{ clipPath: 'circle(50%)' }}
+    className="fixed right-2 md:right-4 xl:right-6 top-[62%] -translate-y-1/2 z-20 w-14 md:w-20 xl:w-24 transition-transform duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:scale-[1.06] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-inv-blue"
+  >
+    <img
+      src={award2013}
+      alt="Лучший строительный продукт года 2013"
+      width={96}
+      height={96}
+      className="w-full h-auto select-none drop-shadow-[0_4px_14px_rgba(22,44,88,0.22)]"
+    />
+  </Link>
 );
 
 /** Подсказки под полем: проверено, что каждая что-то находит в каталоге. */
@@ -527,8 +534,8 @@ export const FooterV2: React.FC = () => (
 
       <div className="space-y-3 text-sm">
         <h2 className="text-white font-semibold">Реквизиты</h2>
-        <p>УНП 192436058</p>
-        <p>г. Минск, ул. Мясникова, 78, оф. 6</p>
+        <p>УНП 600500616</p>
+        <p>Минский р-н, Сеницкий с/с, 84, каб. 9</p>
         <div className="flex flex-col sm:gap-3">
           <a
             href="mailto:info@invit.by"

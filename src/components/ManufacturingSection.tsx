@@ -92,7 +92,7 @@ export const ManufacturingSection: React.FC<ManufacturingSectionProps> = ({
 
                 <div className="pt-2 grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <div className="p-3 bg-surface-soft rounded-xl border border-line text-center">
-                    <span className="block text-xl font-bold text-brand-blue">с 2009</span>
+                    <span className="block text-xl font-bold text-brand-blue">с 2001</span>
                     <span className="text-[11px] font-semibold text-ink/55">Работаем на рынке</span>
                   </div>
                   <div className="p-3 bg-surface-soft rounded-xl border border-line text-center">

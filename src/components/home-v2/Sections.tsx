@@ -63,7 +63,7 @@ const HERO_SLIDES: HeroSlide[] = [
   {
     id: "about",
     title: "Уплотнительные и герметизирующие ленты",
-    text: "Белорусский производитель с 2009 года. Уплотняем стыки в окнах, кровле, сэндвич-панелях и вентиляции.",
+    text: "Белорусский производитель с 2001 года. Уплотняем стыки в окнах, кровле, сэндвич-панелях и вентиляции.",
     image: heroRoof,
     href: paths.catalog,
     cta: "Смотреть каталог",
@@ -270,7 +270,7 @@ export const HeroV2: React.FC = () => {
 
 /* ── 2. Полоса фактов: четыре колонки, разделённые тонкой линией ──────── */
 
-const FOUNDED = 2009;
+const FOUNDED = 2001;
 
 const FACTS = [
   { value: new Date().getFullYear() - FOUNDED, label: "лет на рынке" },
@@ -586,7 +586,7 @@ export const ValuesBlock: React.FC = () => (
     >
       <Fade className="lg:col-span-5">
         <div className="lg:sticky lg:top-24">
-          <h2 className={`${H2} text-inv-ink`}>Работаем с 2009 года</h2>
+          <h2 className={`${H2} text-inv-ink`}>Работаем с 2001 года</h2>
 
           <p className="mt-5 sm:mt-6 text-base leading-[1.55] text-inv-ink-muted max-w-[46ch]">
             За это время наладили собственное производство в Минске, подтвердили
