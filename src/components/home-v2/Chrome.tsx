@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { Menu, X, Phone, ShoppingCart, Search } from 'lucide-react';
 import invitLogo from '../../assets/logo/invit-color.svg';
@@ -228,36 +228,111 @@ export const AwardBadge: React.FC = () => (
 );
 
 /**
- * Поиск в шапке. Своей выдачи не делает — уводит в каталог с готовым запросом
+ * Поиск в шапке: кнопка-лупа, по клику открывается попап с полем.
+ *
+ * Своей выдачи попап не делает — уводит в каталог с готовым запросом
  * (`/catalog?q=…`), где поиск и фильтр по разделам уже есть.
+ *
+ * Полем в строке шапки это было раньше, но вместе с пятым пунктом меню и
+ * телефоном оно не помещалось: при окне 1024 шапка распирала документ до
+ * 1117px. Кнопка занимает 44px и помещается везде.
  */
-const HeaderSearch: React.FC<{ className?: string; onDone?: () => void }> = ({
-  className = '',
-  onDone
-}) => {
+const HeaderSearch: React.FC<{ className?: string }> = ({ className = '' }) => {
+  const [open, setOpen] = useState(false);
   const [value, setValue] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
+
+  // Фокус в поле сразу после открытия, иначе попап требует лишнего клика
+  useEffect(() => {
+    if (open) inputRef.current?.focus();
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [open]);
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     const q = value.trim();
     navigate(q ? `${paths.catalog}?q=${encodeURIComponent(q)}` : paths.catalog);
     setValue('');
-    onDone?.();
+    setOpen(false);
   };
 
   return (
-    <form onSubmit={submit} role="search" className={`relative ${className}`}>
-      <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-inv-ink-muted" />
-      <input
-        type="search"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        placeholder="Поиск по каталогу"
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
         aria-label="Поиск по каталогу"
-        className="w-full min-h-11 pl-9 pr-3 rounded-[4px] border border-inv-border bg-white text-sm text-inv-ink placeholder:text-inv-ink-muted focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-inv-blue"
-      />
-    </form>
+        aria-expanded={open}
+        className={`flex items-center justify-center w-11 h-11 rounded-[4px] text-inv-ink hover:text-inv-blue hover:bg-inv-surface-1 transition-colors duration-[120ms] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue ${className}`}
+      >
+        <Search className="w-5 h-5" />
+      </button>
+
+      {open && (
+        <div
+          className="fixed inset-0 z-50 bg-inv-deep/60 backdrop-blur-sm"
+          onClick={() => setOpen(false)}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Поиск по каталогу"
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white border-b border-inv-border shadow-[0_6px_24px_rgba(22,44,88,0.16)]"
+          >
+            <div className="max-w-[1400px] mx-auto px-4 lg:px-8 py-5 sm:py-6">
+              <div className="flex items-center justify-between gap-4">
+                <h2 className="text-sm font-semibold uppercase tracking-[0.12em] text-inv-ink-muted">
+                  Поиск по каталогу
+                </h2>
+                <button
+                  type="button"
+                  onClick={() => setOpen(false)}
+                  aria-label="Закрыть поиск"
+                  className="flex items-center justify-center w-11 h-11 -mr-2 rounded-[4px] text-inv-ink-muted hover:text-inv-ink hover:bg-inv-surface-1 transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <form onSubmit={submit} role="search" className="mt-3 flex gap-2">
+                <span className="relative flex-1">
+                  <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-inv-ink-muted" />
+                  <input
+                    ref={inputRef}
+                    type="search"
+                    value={value}
+                    onChange={(e) => setValue(e.target.value)}
+                    placeholder="Лента, ПСУЛ, профиль, крепёж…"
+                    aria-label="Что ищем"
+                    className="w-full min-h-11 pl-9 pr-3 rounded-[4px] border border-inv-border bg-white text-base text-inv-ink placeholder:text-inv-ink-muted focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-inv-blue"
+                  />
+                </span>
+                <button
+                  type="submit"
+                  className="inline-flex items-center justify-center min-h-11 px-6 rounded-[4px] bg-inv-blue hover:bg-inv-blue-hover text-white text-sm font-semibold whitespace-nowrap transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
+                >
+                  Найти
+                </button>
+              </form>
+
+              <p className="mt-2 text-xs text-inv-ink-muted">
+                Ищем по названию позиции и разделу — 208 товаров каталога.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
@@ -288,12 +363,12 @@ export const HeaderV2: React.FC<{ onRequest?: () => void }> = ({ onRequest }) =>
           ))}
         </nav>
 
-        <div className="hidden xl:flex items-center gap-4 shrink-0">
-          <HeaderSearch className="hidden xl:block w-44 2xl:w-56" />
+        <div className="hidden xl:flex items-center gap-3 shrink-0">
+          <HeaderSearch />
 
           <a
             href="tel:+375296444979"
-            className="hidden min-[1700px]:flex items-center gap-2 text-sm font-semibold text-inv-ink hover:text-inv-blue transition-colors duration-[120ms] whitespace-nowrap"
+            className="hidden 2xl:flex items-center gap-2 text-sm font-semibold text-inv-ink hover:text-inv-blue transition-colors duration-[120ms] whitespace-nowrap"
           >
             <Phone className="w-4 h-4" />
             +375 29 644-49-79
@@ -307,6 +382,7 @@ export const HeaderV2: React.FC<{ onRequest?: () => void }> = ({ onRequest }) =>
 
         {/* На узком экране корзина остаётся видимой, рядом с бургером */}
         <div className="flex items-center gap-1 xl:hidden">
+          <HeaderSearch />
           <CartButton />
 
         <button
@@ -323,8 +399,6 @@ export const HeaderV2: React.FC<{ onRequest?: () => void }> = ({ onRequest }) =>
 
       {open && (
         <div className="xl:hidden border-t border-inv-border bg-white px-4 py-4 space-y-1">
-          <HeaderSearch className="mb-3" onDone={() => setOpen(false)} />
-
           <span className="block pt-1 pb-2 text-xs font-semibold uppercase tracking-[0.12em] text-inv-ink-muted">
             Каталог товаров
           </span>
