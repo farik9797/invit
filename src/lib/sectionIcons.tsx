@@ -1,92 +1,72 @@
 import React from 'react';
 import {
   mdiAirFilter,
+  mdiFan,
+  mdiHomeRoof,
   mdiPackageVariantClosed,
   mdiTire,
   mdiViewGrid,
   mdiWindowClosedVariant
 } from '@mdi/js';
+import { FLAT_ICONS } from './sectionIconPaths';
 
 /*
- * Иконки разделов каталога.
+ * Иконки разделов каталога — единый набор плоских силуэтов.
  *
- * Основной набор — **готовые знаки от клиента** (`src/assets/sections/*.webp`):
- * те же предметы, что на invit.by, но чистые, с прозрачностью и в приличном
- * разрешении. Их прислали архивом, здесь они приведены к квадрату 192px:
- * пропорции у оригиналов разные (75x87, 112x59), а в сетке знаки должны быть
- * одного кегля.
+ * Основа — знаки клиента из его архива. Они приходили растром со светотенью, и
+ * рядом с векторными запасными смотрелись как другой набор. Поэтому знаки
+ * уплощены: берётся альфа-канал, обводится potrace, рисуется сплошной заливкой.
+ * Форма предмета (рулон, баллон, ключ, уголок) остаётся, объём уходит.
  *
- * Знаки клиента закрывают пятнадцать подразделов из шестнадцати. Исключение —
- * «Уплотнитель резиновый D, P, E»: в его архиве такого нет, а вариант из
- * спрайта читался как ещё один рулон ленты и сливался с ПСУЛ. Там шина из
- * Material Design Icons. Оттуда же знаки для двух категорий и раздела меню
- * «Ленты EUROBAND» — их в архиве тоже нет.
+ * Что это дало, кроме единства: знак стал вектором и красится `currentColor` —
+ * у выбранного пункта каталога иконка снова красная, чего с растром не было.
  *
- * Единство стиля важнее подсветки. Контурный набор из lucide, который стоял
- * между этими двумя версиями, читался ровнее по линии, но выбивался из знаков
- * клиента: у него залитые объёмные силуэты, у lucide — тонкий контур. Клиент
- * попросил вернуть свои знаки и держать весь набор в одном стиле, поэтому
- * запасные (резиновый уплотнитель, две категории, раздел меню) взяты из MDI
- * тоже залитыми и в том же тёмно-сером цвете.
+ * Шесть знаков берём из Material Design Icons:
+ * - резиновый уплотнитель, две категории и раздел меню «Ленты EUROBAND» —
+ *   их в архиве клиента нет;
+ * - кровельные уплотнители и оснащение воздуховодов — после уплощения крыша
+ *   превращалась в шляпу, а короб воздуховода в бесформенное пятно.
  *
- * Цена решения: растр перекрасить нельзя, поэтому у выбранного пункта каталога
- * знак не подсвечивается — красным помечен только текст.
- *
+ * Пересобрать плоские знаки: `scripts/sections/flatten.py`, затем `gen.py`.
  * Рисовать SVG руками нельзя: путь по памяти рендерится мусором.
  */
 
-/** Цвет знаков клиента — под него подогнаны и запасные варианты. */
-const INK = '#47474a';
-
-const CLIENT_ICONS = import.meta.glob('../assets/sections/*.webp', {
-  eager: true,
-  query: '?url',
-  import: 'default'
-}) as Record<string, string>;
-
-const BY_SLUG: Record<string, string> = Object.fromEntries(
-  Object.entries(CLIENT_ICONS).map(([path, url]) => [
-    path.split('/').pop()!.replace('.webp', ''),
-    url
-  ])
-);
-
-/** Подразделы без знака в архиве клиента. */
-const BY_SUBCATEGORY: Record<string, string> = {
-  'uplotnitel-rezinovyy-d-p-e': mdiTire
-};
-
-const BY_CATEGORY: Record<string, string> = {
+const BY_SLUG: Record<string, string> = {
+  'krovelnye-uplotniteli-kleykie-lenty': mdiHomeRoof,
+  'elementy-osnascheniya-vozduhovodov': mdiFan,
+  'uplotnitel-rezinovyy-d-p-e': mdiTire,
   'materialy-dlya-okon': mdiWindowClosedVariant,
   ventilyaciya: mdiAirFilter,
+  // Раздел мега-меню, которого нет в каталоге: только ленты своего производства
   tapes: mdiPackageVariantClosed
 };
 
 /**
  * Иконка подраздела, а если такого нет — общий знак каталога (`all` в дереве).
  *
- * `size` задаёт сетку знака. На резкость он не влияет у векторных вариантов,
- * а у растровых определяет, какой кусок 192px-картинки будет виден: держим его
- * равным размеру в классе, иначе знак ужмётся вдвое.
+ * `size` задаёт сетку знака. На резкость он не влияет: всё векторное.
  */
 export const SectionIcon: React.FC<{
   slug: string;
   className?: string;
   size?: number;
 }> = ({ slug, className = 'w-5 h-5', size = 24 }) => {
-  const client = BY_SLUG[slug];
+  const flat = FLAT_ICONS[slug];
 
-  if (client) {
+  if (flat) {
     return (
-      <img
-        src={client}
-        alt=""
-        aria-hidden="true"
-        loading="lazy"
+      <svg
+        viewBox={flat.viewBox}
         width={size}
         height={size}
-        className={`${className} object-contain`}
-      />
+        className={className}
+        aria-hidden="true"
+        focusable="false"
+      >
+        <g transform={flat.t}>
+          <path fill="currentColor" d={flat.d} />
+        </g>
+      </svg>
     );
   }
 
@@ -99,7 +79,7 @@ export const SectionIcon: React.FC<{
       aria-hidden="true"
       focusable="false"
     >
-      <path fill={INK} d={BY_SUBCATEGORY[slug] ?? BY_CATEGORY[slug] ?? mdiViewGrid} />
+      <path fill="currentColor" d={BY_SLUG[slug] ?? mdiViewGrid} />
     </svg>
   );
 };
