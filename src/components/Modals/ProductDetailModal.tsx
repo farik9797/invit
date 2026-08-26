@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { X, Check, FileText, ShieldCheck, Layers, Plus, PhoneCall } from 'lucide-react';
 import { Product } from '../../types';
-import { variantOptions } from '../../lib/product';
 import { productImage } from '../../lib/productImages';
 
 interface ProductDetailModalProps {
   product: Product | null;
   onClose: () => void;
-  onAddToQuote: (product: Product, selectedWidth?: string) => void;
+  onAddToQuote: (product: Product) => void;
   isAdded: boolean;
 }
 
@@ -19,8 +18,6 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
 }) => {
   if (!product) return null;
 
-  const widthOptions = variantOptions(product);
-  const [selectedWidth, setSelectedWidth] = useState(variantOptions(product)[0]);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/70 backdrop-blur-sm overflow-y-auto">
@@ -79,29 +76,6 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                 </p>
               </div>
 
-              {/* Width Configuration Picker */}
-              <div className="p-3 bg-surface-soft rounded-xl border border-line space-y-2">
-                <label className="font-semibold text-ink block text-xs">
-                  Типоразмер:
-                </label>
-                <div className="flex flex-wrap gap-1.5">
-                  {widthOptions.map((w) => (
-                    <button
-                      key={w}
-                      type="button"
-                      onClick={() => setSelectedWidth(w)}
-                      className={`px-2.5 py-1 rounded text-xs font-semibold border transition-all cursor-pointer ${
-                        selectedWidth === w
-                          ? 'bg-brand-blue text-white border-brand-blue font-bold shadow-sm'
-                          : 'bg-white text-ink/80 border-line hover:bg-surface-soft'
-                      }`}
-                    >
-                      {w}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
               {/* Technical Specifications Table */}
               <div className="border border-line rounded-xl overflow-hidden">
                 <div className="bg-surface-soft px-3 py-2 font-semibold text-ink border-b border-line">
@@ -152,7 +126,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
 
             <button
               onClick={() => {
-                onAddToQuote(product, selectedWidth);
+                onAddToQuote(product);
                 onClose();
               }}
               className="flex-1 sm:flex-initial px-5 py-2.5 rounded-lg bg-brand-blue hover:bg-brand-blue-hover text-white font-semibold text-sm shadow transition-all flex items-center justify-center gap-1.5 cursor-pointer"

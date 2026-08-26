@@ -97,10 +97,9 @@ export interface NewsArticle {
 }
 
 export interface QuoteCartItem {
-  /** Ключ строки: `id товара :: типоразмер`. Один товар в двух размерах — две строки. */
+  /** Ключ строки — id товара: типоразмер на сайте не выбирается. */
   key: string;
   product: Product;
-  selectedWidth: string;
   quantity: number; // рулоны / метры / штуки
 }
 

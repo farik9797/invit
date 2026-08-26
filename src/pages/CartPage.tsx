@@ -90,7 +90,7 @@ export const CartPage: React.FC = () => {
               <h2 className="mt-4 text-base font-semibold text-inv-ink">Корзина пока пуста</h2>
               <p className="mt-2 text-sm text-inv-ink-muted max-w-sm mx-auto leading-relaxed">
                 Нажмите «В корзину» в каталоге, чтобы собрать список нужных материалов.
-                Один товар можно добавить в нескольких типоразмерах.
+                Нужные размеры и объём укажите в комментарии к заявке.
               </p>
               <Link
                 to={paths.catalog}
@@ -104,7 +104,7 @@ export const CartPage: React.FC = () => {
               {/* Позиции */}
               <div className="lg:col-span-7 xl:col-span-8">
                 <div className="divide-y divide-inv-border border border-inv-border rounded-[8px] overflow-hidden">
-                  {items.map(({ key, product, selectedWidth, quantity }) => (
+                  {items.map(({ key, product, quantity }) => (
                     <div key={key} className="p-4 flex flex-wrap sm:flex-nowrap items-center gap-4">
                       <Link
                         to={paths.product(product)}
@@ -125,16 +125,13 @@ export const CartPage: React.FC = () => {
                         >
                           {product.title}
                         </Link>
-                        <span className="mt-1 block text-xs text-inv-ink-muted">
-                          Типоразмер: <span className="text-inv-ink">{selectedWidth}</span>
-                        </span>
                       </div>
 
                       <div className="flex items-center rounded-[4px] border border-inv-border overflow-hidden shrink-0">
                         <button
                           type="button"
                           onClick={() => shop.updateQuoteQty(key, quantity - 1)}
-                          aria-label={`Убавить: ${product.title}, ${selectedWidth}`}
+                          aria-label={`Убавить: ${product.title}`}
                           disabled={quantity <= 1}
                           className="flex items-center justify-center w-11 h-11 text-inv-ink hover:bg-inv-surface-1 disabled:opacity-40 disabled:cursor-default transition-colors cursor-pointer"
                         >
@@ -147,13 +144,13 @@ export const CartPage: React.FC = () => {
                           onChange={(e) =>
                             shop.updateQuoteQty(key, Math.round(Number(e.target.value) || 1))
                           }
-                          aria-label={`Количество: ${product.title}, ${selectedWidth}`}
+                          aria-label={`Количество: ${product.title}`}
                           className="w-14 h-11 text-center text-sm font-semibold text-inv-ink border-x border-inv-border tabular-nums focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-inv-blue"
                         />
                         <button
                           type="button"
                           onClick={() => shop.updateQuoteQty(key, quantity + 1)}
-                          aria-label={`Прибавить: ${product.title}, ${selectedWidth}`}
+                          aria-label={`Прибавить: ${product.title}`}
                           className="flex items-center justify-center w-11 h-11 text-inv-ink hover:bg-inv-surface-1 transition-colors cursor-pointer"
                         >
                           <Plus className="w-4 h-4" />
@@ -163,7 +160,7 @@ export const CartPage: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => shop.removeFromQuote(key)}
-                        aria-label={`Убрать: ${product.title}, ${selectedWidth}`}
+                        aria-label={`Убрать: ${product.title}`}
                         className="flex items-center justify-center w-11 h-11 shrink-0 rounded-[4px] text-inv-ink-muted hover:text-inv-red hover:bg-inv-surface-1 transition-colors cursor-pointer"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -267,8 +264,8 @@ export const CartPage: React.FC = () => {
                 </button>
 
                 <p className="text-xs text-inv-ink-muted leading-relaxed">
-                  Цены зависят от объёма и типоразмера — менеджер посчитает и пришлёт
-                  предложение. Нетиповые размеры считаем отдельно.
+                  Нужные размеры и объём напишите в комментарии — менеджер посчитает и
+                  пришлёт предложение. Нетиповые размеры считаем отдельно.
                 </p>
               </form>
             </div>
