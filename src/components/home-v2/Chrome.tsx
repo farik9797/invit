@@ -1,8 +1,9 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { Menu, X, Phone, ShoppingCart, Search } from 'lucide-react';
+import { Menu, X, Phone, ShoppingCart, Search, ChevronUp } from 'lucide-react';
 import invitLogo from '../../assets/logo/invit-color.svg';
 import award2013 from '../../assets/awards/award-2013.webp';
+import viberIcon from '../../assets/icons/viber.svg';
 import { paths } from '../../routes';
 import { useShop } from '../../context/ShopContext';
 import { gsap, MOTION_DURATION, MOTION_EASE, prefersReducedMotion } from './gsap';
@@ -387,6 +388,64 @@ const HeaderSearch: React.FC<{ className?: string }> = ({ className = '' }) => {
         </div>
       )}
     </>
+  );
+};
+
+/**
+ * Плавающие кнопки в правом нижнем углу: наверх, Viber, обратный звонок.
+ *
+ * «Наверх» появляется только после двух экранов прокрутки — на короткой
+ * странице она бесполезна и просто занимает угол.
+ *
+ * Viber открывается по схеме `viber://chat`. Если приложение не установлено,
+ * ничего не произойдёт: подстраховки через web-ссылку у Viber нет, поэтому
+ * рядом остаётся кнопка обратного звонка.
+ *
+ * Знак «2013» висит выше, на 62% высоты окна, — эти кнопки его не задевают.
+ */
+export const FloatingActions: React.FC<{ onCallback: () => void }> = ({ onCallback }) => {
+  const [showTop, setShowTop] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setShowTop(window.scrollY > window.innerHeight * 2);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  const round =
+    'w-12 h-12 sm:w-14 sm:h-14 rounded-full shadow-[0_6px_24px_rgba(22,44,88,0.22)] flex items-center justify-center cursor-pointer transition-[background-color,transform,opacity] duration-[120ms] ease-[cubic-bezier(0.4,0,0.2,1)] active:scale-[0.96]';
+
+  return (
+    <div className="fixed bottom-5 right-4 sm:bottom-6 sm:right-6 z-40 flex flex-col items-center gap-3">
+      {showTop && (
+        <button
+          type="button"
+          onClick={() => window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? 'auto' : 'smooth' })}
+          aria-label="Наверх"
+          className={`${round} bg-white border border-inv-border text-inv-ink hover:text-inv-blue hover:border-inv-blue focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue`}
+        >
+          <ChevronUp className="w-5 h-5 sm:w-6 sm:h-6" />
+        </button>
+      )}
+
+      <a
+        href="viber://chat?number=%2B375296444979"
+        aria-label="Написать в Viber"
+        className={`${round} bg-[#7360F2] hover:bg-[#5f4ce0] text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7360F2]`}
+      >
+        <img src={viberIcon} alt="" aria-hidden width={24} height={24} className="w-6 h-6 sm:w-7 sm:h-7" />
+      </a>
+
+      <button
+        type="button"
+        onClick={onCallback}
+        aria-label="Заказать обратный звонок"
+        className={`${round} bg-inv-blue hover:bg-inv-blue-hover text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue`}
+      >
+        <Phone className="w-5 h-5 sm:w-6 sm:h-6" />
+      </button>
+    </div>
   );
 };
 

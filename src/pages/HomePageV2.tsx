@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { HeaderV2, FooterV2, AwardBadge } from '../components/home-v2/Chrome';
+import { useShop } from '../context/ShopContext';
+import { HeaderV2, FooterV2, AwardBadge, FloatingActions } from '../components/home-v2/Chrome';
 import {
   HeroV2,
   FactsRow,
@@ -25,6 +26,8 @@ import {
  * нынешнем invit.by, здесь нет намеренно.
  */
 export const HomePageV2: React.FC = () => {
+  const shop = useShop();
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -46,6 +49,8 @@ export const HomePageV2: React.FC = () => {
       <FooterV2 />
 
       <AwardBadge />
+
+      <FloatingActions onCallback={() => shop.openCallback('Запрос со второй главной')} />
     </div>
   );
 };

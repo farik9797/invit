@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import { PhoneCall } from 'lucide-react';
-import { HeaderV2, FooterV2, AwardBadge } from './Chrome';
+import { HeaderV2, FooterV2, AwardBadge, FloatingActions } from './Chrome';
 import { ProductDetailModal } from '../Modals/ProductDetailModal';
 import { CallbackModal } from '../Modals/CallbackModal';
 import { useShop } from '../../context/ShopContext';
@@ -31,13 +30,7 @@ export const LayoutV2: React.FC = () => {
 
       <AwardBadge />
 
-      <button
-        onClick={() => shop.openCallback('Запрос из каталога')}
-        aria-label="Заказать обратный звонок"
-        className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-inv-blue hover:bg-inv-blue-hover text-white shadow-[0_6px_24px_rgba(22,44,88,0.16)] flex items-center justify-center cursor-pointer transition-[background-color,transform] duration-[120ms] ease-[cubic-bezier(0.4,0,0.2,1)] active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
-      >
-        <PhoneCall className="w-6 h-6" />
-      </button>
+      <FloatingActions onCallback={() => shop.openCallback('Запрос из каталога')} />
 
       {/* Модалки те же, что и на основном сайте: внутри этого блока они синие */}
       <ProductDetailModal
