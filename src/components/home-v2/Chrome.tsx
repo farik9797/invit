@@ -1,6 +1,6 @@
 import React, { useLayoutEffect, useRef, useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
-import { Menu, X, Phone, ShoppingCart } from 'lucide-react';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Menu, X, Phone, ShoppingCart, Search } from 'lucide-react';
 import invitLogo from '../../assets/logo/invit-color.svg';
 import award2013 from '../../assets/awards/award-2013.webp';
 import { paths } from '../../routes';
@@ -142,6 +142,7 @@ export const CountUp: React.FC<{ value: number }> = ({ value }) => {
 
 /** «Каталог» вынесен в мега-меню, поэтому в текстовом меню шапки его нет. */
 const NAV = [
+  { label: 'Главная', to: paths.home },
   { label: 'О компании', to: paths.about },
   { label: 'Документация', to: paths.certificates },
   { label: 'Новости', to: paths.news },
@@ -150,9 +151,10 @@ const NAV = [
 
 /** В подвале мега-меню нет, поэтому там перечисляем все разделы сайта. */
 const FOOTER_NAV = [
-  { label: 'Главная', to: paths.home },
+  NAV[0],
   { label: 'Каталог', to: paths.catalog },
-  ...NAV
+  ...NAV.slice(1),
+  { label: 'Политика конфиденциальности', to: paths.privacy }
 ];
 
 const BLUE_BUTTON =
@@ -225,6 +227,40 @@ export const AwardBadge: React.FC = () => (
   />
 );
 
+/**
+ * Поиск в шапке. Своей выдачи не делает — уводит в каталог с готовым запросом
+ * (`/catalog?q=…`), где поиск и фильтр по разделам уже есть.
+ */
+const HeaderSearch: React.FC<{ className?: string; onDone?: () => void }> = ({
+  className = '',
+  onDone
+}) => {
+  const [value, setValue] = useState('');
+  const navigate = useNavigate();
+
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const q = value.trim();
+    navigate(q ? `${paths.catalog}?q=${encodeURIComponent(q)}` : paths.catalog);
+    setValue('');
+    onDone?.();
+  };
+
+  return (
+    <form onSubmit={submit} role="search" className={`relative ${className}`}>
+      <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-inv-ink-muted" />
+      <input
+        type="search"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        placeholder="Поиск по каталогу"
+        aria-label="Поиск по каталогу"
+        className="w-full min-h-11 pl-9 pr-3 rounded-[4px] border border-inv-border bg-white text-sm text-inv-ink placeholder:text-inv-ink-muted focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-inv-blue"
+      />
+    </form>
+  );
+};
+
 export const HeaderV2: React.FC<{ onRequest?: () => void }> = ({ onRequest }) => {
   const [open, setOpen] = useState(false);
 
@@ -240,7 +276,7 @@ export const HeaderV2: React.FC<{ onRequest?: () => void }> = ({ onRequest }) =>
 
         <MegaMenu />
 
-        <nav className="hidden lg:flex items-center gap-6">
+        <nav className="hidden xl:flex items-center gap-6">
           {NAV.map((item) => (
             <NavLink
               key={item.to}
@@ -252,10 +288,12 @@ export const HeaderV2: React.FC<{ onRequest?: () => void }> = ({ onRequest }) =>
           ))}
         </nav>
 
-        <div className="hidden lg:flex items-center gap-5 shrink-0">
+        <div className="hidden xl:flex items-center gap-4 shrink-0">
+          <HeaderSearch className="hidden xl:block w-44 2xl:w-56" />
+
           <a
             href="tel:+375296444979"
-            className="hidden xl:flex items-center gap-2 text-sm font-semibold text-inv-ink hover:text-inv-blue transition-colors duration-[120ms] whitespace-nowrap"
+            className="hidden min-[1700px]:flex items-center gap-2 text-sm font-semibold text-inv-ink hover:text-inv-blue transition-colors duration-[120ms] whitespace-nowrap"
           >
             <Phone className="w-4 h-4" />
             +375 29 644-49-79
@@ -268,7 +306,7 @@ export const HeaderV2: React.FC<{ onRequest?: () => void }> = ({ onRequest }) =>
         </div>
 
         {/* На узком экране корзина остаётся видимой, рядом с бургером */}
-        <div className="flex items-center gap-1 lg:hidden">
+        <div className="flex items-center gap-1 xl:hidden">
           <CartButton />
 
         <button
@@ -284,7 +322,9 @@ export const HeaderV2: React.FC<{ onRequest?: () => void }> = ({ onRequest }) =>
       </div>
 
       {open && (
-        <div className="lg:hidden border-t border-inv-border bg-white px-4 py-4 space-y-1">
+        <div className="xl:hidden border-t border-inv-border bg-white px-4 py-4 space-y-1">
+          <HeaderSearch className="mb-3" onDone={() => setOpen(false)} />
+
           <span className="block pt-1 pb-2 text-xs font-semibold uppercase tracking-[0.12em] text-inv-ink-muted">
             Каталог товаров
           </span>

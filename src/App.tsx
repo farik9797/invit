@@ -33,6 +33,7 @@ import { NewsPage } from './pages/NewsPage';
 import { NewsArticlePage } from './pages/NewsArticlePage';
 import { ContactsPage } from './pages/ContactsPage';
 import { CartPage } from './pages/CartPage';
+import { PrivacyPage } from './pages/PrivacyPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 
 export default function App() {
@@ -68,6 +69,7 @@ export default function App() {
             <Route path="/news/:newsId" element={<NewsArticlePage />} />
             <Route path="/contacts" element={<ContactsPage />} />
             <Route path="/cart" element={<CartPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>

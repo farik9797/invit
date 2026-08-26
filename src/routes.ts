@@ -14,7 +14,8 @@ export const paths = {
   news: '/news',
   newsArticle: (id: string) => `/news/${id}`,
   contacts: '/contacts',
-  cart: '/cart'
+  cart: '/cart',
+  privacy: '/privacy'
 };
 
 export const productSlug = (product: Product) => product.slug;
