@@ -335,7 +335,10 @@ export const FooterV2: React.FC = () => (
   <footer className="bg-inv-deep text-inv-on-deep">
     <div className="max-w-[1400px] mx-auto px-4 lg:px-8 py-10 sm:py-16 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
       <div className="space-y-4">
-        <Link to={paths.home} className="inline-flex items-center min-h-11">
+        <Link
+          to={paths.home}
+          className="inline-flex items-center min-h-11 rounded-[10px] bg-white px-5 py-2.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+        >
           <img src={invitLogo} alt="ООО «ИНВИТ»" className="h-8 w-auto" />
         </Link>
         <p className="text-sm leading-relaxed max-w-xs">
