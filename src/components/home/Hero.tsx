@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'motion/react';
 import { paths } from '../../routes';
 import eurobandLight from '../../assets/logo/euroband-light.svg';
+import windowTapes from '../../assets/hero/window-tapes.webp';
+import sandwichPanels from '../../assets/hero/sandwich-panels.webp';
 import roofStandingSeam from '../../assets/hero/roof-standing-seam.webp';
 import tapeSlabJoint from '../../assets/hero/tape-slab-joint.webp';
 import floorDamperTape from '../../assets/hero/floor-damper-tape.webp';
@@ -25,6 +27,24 @@ interface Slide {
 
 const SLIDES: Slide[] = [
   {
+    id: 'windows',
+    lead: 'Монтажный шов окна —',
+    accent: 'три слоя, три ленты',
+    text: 'Внутри пароизоляционная ВЛ(а) или ВЛ, снаружи паропроницаемая НЛ, в четверти — саморасширяющаяся ПСУЛ. Шов держит тепло и выводит влагу наружу.',
+    image: windowTapes,
+    href: `${paths.category('materialy-dlya-okon')}?sub=montazhnye-lenty-dlya-okon`,
+    cta: 'Ленты для окон'
+  },
+  {
+    id: 'sandwich',
+    lead: 'Сэндвич-панели и профлист —',
+    accent: 'герметизация стыков',
+    text: 'Бутилкаучуковая ЛБ на продольных и поперечных нахлёстах, ПЭС под прижимные планки. Стык не течёт и не свистит на ветру.',
+    image: sandwichPanels,
+    href: `${paths.category('materialy-dlya-okon')}?sub=krovelnye-uplotniteli-kleykie-lenty`,
+    cta: 'Кровельные ленты'
+  },
+  {
     id: 'about',
     lead: 'Уплотнительные и герметизирующие',
     accent: 'ленты',
@@ -35,9 +55,9 @@ const SLIDES: Slide[] = [
   },
   {
     id: 'joint',
-    lead: 'Защита от воды, шума и холода —',
-    accent: 'межфланцевая лента ПЭС',
-    text: 'Уплотнение стыков плит, панелей и металлоконструкций самоклеящейся лентой из вспененного полиэтилена.',
+    lead: 'Стык плит и панелей —',
+    accent: 'уплотнительная лента ПЭС',
+    text: 'Самоклеящаяся лента из вспененного полиэтилена закрывает шов от воды, шума и холода: сэндвич-панели, перекрытия, металлоконструкции.',
     image: tapeSlabJoint,
     whole: true,
     href: `${paths.category('materialy-dlya-okon')}?sub=uplotnitelnye-lenty-pes-samokleyaschiesy`,
@@ -45,9 +65,9 @@ const SLIDES: Slide[] = [
   },
   {
     id: 'floor',
-    lead: 'По периметру стяжки —',
-    accent: 'демпферная лента',
-    text: 'Компенсирует расширение стяжки и отсекает ударный шум от стен и перегородок.',
+    lead: 'Стыки оснований и покрытий —',
+    accent: 'лента EUROBAND',
+    text: 'Проклеиваем шов между бетоном и покрытием: кромка не задирается, пыль и влага в стык не идут.',
     image: floorDamperTape,
     href: `${paths.category('materialy-dlya-okon')}?sub=uplotnitelnye-lenty-pes-samokleyaschiesy`,
     cta: 'Ленты ПЭС'
