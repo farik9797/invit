@@ -1,13 +1,15 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Phone, Mail, MapPin } from 'lucide-react';
-import { paths } from '../../routes';
 import { Reveal } from '../Reveal';
+import { RequestForm } from '../home-v2/RequestForm';
 
 /*
  * Раньше здесь было широкое фото на всю ширину с тёмной карточкой поверх.
  * Клиент попросил ту же композицию, что у блока «Мы работаем с 2001 года»:
  * часть информации слева на светлом, действие справа на тёмном.
+ *
+ * Справа стояла тёмная карточка с парой кнопок-ссылок — вместо формы.
+ * Заменена на ту же форму запроса, что на /contacts и /v2 (`RequestForm`).
  */
 export const ContactBanner: React.FC = () => (
   <section className="bg-surface-soft">
@@ -71,37 +73,11 @@ export const ContactBanner: React.FC = () => (
         </div>
       </Reveal>
 
-      {/* Справа: тёмная карточка с действием */}
-      <Reveal delay={0.12} className="h-full">
-        <div className="h-full lg:-mr-5">
-          <div className="h-full bg-brand-navy text-white/75 p-8 sm:p-12 lg:py-24">
-            <h3 className="text-xl sm:text-2xl font-bold text-white">
-              Спасибо, что выбрали нас!
-            </h3>
-
-            <p className="mt-6 text-sm sm:text-base leading-relaxed">
-              Пришлите спецификацию или просто перечень позиций. Нетиповую ширину и длину
-              считаем отдельно, по объёму даём цену производителя.
-            </p>
-
-            <p className="mt-4 text-sm sm:text-base leading-relaxed">
-              Документы по качеству прикладываем к каждой партии.
-            </p>
-
-            <div className="mt-8 flex flex-col sm:flex-row gap-3">
-              <Link
-                to={paths.contacts}
-                className="inline-flex justify-center items-center min-h-11 bg-brand-blue hover:bg-brand-blue-hover text-white text-sm font-semibold px-7 transition-[background-color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px active:scale-[0.98]"
-              >
-                Связаться с нами
-              </Link>
-              <Link
-                to={paths.certificates}
-                className="inline-flex justify-center items-center min-h-11 border border-white/25 hover:bg-white/10 text-white text-sm font-semibold px-7 whitespace-nowrap transition-[background-color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px active:scale-[0.98]"
-              >
-                Документы
-              </Link>
-            </div>
+      {/* Справа: форма запроса расчёта */}
+      <Reveal delay={0.12}>
+        <div className="py-16 sm:py-24 lg:pl-16">
+          <div className="bg-white border border-inv-border rounded-[8px] p-6 sm:p-8">
+            <RequestForm idPrefix="glavnaya" />
           </div>
         </div>
       </Reveal>
