@@ -572,9 +572,17 @@ export const FooterV2: React.FC = () => (
         <div className="flex flex-col sm:gap-1">
           <a
             href="tel:+375296444979"
-            className="flex items-center min-h-11 sm:min-h-0 text-base font-semibold text-white hover:text-white/80 transition-colors duration-[120ms] whitespace-nowrap"
+            className="flex items-baseline gap-2 min-h-11 sm:min-h-0 text-base font-semibold text-white hover:text-white/80 transition-colors duration-[120ms] whitespace-nowrap"
           >
             {COMPANY.phoneMinsk}
+            <span className="text-xs font-normal text-white/55">Минск</span>
+          </a>
+          <a
+            href="tel:+375174325022"
+            className="flex items-baseline gap-2 min-h-11 sm:min-h-0 text-base font-semibold text-white hover:text-white/80 transition-colors duration-[120ms] whitespace-nowrap"
+          >
+            {COMPANY.phoneSoligorsk}
+            <span className="text-xs font-normal text-white/55">Солигорск</span>
           </a>
           <a
             href={`mailto:${COMPANY.email}`}
