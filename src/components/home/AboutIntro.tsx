@@ -3,26 +3,30 @@ import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { paths } from '../../routes';
 import { Reveal } from '../Reveal';
-import productionShop from '../../assets/about/production-shop.webp';
+import aboutTapes from '../../assets/about/about-tapes.webp';
 
 /*
  * Фото цеха слева, текст справа.
  *
- * Раньше слева был коллаж из двух снимков со смещением. Клиент прислал кадр
- * своего производства и попросил поставить его — коллаж из монтажа и рулона
- * рядом с текстом «собственного производства» смотрелся слабее, чем сам цех.
+ * Кадр менялся дважды: сначала коллаж из двух снимков со смещением, потом фото
+ * цеха, теперь — присланный клиентом снимок с рулонами лент.
+ *
+ * Кадрируем со сдвигом вправо (65%): у цеха прижимали влево ради логотипа на
+ * коробках, здесь наоборот — слева треть кадра пустой бетон, а рулоны и окно
+ * с уплотнённым швом стоят правее середины.
  */
 export const AboutIntro: React.FC = () => (
   <section className="py-16 sm:py-24 bg-surface">
     <div className="max-w-[1340px] mx-auto px-5 grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-      {/* Фото цеха */}
+      {/* Фото продукции */}
       <Reveal>
         <div className="rounded-[8px] border border-line bg-white overflow-hidden">
           <img
-            src={productionShop}
-            alt="Производство уплотнительных лент EUROBAND: намотка и экструзия"
+            src={aboutTapes}
+            alt="Уплотнительные и герметизирующие ленты EUROBAND в рулонах"
             loading="lazy"
-            className="w-full h-64 sm:h-80 lg:h-[420px] object-cover object-left"
+            style={{ objectPosition: '65% 50%' }}
+            className="w-full h-64 sm:h-80 lg:h-[420px] object-cover"
           />
         </div>
       </Reveal>
