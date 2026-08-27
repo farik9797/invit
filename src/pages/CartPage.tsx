@@ -28,6 +28,7 @@ export const CartPage: React.FC = () => {
 
   const [companyName, setCompanyName] = useState('');
   const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
   const [note, setNote] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [confirmClear, setConfirmClear] = useState(false);
@@ -244,6 +245,13 @@ export const CartPage: React.FC = () => {
                     placeholder="Телефон *"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
+                    className="w-full min-h-11 px-3 bg-white border border-inv-border rounded-[4px] text-sm text-inv-ink placeholder:text-inv-ink-muted focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-inv-blue"
+                  />
+                  <input
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     className="w-full min-h-11 px-3 bg-white border border-inv-border rounded-[4px] text-sm text-inv-ink placeholder:text-inv-ink-muted focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-inv-blue"
                   />
                   <textarea

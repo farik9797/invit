@@ -21,6 +21,7 @@ export const RequestForm: React.FC<Props> = ({ idPrefix = 'zayavka' }) => {
   const [name, setName] = useState('');
   const [company, setCompany] = useState('');
   const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
   const [task, setTask] = useState('');
   const [errors, setErrors] = useState<{ name?: string; phone?: string }>({});
   const [status, setStatus] = useState<'idle' | 'sending' | 'done'>('idle');
@@ -98,7 +99,7 @@ export const RequestForm: React.FC<Props> = ({ idPrefix = 'zayavka' }) => {
         <p className="text-sm text-inv-ink-muted">Необязательно</p>
       </div>
 
-      <div className="flex flex-col gap-2 sm:col-span-2">
+      <div className="flex flex-col gap-2">
         <label htmlFor={id('phone')} className="text-sm font-semibold text-inv-ink">
           Телефон
         </label>
@@ -122,6 +123,21 @@ export const RequestForm: React.FC<Props> = ({ idPrefix = 'zayavka' }) => {
             Например, +375 29 000-00-00
           </p>
         )}
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <label htmlFor={id('email')} className="text-sm font-semibold text-inv-ink">
+          Email
+        </label>
+        <input
+          id={id('email')}
+          type="email"
+          inputMode="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className={`${FIELD} border-inv-border`}
+        />
+        <p className="text-sm text-inv-ink-muted">Необязательно</p>
       </div>
 
       <div className="flex flex-col gap-2 sm:col-span-2">

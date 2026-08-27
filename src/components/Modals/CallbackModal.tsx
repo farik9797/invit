@@ -12,6 +12,7 @@ export const CallbackModal: React.FC<CallbackModalProps> = ({ isOpen, onClose, c
 
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
   const [note, setNote] = useState(customNote || '');
   const [submitted, setSubmitted] = useState(false);
 
@@ -93,6 +94,19 @@ export const CallbackModal: React.FC<CallbackModalProps> = ({ isOpen, onClose, c
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="+375 (29) 000-00-00"
                   className="w-full p-2.5 bg-surface-soft border border-line rounded-lg text-ink font-medium text-sm"
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold text-ink/80 mb-1">
+                  Email:
+                </label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="mail@company.by"
+                  className="w-full p-2.5 bg-surface-soft border border-line rounded-lg text-ink font-medium"
                 />
               </div>
 
