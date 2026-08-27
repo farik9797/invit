@@ -152,12 +152,7 @@ const NAV = [
 ];
 
 /** В подвале мега-меню нет, поэтому там перечисляем все разделы сайта. */
-const FOOTER_NAV = [
-  NAV[0],
-  { label: 'Каталог', to: paths.catalog },
-  ...NAV.slice(1),
-  { label: 'Политика конфиденциальности', to: paths.privacy }
-];
+const FOOTER_NAV = [NAV[0], { label: 'Каталог', to: paths.catalog }, ...NAV.slice(1)];
 
 const BLUE_BUTTON =
   'inline-flex items-center justify-center min-h-11 px-6 rounded-[4px] bg-inv-blue text-white text-sm font-semibold whitespace-nowrap cursor-pointer transition-[background-color,transform] duration-[120ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:bg-inv-blue-hover active:bg-inv-blue-pressed active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue';
@@ -631,8 +626,14 @@ export const FooterV2: React.FC = () => (
     </div>
 
     <div className="border-t border-white/15">
-      <div className="max-w-[1400px] mx-auto px-4 lg:px-8 py-5 text-sm">
+      <div className="max-w-[1400px] mx-auto px-4 lg:px-8 pr-20 sm:pr-24 lg:pr-28 py-5 text-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-6">
         <span>© 2001-2026 ООО «ИНВИТ». Все права защищены.</span>
+        <Link
+          to={paths.privacy}
+          className="inline-flex items-center min-h-11 sm:min-h-0 hover:text-white transition-colors duration-[120ms] whitespace-nowrap"
+        >
+          Политика конфиденциальности
+        </Link>
       </div>
     </div>
   </footer>
