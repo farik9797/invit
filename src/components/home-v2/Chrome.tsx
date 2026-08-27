@@ -2,6 +2,7 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { Menu, X, Phone, ShoppingCart, Search, ChevronUp } from 'lucide-react';
 import invitLogo from '../../assets/logo/invit-color.svg';
+import invitLight from '../../assets/logo/invit-light.svg';
 import award2013 from '../../assets/awards/award-2013.webp';
 import viberIcon from '../../assets/icons/viber.svg';
 import { paths } from '../../routes';
@@ -560,9 +561,9 @@ export const FooterV2: React.FC = () => (
       <div className="space-y-4">
         <Link
           to={paths.home}
-          className="inline-flex items-center min-h-11 rounded-[10px] bg-white px-5 py-2.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          className="inline-flex items-center min-h-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
         >
-          <img src={invitLogo} alt="ООО «ИНВИТ»" className="h-8 w-auto" />
+          <img src={invitLight} alt="ООО «ИНВИТ»" className="h-10 w-auto" />
         </Link>
         <p className="text-sm leading-relaxed max-w-xs">
           Белорусский производитель уплотнительных и герметизирующих лент EUROBAND.
