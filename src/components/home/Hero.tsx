@@ -117,11 +117,9 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCallback }) => {
 
       <div className="relative max-w-[1340px] mx-auto px-5 py-20 sm:py-28 lg:py-32">
         {/* Марка стоит над слайдами и не меняется: ленты у всех слайдов одни */}
-        <img
-          src={eurobandLight}
-          alt="EUROBAND"
-          className="h-6 sm:h-7 lg:h-8 w-auto mb-6 lg:mb-8"
-        />
+        <span className="inline-flex items-center rounded-[4px] bg-white px-4 py-2.5 mb-6 lg:mb-8">
+          <img src={eurobandLight} alt="EUROBAND" className="h-6 sm:h-7 lg:h-8 w-auto" />
+        </span>
 
         {/* Слайды лежат в одной ячейке грида: высота равна самому длинному */}
         <div className="grid max-w-3xl">

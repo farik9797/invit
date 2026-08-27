@@ -184,11 +184,9 @@ export const HeroV2: React.FC = () => {
 
         <div className="relative px-5 sm:px-10 lg:px-16 pt-10 pb-8 lg:pt-24 lg:pb-16">
           {/* Марка стоит над слайдами и не меняется: ленты у всех слайдов одни */}
-          <img
-            src={eurobandLight}
-            alt="EUROBAND"
-            className="h-6 sm:h-7 lg:h-8 w-auto mb-6 lg:mb-8"
-          />
+          <span className="inline-flex items-center rounded-[4px] bg-white px-4 py-2.5 mb-6 lg:mb-8">
+            <img src={eurobandLight} alt="EUROBAND" className="h-6 sm:h-7 lg:h-8 w-auto" />
+          </span>
 
           {/* Слайды в одной ячейке грида: высота карточки не прыгает при смене */}
           <div className="grid max-w-3xl">
