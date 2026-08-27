@@ -82,10 +82,19 @@ export const ContactsPage: React.FC = () => (
           <div className="lg:col-span-5 flex flex-col gap-3">
             <a
               href="tel:+375296444979"
-              className="inline-flex items-center gap-3 min-h-11 text-2xl sm:text-3xl font-semibold text-white hover:text-inv-on-deep transition-colors duration-[120ms] whitespace-nowrap"
+              className="inline-flex items-baseline gap-3 min-h-11 text-2xl sm:text-3xl font-semibold text-white hover:text-inv-on-deep transition-colors duration-[120ms] whitespace-nowrap"
             >
-              <Phone className="w-6 h-6 shrink-0" />
+              <Phone className="w-6 h-6 shrink-0 self-center" />
               +375 29 644-49-79
+              <span className="text-sm font-normal text-inv-on-deep">Минск</span>
+            </a>
+            <a
+              href="tel:+375174325022"
+              className="inline-flex items-baseline gap-3 min-h-11 text-xl sm:text-2xl font-semibold text-white hover:text-inv-on-deep transition-colors duration-[120ms] whitespace-nowrap"
+            >
+              <Phone className="w-5 h-5 shrink-0 self-center" />
+              +375 174 32-50-22
+              <span className="text-sm font-normal text-inv-on-deep">Солигорск</span>
             </a>
             <a
               href="mailto:info@invit.by"
