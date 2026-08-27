@@ -22,7 +22,18 @@ export const COMPANY = {
   phoneSoligorsk: '+375 174 32-50-22'
 };
 
-/** Тот же набор строкой «подпись — значение»: подвал и «О компании» рисуют его списком. */
+/**
+ * Компактный вид для подвала: те же данные, но четырьмя строками без подписей.
+ * Полный список с подписями остаётся на странице «О компании».
+ */
+export const REQUISITES_COMPACT: string[] = [
+  `${COMPANY.shortName}, УНП ${COMPANY.unp}, ОКПО ${COMPANY.okpo}`,
+  `Юр. адрес: ${COMPANY.legalAddress}`,
+  `Офис и склад: ${COMPANY.minskOffice}`,
+  `${COMPANY.iban}, ${COMPANY.bank}, BIC ${COMPANY.bic}`
+];
+
+/** Тот же набор строкой «подпись — значение»: страница «О компании» рисует его списком. */
 export const REQUISITES: [string, string][] = [
   ['Полное наименование', COMPANY.fullName],
   ['УНП', COMPANY.unp],

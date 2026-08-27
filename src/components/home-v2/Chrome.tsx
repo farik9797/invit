@@ -5,7 +5,7 @@ import invitLogo from '../../assets/logo/invit-color.svg';
 import award2013 from '../../assets/awards/award-2013.webp';
 import viberIcon from '../../assets/icons/viber.svg';
 import { paths } from '../../routes';
-import { COMPANY, REQUISITES } from '../../data/company';
+import { COMPANY, REQUISITES_COMPACT } from '../../data/company';
 import { useShop } from '../../context/ShopContext';
 import { gsap, MOTION_DURATION, MOTION_EASE, prefersReducedMotion } from './gsap';
 import { MegaMenu, MOBILE_CATALOG_LINKS } from './MegaMenu';
@@ -561,7 +561,7 @@ export const HeaderV2: React.FC<{ onRequest?: () => void }> = ({ onRequest }) =>
 
 export const FooterV2: React.FC = () => (
   <footer className="bg-inv-deep text-inv-on-deep">
-    <div className="max-w-[1400px] mx-auto px-4 lg:px-8 py-10 sm:py-16 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+    <div className="max-w-[1400px] mx-auto px-4 lg:px-8 pr-20 sm:pr-4 lg:pr-8 py-10 sm:py-16 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
       <div className="space-y-4">
         <Link
           to={paths.home}
@@ -573,6 +573,21 @@ export const FooterV2: React.FC = () => (
           Белорусский производитель уплотнительных и герметизирующих лент EUROBAND.
           Сопутствующие материалы поставляем напрямую от производителей.
         </p>
+
+        <div className="flex flex-col sm:gap-1">
+          <a
+            href="tel:+375296444979"
+            className="flex items-center min-h-11 sm:min-h-0 text-base font-semibold text-white hover:text-white/80 transition-colors duration-[120ms] whitespace-nowrap"
+          >
+            {COMPANY.phoneMinsk}
+          </a>
+          <a
+            href={`mailto:${COMPANY.email}`}
+            className="flex items-center min-h-11 sm:min-h-0 text-sm hover:text-white transition-colors duration-[120ms]"
+          >
+            {COMPANY.email}
+          </a>
+        </div>
       </div>
 
       <div className="space-y-3 text-sm">
@@ -592,33 +607,26 @@ export const FooterV2: React.FC = () => (
         </nav>
       </div>
 
-      <div className="space-y-3 text-sm pr-20 sm:pr-0 xl:pr-24">
+      <div className="space-y-3 text-sm xl:pr-24">
         <h2 className="text-white font-semibold">Реквизиты</h2>
 
-        {/* Полный список: клиент попросил не отправлять за ними на другую страницу */}
-        <dl className="space-y-1.5 text-[13px] leading-relaxed">
-          {REQUISITES.map(([label, value]) => (
-            <div key={label}>
-              <dt className="text-white/55">{label}</dt>
-              <dd className="text-inv-on-deep break-words">{value}</dd>
-            </div>
+        {/* Четыре плотные строки: восемь пар «подпись — значение» вытягивали
+            колонку вдвое длиннее соседних и ломали строй подвала. Полный
+            список с подписями остался на странице «О компании». */}
+        <ul className="space-y-2 text-[13px] leading-[1.5] text-white/70">
+          {REQUISITES_COMPACT.map((line) => (
+            <li key={line} className="break-words">
+              {line}
+            </li>
           ))}
-        </dl>
+        </ul>
 
-        <div className="flex flex-col sm:gap-3 pt-1">
-          <a
-            href={`mailto:${COMPANY.email}`}
-            className="flex items-center min-h-11 sm:min-h-0 hover:text-white transition-colors"
-          >
-            {COMPANY.email}
-          </a>
-          <a
-            href="tel:+375296444979"
-            className="flex items-center min-h-11 sm:min-h-0 hover:text-white transition-colors"
-          >
-            {COMPANY.phoneMinsk}
-          </a>
-        </div>
+        <Link
+          to={paths.about}
+          className="inline-flex items-center min-h-11 sm:min-h-0 text-sm hover:text-white transition-colors duration-[120ms]"
+        >
+          Все реквизиты и документы
+        </Link>
       </div>
     </div>
 
