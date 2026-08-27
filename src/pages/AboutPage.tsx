@@ -9,7 +9,7 @@ import { CERTIFICATES, PRODUCTS } from '../data/catalogData';
 import { productImage } from '../lib/productImages';
 import { useShop } from '../context/ShopContext';
 import { paths } from '../routes';
-import eurobandLight from '../assets/logo/euroband-light.svg';
+import eurobandMark from '../assets/logo/euroband-color.svg';
 import heroTape from '../assets/hero/tape-application.webp';
 
 /*
@@ -263,7 +263,7 @@ export const AboutPage: React.FC = () => {
         <div className={`${WRAP} ${SECTION}`}>
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
             <div className="lg:col-span-6">
-              <img src={eurobandLight} alt="EUROBAND" className="h-6 sm:h-7 lg:h-8 w-auto mb-6" />
+              <img src={eurobandMark} alt="EUROBAND" className="h-6 sm:h-7 lg:h-8 w-auto mb-6" />
 
               <h1 className="text-3xl sm:text-4xl lg:text-[44px] font-semibold tracking-[-0.01em] leading-[1.15]">
                 Производим ленты, а не перепродаём их
