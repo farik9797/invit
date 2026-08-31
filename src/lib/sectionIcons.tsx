@@ -4,6 +4,8 @@ import {
   mdiFan,
   mdiHomeRoof,
   mdiPackageVariantClosed,
+  mdiPin,
+  mdiScrewLag,
   mdiTire,
   mdiViewGrid,
   mdiWindowClosedVariant
@@ -35,6 +37,8 @@ const BY_SLUG: Record<string, string> = {
   'krovelnye-uplotniteli-kleykie-lenty': mdiHomeRoof,
   'elementy-osnascheniya-vozduhovodov': mdiFan,
   'uplotnitel-rezinovyy-d-p-e': mdiTire,
+  'samorezy-i-shurupy': mdiScrewLag,
+  'dyubelnaya-tehnika': mdiPin,
   'materialy-dlya-okon': mdiWindowClosedVariant,
   ventilyaciya: mdiAirFilter,
   // Раздел мега-меню, которого нет в каталоге: только ленты своего производства

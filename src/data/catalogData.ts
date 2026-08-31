@@ -1,4 +1,5 @@
 import { Category, Product, HeroSlide, CertificateItem, NewsArticle } from '../types';
+import { IMPORTED_FASTENERS } from './importedFasteners';
 
 // Каталог выгружен с invit.by. Изображения отдаются с invit.by — при переносе
 // сайта на боевой хостинг заменить на локальные файлы.
@@ -17,11 +18,13 @@ export const CATEGORIES: Category[] = [
       { id: 'montazhnye-lenty-dlya-okon', name: 'Монтажные ленты для окон', slug: 'montazhnye-lenty-dlya-okon', count: 4 },
       { id: 'samorasshiryayuschayasya-lenta-psul', name: 'Саморасширяющаяся лента ПСУЛ', slug: 'samorasshiryayuschayasya-lenta-psul', count: 1 },
       { id: 'pena-montazhnaya-ochistitel-dlya-peny', name: 'Пена монтажная, очиститель для пены', slug: 'pena-montazhnaya-ochistitel-dlya-peny', count: 18 },
-      { id: 'germetiki-kleya-himiya-smazki', name: 'Герметики, клея, химия, смазки', slug: 'germetiki-kleya-himiya-smazki', count: 35 },
-      { id: 'krepezh-dlya-okon-krovli-fasadov', name: 'Крепёж для окон, кровли, фасадов', slug: 'krepezh-dlya-okon-krovli-fasadov', count: 26 },
+      { id: 'germetiki-kleya-himiya-smazki', name: 'Герметики, клея, химия, смазки', slug: 'germetiki-kleya-himiya-smazki', count: 38 },
+      { id: 'krepezh-dlya-okon-krovli-fasadov', name: 'Крепёж для окон, кровли, фасадов', slug: 'krepezh-dlya-okon-krovli-fasadov', count: 133 },
+      { id: 'samorezy-i-shurupy', name: 'Саморезы и шурупы', slug: 'samorezy-i-shurupy', count: 263 },
+      { id: 'dyubelnaya-tehnika', name: 'Дюбельная техника', slug: 'dyubelnaya-tehnika', count: 203 },
       { id: 'krovelnye-uplotniteli-kleykie-lenty', name: 'Кровельные уплотнители, клейкие ленты', slug: 'krovelnye-uplotniteli-kleykie-lenty', count: 17 },
       { id: 'uplotnitelnye-lenty-pes-samokleyaschiesy', name: 'Уплотнительные ленты ПЭС самоклеящиеся', slug: 'uplotnitelnye-lenty-pes-samokleyaschiesy', count: 5 },
-      { id: 'instrument-sizy', name: 'Инструмент, СИЗы', slug: 'instrument-sizy', count: 54 },
+      { id: 'instrument-sizy', name: 'Инструмент, СИЗы', slug: 'instrument-sizy', count: 71 },
       { id: 'uplotnitel-rezinovyy-d-p-e', name: 'Уплотнитель резиновый D, P, E', slug: 'uplotnitel-rezinovyy-d-p-e', count: 10 },
       { id: 'penopolietilen-ppe-rulonnaya-izolyaciya', name: 'Пенополиэтилен ППЭ, рулонная изоляция', slug: 'penopolietilen-ppe-rulonnaya-izolyaciya', count: 6 },
     ]
@@ -39,7 +42,7 @@ export const CATEGORIES: Category[] = [
       { id: 'flancevyy-profil-dlya-vozduhovodov', name: 'Фланцевый профиль для воздуховодов', slug: 'flancevyy-profil-dlya-vozduhovodov', count: 7 },
       { id: 'ugolki-montazhnye', name: 'Уголки монтажные', slug: 'ugolki-montazhnye', count: 6 },
       { id: 'krepezhnye-detali-dlya-vozduhovodov', name: 'Крепежные детали для воздуховодов', slug: 'krepezhnye-detali-dlya-vozduhovodov', count: 10 },
-      { id: 'profil-montazhnyy-traversa', name: 'Профиль монтажный – траверса', slug: 'profil-montazhnyy-traversa', count: 4 },
+      { id: 'profil-montazhnyy-traversa', name: 'Профиль монтажный – траверса', slug: 'profil-montazhnyy-traversa', count: 5 },
       { id: 'lenty-uplotnitelnye-samokleyaschiesya', name: 'Ленты уплотнительные самоклеящиеся', slug: 'lenty-uplotnitelnye-samokleyaschiesya', count: 3 },
       { id: 'elementy-osnascheniya-vozduhovodov', name: 'Элементы оснащения воздуховодов', slug: 'elementy-osnascheniya-vozduhovodov', count: 2 },
     ]
@@ -5093,6 +5096,7 @@ export const PRODUCTS: Product[] = [
     specs: [],
     sourceUrl: 'https://invit.by/komplektujushhie-dlja-vozduhovodov-i-sistem-ventiljacii/flancevyj-profil%27/flancevyj-profil%27-k/flancevyj-profil%27-k40'
   },
+  ...IMPORTED_FASTENERS,
 ];
 
 export const HERO_SLIDES: HeroSlide[] = [
