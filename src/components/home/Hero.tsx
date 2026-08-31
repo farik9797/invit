@@ -8,6 +8,7 @@ import sandwichPanels from '../../assets/hero/sandwich-panels.webp';
 import roofStandingSeam from '../../assets/hero/roof-standing-seam.webp';
 import tapeSlabJoint from '../../assets/hero/tape-slab-joint.webp';
 import floorDamperTape from '../../assets/hero/floor-damper-tape.webp';
+import psulTape from '../../assets/hero/psul-tape.webp';
 
 interface HeroProps {
   onOpenCallback: () => void;
@@ -71,6 +72,15 @@ const SLIDES: Slide[] = [
     image: floorDamperTape,
     href: `${paths.category('materialy-dlya-okon')}?sub=uplotnitelnye-lenty-pes-samokleyaschiesy`,
     cta: 'Ленты ПЭС'
+  },
+  {
+    id: 'psul',
+    lead: 'Саморасширяющаяся лента —',
+    accent: 'ПСУЛ EUROBAND',
+    text: 'Акриловая пропитка и открытая ячейка: после монтажа лента расширяется впятеро и держит шов сухим и паропроницаемым не менее 20 лет.',
+    image: psulTape,
+    href: `${paths.category('materialy-dlya-okon')}?sub=samorasshiryayuschayasya-lenta-psul`,
+    cta: 'Лента ПСУЛ'
   }
 ];
 

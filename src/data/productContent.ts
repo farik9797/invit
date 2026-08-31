@@ -2562,6 +2562,8 @@ export const PRODUCT_CONTENT: Record<string, ProductContent> = {
       'https://invit.by/image/data/PSUL/psul_psul.jpg',
       'https://invit.by/image/data/PSUL/psul_svojstva.jpg',
       'https://invit.by/image/data/PSUL/diagramma_psul.jpg',
+      'local:psul-euroband-etiketka',
+      'local:psul-euroband-4-rulona',
     ],
     blocks: [
       { kind: 'heading', text: 'Описание продукта' },

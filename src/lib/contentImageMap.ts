@@ -261,4 +261,8 @@ export const CONTENT_IMAGE_MAP: Record<string, string> = {
   "https://invit.by/image/data/ventilation/flancevyj_profil%27_K40.jpg": 'flancevyj-profil-k40-9d2a63',
   "https://invit.by/image/cache/data/slides/lenta_pe_euroband-1092x337.jpg": 'lenta-pe-euroband-1092x337-ce0e49',
   "https://invit.by/image/cache/data/slides/lenta_vla_euroband_pil-1092x337.jpg": 'lenta-vla-euroband-pil-1092x337-175bdb',
+
+  // Ниже — не с invit.by, а фото, присланные клиентом напрямую. Ключ синтетический.
+  "local:psul-euroband-etiketka": 'psul-euroband-etiketka',
+  "local:psul-euroband-4-rulona": 'psul-euroband-4-rulona',
 };
