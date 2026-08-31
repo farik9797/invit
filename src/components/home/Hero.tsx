@@ -91,6 +91,22 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCallback }) => {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
 
+  // Шесть фоновых фото разом — больше мегабайта на первом экране, часть не
+  // успевала прийти к моменту показа (слайд листался на пустой тёмный фон).
+  // Грузим только текущий кадр и следующий: у следующего есть весь DURATION
+  // на закачку, пока показан текущий. Once загруженное не выгружаем — иначе
+  // нечему будет играть кросс-фейдом при возврате назад.
+  const [loaded, setLoaded] = useState(() => new Set([0, 1 % SLIDES.length]));
+  useEffect(() => {
+    setLoaded((prev) => {
+      if (prev.has(active) && prev.has((active + 1) % SLIDES.length)) return prev;
+      const next = new Set(prev);
+      next.add(active);
+      next.add((active + 1) % SLIDES.length);
+      return next;
+    });
+  }, [active]);
+
   useEffect(() => {
     if (reduced || paused) return;
     const timer = setTimeout(() => setActive((prev) => (prev + 1) % SLIDES.length), DURATION);
@@ -104,7 +120,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCallback }) => {
       onMouseLeave={() => setPaused(false)}
     >
       {/* Фоны слайдов — плавная смена вместо подмены src */}
-      {SLIDES.map((slide, idx) => (
+      {SLIDES.map((slide, idx) =>
+        !loaded.has(idx) ? null : (
         <img
           key={slide.id}
           src={slide.image}
@@ -118,7 +135,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCallback }) => {
             slide.whole ? 'object-cover lg:object-contain lg:object-right-bottom' : 'object-cover'
           } ${idx === active ? 'opacity-90' : 'opacity-0'}`}
         />
-      ))}
+        )
+      )}
       {/* Затемняем только левую половину под текстом, правая остаётся чистым фото */}
       <div className="absolute inset-0 bg-gradient-to-r from-ink/85 from-10% via-ink/45 via-45% to-transparent to-70%" />
       {/* На телефоне текст лежит поверх всей ширины кадра — горизонтальной подложки
