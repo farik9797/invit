@@ -3301,6 +3301,7 @@ export const PRODUCT_CONTENT: Record<string, ProductContent> = {
       'https://invit.by/image/data/PSUL/mezhvencovyj-psul.png',
       'https://invit.by/image/data/PSUL/psul-dlja-brusa.jpg',
       'https://invit.by/image/data/PSUL/psul-dlja-kottedzhnogo-stroitel\'stva.png',
+      'local:psul-rulony-assortiment',
     ],
     blocks: [
       { kind: 'text', text: 'Компания ИНВИТ предлагает современную, профессиональную технологию уплотнения швов в стенах из клееного профилированного бруса, деревянного бруса, оцилиндрованного бревна и традиционных срубов.' },

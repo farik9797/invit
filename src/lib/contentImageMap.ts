@@ -265,4 +265,5 @@ export const CONTENT_IMAGE_MAP: Record<string, string> = {
   // Ниже — не с invit.by, а фото, присланные клиентом напрямую. Ключ синтетический.
   "local:psul-euroband-etiketka": 'psul-euroband-etiketka',
   "local:psul-euroband-4-rulona": 'psul-euroband-4-rulona',
+  "local:psul-rulony-assortiment": 'psul-rulony-assortiment',
 };
