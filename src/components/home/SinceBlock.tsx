@@ -1,6 +1,8 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Reveal } from '../Reveal';
 import { CERTIFICATES, PRODUCTS } from '../../data/catalogData';
+import { paths } from '../../routes';
 
 const FOUNDED = 2001;
 
@@ -77,6 +79,13 @@ export const SinceBlock: React.FC = () => (
               Мы последовательно расширяем ассортимент лент и географию поставок по Беларуси и странам
               ЕАЭС.
             </p>
+
+            <Link
+              to={paths.contacts}
+              className="mt-8 inline-flex items-center justify-center min-h-11 bg-brand-blue hover:bg-brand-blue-hover text-white text-sm font-semibold px-7 transition-[background-color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px active:scale-[0.98]"
+            >
+              Связаться с нами
+            </Link>
           </div>
         </div>
       </Reveal>
