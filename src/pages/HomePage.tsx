@@ -58,7 +58,7 @@ export const HomePage: React.FC = () => {
       </section>
 
       <AboutIntro />
-      <SinceBlock />
+      <SinceBlock onOpenCallback={() => shop.openCallback('Связаться с нами — блок «Для нас важны»')} />
       <NewsGrid />
       <ContactBanner />
       <CertificatesStrip />

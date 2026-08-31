@@ -1,8 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Reveal } from '../Reveal';
 import { CERTIFICATES, PRODUCTS } from '../../data/catalogData';
-import { paths } from '../../routes';
 
 const FOUNDED = 2001;
 
@@ -28,7 +26,7 @@ const VALUES = [
  * приём из середины десятых, к тому же дублировавший заголовок. Вместо неё
  * три числа, которые считаются по каталогу.
  */
-export const SinceBlock: React.FC = () => (
+export const SinceBlock: React.FC<{ onOpenCallback: () => void }> = ({ onOpenCallback }) => (
   <section className="relative bg-surface-soft overflow-hidden">
     <div className="max-w-[1340px] mx-auto px-5 grid lg:grid-cols-2">
       {/* Левая колонка */}
@@ -80,12 +78,13 @@ export const SinceBlock: React.FC = () => (
               ЕАЭС.
             </p>
 
-            <Link
-              to={paths.contacts}
-              className="mt-8 inline-flex items-center justify-center min-h-11 bg-brand-blue hover:bg-brand-blue-hover text-white text-sm font-semibold px-7 transition-[background-color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px active:scale-[0.98]"
+            <button
+              type="button"
+              onClick={onOpenCallback}
+              className="mt-8 inline-flex items-center justify-center min-h-11 bg-brand-blue hover:bg-brand-blue-hover text-white text-sm font-semibold px-7 cursor-pointer transition-[background-color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px active:scale-[0.98]"
             >
               Связаться с нами
-            </Link>
+            </button>
           </div>
         </div>
       </Reveal>
