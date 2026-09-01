@@ -6,6 +6,7 @@ import { ProductGrid } from '../components/ProductCard';
 import { CATEGORIES, PRODUCTS } from '../data/catalogData';
 import { useShop } from '../context/ShopContext';
 import { sortForListing } from '../lib/product';
+import { searchProducts } from '../lib/search';
 import { SectionIcon } from '../lib/sectionIcons';
 import { paths } from '../routes';
 
@@ -53,12 +54,7 @@ export const CatalogPage: React.FC = () => {
     if (category) list = list.filter((p) => p.categorySlug === category.slug);
     if (activeSub) list = list.filter((p) => p.subcategorySlug === activeSub);
 
-    const needle = query.trim().toLowerCase();
-    if (needle) {
-      list = list.filter((p) =>
-        `${p.title} ${p.shortTitle} ${p.subcategoryName}`.toLowerCase().includes(needle)
-      );
-    }
+    list = searchProducts(list, query);
 
     return sortForListing(list);
   }, [category, activeSub, query]);
