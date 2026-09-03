@@ -115,6 +115,7 @@ with zipfile.ZipFile(ZIP_PATH) as z:
             'division': division,
             'description': 'Прямая поставка от поставщика. Актуальный остаток, объём и цену уточняйте у менеджера.',
             'image': img_name,
+            'sku': row['ARTIKUL'],
             'specs': specs,
             'features': [],
             'sourceUrl': '',
@@ -145,6 +146,8 @@ for p in products:
     lines.append(f"    division: {esc(p['division'])},")
     lines.append(f"    description: {esc(p['description'])},")
     lines.append(f"    image: {esc(p['image'])},")
+    if p['sku']:
+        lines.append(f"    sku: {esc(p['sku'])},")
     specs_str = ', '.join(
         '{ label: %s, value: %s }' % (esc(s['label']), esc(s['value'])) for s in p['specs']
     )

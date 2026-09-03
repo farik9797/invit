@@ -52,6 +52,8 @@ export interface Product {
   description: string;
   image: string;
   imageLarge?: string;
+  /** Артикул поставщика — есть только у товаров из прайса STARFIX/STARTUL. */
+  sku?: string;
   badge?: 'Хит' | 'Новинка' | 'Акция' | 'Собственное производство';
   specs: ProductSpec[];
   sizes?: ProductSizes;

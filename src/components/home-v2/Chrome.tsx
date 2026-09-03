@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { Menu, X, Phone, ShoppingCart, Search, ChevronUp, MessageCircle } from 'lucide-react';
 import invitLogo from '../../assets/logo/invit-color.svg';
@@ -8,6 +8,9 @@ import viberIcon from '../../assets/icons/viber.svg';
 import whatsappIcon from '../../assets/icons/whatsapp.svg';
 import instagramIcon from '../../assets/icons/instagram.svg';
 import { paths } from '../../routes';
+import { PRODUCTS } from '../../data/catalogData';
+import { productImage } from '../../lib/productImages';
+import { searchProducts } from '../../lib/search';
 import { COMPANY, REQUISITES_COMPACT } from '../../data/company';
 import { useShop } from '../../context/ShopContext';
 import { gsap, MOTION_DURATION, MOTION_EASE, prefersReducedMotion } from './gsap';
@@ -251,12 +254,28 @@ const SEARCH_HINTS = ['ПСУЛ', 'ПЭС', 'Герметики', 'Крепёж'
  * пунктом меню оно не помещалось: при окне 1024 строка распирала документ до
  * 1117px. Кнопка занимает 44px и помещается везде.
  */
+/** Сколько совпадений показываем прямо в попапе — остальное на странице каталога. */
+const SEARCH_PREVIEW_LIMIT = 6;
+
+const plural = (n: number, forms: [string, string, string]) => {
+  const mod100 = n % 100;
+  if (mod100 >= 11 && mod100 <= 14) return forms[2];
+  const mod10 = n % 10;
+  if (mod10 === 1) return forms[0];
+  if (mod10 >= 2 && mod10 <= 4) return forms[1];
+  return forms[2];
+};
+
 const HeaderSearch: React.FC<{ className?: string }> = ({ className = '' }) => {
   const [open, setOpen] = useState(false);
   const [shown, setShown] = useState(false);
   const [value, setValue] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
+
+  const matches = useMemo(() => searchProducts(PRODUCTS, value), [value]);
+  const matchCount = value.trim() ? matches.length : 0;
+  const results = matches.slice(0, SEARCH_PREVIEW_LIMIT);
 
   // Появление: сначала монтируем в свёрнутом виде, затем в следующем кадре
   // включаем классы перехода — иначе браузер отрисует сразу конечное состояние.
@@ -367,23 +386,75 @@ const HeaderSearch: React.FC<{ className?: string }> = ({ className = '' }) => {
               </button>
             </form>
 
-            <div className="px-5 pb-6 sm:px-7">
-              <span className="block text-xs text-inv-ink-muted">Часто ищут</span>
-              <div className="mt-2 flex flex-wrap gap-2">
-                {SEARCH_HINTS.map((hint) => (
-                  <button
-                    key={hint}
-                    type="button"
-                    onClick={() => go(hint)}
-                    className="inline-flex items-center min-h-11 px-4 rounded-[4px] border border-inv-border bg-white text-sm text-inv-ink hover:border-inv-blue hover:text-inv-blue transition-colors duration-[120ms] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
-                  >
-                    {hint}
-                  </button>
-                ))}
+            {/* Живая выдача: показываем первые совпадения прямо в попапе,
+                чтобы за товаром не нужно было идти на страницу каталога. */}
+            {value.trim() && (
+              <div className="border-t border-inv-border-subtle max-h-[46vh] overflow-y-auto">
+                {results.length === 0 ? (
+                  <p className="px-5 py-6 sm:px-7 text-sm text-inv-ink-muted">
+                    По запросу «{value.trim()}» ничего не нашлось. Попробуйте короче или
+                    введите артикул.
+                  </p>
+                ) : (
+                  <ul>
+                    {results.map((product) => (
+                      <li key={product.id}>
+                        <Link
+                          to={paths.product(product)}
+                          onClick={() => {
+                            setValue('');
+                            setOpen(false);
+                          }}
+                          className="flex items-center gap-3 px-5 sm:px-7 py-3 hover:bg-inv-surface-1 transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-inv-blue"
+                        >
+                          <img
+                            src={productImage(product)}
+                            alt=""
+                            aria-hidden
+                            loading="lazy"
+                            className="w-12 h-12 shrink-0 object-contain bg-white rounded-[4px] border border-inv-border-subtle p-1"
+                          />
+                          <span className="min-w-0">
+                            <span className="block text-sm text-inv-ink leading-snug line-clamp-2">
+                              {product.title}
+                            </span>
+                            {product.sku && (
+                              <span className="mt-0.5 block text-xs text-inv-ink-muted">
+                                Артикул {product.sku}
+                              </span>
+                            )}
+                          </span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
+            )}
 
-              <p className="mt-4 pt-4 border-t border-inv-border-subtle text-xs text-inv-ink-muted">
-                Ищем по названию позиции и разделу — 208 товаров каталога.
+            <div className="px-5 pb-6 pt-4 sm:px-7 border-t border-inv-border-subtle">
+              {!value.trim() && (
+                <>
+                  <span className="block text-xs text-inv-ink-muted">Часто ищут</span>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {SEARCH_HINTS.map((hint) => (
+                      <button
+                        key={hint}
+                        type="button"
+                        onClick={() => setValue(hint)}
+                        className="inline-flex items-center min-h-11 px-4 rounded-[4px] border border-inv-border bg-white text-sm text-inv-ink hover:border-inv-blue hover:text-inv-blue transition-colors duration-[120ms] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
+                      >
+                        {hint}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
+
+              <p className={`text-xs text-inv-ink-muted ${value.trim() ? '' : 'mt-4 pt-4 border-t border-inv-border-subtle'}`}>
+                {matchCount > 0
+                  ? `Найдено ${matchCount} ${plural(matchCount, ['позиция', 'позиции', 'позиций'])} — Enter покажет все.`
+                  : 'Ищем по названию и артикулу.'}{' '}
                 Закрыть: <kbd className="px-1.5 py-0.5 rounded-[3px] border border-inv-border bg-inv-surface-1 font-sans">Esc</kbd>
               </p>
             </div>
@@ -542,6 +613,7 @@ export const HeaderV2: React.FC<{ onRequest?: () => void }> = ({ onRequest }) =>
 
   return (
     <header className="sticky top-0 z-30 bg-white border-b border-inv-border">
+      {/* Первая строка: логотип, телефон, поиск, корзина, «Запросить расчёт» */}
       <div className="max-w-[1400px] mx-auto px-4 lg:px-8 h-[68px] flex items-center justify-between gap-6">
         <Link
           to={paths.home}
@@ -550,26 +622,12 @@ export const HeaderV2: React.FC<{ onRequest?: () => void }> = ({ onRequest }) =>
           <img src={invitLogo} alt="ООО «ИНВИТ»" className="h-8 w-auto" />
         </Link>
 
-        <MegaMenu />
-
-        <nav className="hidden xl:flex items-center gap-6">
-          {NAV.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              className="text-sm text-inv-ink-muted hover:text-inv-blue transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
-            >
-              {item.label}
-            </NavLink>
-          ))}
-        </nav>
-
-        <div className="hidden xl:flex items-center gap-3 shrink-0">
+        <div className="hidden lg:flex items-center gap-3 shrink-0 ml-auto">
           <HeaderSearch />
 
           <a
             href="tel:+375296444979"
-            className="hidden 2xl:flex items-center gap-2 text-sm font-semibold text-inv-ink hover:text-inv-blue transition-colors duration-[120ms] whitespace-nowrap"
+            className="flex items-center gap-2 text-sm font-semibold text-inv-ink hover:text-inv-blue transition-colors duration-[120ms] whitespace-nowrap"
           >
             <Phone className="w-4 h-4" />
             +375 29 644-49-79
@@ -582,7 +640,7 @@ export const HeaderV2: React.FC<{ onRequest?: () => void }> = ({ onRequest }) =>
         </div>
 
         {/* На узком экране корзина остаётся видимой, рядом с бургером */}
-        <div className="flex items-center gap-1 xl:hidden">
+        <div className="flex items-center gap-1 lg:hidden">
           <HeaderSearch />
           <CartButton />
 
@@ -598,8 +656,28 @@ export const HeaderV2: React.FC<{ onRequest?: () => void }> = ({ onRequest }) =>
         </div>
       </div>
 
+      {/* Вторая строка: каталог и разделы сайта — в шапке из одной строки
+          пятый пункт меню вместе с правым блоком не помещался. */}
+      <div className="hidden lg:block border-t border-inv-border-subtle">
+        <div className="max-w-[1400px] mx-auto px-4 lg:px-8 h-[52px] flex items-center gap-6">
+          <MegaMenu />
+
+          <nav className="flex items-center gap-6">
+            {NAV.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                className="text-sm text-inv-ink-muted hover:text-inv-blue transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
+              >
+                {item.label}
+              </NavLink>
+            ))}
+          </nav>
+        </div>
+      </div>
+
       {open && (
-        <div className="xl:hidden border-t border-inv-border bg-white px-4 py-4 space-y-1">
+        <div className="lg:hidden border-t border-inv-border bg-white px-4 py-4 space-y-1">
           <span className="block pt-1 pb-2 text-xs font-semibold uppercase tracking-[0.12em] text-inv-ink-muted">
             Каталог товаров
           </span>

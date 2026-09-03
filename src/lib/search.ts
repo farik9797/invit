@@ -69,18 +69,26 @@ const expandQuery = (rawNeedle: string): string[] => {
   return [...terms];
 };
 
-/** Заголовок весит больше названия подкатегории, начало строки — больше середины. */
+/*
+ * Ищем только по названию и артикулу — так просил клиент. Раньше в поиск
+ * попадало и название подкатегории: запрос «очиститель» вытаскивал всю пену
+ * из раздела «Пена монтажная, очиститель для пены», хотя в самих товарах
+ * этого слова нет.
+ *
+ * Вес: точный артикул > начало названия > название целиком.
+ */
 const scoreProduct = (product: Product, terms: string[]): number => {
   const title = product.title.toLowerCase();
   const short = product.shortTitle.toLowerCase();
-  const sub = product.subcategoryName.toLowerCase();
+  const sku = product.sku?.toLowerCase() ?? '';
 
   let best = 0;
   for (const term of terms) {
     if (!term) continue;
-    if (title.startsWith(term) || short.startsWith(term)) best = Math.max(best, 3);
-    else if (title.includes(term) || short.includes(term)) best = Math.max(best, 2);
-    else if (sub.includes(term)) best = Math.max(best, 1);
+    if (sku && sku === term) best = Math.max(best, 4);
+    else if (sku && sku.includes(term)) best = Math.max(best, 3);
+    else if (title.startsWith(term) || short.startsWith(term)) best = Math.max(best, 2);
+    else if (title.includes(term) || short.includes(term)) best = Math.max(best, 1);
   }
   return best;
 };
