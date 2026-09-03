@@ -723,68 +723,78 @@ export const HeaderV2: React.FC<{ onRequest?: () => void }> = ({ onRequest }) =>
 
   return (
     <header className="sticky top-0 z-30 bg-white border-b border-inv-border">
-      {/* Первая строка: логотип, поле поиска, телефон */}
-      <div className="max-w-[1400px] mx-auto px-4 lg:px-8 h-[68px] flex items-center justify-between gap-4 lg:gap-8">
+      {/*
+       * Десктоп: обе строки — одна сетка из трёх колонок, поэтому меню во
+       * второй строке встаёт ровно по ширине поля поиска в первой. Двумя
+       * отдельными flex-строками так не выходило: слева логотип и «Каталог»
+       * разной ширины, справа телефон и блок кнопок — колонки не совпадали.
+       * Разделитель — обычная ячейка на всю ширину сетки.
+       */}
+      <div className="hidden lg:grid max-w-[1400px] mx-auto px-4 lg:px-8 grid-cols-[auto_minmax(0,560px)_auto] grid-rows-[76px_1px_56px] items-center gap-x-6">
         <Link
           to={paths.home}
-          className="shrink-0 flex items-center min-h-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
+          className="flex items-center min-h-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
         >
-          <img src={invitLogo} alt="ООО «ИНВИТ»" className="h-8 w-auto" />
+          <img src={invitLogo} alt="ООО «ИНВИТ»" className="h-11 w-auto" />
         </Link>
 
-        <HeaderSearchField className="hidden lg:block flex-1 min-w-0 max-w-[560px]" />
+        <HeaderSearchField />
 
         <a
           href="tel:+375296444979"
-          className="hidden lg:flex items-center gap-2 shrink-0 text-sm font-semibold text-inv-ink hover:text-inv-blue transition-colors duration-[120ms] whitespace-nowrap"
+          className="flex items-center gap-2 justify-self-end text-sm font-semibold text-inv-ink hover:text-inv-blue transition-colors duration-[120ms] whitespace-nowrap"
         >
           <Phone className="w-4 h-4" />
           +375 29 644-49-79
         </a>
 
-        {/* На узком экране корзина остаётся видимой, рядом с бургером */}
-        <div className="flex items-center gap-1 lg:hidden ml-auto">
-          <HeaderSearch />
+        <div className="col-span-3 h-px bg-inv-border-subtle" />
+
+        <MegaMenu />
+
+        <nav className="flex items-center justify-center gap-6">
+          {NAV.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className="text-sm text-inv-ink-muted hover:text-inv-blue transition-colors duration-[120ms] whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
+            >
+              {item.label}
+            </NavLink>
+          ))}
+        </nav>
+
+        <div className="flex items-center gap-3 justify-self-end">
           <CartButton />
 
-        <button
-          type="button"
-          onClick={() => setOpen((v) => !v)}
-          aria-expanded={open}
-          aria-label={open ? 'Закрыть меню' : 'Открыть меню'}
-          className="w-11 h-11 -mr-2 flex items-center justify-center text-inv-ink cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
-        >
-          {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
+          <BlueButton href="#zapros" onClick={onRequest}>
+            Запросить расчёт
+          </BlueButton>
         </div>
       </div>
 
-      {/* Вторая строка: слева каталог и разделы сайта, справа корзина и заявка */}
-      <div className="hidden lg:block border-t border-inv-border-subtle">
-        <div className="max-w-[1400px] mx-auto px-4 lg:px-8 h-[56px] flex items-center justify-between gap-6">
-          <div className="shrink-0">
-            <MegaMenu />
-          </div>
+      {/* Мобильная строка: логотип, поиск, корзина, бургер */}
+      <div className="lg:hidden max-w-[1400px] mx-auto px-4 h-[68px] flex items-center gap-4">
+        <Link
+          to={paths.home}
+          className="shrink-0 flex items-center min-h-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
+        >
+          <img src={invitLogo} alt="ООО «ИНВИТ»" className="h-10 w-auto" />
+        </Link>
 
-          <nav className="flex flex-1 items-center justify-center gap-6">
-            {NAV.map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                className="text-sm text-inv-ink-muted hover:text-inv-blue transition-colors duration-[120ms] whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
-              >
-                {item.label}
-              </NavLink>
-            ))}
-          </nav>
+        <div className="flex items-center gap-1 ml-auto">
+          <HeaderSearch />
+          <CartButton />
 
-          <div className="flex items-center gap-3 shrink-0">
-            <CartButton />
-
-            <BlueButton href="#zapros" onClick={onRequest}>
-              Запросить расчёт
-            </BlueButton>
-          </div>
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            aria-expanded={open}
+            aria-label={open ? 'Закрыть меню' : 'Открыть меню'}
+            className="w-11 h-11 -mr-2 flex items-center justify-center text-inv-ink cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
+          >
+            {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
         </div>
       </div>
 
