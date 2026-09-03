@@ -224,7 +224,7 @@ export const AwardBadge: React.FC<{ dimmed?: boolean }> = ({ dimmed }) => (
     aria-hidden={dimmed}
     tabIndex={dimmed ? -1 : undefined}
     style={{ clipPath: 'circle(50%)' }}
-    className={`fixed right-2 md:right-4 xl:right-6 top-[62%] -translate-y-1/2 z-20 w-14 md:w-20 xl:w-24 transition-[transform,opacity] duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:scale-[1.06] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-inv-blue ${
+    className={`fixed right-2 md:right-4 xl:right-6 top-[35%] -translate-y-1/2 z-20 w-14 md:w-20 xl:w-24 transition-[transform,opacity] duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:scale-[1.06] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-inv-blue ${
       dimmed ? 'opacity-0 pointer-events-none' : 'opacity-100'
     }`}
   >
@@ -471,18 +471,19 @@ export const FloatingActions: React.FC<{ expanded: boolean; onExpandedChange: (e
     'w-12 h-12 sm:w-14 sm:h-14 rounded-full shadow-[0_6px_24px_rgba(22,44,88,0.22)] flex items-center justify-center cursor-pointer transition-[background-color,transform,opacity] duration-[120ms] ease-[cubic-bezier(0.4,0,0.2,1)] active:scale-[0.96]';
 
   return (
-    <div className="fixed bottom-5 right-4 sm:bottom-6 sm:right-6 z-40 flex flex-col items-center gap-3">
+    <>
       {showTop && (
         <button
           type="button"
           onClick={() => window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? 'auto' : 'smooth' })}
           aria-label="Наверх"
-          className={`${round} bg-white border border-inv-border text-inv-ink hover:text-inv-blue hover:border-inv-blue focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue`}
+          className={`${round} fixed bottom-5 left-4 sm:bottom-6 sm:left-6 z-40 bg-white border border-inv-border text-inv-ink hover:text-inv-blue hover:border-inv-blue focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue`}
         >
           <ChevronUp className="w-5 h-5 sm:w-6 sm:h-6" />
         </button>
       )}
 
+      <div className="fixed bottom-5 right-4 sm:bottom-6 sm:right-6 z-40 flex flex-col items-center gap-3">
       {CHANNELS.map((channel, idx) => (
         <a
           key={channel.key}
@@ -531,7 +532,8 @@ export const FloatingActions: React.FC<{ expanded: boolean; onExpandedChange: (e
       >
         {expanded ? <X className="w-5 h-5 sm:w-6 sm:h-6" /> : <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6" />}
       </button>
-    </div>
+      </div>
+    </>
   );
 };
 
