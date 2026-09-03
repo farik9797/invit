@@ -466,6 +466,116 @@ const HeaderSearch: React.FC<{ className?: string }> = ({ className = '' }) => {
 };
 
 /**
+ * Поиск полем прямо в шапке (десктоп). Подсказка с товарами раскрывается
+ * под полем — попап на весь экран для этого уже не нужен, он остаётся
+ * на мобильном, где для поля в строке нет места.
+ */
+const HeaderSearchField: React.FC<{ className?: string }> = ({ className = '' }) => {
+  const [value, setValue] = useState('');
+  const [focused, setFocused] = useState(false);
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+
+  const matches = useMemo(() => searchProducts(PRODUCTS, value), [value]);
+  const matchCount = value.trim() ? matches.length : 0;
+  const results = matches.slice(0, SEARCH_PREVIEW_LIMIT);
+  const showDrop = focused && value.trim().length > 0;
+
+  // Клик мимо поля закрывает подсказку, но не стирает запрос
+  useEffect(() => {
+    if (!showDrop) return;
+    const onDown = (e: MouseEvent) => {
+      if (!wrapRef.current?.contains(e.target as Node)) setFocused(false);
+    };
+    document.addEventListener('mousedown', onDown);
+    return () => document.removeEventListener('mousedown', onDown);
+  }, [showDrop]);
+
+  const close = () => setFocused(false);
+
+  return (
+    <div ref={wrapRef} className={`relative ${className}`}>
+      <form
+        role="search"
+        onSubmit={(e) => {
+          e.preventDefault();
+          const q = value.trim();
+          navigate(q ? `${paths.catalog}?q=${encodeURIComponent(q)}` : paths.catalog);
+          close();
+        }}
+      >
+        <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-inv-ink-muted" />
+        <input
+          type="search"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          onFocus={() => setFocused(true)}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') close();
+          }}
+          placeholder="Поиск по названию или артикулу"
+          aria-label="Поиск по каталогу"
+          className="w-full h-11 pl-10 pr-3 rounded-[4px] border border-inv-border bg-inv-surface-1 text-sm text-inv-ink placeholder:text-inv-ink-muted transition-[background-color,border-color] duration-[120ms] focus:bg-white focus:border-inv-blue focus-visible:outline-none"
+        />
+      </form>
+
+      {showDrop && (
+        <div className="absolute left-0 right-0 top-[calc(100%+6px)] z-40 rounded-[8px] border border-inv-border bg-white shadow-[0_16px_40px_rgba(10,25,60,0.18)] overflow-hidden">
+          {results.length === 0 ? (
+            <p className="px-4 py-4 text-sm text-inv-ink-muted">
+              Ничего не нашлось. Попробуйте короче или введите артикул.
+            </p>
+          ) : (
+            <>
+              <ul className="max-h-[52vh] overflow-y-auto">
+                {results.map((product) => (
+                  <li key={product.id}>
+                    <Link
+                      to={paths.product(product)}
+                      onClick={() => {
+                        setValue('');
+                        close();
+                      }}
+                      className="flex items-center gap-3 px-4 py-2.5 hover:bg-inv-surface-1 transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-inv-blue"
+                    >
+                      <img
+                        src={productImage(product)}
+                        alt=""
+                        aria-hidden
+                        loading="lazy"
+                        className="w-10 h-10 shrink-0 object-contain bg-white rounded-[4px] border border-inv-border-subtle p-1"
+                      />
+                      <span className="min-w-0">
+                        <span className="block text-sm text-inv-ink leading-snug line-clamp-2">
+                          {product.title}
+                        </span>
+                        {product.sku && (
+                          <span className="mt-0.5 block text-xs text-inv-ink-muted">
+                            Артикул {product.sku}
+                          </span>
+                        )}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+
+              <Link
+                to={`${paths.catalog}?q=${encodeURIComponent(value.trim())}`}
+                onClick={close}
+                className="flex items-center justify-center min-h-11 border-t border-inv-border-subtle text-sm font-semibold text-inv-blue hover:bg-inv-surface-1 transition-colors duration-[120ms]"
+              >
+                Показать все {matchCount} {plural(matchCount, ['позицию', 'позиции', 'позиций'])}
+              </Link>
+            </>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+/**
  * Плавающие кнопки в правом нижнем углу: наверх, Viber, обратный звонок.
  *
  * «Наверх» появляется только после двух экранов прокрутки — на короткой
@@ -613,8 +723,8 @@ export const HeaderV2: React.FC<{ onRequest?: () => void }> = ({ onRequest }) =>
 
   return (
     <header className="sticky top-0 z-30 bg-white border-b border-inv-border">
-      {/* Первая строка: логотип, телефон, поиск, корзина, «Запросить расчёт» */}
-      <div className="max-w-[1400px] mx-auto px-4 lg:px-8 h-[68px] flex items-center justify-between gap-6">
+      {/* Первая строка: логотип, каталог, поле поиска, телефон */}
+      <div className="max-w-[1400px] mx-auto px-4 lg:px-8 h-[68px] flex items-center gap-4 lg:gap-6">
         <Link
           to={paths.home}
           className="shrink-0 flex items-center min-h-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
@@ -622,25 +732,22 @@ export const HeaderV2: React.FC<{ onRequest?: () => void }> = ({ onRequest }) =>
           <img src={invitLogo} alt="ООО «ИНВИТ»" className="h-8 w-auto" />
         </Link>
 
-        <div className="hidden lg:flex items-center gap-3 shrink-0 ml-auto">
-          <HeaderSearch />
-
-          <a
-            href="tel:+375296444979"
-            className="flex items-center gap-2 text-sm font-semibold text-inv-ink hover:text-inv-blue transition-colors duration-[120ms] whitespace-nowrap"
-          >
-            <Phone className="w-4 h-4" />
-            +375 29 644-49-79
-          </a>
-          <CartButton />
-
-          <BlueButton href="#zapros" onClick={onRequest}>
-            Запросить расчёт
-          </BlueButton>
+        <div className="hidden lg:block shrink-0">
+          <MegaMenu />
         </div>
 
+        <HeaderSearchField className="hidden lg:block flex-1 min-w-0 max-w-[520px]" />
+
+        <a
+          href="tel:+375296444979"
+          className="hidden lg:flex items-center gap-2 shrink-0 ml-auto text-sm font-semibold text-inv-ink hover:text-inv-blue transition-colors duration-[120ms] whitespace-nowrap"
+        >
+          <Phone className="w-4 h-4" />
+          +375 29 644-49-79
+        </a>
+
         {/* На узком экране корзина остаётся видимой, рядом с бургером */}
-        <div className="flex items-center gap-1 lg:hidden">
+        <div className="flex items-center gap-1 lg:hidden ml-auto">
           <HeaderSearch />
           <CartButton />
 
@@ -656,12 +763,9 @@ export const HeaderV2: React.FC<{ onRequest?: () => void }> = ({ onRequest }) =>
         </div>
       </div>
 
-      {/* Вторая строка: каталог и разделы сайта — в шапке из одной строки
-          пятый пункт меню вместе с правым блоком не помещался. */}
+      {/* Вторая строка: слева разделы сайта, справа корзина и заявка */}
       <div className="hidden lg:block border-t border-inv-border-subtle">
-        <div className="max-w-[1400px] mx-auto px-4 lg:px-8 h-[52px] flex items-center gap-6">
-          <MegaMenu />
-
+        <div className="max-w-[1400px] mx-auto px-4 lg:px-8 h-[52px] flex items-center justify-between gap-6">
           <nav className="flex items-center gap-6">
             {NAV.map((item) => (
               <NavLink
@@ -673,6 +777,14 @@ export const HeaderV2: React.FC<{ onRequest?: () => void }> = ({ onRequest }) =>
               </NavLink>
             ))}
           </nav>
+
+          <div className="flex items-center gap-3 shrink-0">
+            <CartButton />
+
+            <BlueButton href="#zapros" onClick={onRequest}>
+              Запросить расчёт
+            </BlueButton>
+          </div>
         </div>
       </div>
 
