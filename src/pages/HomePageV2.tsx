@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import { useShop } from '../context/ShopContext';
+import React, { useEffect, useState } from 'react';
 import { HeaderV2, FooterV2, AwardBadge, FloatingActions } from '../components/home-v2/Chrome';
 import {
   HeroV2,
@@ -26,7 +25,9 @@ import {
  * нынешнем invit.by, здесь нет намеренно.
  */
 export const HomePageV2: React.FC = () => {
-  const shop = useShop();
+  // Медаль «Лучший продукт 2013» и раскрытый виджет контактов делят одно
+  // и то же место на телефонах — прячем медаль, пока виджет открыт.
+  const [contactsOpen, setContactsOpen] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -48,9 +49,9 @@ export const HomePageV2: React.FC = () => {
       </main>
       <FooterV2 />
 
-      <AwardBadge />
+      <AwardBadge dimmed={contactsOpen} />
 
-      <FloatingActions onCallback={() => shop.openCallback('Запрос со второй главной')} />
+      <FloatingActions expanded={contactsOpen} onExpandedChange={setContactsOpen} />
     </div>
   );
 };

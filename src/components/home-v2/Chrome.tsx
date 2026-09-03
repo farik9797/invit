@@ -1,10 +1,12 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { Menu, X, Phone, ShoppingCart, Search, ChevronUp } from 'lucide-react';
+import { Menu, X, Phone, ShoppingCart, Search, ChevronUp, MessageCircle } from 'lucide-react';
 import invitLogo from '../../assets/logo/invit-color.svg';
 import invitLight from '../../assets/logo/invit-light.svg';
 import award2013 from '../../assets/awards/award-2013.webp';
 import viberIcon from '../../assets/icons/viber.svg';
+import whatsappIcon from '../../assets/icons/whatsapp.svg';
+import instagramIcon from '../../assets/icons/instagram.svg';
 import { paths } from '../../routes';
 import { COMPANY, REQUISITES_COMPACT } from '../../data/company';
 import { useShop } from '../../context/ShopContext';
@@ -215,12 +217,16 @@ const CartButton: React.FC<{ className?: string }> = ({ className = '' }) => {
  * Раньше знак был некликабельным: диплома на сайте не было, и клик уводил бы
  * в раздел, где его не найти.
  */
-export const AwardBadge: React.FC = () => (
+export const AwardBadge: React.FC<{ dimmed?: boolean }> = ({ dimmed }) => (
   <Link
     to={paths.bestProduct}
     aria-label="Лучший строительный продукт года 2013 — подробнее"
+    aria-hidden={dimmed}
+    tabIndex={dimmed ? -1 : undefined}
     style={{ clipPath: 'circle(50%)' }}
-    className="fixed right-2 md:right-4 xl:right-6 top-[62%] -translate-y-1/2 z-20 w-14 md:w-20 xl:w-24 transition-transform duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:scale-[1.06] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-inv-blue"
+    className={`fixed right-2 md:right-4 xl:right-6 top-[62%] -translate-y-1/2 z-20 w-14 md:w-20 xl:w-24 transition-[transform,opacity] duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:scale-[1.06] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-inv-blue ${
+      dimmed ? 'opacity-0 pointer-events-none' : 'opacity-100'
+    }`}
   >
     <img
       src={award2013}
@@ -400,7 +406,58 @@ const HeaderSearch: React.FC<{ className?: string }> = ({ className = '' }) => {
  *
  * Знак «2013» висит выше, на 62% высоты окна, — эти кнопки его не задевают.
  */
-export const FloatingActions: React.FC<{ onCallback: () => void }> = ({ onCallback }) => {
+/*
+ * Раскрывающийся виджет каналов связи — по образцу стороннего плагина Chaty,
+ * который клиент показал на сайте партнёра (otdelkahomes.by): круглая кнопка
+ * снизу разворачивает стопку каналов вверх, повторный клик (или крестик)
+ * сворачивает обратно.
+ *
+ * WhatsApp и Instagram у ИНВИТ пока нет ни на этом сайте, ни на реальном
+ * invit.by — клиент попросил добавить кнопки уже сейчас и прислать ссылки
+ * позже. `href="#"` с отменой перехода — временная заглушка, заменить на
+ * `https://wa.me/...` и адрес профиля, когда придут номер и аккаунт.
+ */
+const CHANNELS: {
+  key: string;
+  label: string;
+  href: string;
+  isPlaceholder?: boolean;
+  bg: string;
+  icon: string;
+}[] = [
+  {
+    key: 'whatsapp',
+    label: 'Написать в WhatsApp',
+    href: '#',
+    isPlaceholder: true,
+    bg: 'bg-[#25D366] hover:bg-[#20bd5a]',
+    icon: whatsappIcon
+  },
+  {
+    key: 'instagram',
+    label: 'Открыть Instagram',
+    href: '#',
+    isPlaceholder: true,
+    bg: 'hover:brightness-95',
+    icon: instagramIcon
+  },
+  {
+    key: 'viber',
+    label: 'Написать в Viber',
+    href: 'viber://chat?number=%2B375296444979',
+    bg: 'bg-[#7360F2] hover:bg-[#5f4ce0]',
+    icon: viberIcon
+  }
+];
+
+const INSTAGRAM_GRADIENT = {
+  backgroundImage: 'linear-gradient(45deg, #FEDA75, #FA7E1E, #D62976, #962FBF, #4F5BD5)'
+};
+
+export const FloatingActions: React.FC<{ expanded: boolean; onExpandedChange: (expanded: boolean) => void }> = ({
+  expanded,
+  onExpandedChange
+}) => {
   const [showTop, setShowTop] = useState(false);
 
   useEffect(() => {
@@ -426,21 +483,53 @@ export const FloatingActions: React.FC<{ onCallback: () => void }> = ({ onCallba
         </button>
       )}
 
+      {CHANNELS.map((channel, idx) => (
+        <a
+          key={channel.key}
+          href={channel.href}
+          target={channel.isPlaceholder ? undefined : '_blank'}
+          rel={channel.isPlaceholder ? undefined : 'noopener'}
+          onClick={channel.isPlaceholder ? (e) => e.preventDefault() : undefined}
+          aria-label={channel.label}
+          aria-hidden={!expanded}
+          tabIndex={expanded ? 0 : -1}
+          style={{
+            transitionDelay: expanded ? `${idx * 30}ms` : '0ms',
+            ...(channel.key === 'instagram' ? INSTAGRAM_GRADIENT : undefined)
+          }}
+          className={`${round} ${channel.bg} text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
+            expanded
+              ? 'opacity-100 scale-100 translate-y-0'
+              : 'opacity-0 scale-75 translate-y-3 pointer-events-none'
+          }`}
+        >
+          <img src={channel.icon} alt="" aria-hidden width={24} height={24} className="w-6 h-6 sm:w-7 sm:h-7" />
+        </a>
+      ))}
+
       <a
-        href="viber://chat?number=%2B375296444979"
-        aria-label="Написать в Viber"
-        className={`${round} bg-[#7360F2] hover:bg-[#5f4ce0] text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7360F2]`}
+        href={`tel:${COMPANY.phoneMinsk.replace(/[^\d+]/g, '')}`}
+        aria-label="Позвонить"
+        aria-hidden={!expanded}
+        tabIndex={expanded ? 0 : -1}
+        style={{ transitionDelay: expanded ? `${CHANNELS.length * 30}ms` : '0ms' }}
+        className={`${round} bg-inv-blue hover:bg-inv-blue-hover text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue ${
+          expanded
+            ? 'opacity-100 scale-100 translate-y-0'
+            : 'opacity-0 scale-75 translate-y-3 pointer-events-none'
+        }`}
       >
-        <img src={viberIcon} alt="" aria-hidden width={24} height={24} className="w-6 h-6 sm:w-7 sm:h-7" />
+        <Phone className="w-5 h-5 sm:w-6 sm:h-6" />
       </a>
 
       <button
         type="button"
-        onClick={onCallback}
-        aria-label="Заказать обратный звонок"
+        onClick={() => onExpandedChange(!expanded)}
+        aria-expanded={expanded}
+        aria-label={expanded ? 'Закрыть контакты' : 'Связаться с нами'}
         className={`${round} bg-inv-blue hover:bg-inv-blue-hover text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue`}
       >
-        <Phone className="w-5 h-5 sm:w-6 sm:h-6" />
+        {expanded ? <X className="w-5 h-5 sm:w-6 sm:h-6" /> : <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6" />}
       </button>
     </div>
   );

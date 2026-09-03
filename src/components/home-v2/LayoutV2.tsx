@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { HeaderV2, FooterV2, AwardBadge, FloatingActions } from './Chrome';
 import { ProductDetailModal } from '../Modals/ProductDetailModal';
@@ -13,6 +13,9 @@ import { useShop } from '../../context/ShopContext';
 export const LayoutV2: React.FC = () => {
   const shop = useShop();
   const { pathname, search } = useLocation();
+  // Медаль «Лучший продукт 2013» и раскрытый виджет контактов делят одно
+  // и то же место на телефонах — прячем медаль, пока виджет открыт.
+  const [contactsOpen, setContactsOpen] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -28,9 +31,9 @@ export const LayoutV2: React.FC = () => {
 
       <FooterV2 />
 
-      <AwardBadge />
+      <AwardBadge dimmed={contactsOpen} />
 
-      <FloatingActions onCallback={() => shop.openCallback('Запрос из каталога')} />
+      <FloatingActions expanded={contactsOpen} onExpandedChange={setContactsOpen} />
 
       {/* Модалки те же, что и на основном сайте: внутри этого блока они синие */}
       <ProductDetailModal
