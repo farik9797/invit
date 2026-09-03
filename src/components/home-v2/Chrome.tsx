@@ -762,21 +762,21 @@ export const HeaderV2: React.FC<{ onRequest?: () => void }> = ({ onRequest }) =>
       {/* Вторая строка: слева каталог и разделы сайта, справа корзина и заявка */}
       <div className="hidden lg:block border-t border-inv-border-subtle">
         <div className="max-w-[1400px] mx-auto px-4 lg:px-8 h-[56px] flex items-center justify-between gap-6">
-          <div className="flex items-center gap-6 min-w-0">
+          <div className="shrink-0">
             <MegaMenu />
-
-            <nav className="flex items-center gap-6">
-              {NAV.map((item) => (
-                <NavLink
-                  key={item.to}
-                  to={item.to}
-                  className="text-sm text-inv-ink-muted hover:text-inv-blue transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
-                >
-                  {item.label}
-                </NavLink>
-              ))}
-            </nav>
           </div>
+
+          <nav className="flex flex-1 items-center justify-center gap-6">
+            {NAV.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                className="text-sm text-inv-ink-muted hover:text-inv-blue transition-colors duration-[120ms] whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
+              >
+                {item.label}
+              </NavLink>
+            ))}
+          </nav>
 
           <div className="flex items-center gap-3 shrink-0">
             <CartButton />
