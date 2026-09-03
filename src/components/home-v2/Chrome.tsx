@@ -723,8 +723,8 @@ export const HeaderV2: React.FC<{ onRequest?: () => void }> = ({ onRequest }) =>
 
   return (
     <header className="sticky top-0 z-30 bg-white border-b border-inv-border">
-      {/* Первая строка: логотип, каталог, поле поиска, телефон */}
-      <div className="max-w-[1400px] mx-auto px-4 lg:px-8 h-[68px] flex items-center gap-4 lg:gap-6">
+      {/* Первая строка: логотип, поле поиска, телефон */}
+      <div className="max-w-[1400px] mx-auto px-4 lg:px-8 h-[68px] flex items-center justify-between gap-4 lg:gap-8">
         <Link
           to={paths.home}
           className="shrink-0 flex items-center min-h-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
@@ -732,15 +732,11 @@ export const HeaderV2: React.FC<{ onRequest?: () => void }> = ({ onRequest }) =>
           <img src={invitLogo} alt="ООО «ИНВИТ»" className="h-8 w-auto" />
         </Link>
 
-        <div className="hidden lg:block shrink-0">
-          <MegaMenu />
-        </div>
-
-        <HeaderSearchField className="hidden lg:block flex-1 min-w-0 max-w-[520px]" />
+        <HeaderSearchField className="hidden lg:block flex-1 min-w-0 max-w-[560px]" />
 
         <a
           href="tel:+375296444979"
-          className="hidden lg:flex items-center gap-2 shrink-0 ml-auto text-sm font-semibold text-inv-ink hover:text-inv-blue transition-colors duration-[120ms] whitespace-nowrap"
+          className="hidden lg:flex items-center gap-2 shrink-0 text-sm font-semibold text-inv-ink hover:text-inv-blue transition-colors duration-[120ms] whitespace-nowrap"
         >
           <Phone className="w-4 h-4" />
           +375 29 644-49-79
@@ -763,20 +759,24 @@ export const HeaderV2: React.FC<{ onRequest?: () => void }> = ({ onRequest }) =>
         </div>
       </div>
 
-      {/* Вторая строка: слева разделы сайта, справа корзина и заявка */}
+      {/* Вторая строка: слева каталог и разделы сайта, справа корзина и заявка */}
       <div className="hidden lg:block border-t border-inv-border-subtle">
-        <div className="max-w-[1400px] mx-auto px-4 lg:px-8 h-[52px] flex items-center justify-between gap-6">
-          <nav className="flex items-center gap-6">
-            {NAV.map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                className="text-sm text-inv-ink-muted hover:text-inv-blue transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
-              >
-                {item.label}
-              </NavLink>
-            ))}
-          </nav>
+        <div className="max-w-[1400px] mx-auto px-4 lg:px-8 h-[56px] flex items-center justify-between gap-6">
+          <div className="flex items-center gap-6 min-w-0">
+            <MegaMenu />
+
+            <nav className="flex items-center gap-6">
+              {NAV.map((item) => (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  className="text-sm text-inv-ink-muted hover:text-inv-blue transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
+                >
+                  {item.label}
+                </NavLink>
+              ))}
+            </nav>
+          </div>
 
           <div className="flex items-center gap-3 shrink-0">
             <CartButton />
