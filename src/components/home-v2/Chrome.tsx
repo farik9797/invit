@@ -752,7 +752,7 @@ export const HeaderV2: React.FC<{ onRequest?: () => void }> = ({ onRequest }) =>
 
         <MegaMenu />
 
-        <nav className="flex items-center justify-center gap-6">
+        <nav className="flex items-center justify-between">
           {NAV.map((item) => (
             <NavLink
               key={item.to}
