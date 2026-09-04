@@ -263,7 +263,10 @@ export const AboutPage: React.FC = () => {
         <div className={`${WRAP} ${SECTION}`}>
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
             <div className="lg:col-span-6">
-              <img src={eurobandMark} alt="EUROBAND" className="h-6 sm:h-7 lg:h-8 w-auto mb-6" />
+              {/* Плашка обязательна: «BAND» в марке тёмно-серый и на тёмной полосе пропадает */}
+              <span className="inline-flex items-center rounded-[4px] bg-white px-4 py-2.5 mb-6">
+                <img src={eurobandMark} alt="EUROBAND" className="h-6 sm:h-7 lg:h-8 w-auto" />
+              </span>
 
               <h1 className="text-3xl sm:text-4xl lg:text-[44px] font-semibold tracking-[-0.01em] leading-[1.15]">
                 Производим ленты, а не перепродаём их
