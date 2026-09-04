@@ -278,11 +278,12 @@ export const AboutPage: React.FC = () => {
                 поставляем напрямую от производителей.
               </p>
 
+              {/* Кнопка белая, не синяя: inv-blue на inv-deep даёт 2.1:1 и сливается с полосой */}
               <div className="mt-8 flex flex-col sm:flex-row gap-3">
                 <button
                   type="button"
                   onClick={() => shop.openCallback('Запрос презентации компании')}
-                  className="inline-flex items-center justify-center min-h-11 px-6 rounded-[4px] bg-inv-blue text-white text-sm font-semibold cursor-pointer transition-[background-color,transform] duration-[120ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:bg-inv-blue-hover active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  className="inline-flex items-center justify-center min-h-11 px-6 rounded-[4px] bg-white text-inv-deep text-sm font-semibold cursor-pointer transition-[background-color,transform] duration-[120ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:bg-inv-surface-2 active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                 >
                   Запросить презентацию
                 </button>
