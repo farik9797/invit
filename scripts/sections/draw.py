@@ -103,25 +103,42 @@ def rubber_profile():
     return outer + base + circle(back + r*0.48, cy, r*0.44)
 
 
-def flex_insert():
-    """Оснащение воздуховодов: гибкая вставка — два фланца и гофр между ними."""
-    fw, fx0, fx1 = 36, 52, 332
-    fy0, fy1 = 78, 306
-    by0, by1 = 132, 252
+def damper_handle(cx=158, cy=236, R=94, ang_deg=-44, length=196,
+                  w_base=26, w_tip=19, tip_r=34):
+    """Оснащение воздуховодов: ручка дроссель-клапана — площадка и рычаг.
 
-    outline = poly([
-        (fx0, fy0), (fx0+fw, fy0), (fx0+fw, by0), (fx1-fw, by0), (fx1-fw, fy0),
-        (fx1, fy0), (fx1, fy1), (fx1-fw, fy1), (fx1-fw, by1), (fx0+fw, by1),
-        (fx0+fw, fy1), (fx0, fy1),
-    ])
-    n, sw = 5, 14
-    span = (fx1-fw) - (fx0+fw)
-    gap = (span - n*sw) / (n+1)
-    sy0, sy1 = by0 + 18, by1 - 18
-    slots = ''.join(
-        poly([(x, sy0), (x+sw, sy0), (x+sw, sy1), (x, sy1)])
-        for x in (fx0 + fw + gap + i*(sw+gap) for i in range(n)))
-    return outline + slots
+    Площадка и рычаг сливаются в один контур: под evenodd две наложенные
+    фигуры вычитаются, и на стыке появилась бы выемка. Точки схода кромок
+    рычага с окружностью считаются пересечением, дальше окружность
+    обходится длинной дугой — мимо рычага.
+    """
+    a = math.radians(ang_deg)
+    ux, uy = math.cos(a), math.sin(a)               # ось рычага
+    nx, ny = -uy, ux                                # нормаль к оси
+
+    s_off = math.sqrt(max(R*R - w_base*w_base, 1))  # где кромка режет окружность
+    pL = (cx + nx*w_base + ux*s_off, cy + ny*w_base + uy*s_off)
+    pR = (cx - nx*w_base + ux*s_off, cy - ny*w_base + uy*s_off)
+    aL = math.atan2(pL[1]-cy, pL[0]-cx)
+    aR = math.atan2(pR[1]-cy, pR[0]-cx)
+
+    tipc = (cx + ux*length, cy + uy*length)         # скругление на конце рычага
+    pts = [pL, (tipc[0] + nx*w_tip, tipc[1] + ny*w_tip)]
+    a0 = math.atan2(pts[-1][1]-tipc[1], pts[-1][0]-tipc[0])
+    for i in range(1, 25):
+        t = a0 - math.pi*(i/24)
+        pts.append((tipc[0] + tip_r*math.cos(t), tipc[1] + tip_r*math.sin(t)))
+    pts += [(tipc[0] - nx*w_tip, tipc[1] - ny*w_tip), pR]
+
+    sweep = (aL - aR) % (2*math.pi)
+    if sweep < math.pi:                             # короткая дуга — это рычаг,
+        sweep -= 2*math.pi                          # обходим в другую сторону
+    for i in range(1, 96):
+        t = aR + sweep*(i/96)
+        pts.append((cx + R*math.cos(t), cy + R*math.sin(t)))
+
+    q = 34                                          # посадочное гнездо под ось
+    return poly(pts) + poly([(cx, cy-q), (cx+q, cy), (cx, cy+q), (cx-q, cy)])
 
 
 ICONS = {
@@ -129,7 +146,7 @@ ICONS = {
     'dyubelnaya-tehnika': dowel(),
     'krovelnye-uplotniteli-kleykie-lenty': roof_seal(),
     'uplotnitel-rezinovyy-d-p-e': rubber_profile(),
-    'elementy-osnascheniya-vozduhovodov': flex_insert(),
+    'elementy-osnascheniya-vozduhovodov': damper_handle(),
 }
 
 body = ''.join(f"  '{k}': '{d}',\n" for k, d in ICONS.items())
