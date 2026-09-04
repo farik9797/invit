@@ -175,7 +175,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCallback }) => {
               >
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-[1.25] tracking-tight">
                   {slide.lead}{' '}
-                  <span className="border-b-4 border-brand-green pb-1">{slide.accent}</span>
+                  <span className="border-b-4 border-white pb-1">{slide.accent}</span>
                 </h1>
 
                 <p className="mt-7 text-base sm:text-lg text-white/85 leading-relaxed max-w-xl">
