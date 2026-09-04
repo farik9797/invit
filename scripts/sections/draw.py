@@ -123,21 +123,47 @@ def psul_coil(cx=C, cy=C, r_out=158, pitch=66, band=30, turns=1.7, steps=200):
     return poly(outer + inner[::-1])
 
 
-def foam_can():
-    """Пена монтажная: баллон с плечом, клапаном и штуцером."""
-    body = mirrored([(74, 344), (74, 172), (62, 152), (34, 128),
-                     (34, 112), (50, 104), (50, 76), (16, 76), (16, 46)])
-    label = poly([(C-52, 214), (C+52, 214), (C+52, 264), (C-52, 264)])
-    return poly(body) + label
+def foam_gun():
+    """Пена монтажная: пистолет — ствол, посадочное гнездо под баллон, рукоять.
+
+    Раньше здесь был баллон, но рядом стоит картридж герметика, и два
+    вертикальных сосуда в контуре путались. Пистолет по силуэту не похож
+    ни на что в наборе.
+    """
+    # Первый вариант был одним контуром с прямой рукоятью и коротким гнездом —
+    # выходил силуэт молотка. Наклонные баллон и рукоять узнаются лучше.
+    # В контурном стиле части можно рисовать по отдельности: обводки не
+    # вычитаются, а стыки читаются как сборка на техническом эскизе.
+    barrel = poly([(102, 132), (278, 132), (278, 144), (322, 144),
+                   (322, 172), (278, 172), (278, 184), (102, 184)])
+    socket = poly([(118, 132), (184, 132), (154, 48), (88, 48)])
+    grip = poly([(110, 184), (172, 184), (184, 300), (124, 308)])
+    trigger = poly([(192, 192), (216, 216), (200, 240)], close=False)
+    return barrel + socket + grip + trigger
 
 
-def sealant_cartridge():
-    """Герметики: картридж с косо срезанным носиком и поршнем."""
-    left = [(C-64, 340), (C-64, 152), (C-54, 140), (C-26, 120), (C-16, 104), (C-9, 44)]
-    tip = [(C+13, 62)]                              # косой срез
-    right = [(C+16, 104), (C+26, 120), (C+54, 140), (C+64, 152), (C+64, 340)]
-    piston = poly([(C-64, 306), (C+64, 306)], close=False)
-    return poly(left + tip + right) + piston
+def sealant_bead(cx=150, cy=120, ang_deg=40, back=-100, neck=84,
+                 tip=130, hw=46, tip_hw=16):
+    """Герметики: картридж под углом и валик выдавленного шва.
+
+    Валик — единственная волнистая линия в наборе, по ней раздел опознаётся
+    даже когда сам картридж на 26px сминается.
+    """
+    a = math.radians(ang_deg)
+    ux, uy = math.cos(a), math.sin(a)
+    nx, ny = -uy, ux
+    def pt(s_, n_):
+        return (cx + ux*s_ + nx*n_, cy + uy*s_ + ny*n_)
+
+    body = poly([pt(back, -hw), pt(neck, -hw), pt(neck + 16, -28), pt(tip, -tip_hw),
+                 pt(tip, tip_hw), pt(neck + 16, 28), pt(neck, hw), pt(back, hw)])
+    piston = poly([pt(back + 24, -hw), pt(back + 24, hw)], close=False)
+
+    x0, x1, y0, amp, steps = 150, 352, 300, 16, 60
+    bead = poly([(x0 + (x1-x0)*i/steps,
+                  y0 + amp*math.sin(2*math.pi*2*i/steps)) for i in range(steps + 1)],
+                close=False)
+    return body + piston + bead
 
 
 def anchor_bolt():
@@ -335,12 +361,16 @@ def roof_seal(top=104, base=222, amp=26, periods=2.5):
 
 
 def rubber_profile():
-    """Резиновый уплотнитель: сечение профиля D — спинка, круглый перёд, полость."""
-    back, top_y, bot_y = 118, 74, 310
-    r = (bot_y - top_y) / 2
-    cy = (top_y + bot_y) / 2
-    outer = f'M{back:.1f} {top_y:.1f}A{r:.1f} {r:.1f} 0 0 1 {back:.1f} {bot_y:.1f}Z'
-    return outer + circle(back + r*0.48, cy, r*0.44)
+    """Резиновый уплотнитель: полое сечение с монтажной ножкой.
+
+    Сплошной знак был силуэтом D с дыркой; в контуре это читалось как буква.
+    Двойной контур со стенкой постоянной толщины плюс ножка, которой профиль
+    заводится в паз, — так рисуют сечения уплотнителей в каталогах.
+    """
+    outer = ('M200 90A102 102 0 0 1 200 294'         # спинка и круглый перёд
+             'L200 264L82 264L82 230L200 230Z')      # монтажная ножка, снизу
+    inner = 'M216 122A70 70 0 0 1 216 262Z'          # полость
+    return outer + inner
 
 
 def damper_handle(cx=158, cy=236, R=94, ang_deg=-44, length=196,
@@ -361,8 +391,8 @@ ICONS = {
     # материалы для монтажа окон
     'montazhnye-lenty-dlya-okon': tape_roll(),
     'samorasshiryayuschayasya-lenta-psul': psul_coil(),
-    'pena-montazhnaya-ochistitel-dlya-peny': foam_can(),
-    'germetiki-kleya-himiya-smazki': sealant_cartridge(),
+    'pena-montazhnaya-ochistitel-dlya-peny': foam_gun(),
+    'germetiki-kleya-himiya-smazki': sealant_bead(),
     'krepezh-dlya-okon-krovli-fasadov': anchor_bolt(),
     'samorezy-i-shurupy': screw(),
     'dyubelnaya-tehnika': dowel(),
