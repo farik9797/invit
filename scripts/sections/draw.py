@@ -1,17 +1,21 @@
-"""Знаки разделов, которых нет у клиента, — рисуем сами.
+"""Знаки разделов каталога — рисуем все восемнадцать сами.
 
-Пять разделов остались без фирменного знака:
-  · саморезы и дюбели — разделы появились с импортом крепежа STARFIX,
-    знаков клиент не присылал;
-  · кровельные уплотнители и оснащение воздуховодов — знаки клиента есть,
-    но не переживают уплощение: вся узнаваемость у них в светотени, силуэт
-    вырождается в шляпу и в овал (проверено на четырёх наборах параметров
-    potrace, см. PROGRESS.md);
-  · резиновый уплотнитель D/P/E — знака нет.
+Сначала рисовали только пять: три раздела знака клиента не имели, ещё два
+не переживали уплощение (кровельный уплотнитель вырождался в шляпу,
+оснащение воздуховодов — в овал; проверено на четырёх наборах параметров
+potrace, см. PROGRESS.md). Остальные тринадцать брались уплощением растровых
+знаков клиента, и набор выходил разнородным: часть знаков предметная, часть —
+обводка чужой картинки. Клиент попросил заменить весь набор, поэтому
+тринадцать оставшихся тоже нарисованы здесь.
 
-Стиль набора: плотный одноцветный силуэт реального предмета, внутренняя
-структура — вырезами (fill-rule evenodd), как у траверсы с отверстиями.
-Геометрия считается формулами: путь по памяти рисовать нельзя.
+Стиль: плотный одноцветный силуэт реального предмета, внутренняя структура —
+вырезами (fill-rule evenodd). Геометрия считается формулами: путь по памяти
+рисовать нельзя.
+
+Пять разделов про ленту не должны путаться между собой, поэтому у каждого своя
+подача: монтажные ленты — рулон с отклеенным концом, ПСУЛ — спираль (она же
+намёк на саморасширение), ПЭС — плоская полоса с отходящей плёнкой, ППЭ —
+рулон в перспективе, вентиляционные ленты — два рулона друг на друге.
 
 Запуск:  python3 scripts/sections/draw.py
 Пишет:   src/lib/sectionIconsDrawn.ts
@@ -35,6 +39,185 @@ def circle(cx, cy, r):
             f'A{r:.1f} {r:.1f} 0 1 0 {cx+r:.1f} {cy:.1f}'
             f'A{r:.1f} {r:.1f} 0 1 0 {cx-r:.1f} {cy:.1f}Z')
 
+
+def ellipse(cx, cy, rx, ry, steps=64):
+    return poly([(cx + rx*math.cos(2*math.pi*i/steps),
+                  cy + ry*math.sin(2*math.pi*i/steps)) for i in range(steps)])
+
+
+def mirrored(profile):
+    """Симметричная деталь из профиля [(полуширина, y), ...] снизу вверх."""
+    return ([(C - h, y) for h, y in profile] +
+            [(C + h, y) for h, y in reversed(profile)])
+
+
+def disc_with_arm(cx, cy, R, ang_deg, w_base, tip, arc_steps=96):
+    """Диск с приливом ОДНИМ контуром.
+
+    Наложить прилив на диск отдельной фигурой нельзя: под evenodd пересечение
+    вычитается и на стыке появляется выемка. Поэтому считаем, где кромки
+    прилива режут окружность, и обходим её длинной дугой — мимо прилива.
+
+    `tip` — точки конца прилива в осевых координатах (s вдоль оси от центра
+    диска, n поперёк), перечисленные от левой кромки к правой.
+    """
+    a = math.radians(ang_deg)
+    ux, uy = math.cos(a), math.sin(a)               # ось прилива
+    nx, ny = -uy, ux                                # нормаль к оси
+
+    s_off = math.sqrt(max(R*R - w_base*w_base, 1))  # где кромка режет окружность
+    pL = (cx + nx*w_base + ux*s_off, cy + ny*w_base + uy*s_off)
+    pR = (cx - nx*w_base + ux*s_off, cy - ny*w_base + uy*s_off)
+    aL = math.atan2(pL[1]-cy, pL[0]-cx)
+    aR = math.atan2(pR[1]-cy, pR[0]-cx)
+
+    pts = [pL] + [(cx + ux*s + nx*n, cy + uy*s + ny*n) for s, n in tip] + [pR]
+
+    sweep = (aL - aR) % (2*math.pi)
+    if sweep < math.pi:                             # короткая дуга — это прилив,
+        sweep -= 2*math.pi                          # обходим в другую сторону
+    for i in range(1, arc_steps):
+        t = aR + sweep*(i/arc_steps)
+        pts.append((cx + R*math.cos(t), cy + R*math.sin(t)))
+    return pts
+
+
+# ── Материалы для монтажа окон ──────────────────────────────────────────────
+
+def tape_roll(cx=140, cy=140, R=100, yt=170, yb=226, x_end=340, cut=18):
+    """Монтажные ленты для окон: рулон и отмотанная лента.
+
+    Лента отходит по касательной, а не радиально: радиальный прилив любой
+    ширины читается как ручка лупы. Контур один — окружность обходится
+    длинной дугой мимо полосы (иначе evenodd вычел бы наложение).
+    """
+    xt = cx + math.sqrt(R*R - (yt-cy)**2)           # где кромки ленты режут рулон
+    xb = cx + math.sqrt(R*R - (yb-cy)**2)
+    at = math.atan2(yt-cy, xt-cx)
+    ab = math.atan2(yb-cy, xb-cx)
+
+    pts = [(xt, yt), (x_end, yt), (x_end + cut, yb), (xb, yb)]
+    sweep = (at + 2*math.pi) - ab                   # длинная дуга, мимо ленты
+    for i in range(1, 97):
+        t = ab + sweep*(i/96)
+        pts.append((cx + R*math.cos(t), cy + R*math.sin(t)))
+    return poly(pts) + circle(cx, cy, 34)
+
+
+def psul_coil(cx=C, cy=C, r_out=150, pitch=46, band=28, turns=2.4, steps=200):
+    """ПСУЛ: спираль сжатой ленты — она же читается как саморасширение."""
+    outer, inner = [], []
+    for i in range(steps + 1):
+        t = turns*2*math.pi*(i/steps)
+        r = r_out - pitch*(t/(2*math.pi))
+        outer.append((cx + r*math.cos(t), cy + r*math.sin(t)))
+        inner.append((cx + (r-band)*math.cos(t), cy + (r-band)*math.sin(t)))
+    return poly(outer + inner[::-1])
+
+
+def foam_can():
+    """Пена монтажная: баллон с плечом, клапаном и штуцером."""
+    body = mirrored([(74, 344), (74, 172), (62, 152), (34, 128),
+                     (34, 112), (50, 104), (50, 76), (16, 76), (16, 46)])
+    label = poly([(C-52, 214), (C+52, 214), (C+52, 264), (C-52, 264)])
+    return poly(body) + label
+
+
+def sealant_cartridge():
+    """Герметики: картридж с косо срезанным носиком и поршнем."""
+    left = [(C-64, 340), (C-64, 152), (C-54, 140), (C-26, 120), (C-16, 104), (C-9, 44)]
+    tip = [(C+13, 62)]                              # косой срез
+    right = [(C+16, 104), (C+26, 120), (C+54, 140), (C+64, 152), (C+64, 340)]
+    piston = poly([(C-52, 300), (C+52, 300), (C+52, 314), (C-52, 314)])
+    return poly(left + tip + right) + piston
+
+
+def anchor_bolt():
+    """Крепёж для окон, кровли, фасадов: болт с шестигранной головкой и шайбой."""
+    hx, hy, hr = C, 96, 66
+    v = [(hx + hr*math.cos(math.radians(60*i)),
+          hy + hr*math.sin(math.radians(60*i))) for i in range(6)]
+    # v[0] правая точка, дальше по часовой: v[1] низ-право, v[2] низ-лево …
+    wash_hw, wash_bot = 58, 176
+    sh_hw, sh_bot, tip_hw = 26, 316, 14
+    pts = [v[5], v[0], v[1],
+           (hx + wash_hw, v[1][1]), (hx + wash_hw, wash_bot), (hx + sh_hw, wash_bot),
+           (hx + sh_hw, sh_bot), (hx + tip_hw, 342), (hx - tip_hw, 342), (hx - sh_hw, sh_bot),
+           (hx - sh_hw, wash_bot), (hx - wash_hw, wash_bot), (hx - wash_hw, v[2][1]),
+           v[2], v[3], v[4]]
+    return poly(pts)
+
+
+def pes_strip():
+    """Уплотнительные ленты ПЭС: полоса и отходящая защитная плёнка."""
+    foam = poly([(58, 118), (326, 118), (340, 132), (340, 198),
+                 (326, 212), (58, 212), (44, 198), (44, 132)])
+    liner = poly([(44, 240), (232, 240), (296, 200), (322, 182),
+                  (338, 206), (312, 224), (250, 278), (44, 278)])
+    return foam + liner
+
+
+def wrench():
+    """Инструмент, СИЗы: комбинированный ключ — накидное кольцо и рожок."""
+    cx, cy, R = 128, 128, 62
+    tip = [(200, 34), (248, 34), (248, 13), (212, 13),
+           (212, -13), (248, -13), (248, -34), (200, -34)]
+    ring_hole = poly([(cx + 36*math.cos(math.radians(60*i + 30)),
+                       cy + 36*math.sin(math.radians(60*i + 30))) for i in range(6)])
+    return poly(disc_with_arm(cx, cy, R, 45, 26, tip)) + ring_hole
+
+
+def ppe_roll():
+    """Пенополиэтилен ППЭ: рулон в перспективе, с торца виден керн."""
+    y0, y1, cy = 132, 268, 200
+    ry, rx = (y1 - y0)/2, 40
+    xl, xr = 104, 296
+    pts = []
+    for i in range(33):                             # левый торец, выпуклый влево
+        t = math.pi/2 + math.pi*(i/32)
+        pts.append((xl + rx*math.cos(t), cy + ry*math.sin(t)))
+    for i in range(33):                             # правый торец
+        t = -math.pi/2 + math.pi*(i/32)
+        pts.append((xr + rx*math.cos(t), cy + ry*math.sin(t)))
+    return poly(pts) + ellipse(xr, cy, 22, 38)
+
+
+# ── Комплектующие для вентиляции ────────────────────────────────────────────
+
+def flange_profile():
+    """Фланцевый профиль: сечение гнутого профиля с отбортовкой."""
+    return poly([(92, 70), (300, 70), (300, 114), (136, 114),
+                 (136, 268), (300, 268), (300, 312), (92, 312)])
+
+
+def corner_bracket():
+    """Уголки монтажные: уголок с отверстиями под крепёж."""
+    body = poly([(72, 72), (144, 72), (144, 240), (312, 240), (312, 312), (72, 312)])
+    return body + circle(108, 118, 22) + circle(270, 276, 22)
+
+
+def z_bracket():
+    """Крепёжные детали воздуховодов: Z-образный кронштейн с перфорацией."""
+    body = poly([(56, 96), (200, 96), (200, 216), (328, 216),
+                 (328, 288), (128, 288), (128, 168), (56, 168)])
+    return body + circle(92, 132, 20) + circle(292, 252, 20)
+
+
+def traverse_channel():
+    """Профиль монтажный – траверса: перфорированный швеллер."""
+    body = poly([(36, 120), (76, 120), (76, 158), (308, 158), (308, 120),
+                 (348, 120), (348, 252), (36, 252)])
+    holes = ''.join(circle(x, 206, 24) for x in (90, 156, 222, 288))
+    return body + holes
+
+
+def two_rolls():
+    """Ленты уплотнительные самоклеящиеся: два рулона разного размера."""
+    return (circle(140, 150, 92) + circle(140, 150, 32) +
+            circle(280, 246, 64) + circle(280, 246, 22))
+
+
+# ── Нарисованные раньше ─────────────────────────────────────────────────────
 
 def screw():
     """Саморез: потайная головка с крестовым шлицем, витки, остриё."""
@@ -105,56 +288,47 @@ def rubber_profile():
 
 def damper_handle(cx=158, cy=236, R=94, ang_deg=-44, length=196,
                   w_base=26, w_tip=19, tip_r=34):
-    """Оснащение воздуховодов: ручка дроссель-клапана — площадка и рычаг.
-
-    Площадка и рычаг сливаются в один контур: под evenodd две наложенные
-    фигуры вычитаются, и на стыке появилась бы выемка. Точки схода кромок
-    рычага с окружностью считаются пересечением, дальше окружность
-    обходится длинной дугой — мимо рычага.
-    """
-    a = math.radians(ang_deg)
-    ux, uy = math.cos(a), math.sin(a)               # ось рычага
-    nx, ny = -uy, ux                                # нормаль к оси
-
-    s_off = math.sqrt(max(R*R - w_base*w_base, 1))  # где кромка режет окружность
-    pL = (cx + nx*w_base + ux*s_off, cy + ny*w_base + uy*s_off)
-    pR = (cx - nx*w_base + ux*s_off, cy - ny*w_base + uy*s_off)
-    aL = math.atan2(pL[1]-cy, pL[0]-cx)
-    aR = math.atan2(pR[1]-cy, pR[0]-cx)
-
-    tipc = (cx + ux*length, cy + uy*length)         # скругление на конце рычага
-    pts = [pL, (tipc[0] + nx*w_tip, tipc[1] + ny*w_tip)]
-    a0 = math.atan2(pts[-1][1]-tipc[1], pts[-1][0]-tipc[0])
-    for i in range(1, 25):
-        t = a0 - math.pi*(i/24)
-        pts.append((tipc[0] + tip_r*math.cos(t), tipc[1] + tip_r*math.sin(t)))
-    pts += [(tipc[0] - nx*w_tip, tipc[1] - ny*w_tip), pR]
-
-    sweep = (aL - aR) % (2*math.pi)
-    if sweep < math.pi:                             # короткая дуга — это рычаг,
-        sweep -= 2*math.pi                          # обходим в другую сторону
-    for i in range(1, 96):
-        t = aR + sweep*(i/96)
-        pts.append((cx + R*math.cos(t), cy + R*math.sin(t)))
+    """Оснащение воздуховодов: ручка дроссель-клапана — площадка и рычаг."""
+    tip = [(length, w_tip)]
+    for i in range(1, 25):                          # скругление на конце рычага
+        th = math.pi/2 - math.pi*(i/24)
+        tip.append((length + tip_r*math.cos(th), tip_r*math.sin(th)))
+    tip.append((length, -w_tip))
 
     q = 34                                          # посадочное гнездо под ось
-    return poly(pts) + poly([(cx, cy-q), (cx+q, cy), (cx, cy+q), (cx-q, cy)])
+    return (poly(disc_with_arm(cx, cy, R, ang_deg, w_base, tip))
+            + poly([(cx, cy-q), (cx+q, cy), (cx, cy+q), (cx-q, cy)]))
 
 
 ICONS = {
+    # материалы для монтажа окон
+    'montazhnye-lenty-dlya-okon': tape_roll(),
+    'samorasshiryayuschayasya-lenta-psul': psul_coil(),
+    'pena-montazhnaya-ochistitel-dlya-peny': foam_can(),
+    'germetiki-kleya-himiya-smazki': sealant_cartridge(),
+    'krepezh-dlya-okon-krovli-fasadov': anchor_bolt(),
     'samorezy-i-shurupy': screw(),
     'dyubelnaya-tehnika': dowel(),
     'krovelnye-uplotniteli-kleykie-lenty': roof_seal(),
+    'uplotnitelnye-lenty-pes-samokleyaschiesy': pes_strip(),
+    'instrument-sizy': wrench(),
     'uplotnitel-rezinovyy-d-p-e': rubber_profile(),
+    'penopolietilen-ppe-rulonnaya-izolyaciya': ppe_roll(),
+    # комплектующие для вентиляции
+    'flancevyy-profil-dlya-vozduhovodov': flange_profile(),
+    'ugolki-montazhnye': corner_bracket(),
+    'krepezhnye-detali-dlya-vozduhovodov': z_bracket(),
+    'profil-montazhnyy-traversa': traverse_channel(),
+    'lenty-uplotnitelnye-samokleyaschiesya': two_rolls(),
     'elementy-osnascheniya-vozduhovodov': damper_handle(),
 }
 
 body = ''.join(f"  '{k}': '{d}',\n" for k, d in ICONS.items())
 out = f'''/* Сгенерировано `scripts/sections/draw.py` — руками не править.
  *
- * Знаки для пяти разделов, у которых нет фирменного знака клиента.
- * Рисуются формулами на сетке {S}x{S}, стиль тот же, что у уплощённых:
- * сплошной силуэт, внутренняя структура вырезами (нужен fill-rule evenodd).
+ * Знаки всех восемнадцати подразделов каталога. Рисуются формулами на сетке
+ * {S}x{S}: сплошной силуэт предмета, внутренняя структура вырезами, поэтому
+ * при отрисовке нужен fill-rule evenodd.
  */
 
 export const DRAWN_ICONS: Record<string, string> = {{
@@ -164,4 +338,4 @@ p = pathlib.Path('/Users/farik/claude/Projects/Invit/src/lib/sectionIconsDrawn.t
 p.write_text(out, encoding='utf-8')
 print('записано:', p)
 for k, d in ICONS.items():
-    print(f'  {k:40s} {len(d):5d} симв.')
+    print(f'  {k:44s} {len(d):5d} симв.')
