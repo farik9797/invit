@@ -31,9 +31,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   compact = false
 }) => (
   <div className="h-full flex flex-col rounded-[8px] border border-inv-border bg-white overflow-hidden group transition-[transform,box-shadow] duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(22,44,88,0.16)]">
+    {/* overflow-hidden обязателен: фото увеличено в 1.3 раза и без обрезки
+        вылезает за свою рамку. На фото с белым фоном это незаметно, а у тех,
+        что сняты на сером (ПЭС под контробрешётку), серое поле выходило на
+        границы карточки и наезжало на разделитель. */}
     <Link
       to={paths.product(product)}
-      className={`block bg-white border-b border-inv-border-subtle focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-inv-blue ${
+      className={`block overflow-hidden bg-white border-b border-inv-border-subtle focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-inv-blue ${
         compact ? 'h-32 p-3' : 'h-48 p-4'
       }`}
     >
