@@ -1,4 +1,4 @@
-"""Знаки разделов каталога — рисуем все восемнадцать сами.
+"""Знаки разделов каталога — рисуем весь набор сами.
 
 Сначала рисовали только пять: три раздела знака клиента не имели, ещё два
 не переживали уплощение (кровельный уплотнитель вырождался в шляпу,
@@ -217,6 +217,55 @@ def two_rolls():
             circle(280, 246, 64) + circle(280, 246, 22))
 
 
+# ── Категории верхнего уровня и общие знаки ─────────────────────────────────
+
+def window_frame():
+    """Материалы для монтажа окон: оконная коробка с импостом и подоконником."""
+    frame = poly([(48, 56), (336, 56), (336, 300), (352, 300), (352, 332),
+                  (32, 332), (32, 300), (48, 300)])
+    pane_l = poly([(78, 86), (180, 86), (180, 270), (78, 270)])
+    pane_r = poly([(204, 86), (306, 86), (306, 270), (204, 270)])
+    return frame + pane_l + pane_r
+
+
+def duct_elbow(ox=300, oy=300, rc=150, w=52, fl=30, fw=14):
+    """Комплектующие для вентиляции: отвод воздуховода с фланцами по торцам."""
+    ro, ri = rc + w, rc - w
+    a0, a1 = math.pi, 1.5*math.pi                   # от нижнего торца к правому
+
+    def arc(r, t0, t1, n=48):
+        return [(ox + r*math.cos(t0 + (t1-t0)*i/n),
+                 oy + r*math.sin(t0 + (t1-t0)*i/n)) for i in range(n + 1)]
+
+    xi, xo = ox - ri, ox - ro                       # нижний торец: x внутр./внешн.
+    yi, yo = oy - ri, oy - ro                       # правый торец: y внутр./внешн.
+    pts = ([(xo - fw, oy), (xo - fw, oy + fl), (xi + fw, oy + fl), (xi + fw, oy)]
+           + arc(ri, a0, a1)
+           + [(ox, yi + fw), (ox + fl, yi + fw), (ox + fl, yo - fw), (ox, yo - fw)]
+           + arc(ro, a1, a0))
+    return poly(pts)
+
+
+def standing_roll(cx=192, ry=46, rx=118, y_top=132, y_bot=250, steps=40):
+    """Ленты EUROBAND: рулон стоя, в три четверти — виден торец и керн."""
+    pts = [(cx - rx, y_top), (cx - rx, y_bot)]
+    for i in range(steps + 1):                      # низ: полуэллипс через дно
+        t = math.pi - math.pi*(i/steps)
+        pts.append((cx + rx*math.cos(t), y_bot + ry*math.sin(t)))
+    pts.append((cx + rx, y_top))
+    for i in range(steps + 1):                      # верх: полуэллипс через макушку
+        t = -math.pi*(i/steps)
+        pts.append((cx + rx*math.cos(t), y_top + ry*math.sin(t)))
+    return poly(pts) + ellipse(cx, y_top, 40, 16)
+
+
+def catalog_grid(a=132, gap=32):
+    """Весь каталог: четыре плитки. Он же запасной знак, если раздел неизвестен."""
+    x0 = (S - (2*a + gap)) / 2
+    return ''.join(poly([(x, y), (x + a, y), (x + a, y + a), (x, y + a)])
+                   for x in (x0, x0 + a + gap) for y in (x0, x0 + a + gap))
+
+
 # ── Нарисованные раньше ─────────────────────────────────────────────────────
 
 def screw():
@@ -321,6 +370,11 @@ ICONS = {
     'profil-montazhnyy-traversa': traverse_channel(),
     'lenty-uplotnitelnye-samokleyaschiesya': two_rolls(),
     'elementy-osnascheniya-vozduhovodov': damper_handle(),
+    # категории верхнего уровня и разделы мега-меню
+    'materialy-dlya-okon': window_frame(),
+    'ventilyaciya': duct_elbow(),
+    'tapes': standing_roll(),
+    'all': catalog_grid(),
 }
 
 body = ''.join(f"  '{k}': '{d}',\n" for k, d in ICONS.items())
