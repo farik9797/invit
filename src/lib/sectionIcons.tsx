@@ -6,16 +6,18 @@ import { DRAWN_ICONS } from './sectionIconsDrawn';
  *
  * Весь набор рисуется формулами в `scripts/sections/draw.py`: 18 подразделов,
  * две категории верхнего уровня, раздел мега-меню «Ленты EUROBAND» и общий
- * знак «Весь каталог». Сплошной одноцветный силуэт предмета, внутренняя
- * структура вырезами, поэтому нужен `fill-rule: evenodd`. Красится
- * `currentColor` — у выбранного раздела знак становится красным (с растром
- * так не выходило). Сторонних наборов в знаках больше нет.
+ * знак «Весь каталог». Сторонних наборов в знаках нет.
  *
- * Раньше 13 знаков брались уплощением растровых картинок клиента (potrace по
- * альфа-каналу), а категории брались из Material Design Icons — набор выходил
- * разнородным. Растры и скрипты уплощения оставлены
- * (`src/assets/sections/*.webp`, `flatten.py`, `gen.py`) — это путь назад,
- * если знаки клиента понадобятся снова.
+ * Стиль линейный: путь не заливается, а обводится. Цвет обводки —
+ * `currentColor`, поэтому у выбранного раздела знак становится красным.
+ *
+ * Толщина обводки задана в единицах сетки 384, поэтому масштабируется вместе
+ * со знаком: на плитке 48px это ~2px, в меню 20px — ~0.9px.
+ *
+ * Раньше знаки были сплошными силуэтами, а до того — уплощением растровых
+ * картинок клиента (potrace) и Material Design Icons. Растры и скрипты
+ * уплощения оставлены (`src/assets/sections/*.webp`, `flatten.py`, `gen.py`) —
+ * это путь назад, если знаки клиента понадобятся снова.
  *
  * Рисовать SVG руками нельзя: путь по памяти рендерится мусором.
  */
@@ -25,6 +27,9 @@ import { DRAWN_ICONS } from './sectionIconsDrawn';
  *
  * `size` задаёт сетку знака. На резкость он не влияет: всё векторное.
  */
+/** Толщина обводки в единицах сетки 384. */
+const STROKE = 18;
+
 export const SectionIcon: React.FC<{
   slug: string;
   className?: string;
@@ -35,10 +40,14 @@ export const SectionIcon: React.FC<{
     width={size}
     height={size}
     className={className}
-    fillRule="evenodd"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={STROKE}
+    strokeLinecap="round"
+    strokeLinejoin="round"
     aria-hidden="true"
     focusable="false"
   >
-    <path fill="currentColor" d={DRAWN_ICONS[slug] ?? DRAWN_ICONS.all} />
+    <path d={DRAWN_ICONS[slug] ?? DRAWN_ICONS.all} />
   </svg>
 );

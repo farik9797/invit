@@ -8,9 +8,15 @@ potrace, см. PROGRESS.md). Остальные тринадцать брали�
 обводка чужой картинки. Клиент попросил заменить весь набор, поэтому
 тринадцать оставшихся тоже нарисованы здесь.
 
-Стиль: плотный одноцветный силуэт реального предмета, внутренняя структура —
-вырезами (fill-rule evenodd). Геометрия считается формулами: путь по памяти
-рисовать нельзя.
+Стиль: линейный. Пути НЕ заливаются, а обводятся (`fill:none`, `stroke`,
+скруглённые стыки) — см. `src/lib/sectionIcons.tsx`. Поэтому здесь нет вырезов:
+то, что при заливке было дыркой (керн рулона, отверстие под крепёж), в контуре
+просто ещё одна линия. Геометрия считается формулами: путь по памяти рисовать
+нельзя.
+
+Из-за обводки некоторым знакам нужны линии, которых силуэту не требовалось:
+у рулона в перспективе силуэт обводит только половину торцевого эллипса,
+и без второй половины цилиндр читается как капля.
 
 Пять разделов про ленту не должны путаться между собой, поэтому у каждого своя
 подача: монтажные ленты — рулон с отклеенным концом, ПСУЛ — спираль (она же
@@ -104,7 +110,9 @@ def tape_roll(cx=140, cy=140, R=100, yt=170, yb=226, x_end=340, cut=18):
     return poly(pts) + circle(cx, cy, 34)
 
 
-def psul_coil(cx=C, cy=C, r_out=150, pitch=46, band=28, turns=2.4, steps=200):
+# Витков меньше, шаг крупнее, чем было у заливки: в контуре каждый виток — это
+# две линии вместо одной, и частая спираль на 26px заплывала в пятно.
+def psul_coil(cx=C, cy=C, r_out=158, pitch=66, band=30, turns=1.7, steps=200):
     """ПСУЛ: спираль сжатой ленты — она же читается как саморасширение."""
     outer, inner = [], []
     for i in range(steps + 1):
@@ -128,7 +136,7 @@ def sealant_cartridge():
     left = [(C-64, 340), (C-64, 152), (C-54, 140), (C-26, 120), (C-16, 104), (C-9, 44)]
     tip = [(C+13, 62)]                              # косой срез
     right = [(C+16, 104), (C+26, 120), (C+54, 140), (C+64, 152), (C+64, 340)]
-    piston = poly([(C-52, 300), (C+52, 300), (C+52, 314), (C-52, 314)])
+    piston = poly([(C-64, 306), (C+64, 306)], close=False)
     return poly(left + tip + right) + piston
 
 
@@ -179,7 +187,8 @@ def ppe_roll():
     for i in range(33):                             # правый торец
         t = -math.pi/2 + math.pi*(i/32)
         pts.append((xr + rx*math.cos(t), cy + ry*math.sin(t)))
-    return poly(pts) + ellipse(xr, cy, 22, 38)
+    return (poly(pts) + ellipse(xr, cy, rx, ry)      # торец целиком, не половина
+            + ellipse(xr, cy, 22, 38))                  # керн
 
 
 # ── Комплектующие для вентиляции ────────────────────────────────────────────
@@ -256,7 +265,8 @@ def standing_roll(cx=192, ry=46, rx=118, y_top=132, y_bot=250, steps=40):
     for i in range(steps + 1):                      # верх: полуэллипс через макушку
         t = -math.pi*(i/steps)
         pts.append((cx + rx*math.cos(t), y_top + ry*math.sin(t)))
-    return poly(pts) + ellipse(cx, y_top, 40, 16)
+    return (poly(pts) + ellipse(cx, y_top, rx, ry)   # верхний торец целиком
+            + ellipse(cx, y_top, 40, 16))               # керн
 
 
 def catalog_grid(a=132, gap=32):
@@ -285,11 +295,10 @@ def screw():
         pts += [(C-sh_hw, y + step), (C-tooth_out, y + step*0.45)]
     pts += [(C-sh_hw, head_bot)]
 
-    sw, st = 46, 13                                         # крестовый шлиц — вырез
+    sw = 44                                                 # крестовый шлиц — две линии
     my = (head_top + head_bot)/2 - 4
-    slot = (poly([(C-sw, my-st), (C+sw, my-st), (C+sw, my+st), (C-sw, my+st)])
-            + poly([(C-st, my-sw*0.62), (C+st, my-sw*0.62),
-                    (C+st, my+sw*0.62), (C-st, my+sw*0.62)]))
+    slot = (poly([(C-sw, my), (C+sw, my)], close=False)
+            + poly([(C, my-sw*0.62), (C, my+sw*0.62)], close=False))
     return poly(pts) + slot
 
 
@@ -311,7 +320,7 @@ def dowel():
         pts += [(C-hw, y + step*0.62), (C-hw-out, y + step*0.30), (C-hw, y)]
     pts += [(C-hw, c_bot), (C-c_hw, c_bot)]
 
-    slot = poly([(C-11, bot), (C+11, bot), (C+11, y1+16), (C-11, y1+16)])
+    slot = poly([(C, bot - 10), (C, y1 + 16)], close=False)
     return poly(pts) + slot
 
 
@@ -331,8 +340,7 @@ def rubber_profile():
     r = (bot_y - top_y) / 2
     cy = (top_y + bot_y) / 2
     outer = f'M{back:.1f} {top_y:.1f}A{r:.1f} {r:.1f} 0 0 1 {back:.1f} {bot_y:.1f}Z'
-    base = poly([(back-40, top_y), (back, top_y), (back, bot_y), (back-40, bot_y)])
-    return outer + base + circle(back + r*0.48, cy, r*0.44)
+    return outer + circle(back + r*0.48, cy, r*0.44)
 
 
 def damper_handle(cx=158, cy=236, R=94, ang_deg=-44, length=196,
