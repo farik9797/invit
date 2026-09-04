@@ -186,7 +186,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCallback }) => {
                   <Link
                     to={slide.href}
                     tabIndex={isActive ? 0 : -1}
-                    className="inline-flex justify-center items-center bg-brand-green hover:bg-brand-green-hover text-white text-sm font-semibold px-8 py-4 w-full sm:w-auto transition-[background-color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px active:scale-[0.98]"
+                    className="inline-flex justify-center items-center bg-white hover:bg-brand-green-soft text-brand-navy text-sm font-semibold px-8 py-4 w-full sm:w-auto transition-[background-color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px active:scale-[0.98]"
                   >
                     {slide.cta}
                   </Link>
@@ -217,7 +217,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCallback }) => {
               >
                 <span
                   className={`block h-1.5 rounded-full transition-[width,background-color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                    idx === active ? 'w-10 bg-brand-green' : 'w-4 bg-white/25 hover:bg-white/50'
+                    idx === active ? 'w-10 bg-white' : 'w-4 bg-white/25 hover:bg-white/50'
                   }`}
                 />
               </button>
@@ -233,7 +233,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCallback }) => {
             <div className="hidden sm:block flex-1 max-w-40 h-px bg-white/15 overflow-hidden">
               <motion.div
                 key={`${active}-${paused}`}
-                className="h-full bg-brand-green origin-left"
+                className="h-full bg-white origin-left"
                 initial={{ scaleX: 0 }}
                 animate={{ scaleX: paused ? 0 : 1 }}
                 transition={{ duration: paused ? 0 : DURATION / 1000, ease: 'linear' }}

@@ -220,7 +220,7 @@ export const HeroV2: React.FC = () => {
                   </p>
 
                   <div className="mt-7 sm:mt-10 flex flex-col sm:flex-row gap-3">
-                    <BlueButton href="#zapros" className="w-full sm:w-auto">
+                    <BlueButton href="#zapros" onDeep className="w-full sm:w-auto">
                       Запросить расчёт
                     </BlueButton>
                     <Link
@@ -249,7 +249,7 @@ export const HeroV2: React.FC = () => {
                 >
                   <span
                     className={`h-1 w-full rounded-[4px] transition-colors duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] ${
-                      idx === active ? "bg-inv-blue" : "bg-white/35"
+                      idx === active ? "bg-white" : "bg-white/35"
                     }`}
                   />
                 </button>

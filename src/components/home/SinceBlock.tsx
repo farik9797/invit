@@ -81,7 +81,7 @@ export const SinceBlock: React.FC<{ onOpenCallback: () => void }> = ({ onOpenCal
             <button
               type="button"
               onClick={onOpenCallback}
-              className="mt-8 inline-flex items-center justify-center min-h-11 bg-brand-blue hover:bg-brand-blue-hover text-white text-sm font-semibold px-7 cursor-pointer transition-[background-color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px active:scale-[0.98]"
+              className="mt-8 inline-flex items-center justify-center min-h-11 bg-white hover:bg-brand-green-soft text-brand-navy text-sm font-semibold px-7 cursor-pointer transition-[background-color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px active:scale-[0.98]"
             >
               Связаться с нами
             </button>
