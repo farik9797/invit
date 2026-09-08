@@ -233,26 +233,51 @@ const CartButton: React.FC<{ className?: string }> = ({ className = '' }) => {
  * Раньше знак был некликабельным: диплома на сайте не было, и клик уводил бы
  * в раздел, где его не найти.
  */
-export const AwardBadge: React.FC<{ dimmed?: boolean }> = ({ dimmed }) => (
-  <Link
-    to={paths.bestProduct}
-    aria-label="Лучший строительный продукт года 2013 — подробнее"
-    aria-hidden={dimmed}
-    tabIndex={dimmed ? -1 : undefined}
-    style={{ clipPath: 'circle(50%)' }}
-    className={`fixed right-2 md:right-4 xl:right-6 top-[35%] -translate-y-1/2 z-20 w-14 md:w-20 xl:w-24 transition-[transform,opacity] duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:scale-[1.06] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-inv-blue ${
-      dimmed ? 'opacity-0 pointer-events-none' : 'opacity-100'
-    }`}
-  >
-    <img
-      src={award2013}
-      alt="Лучший строительный продукт года 2013"
-      width={96}
-      height={96}
-      className="w-full h-auto select-none drop-shadow-[0_4px_14px_rgba(22,44,88,0.22)]"
-    />
-  </Link>
-);
+/*
+ * Медаль — знак доверия для первого впечатления, а не постоянный оверлей.
+ * Поэтому она живёт только в первом экране: ниже она висела поверх карточек
+ * каталога и фото товаров.
+ *
+ * На телефонах её нет совсем. Экран 375px узкий, медаль при `top-35%`
+ * ложилась прямо на заголовок героя («три слоя, три ленты»), а свободной
+ * полосы, куда её увести на всех шести слайдах сразу, там нет.
+ * Страница награды при этом не осиротела: на неё ведёт ссылка со страницы
+ * «О компании».
+ */
+export const AwardBadge: React.FC<{ dimmed?: boolean }> = ({ dimmed }) => {
+  const [pastHero, setPastHero] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setPastHero(window.scrollY > window.innerHeight * 0.7);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // dimmed — раскрытый виджет контактов: на телефонах они делят одно место
+  const hidden = dimmed || pastHero;
+
+  return (
+    <Link
+      to={paths.bestProduct}
+      aria-label="Лучший строительный продукт года 2013 — подробнее"
+      aria-hidden={hidden}
+      tabIndex={hidden ? -1 : undefined}
+      style={{ clipPath: 'circle(50%)' }}
+      className={`hidden md:block fixed right-4 xl:right-6 top-[35%] -translate-y-1/2 z-20 w-20 xl:w-24 transition-[transform,opacity] duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:scale-[1.06] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-inv-blue ${
+        hidden ? 'opacity-0 pointer-events-none' : 'opacity-100'
+      }`}
+    >
+      <img
+        src={award2013}
+        alt="Лучший строительный продукт года 2013"
+        width={96}
+        height={96}
+        className="w-full h-auto select-none drop-shadow-[0_4px_14px_rgba(22,44,88,0.22)]"
+      />
+    </Link>
+  );
+};
 
 /** Подсказки под полем: проверено, что каждая что-то находит в каталоге. */
 const SEARCH_HINTS = ['ПСУЛ', 'ПЭС', 'Герметики', 'Крепёж', 'Пена', 'Уголки'];
