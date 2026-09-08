@@ -13,3 +13,5 @@ password.md
 # local Claude Code settings
 .claude/settings.local.json
 scripts/sprite/out/
+# выгрузки поставщиков и архивы фото — данные, не код (в files/ лежит zip на 1.1 ГБ)
+files/
