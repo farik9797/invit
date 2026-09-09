@@ -5,8 +5,7 @@ import invitLogo from '../../assets/logo/invit-color.svg';
 import invitLight from '../../assets/logo/invit-light.svg';
 import award2013 from '../../assets/awards/award-2013.webp';
 import viberIcon from '../../assets/icons/viber.svg';
-import whatsappIcon from '../../assets/icons/whatsapp.svg';
-import instagramIcon from '../../assets/icons/instagram.svg';
+import telegramIcon from '../../assets/icons/telegram.svg';
 import { paths } from '../../routes';
 import { PRODUCTS } from '../../data/catalogData';
 import { productImage } from '../../lib/productImages';
@@ -631,34 +630,16 @@ const HeaderSearchField: React.FC<{ className?: string }> = ({ className = '' })
  * снизу разворачивает стопку каналов вверх, повторный клик (или крестик)
  * сворачивает обратно.
  *
- * WhatsApp и Instagram у ИНВИТ пока нет ни на этом сайте, ни на реальном
- * invit.by — клиент попросил добавить кнопки уже сейчас и прислать ссылки
- * позже. `href="#"` с отменой перехода — временная заглушка, заменить на
- * `https://wa.me/...` и адрес профиля, когда придут номер и аккаунт.
+ * Раньше здесь стояли заглушки WhatsApp и Instagram: аккаунтов у ИНВИТ не было,
+ * кнопки никуда не вели. Вместо них — телеграм-бот, у него живой адрес.
  */
-const CHANNELS: {
-  key: string;
-  label: string;
-  href: string;
-  isPlaceholder?: boolean;
-  bg: string;
-  icon: string;
-}[] = [
+const CHANNELS: { key: string; label: string; href: string; bg: string; icon: string }[] = [
   {
-    key: 'whatsapp',
-    label: 'Написать в WhatsApp',
-    href: '#',
-    isPlaceholder: true,
-    bg: 'bg-[#25D366] hover:bg-[#20bd5a]',
-    icon: whatsappIcon
-  },
-  {
-    key: 'instagram',
-    label: 'Открыть Instagram',
-    href: '#',
-    isPlaceholder: true,
-    bg: 'hover:brightness-95',
-    icon: instagramIcon
+    key: 'telegram',
+    label: 'Написать в Telegram',
+    href: 'https://t.me/invit_euroband_bot',
+    bg: 'bg-[#26A5E4] hover:bg-[#1e8fc7]',
+    icon: telegramIcon
   },
   {
     key: 'viber',
@@ -668,10 +649,6 @@ const CHANNELS: {
     icon: viberIcon
   }
 ];
-
-const INSTAGRAM_GRADIENT = {
-  backgroundImage: 'linear-gradient(45deg, #FEDA75, #FA7E1E, #D62976, #962FBF, #4F5BD5)'
-};
 
 export const FloatingActions: React.FC<{ expanded: boolean; onExpandedChange: (expanded: boolean) => void }> = ({
   expanded,
@@ -707,16 +684,12 @@ export const FloatingActions: React.FC<{ expanded: boolean; onExpandedChange: (e
         <a
           key={channel.key}
           href={channel.href}
-          target={channel.isPlaceholder ? undefined : '_blank'}
-          rel={channel.isPlaceholder ? undefined : 'noopener'}
-          onClick={channel.isPlaceholder ? (e) => e.preventDefault() : undefined}
+          target="_blank"
+          rel="noopener"
           aria-label={channel.label}
           aria-hidden={!expanded}
           tabIndex={expanded ? 0 : -1}
-          style={{
-            transitionDelay: expanded ? `${idx * 30}ms` : '0ms',
-            ...(channel.key === 'instagram' ? INSTAGRAM_GRADIENT : undefined)
-          }}
+          style={{ transitionDelay: expanded ? `${idx * 30}ms` : '0ms' }}
           className={`${round} ${channel.bg} text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
             expanded
               ? 'opacity-100 scale-100 translate-y-0'
