@@ -247,14 +247,18 @@ export const AwardBadge: React.FC = () => (
   /*
    * Знак висит у правого края на всех страницах и не прячется при прокрутке:
    * раньше он гас за первым экраном и когда раскрывался виджет контактов, и
-   * награду на внутренних страницах было не увидеть. На телефонах его нет —
-   * там для него нет свободного поля (`hidden md:block`).
+   * награду на внутренних страницах было не увидеть.
+   *
+   * На телефонах он мельче и стоит в левом нижнем углу, над кнопкой «наверх».
+   * Посреди экрана, как на десктопе, он не годится: свободного поля у края там
+   * нет, и знак ложился прямо на текст. Справа он тоже не встал — туда снизу
+   * разворачивается виджет контактов, и знак приходился ровно на кнопку звонка.
    */
   <Link
     to={paths.bestProduct}
     aria-label="Лучший строительный продукт года 2013 — подробнее"
     style={{ clipPath: 'circle(50%)' }}
-    className="hidden md:block fixed right-4 xl:right-6 top-[35%] -translate-y-1/2 z-20 w-20 xl:w-24 transition-transform duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:scale-[1.06] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-inv-blue"
+    className="fixed left-2 bottom-[88px] md:left-auto md:right-4 md:bottom-auto md:top-[35%] md:-translate-y-1/2 xl:right-6 z-20 w-14 md:w-20 xl:w-24 transition-transform duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:scale-[1.06] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-inv-blue"
   >
     <img
       src={award2013}
