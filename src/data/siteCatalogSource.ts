@@ -4,7 +4,7 @@ import { IMPORTED_FASTENERS } from './importedFasteners';
 /*
  * Каталог сайта invit.by в том виде, в каком он был собран парсером, плюс
  * импортированный крепёж. Приложение его не читает: витрина берёт данные из
- * catalog.generated.ts. Здесь исходник для files/merge-site.py — он сводит
+ * catalog.generated.ts. Здесь исходник для scripts/merge-site.py — он сводит
  * эти позиции с выгрузками поставщиков.
  */
 
