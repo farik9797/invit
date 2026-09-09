@@ -31,7 +31,7 @@ export const LayoutV2: React.FC = () => {
 
       <FooterV2 />
 
-      <AwardBadge dimmed={contactsOpen} />
+      <AwardBadge />
 
       <FloatingActions expanded={contactsOpen} onExpandedChange={setContactsOpen} />
 

@@ -243,40 +243,28 @@ const CartButton: React.FC<{ className?: string }> = ({ className = '' }) => {
  * Страница награды при этом не осиротела: на неё ведёт ссылка со страницы
  * «О компании».
  */
-export const AwardBadge: React.FC<{ dimmed?: boolean }> = ({ dimmed }) => {
-  const [pastHero, setPastHero] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setPastHero(window.scrollY > window.innerHeight * 0.7);
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
-  // dimmed — раскрытый виджет контактов: на телефонах они делят одно место
-  const hidden = dimmed || pastHero;
-
-  return (
-    <Link
-      to={paths.bestProduct}
-      aria-label="Лучший строительный продукт года 2013 — подробнее"
-      aria-hidden={hidden}
-      tabIndex={hidden ? -1 : undefined}
-      style={{ clipPath: 'circle(50%)' }}
-      className={`hidden md:block fixed right-4 xl:right-6 top-[35%] -translate-y-1/2 z-20 w-20 xl:w-24 transition-[transform,opacity] duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:scale-[1.06] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-inv-blue ${
-        hidden ? 'opacity-0 pointer-events-none' : 'opacity-100'
-      }`}
-    >
-      <img
-        src={award2013}
-        alt="Лучший строительный продукт года 2013"
-        width={96}
-        height={96}
-        className="w-full h-auto select-none drop-shadow-[0_4px_14px_rgba(22,44,88,0.22)]"
-      />
-    </Link>
-  );
-};
+export const AwardBadge: React.FC = () => (
+  /*
+   * Знак висит у правого края на всех страницах и не прячется при прокрутке:
+   * раньше он гас за первым экраном и когда раскрывался виджет контактов, и
+   * награду на внутренних страницах было не увидеть. На телефонах его нет —
+   * там для него нет свободного поля (`hidden md:block`).
+   */
+  <Link
+    to={paths.bestProduct}
+    aria-label="Лучший строительный продукт года 2013 — подробнее"
+    style={{ clipPath: 'circle(50%)' }}
+    className="hidden md:block fixed right-4 xl:right-6 top-[35%] -translate-y-1/2 z-20 w-20 xl:w-24 transition-transform duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:scale-[1.06] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-inv-blue"
+  >
+    <img
+      src={award2013}
+      alt="Лучший строительный продукт года 2013"
+      width={96}
+      height={96}
+      className="w-full h-auto select-none drop-shadow-[0_4px_14px_rgba(22,44,88,0.22)]"
+    />
+  </Link>
+);
 
 /** Подсказки под полем: проверено, что каждая что-то находит в каталоге. */
 const SEARCH_HINTS = ['ПСУЛ', 'ПЭС', 'Герметики', 'Крепёж', 'Пена', 'Уголки'];

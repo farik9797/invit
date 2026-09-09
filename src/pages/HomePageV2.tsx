@@ -49,7 +49,7 @@ export const HomePageV2: React.FC = () => {
       </main>
       <FooterV2 />
 
-      <AwardBadge dimmed={contactsOpen} />
+      <AwardBadge />
 
       <FloatingActions expanded={contactsOpen} onExpandedChange={setContactsOpen} />
     </div>
