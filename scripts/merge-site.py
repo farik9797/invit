@@ -22,6 +22,7 @@ from collections import Counter, defaultdict
 ROOT = pathlib.Path(__file__).parent.parent
 HERE = ROOT / 'files'          # выгрузки поставщиков и фото — вне репозитория
 SRC = HERE / 'woocommerce_import.csv'
+ADMIN = HERE / 'выгрузка-сайта-полная.csv'
 DST = HERE / 'woocommerce_import_merged.csv'
 REPORT = HERE / 'сведение-отчёт.csv'
 IMAGES = HERE / 'images'
@@ -31,6 +32,35 @@ IMAGES = HERE / 'images'
 # архив фото поставщика, поэтому переехали в files/.
 ASSETS = HERE / 'site-photos'
 UA = {'User-Agent': 'Mozilla/5.0'}
+
+# Девятнадцать позиций, включённых на invit.by, но не попавших в разбор каталога
+# сайта: страницы разделов их не показывают, нашлись только при сверке с
+# админкой. Берём их из выгрузки админки; ключ — product_id, значение — раздел
+# в дереве клиента (по самому товару, у админки дерево своё, укрупнённое).
+FROM_ADMIN = {
+    '81':  'Материалы для монтажа окон > Пена монтажная, очиститель для пены',
+    '82':  'Материалы для монтажа окон > Пена монтажная, очиститель для пены',
+    '147': 'Материалы для монтажа окон > Пена монтажная, очиститель для пены',
+    '135': 'Комплектующие для воздуховодов и систем вентиляции > Уголки монтажные',
+    '136': 'Комплектующие для воздуховодов и систем вентиляции > Уголки монтажные',
+    '237': 'Комплектующие для воздуховодов и систем вентиляции > Кронштейны L, V, Z, П-образные',
+    '252': 'СИЗ и расходные материалы > Перчатки',
+    '156': 'Крепёж > Саморез оконный со сверлом',
+    '158': 'Крепёж > Саморез оконный острый',
+    '194': 'Крепёж > Саморез с пресс-шайбой острый',
+    '195': 'Крепёж > Саморез с пресс-шайбой со сверлом',
+    '210': 'Крепёж > Шуруп с полусферической головкой',
+    '235': 'Крепёж > Шуруп универсальный',
+    '288': 'Крепёж > Саморез для сэндвич-панелей',
+    '292': 'Крепёж > Саморез для фасадных систем',
+    '295': 'Крепёж > Саморез для фасадных систем',
+    '298': 'Крепёж > Саморез кровельный',
+    '307': 'Крепёж > Шуруп с шестигранной головкой',
+    # Шуруп по металлу со сверлом и керамическим покрытием: отдельной строки
+    # под него в дереве клиента нет, кладём к фасадным — там такие же
+    # самосверлящие с покрытием.
+    '309': 'Крепёж > Саморез для фасадных систем',
+}
 
 QUOTED = r"""(?:'((?:[^'\\]|\\.)*)'|"((?:[^"\\]|\\.)*)")"""
 norm = lambda t: re.sub(r'[^а-яёa-z0-9]', '', t.lower())
@@ -219,6 +249,39 @@ def pull_image(product):
         return ''
 
 
+def load_admin(columns, known_sku):
+    """Строки из выгрузки админки — она уже в тех же 27 колонках."""
+    if not ADMIN.exists():
+        print(f'  {ADMIN.name} нет — девятнадцать позиций админки пропущены')
+        return []
+
+    with ADMIN.open(encoding='utf-8-sig', newline='') as f:
+        rows = [r for r in csv.DictReader(f) if r['product_id'] in FROM_ADMIN]
+
+    out = []
+    for row in rows:
+        # ЧПУ — тот же ключ, по которому сходятся остальные товары сайта.
+        # У трёх позиций его в админке нет, там берём внутренний номер.
+        sku = row['URL (ЧПУ)'].strip() or f"INV-{row['product_id']}"
+        if sku in known_sku:
+            continue
+        item = {c: row.get(c, '') for c in columns}
+        item.update({
+            'Type': 'simple', 'SKU': sku, 'Published': '1',
+            'Visibility in catalog': 'visible', 'Tax status': 'taxable',
+            'In stock?': '1',
+            'Regular price': '',                       # каталог сайта без цен
+            'Categories': FROM_ADMIN[row['product_id']],
+            'Images': pull_image({'id': sku, 'sku': sku, 'title': row['Name'],
+                                  'image': row['Images'].split(', ')[0].strip()}),
+            # У админки во втором свойстве модель, у остальной выгрузки — страна.
+            # Два разных смысла в одной колонке ломают импорт атрибутов.
+            'Attribute 2 name': 'Страна', 'Attribute 2 value(s)': ''
+        })
+        out.append(item)
+    return out
+
+
 def target_of(product):
     sub, title = product['sub'], product['title'].lower()
     if sub in FIXED:
@@ -272,6 +335,9 @@ def main():
             'Attribute 2 visible': '1', 'Attribute 2 global': '0',
         }})
 
+    from_admin = load_admin(columns, {r['SKU'].strip() for r in rows if r['SKU'].strip()})
+    rows += from_admin
+
     with DST.open('w', encoding='utf-8-sig', newline='') as f:
         w = csv.DictWriter(f, fieldnames=columns, lineterminator='\r\n')
         w.writeheader(); w.writerows(rows)
@@ -280,6 +346,9 @@ def main():
                 'Название': p['title'][:150], 'Куда': ''} for p in dups] +
               [{'Что': 'добавлен', 'Раздел сайта': p['sub'],
                 'Название': p['title'][:150], 'Куда': c} for p, c in added] +
+              [{'Что': 'добавлен из админки — на сайте есть, в разборе не было',
+                'Раздел сайта': '', 'Название': r['Name'][:150],
+                'Куда': r['Categories']} for r in from_admin] +
               [{'Что': ('похоже, страница раздела, а не товар' if p.get('landing')
                          else 'НЕТ РАЗДЕЛА в дереве'),
                 'Раздел сайта': p['sub'], 'Название': p['title'][:150], 'Куда': ''}
@@ -294,6 +363,7 @@ def main():
     landing = sum(1 for p in unmapped if p.get('landing'))
     print(f'  некуда положить    : {len(unmapped)}  (из них похожих на страницу раздела: {landing})')
     with_photo = sum(1 for p, _ in added if p['file'])
+    print(f'  добавлено из админки: {len(from_admin)} из {len(FROM_ADMIN)}')
     print(f'\nвыгрузка: {len(woo)} → {len(rows)}')
     print(f'фото выгружено: {with_photo} из {len(added)} → {IMAGES}/')
     print('\nнекуда положить, по разделам сайта:')
