@@ -37,5 +37,7 @@ export const contentImage = (remoteUrl: string) => {
  */
 export const productGallery = (product: Product, extra: string[]) => {
   const main = productImage(product);
-  return [main, ...extra.slice(1).map((url) => contentImage(url))];
+  // У части позиций поставщика снимка нет: тогда галереи нет вовсе, а страница
+  // показывает знак раздела.
+  return [...(main ? [main] : []), ...extra.slice(1).map((url) => contentImage(url))];
 };

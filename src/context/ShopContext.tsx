@@ -20,7 +20,7 @@ import { PRODUCTS } from '../data/catalogData';
  */
 interface ShopContextValue {
   quoteCart: QuoteCartItem[];
-  addToQuote: (product: Product, qty?: number) => void;
+  addToQuote: (product: Product, qty?: number, variant?: string) => void;
   removeFromQuote: (key: string) => void;
   updateQuoteQty: (key: string, qty: number) => void;
   clearQuoteCart: () => void;
@@ -49,14 +49,23 @@ const restoreCart = (): QuoteCartItem[] => {
 
     // В старом формате рядом с id лежала ширина — её просто игнорируем,
     // корзины покупателей от этого не ломаются.
-    const rows: { id: string; qty: number }[] = JSON.parse(raw);
+    const rows: { id: string; qty: number; variant?: string }[] = JSON.parse(raw);
 
     return rows.flatMap((row) => {
       const product = PRODUCTS.find((p) => p.id === row.id);
       // Позиции могло не стать: каталог обновляется, а корзина лежит у покупателя
       if (!product) return [];
 
-      return [{ key: product.id, product, quantity: Math.max(1, Math.round(row.qty) || 1) }];
+      // Исполнение тоже могло уйти из каталога — тогда берём товар как есть
+      const variant = product.variants?.some((v) => v.value === row.variant)
+        ? row.variant
+        : undefined;
+      return [{
+        key: variant ? `${product.id}::${variant}` : product.id,
+        product,
+        variant,
+        quantity: Math.max(1, Math.round(row.qty) || 1)
+      }];
     });
   } catch {
     return [];
@@ -74,7 +83,11 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       window.localStorage.setItem(
         STORAGE_KEY,
         JSON.stringify(
-          quoteCart.map((item) => ({ id: item.product.id, qty: item.quantity }))
+          quoteCart.map((item) => ({
+            id: item.product.id,
+            qty: item.quantity,
+            variant: item.variant
+          }))
         )
       );
     } catch {
@@ -83,9 +96,10 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [quoteCart]);
 
-  const addToQuote = (product: Product, qty = 1) => {
+  const addToQuote = (product: Product, qty = 1, variant?: string) => {
     const amount = Math.max(1, Math.round(qty));
-    const key = product.id;
+    // Разные исполнения — разные строки: у них свои артикулы у поставщика.
+    const key = variant ? `${product.id}::${variant}` : product.id;
 
     setQuoteCart((prev) => {
       const existingIndex = prev.findIndex((item) => item.key === key);
@@ -97,7 +111,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
         };
         return updated;
       }
-      return [...prev, { key, product, quantity: amount }];
+      return [...prev, { key, product, variant, quantity: amount }];
     });
     // Никуда не переходим и ничего не открываем: обратная связь — счётчик у
     // иконки в шапке. За заказом покупатель идёт в корзину сам.

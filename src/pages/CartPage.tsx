@@ -105,7 +105,7 @@ export const CartPage: React.FC = () => {
               {/* Позиции */}
               <div className="lg:col-span-7 xl:col-span-8">
                 <div className="divide-y divide-inv-border border border-inv-border rounded-[8px] overflow-hidden">
-                  {items.map(({ key, product, quantity }) => (
+                  {items.map(({ key, product, variant, quantity }) => (
                     <div key={key} className="p-4 flex flex-wrap sm:flex-nowrap items-center gap-4">
                       <Link
                         to={paths.product(product)}
@@ -126,6 +126,11 @@ export const CartPage: React.FC = () => {
                         >
                           {product.title}
                         </Link>
+                        {variant && (
+                          <div className="text-xs text-inv-ink-muted mt-1">
+                            {product.variantLabel ?? 'Исполнение'}: {variant}
+                          </div>
+                        )}
                       </div>
 
                       <div className="flex items-center rounded-[4px] border border-inv-border overflow-hidden shrink-0">

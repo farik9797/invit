@@ -316,8 +316,8 @@ interface TapeCell {
   image: string;
 }
 
-/** Крупную ячейку отдаём самому большому разделу: под него есть кровельное фото. */
-const LEAD_SLUG = "krovelnye-uplotniteli-kleykie-lenty";
+/** Крупную ячейку отдаём монтажным лентам: с них начинается каталог. */
+const LEAD_SLUG = "montazhnye-lenty-dlya-okon";
 
 const TAPE_CELLS: TapeCell[] = [
   LEAD_SLUG,

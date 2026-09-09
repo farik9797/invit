@@ -9,28 +9,13 @@ import ventilationBanner from '../assets/categories/ventilyaciya.webp';
  * и мылит в сетке. Те же кадры, пережатые в WebP 500px, весят в среднем 12 КБ:
  * страница раздела стала легче (0,62 -> ~0,3 МБ) и при этом чётче.
  *
- * Файлы собраны скриптом из `imageLarge` каждой позиции, имя файла это id
- * товара, приведённый к латинице и дефисам. Пересобирать при обновлении каталога.
+ * Файлы собирает scripts/build-catalog.py в `public/products/`, имя файла —
+ * идентификатор товара. Пересобирать при обновлении каталога.
  */
-const FILES = import.meta.glob('../assets/products/*.webp', {
-  eager: true,
-  query: '?url',
-  import: 'default'
-}) as Record<string, string>;
-
-const BY_NAME: Record<string, string> = {};
-for (const [path, url] of Object.entries(FILES)) {
-  const name = path.split('/').pop()!.replace(/\.webp$/, '');
-  BY_NAME[name] = url;
-}
-
-/** Такое же приведение имени, как в скрипте выгрузки. */
-const fileName = (id: string) =>
-  id.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-
-/** Локальное фото товара; если его нет, отдаём исходный адрес с invit.by. */
 export const productImage = (product: Product) =>
-  BY_NAME[fileName(product.id)] ?? product.imageLarge ?? product.image;
+  (product.image ? `${import.meta.env.BASE_URL}products/${product.image}` : '') ||
+  product.imageLarge ||
+  '';
 
 
 /**

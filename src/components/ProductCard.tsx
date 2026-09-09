@@ -41,12 +41,20 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         compact ? 'h-32 p-3' : 'h-48 p-4'
       }`}
     >
-      <img
-        src={productImage(product)}
-        alt={product.title}
-        loading="lazy"
-        className="w-full h-full object-contain transition-transform duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:scale-105"
-      />
+      {productImage(product) ? (
+        <img
+          src={productImage(product)}
+          alt={product.title}
+          loading="lazy"
+          className="w-full h-full object-contain transition-transform duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:scale-105"
+        />
+      ) : (
+        /* Снимка нет — у поставщика он есть не для каждой позиции. Вместо
+           пустой рамки ставим знак раздела. */
+        <div className="w-full h-full flex items-center justify-center text-inv-border">
+          <SectionIcon slug={product.subcategorySlug} size={64} className="w-16 h-16" />
+        </div>
+      )}
     </Link>
 
     <div className={`flex flex-1 flex-col ${compact ? 'p-3' : 'p-4 sm:p-5'}`}>
@@ -66,6 +74,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       >
         {product.title}
       </Link>
+
+      {product.variants?.length ? (
+        <span className="mt-1.5 text-xs text-inv-ink-muted">
+          {product.variantLabel?.toLowerCase()}: {product.variants.length} шт. на выбор
+        </span>
+      ) : null}
 
       {product.description && (
         <p
@@ -88,6 +102,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           <ArrowRight className="w-4 h-4 transition-transform duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:translate-x-0.5" />
         </Link>
 
+        {product.variants?.length ? (
+          <Link
+            to={paths.product(product)}
+            className="inline-flex items-center gap-1.5 min-h-11 px-3 rounded-[4px] text-sm font-semibold bg-inv-surface-1 text-inv-ink hover:bg-inv-surface-2 transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
+          >
+            <Plus className="w-4 h-4" />
+            {!compact && <span className="hidden sm:inline">Выбрать размер</span>}
+          </Link>
+        ) : (
         <button
           type="button"
           onClick={() => onAddToQuote(product)}
@@ -101,6 +124,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           {isAdded ? <Check className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
           {!compact && <span className="hidden sm:inline">{isAdded ? 'В корзине' : 'В корзину'}</span>}
         </button>
+        )}
       </div>
     </div>
   </div>

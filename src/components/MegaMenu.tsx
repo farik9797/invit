@@ -12,19 +12,26 @@ interface MenuItem {
   href: string;
 }
 
-const collect = (own: boolean): MenuItem[] =>
-  CATEGORIES.flatMap((category) =>
-    category.subcategories
-      .filter((sub) => TAPE_SUBCATEGORIES.includes(sub.slug) === own)
-      .map((sub) => ({
-        name: sub.name,
-        count: PRODUCTS.filter((p) => p.subcategorySlug === sub.slug).length,
-        href: `${paths.category(category.slug)}?sub=${sub.slug}`
-      }))
-  );
+/** Ленты EUROBAND — по линейкам: их немного, и покупатель ищет именно линейку. */
+const OWN: MenuItem[] = CATEGORIES.flatMap((category) =>
+  category.subcategories
+    .filter((sub) => TAPE_SUBCATEGORIES.includes(sub.slug))
+    .map((sub) => ({
+      name: sub.name,
+      count: PRODUCTS.filter((p) => p.subcategorySlug === sub.slug).length,
+      href: `${paths.category(category.slug)}?sub=${sub.slug}`
+    }))
+);
 
-const OWN = collect(true);
-const RELATED = collect(false);
+/*
+ * Прямые поставки — по разделам, а не по подразделам. Подразделов в каталоге
+ * девяносто пять, списком они превращали меню в простыню на сорок строк.
+ */
+const RELATED: MenuItem[] = CATEGORIES.map((category) => ({
+  name: category.name,
+  count: PRODUCTS.filter((p) => p.categorySlug === category.slug).length,
+  href: paths.category(category.slug)
+}));
 const PROMO = PRODUCTS.find((p) => p.slug === 'psul-euroband-dlja-okon') ?? PRODUCTS[0];
 
 /** Выпадающий каталог во всю ширину — открывается наведением и с клавиатуры. */

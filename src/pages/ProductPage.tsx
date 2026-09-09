@@ -10,6 +10,7 @@ import { useShop } from '../context/ShopContext';
 import { paths, productSlug } from '../routes';
 import { sortForListing, dedupeContentBlocks } from '../lib/product';
 import { productGallery } from '../lib/contentImages';
+import { SectionIcon } from '../lib/sectionIcons';
 import { ProductContent } from '../types';
 
 export const ProductPage: React.FC = () => {
@@ -22,19 +23,22 @@ export const ProductPage: React.FC = () => {
   const [activePhoto, setActivePhoto] = useState(0);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [qty, setQty] = useState(1);
+  const [variant, setVariant] = useState<string | null>(null);
 
   // Полное описание и галерея грузятся отдельным чанком — только на этой странице.
   useEffect(() => {
     let cancelled = false;
     setContent(null);
     setActivePhoto(0);
+    setVariant(null);
     import('../data/productContent').then(({ PRODUCT_CONTENT }) => {
-      if (!cancelled && slug) setContent(PRODUCT_CONTENT[slug] ?? null);
+      // Описания лежат по идентификатору товара, а не по адресу страницы
+      if (!cancelled && product) setContent(PRODUCT_CONTENT[product.id] ?? null);
     });
     return () => {
       cancelled = true;
     };
-  }, [slug]);
+  }, [slug, product]);
 
   useEffect(() => {
   }, [product]);
@@ -42,15 +46,32 @@ export const ProductPage: React.FC = () => {
   if (!product) return <Navigate to={paths.catalog} replace />;
 
   const category = CATEGORIES.find((c) => c.slug === product.categorySlug);
-  const isAdded = shop.quoteCart.some((i) => i.product.id === product.id);
+  // Исполнение по умолчанию — первое в списке: он отсортирован по размеру.
+  const chosen = variant ?? product.variants?.[0]?.value ?? null;
+  const chosenSku = product.variants?.find((o) => o.value === chosen)?.sku;
+  const isAdded = shop.quoteCart.some(
+    (i) => i.product.id === product.id && (chosen === null || i.variant === chosen)
+  );
 
   const contentBlocks = dedupeContentBlocks(content?.blocks ?? [], product.description);
 
   const gallery = productGallery(product, content?.images ?? []);
 
-  const related = sortForListing(
-    PRODUCTS.filter((p) => p.subcategorySlug === product.subcategorySlug && p.id !== product.id)
-  ).slice(0, 4);
+  /*
+   * Сопутствующие: сначала соседи по подразделу, потом остальной раздел.
+   * В подразделе бывает один-единственный товар (лента для сэндвич-панелей),
+   * и блок оставался пустым — а он теперь заменяет перечень ссылок, который
+   * раньше стоял в самом описании.
+   */
+  const siblings = PRODUCTS.filter(
+    (p) => p.subcategorySlug === product.subcategorySlug && p.id !== product.id
+  );
+  const nearby = PRODUCTS.filter(
+    (p) =>
+      p.categorySlug === product.categorySlug &&
+      p.subcategorySlug !== product.subcategorySlug
+  );
+  const related = [...sortForListing(siblings), ...sortForListing(nearby)].slice(0, 4);
 
   return (
     <>
@@ -66,20 +87,27 @@ export const ProductPage: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
           {/* Галерея */}
           <div className="lg:col-span-4 space-y-3 lg:sticky lg:top-32 lg:self-start">
-            <button
-              onClick={() => setLightboxIndex(activePhoto)}
-              className="flex items-center justify-center w-full max-w-[420px] aspect-square bg-white border border-line rounded-xl overflow-hidden cursor-zoom-in hover:border-brand-sky transition-colors"
-              aria-label="Открыть фото"
-            >
-              {/* w-auto/h-auto: фото не растягивается выше своего разрешения */}
-              <img
-                src={gallery[activePhoto]}
-                alt={product.title}
-                width={500}
-                height={500}
-                className="w-auto h-auto max-w-full max-h-full object-contain p-4"
-              />
-            </button>
+            {gallery.length > 0 ? (
+              <button
+                onClick={() => setLightboxIndex(activePhoto)}
+                className="flex items-center justify-center w-full max-w-[420px] aspect-square bg-white border border-line rounded-xl overflow-hidden cursor-zoom-in hover:border-brand-sky transition-colors"
+                aria-label="Открыть фото"
+              >
+                {/* w-auto/h-auto: фото не растягивается выше своего разрешения */}
+                <img
+                  src={gallery[activePhoto]}
+                  alt={product.title}
+                  width={500}
+                  height={500}
+                  className="w-auto h-auto max-w-full max-h-full object-contain p-4"
+                />
+              </button>
+            ) : (
+              <div className="flex flex-col items-center justify-center gap-3 w-full max-w-[420px] aspect-square bg-white border border-line rounded-xl text-line">
+                <SectionIcon slug={product.subcategorySlug} size={96} className="w-24 h-24" />
+                <span className="text-xs text-ink/40">Фото уточняйте у менеджера</span>
+              </div>
+            )}
 
             {gallery.length > 1 && (
               <div className="grid grid-cols-5 gap-2 max-w-[420px]">
@@ -150,6 +178,42 @@ export const ProductPage: React.FC = () => {
               </div>
             )}
 
+            {/* Исполнения: одна карточка вместо десятков одинаковых позиций */}
+            {product.variants && product.variants.length > 0 && (
+              <div className="border border-line rounded-xl p-5">
+                <div className="flex items-baseline justify-between gap-4">
+                  <span className="text-xs font-semibold text-ink">
+                    {product.variantLabel ?? 'Исполнение'}
+                  </span>
+                  <span className="text-[11px] text-ink/50">
+                    {product.variants.length} на выбор
+                  </span>
+                </div>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {product.variants.map((option) => (
+                    <button
+                      key={option.sku}
+                      type="button"
+                      onClick={() => setVariant(option.value)}
+                      className={`px-3 py-2 rounded-lg border text-sm font-semibold transition-colors cursor-pointer focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand-blue ${
+                        option.value === chosen
+                          ? 'border-brand-blue text-brand-blue bg-brand-blue/5'
+                          : 'border-line text-ink hover:border-brand-sky'
+                      }`}
+                    >
+                      {option.value}
+                    </button>
+                  ))}
+                </div>
+                {/* Артикул у каждого исполнения свой. Внутренние коды
+                    поставщика («ЦБ-0000608166») покупателю не показываем: по
+                    ним ничего не найти, это номенклатура его склада. */}
+                {chosenSku && !/^Ц[БВЗГИЕД]-/.test(chosenSku) && (
+                  <div className="mt-3 text-xs text-ink/60">Артикул: {chosenSku}</div>
+                )}
+              </div>
+            )}
+
             {/* Количество и действия */}
             <div className="border border-line rounded-xl p-5 space-y-4">
               {/* Сколько добавить: клиент просил класть в корзину несколько сразу */}
@@ -187,7 +251,7 @@ export const ProductPage: React.FC = () => {
 
               <div className="flex flex-col sm:flex-row gap-3">
                 <button
-                  onClick={() => shop.addToQuote(product, qty)}
+                  onClick={() => shop.addToQuote(product, qty, chosen ?? undefined)}
                   className={`flex-1 px-5 py-3.5 rounded-lg text-sm font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer ${
                     isAdded
                       ? 'bg-brand-navy hover:bg-brand-navy/90 text-white'

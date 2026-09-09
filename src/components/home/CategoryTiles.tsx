@@ -37,15 +37,15 @@ const COLUMNS: Record<number, string> = {
 const columnsFor = (count: number) =>
   COLUMNS[count === 6 ? 6 : count % 5 === 0 ? 5 : count % 4 === 0 ? 4 : 3];
 
-const GROUPS = CATEGORIES.map((category) => ({
+/*
+ * Плитка на раздел, а не на подраздел. Подразделов в каталоге девяносто пять —
+ * на главной это была бы стена на десять экранов; вглубь покупатель идёт уже
+ * со страницы раздела.
+ */
+const TILES = CATEGORIES.map((category) => ({
   slug: category.slug,
   name: category.name,
-  count: PRODUCTS.filter((p) => p.categorySlug === category.slug).length,
-  tiles: category.subcategories.map((sub) => ({
-    slug: sub.slug,
-    name: sub.name,
-    count: PRODUCTS.filter((p) => p.subcategorySlug === sub.slug).length
-  }))
+  count: PRODUCTS.filter((p) => p.categorySlug === category.slug).length
 }));
 
 export const CategoryTiles: React.FC = () => (
@@ -70,54 +70,34 @@ export const CategoryTiles: React.FC = () => (
         </div>
       </Reveal>
 
-      {GROUPS.map((group) => (
-        <div key={group.slug} className="mt-10">
-          <Reveal>
-            <div className="flex items-baseline justify-between gap-4 pb-3 border-b border-line md:pr-24 xl:pr-28">
-              <h3 className="text-base sm:text-lg font-semibold text-ink">
-                <Link
-                  to={paths.category(group.slug)}
-                  className="inline-flex items-center min-h-11 sm:min-h-0 hover:text-brand-blue transition-colors"
-                >
-                  {group.name}
-                </Link>
-              </h3>
-              <span className="text-xs text-ink/50 tabular-nums whitespace-nowrap">
-                {group.count} {plural(group.count)}
-              </span>
-            </div>
-          </Reveal>
-
-          <RevealGroup
-            className={`mt-5 grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 ${columnsFor(group.tiles.length)}`}
+      <RevealGroup
+        className={`mt-10 grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 ${columnsFor(TILES.length)}`}
+      >
+        {TILES.map((tile) => (
+          <Link
+            key={tile.slug}
+            to={paths.category(tile.slug)}
+            className="group flex h-full flex-col rounded-xl border border-line bg-white overflow-hidden transition-[transform,box-shadow,border-color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:border-brand-blue hover:shadow-lg"
           >
-            {group.tiles.map((tile) => (
-              <Link
-                key={tile.slug}
-                to={`${paths.category(group.slug)}?sub=${tile.slug}`}
-                className="group flex h-full flex-col rounded-xl border border-line bg-white overflow-hidden transition-[transform,box-shadow,border-color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:border-brand-blue hover:shadow-lg"
-              >
-                <span className="flex h-24 sm:h-28 items-center justify-center bg-surface-soft text-brand-blue">
-                  <SectionIcon
-                    slug={tile.slug}
-                    size={48}
-                    className="w-11 h-11 sm:w-12 sm:h-12 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.08]"
-                  />
-                </span>
+            <span className="flex h-24 sm:h-28 items-center justify-center bg-surface-soft text-brand-blue">
+              <SectionIcon
+                slug={tile.slug}
+                size={48}
+                className="w-11 h-11 sm:w-12 sm:h-12 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.08]"
+              />
+            </span>
 
-                <span className="flex flex-1 flex-col gap-1 border-t border-line p-3 sm:p-4">
-                  <span className="text-xs sm:text-[13px] font-semibold leading-snug text-ink group-hover:text-brand-blue transition-colors">
-                    {tile.name}
-                  </span>
-                  <span className="mt-auto text-[11px] text-ink/45 tabular-nums">
-                    {tile.count} {plural(tile.count)}
-                  </span>
-                </span>
-              </Link>
-            ))}
-          </RevealGroup>
-        </div>
-      ))}
+            <span className="flex flex-1 flex-col gap-1 border-t border-line p-3 sm:p-4">
+              <span className="text-xs sm:text-[13px] font-semibold leading-snug text-ink group-hover:text-brand-blue transition-colors">
+                {tile.name}
+              </span>
+              <span className="mt-auto text-[11px] text-ink/45 tabular-nums">
+                {tile.count} {plural(tile.count)}
+              </span>
+            </span>
+          </Link>
+        ))}
+      </RevealGroup>
     </div>
   </section>
 );

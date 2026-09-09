@@ -4,8 +4,23 @@
     {
       "name": "invit-dev",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
       "port": 3000
+    },
+    {
+      "name": "invit-preview",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "preview",
+        "--",
+        "--port=4173"
+      ],
+      "port": 4173,
+      "url": "http://localhost:4173"
     }
   ]
 }

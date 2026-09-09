@@ -34,6 +34,14 @@ export interface ProductSpec {
   value: string;
 }
 
+/** Исполнение товара: строка выгрузки, свёрнутая в вариацию карточки. */
+export interface ProductVariant {
+  sku: string;
+  title: string;
+  /** Значение оси: «10х345х460 мм», «RAL 8017», «размер L». */
+  value: string;
+}
+
 /** Размерный ряд с сайта: шапка таблицы и строки. */
 export interface ProductSizes {
   headers: string[];
@@ -57,6 +65,9 @@ export interface Product {
   badge?: 'Хит' | 'Новинка' | 'Акция' | 'Собственное производство';
   specs: ProductSpec[];
   sizes?: ProductSizes;
+  /** Чем различаются исполнения: «Типоразмер», «Цвет», «Длина». */
+  variantLabel?: string;
+  variants?: ProductVariant[];
   features: string[];
   datasheetUrl?: string;
   sourceUrl: string;
@@ -99,9 +110,11 @@ export interface NewsArticle {
 }
 
 export interface QuoteCartItem {
-  /** Ключ строки — id товара: типоразмер на сайте не выбирается. */
+  /** Ключ строки: id товара, а у товара с исполнениями — id и выбранное. */
   key: string;
   product: Product;
+  /** Выбранное исполнение: «10х345х460 мм», «RAL 8017». */
+  variant?: string;
   quantity: number; // рулоны / метры / штуки
 }
 
