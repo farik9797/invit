@@ -35,7 +35,7 @@ export const HomePage: React.FC = () => {
             <div>
               <span className="text-xs font-semibold text-brand-green">Продукция</span>
               <h2 className="mt-2 text-3xl sm:text-4xl font-bold text-ink tracking-tight">
-                Ленты нашего производства
+                Каталог
               </h2>
             </div>
 
