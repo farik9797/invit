@@ -23,6 +23,16 @@ potrace, см. PROGRESS.md). Остальные тринадцать брали�
 намёк на саморасширение), ПЭС — плоская полоса с отходящей плёнкой, ППЭ —
 рулон в перспективе, вентиляционные ленты — два рулона друг на друге.
 
+Когда каталог вырос до одиннадцати разделов и девяноста пяти подразделов,
+восемнадцати знаков стало не хватать, и половина сетки показывала один и тот же
+запасной знак. Набор дорисован до всего дерева. Там, где предмет буквально один
+и тот же (четыре вида герметика — тот же картридж), знак общий: разводить их
+рисунком значило бы выдумывать различие, которого нет.
+
+Крепёж собран из заготовки `fastener()`: стержень с резьбой у всех одинаковый,
+а различают подразделы головка и наконечник — ровно то, чем различаются сами
+изделия.
+
 Запуск:  python3 scripts/sections/draw.py
 Пишет:   src/lib/sectionIconsDrawn.ts
 """
@@ -387,30 +397,763 @@ def damper_handle(cx=158, cy=236, R=94, ang_deg=-44, length=196,
             + poly([(cx, cy-q), (cx+q, cy), (cx, cy+q), (cx-q, cy)]))
 
 
+# ── Общие построения ────────────────────────────────────────────────────────
+
+def rect(x0, y0, x1, y1):
+    return poly([(x0, y0), (x1, y0), (x1, y1), (x0, y1)])
+
+
+def line(*points):
+    return poly(list(points), close=False)
+
+
+def arc(cx, cy, r, t0, t1, n=48):
+    """Точки дуги от t0 до t1 (радианы), по возрастанию угла."""
+    return [(cx + r*math.cos(t0 + (t1-t0)*i/n),
+             cy + r*math.sin(t0 + (t1-t0)*i/n)) for i in range(n + 1)]
+
+
+# ── Крепёж: одна заготовка, разные головки и наконечники ────────────────────
+#
+# Восемнадцать подразделов крепежа отличаются головкой и остриём, а стержень
+# у всех одинаковый. Поэтому стержень с резьбой считается один раз, а знак
+# собирается из головки и наконечника — так весь крепёж держит общий рисунок,
+# и подразделы различаются тем же, чем различаются сами изделия.
+
+def fastener(head, hw=26, tooth=26, teeth=9, y0=104, y1=296, tip='sharp', extra=''):
+    """Крепёж одним контуром. `head` — контур головки слева направо,
+    от (C-hw, y0) до (C+hw, y0); дальше дорисовываются резьба и остриё."""
+    step = (y1 - y0) / teeth
+    pts = list(head)
+    for i in range(teeth):
+        y = y0 + i*step
+        pts += [(C + hw + tooth, y + step*0.45), (C + hw, y + step)]
+    if tip == 'sharp':
+        pts += [(C, y1 + 46)]
+    elif tip == 'drill':                       # наконечник-сверло
+        pts += [(C + hw, y1 + 16), (C + 11, y1 + 18), (C + 17, y1 + 52),
+                (C - 17, y1 + 52), (C - 11, y1 + 18), (C - hw, y1 + 16)]
+    else:                                      # тупой торец
+        pts += [(C + hw, y1 + 16), (C - hw, y1 + 16)]
+    for i in range(teeth - 1, -1, -1):
+        y = y0 + i*step
+        pts += [(C - hw, y + step), (C - hw - tooth, y + step*0.45)]
+    pts += [(C - hw, y0)]
+    return poly(pts) + extra
+
+
+def head_flat(hw=26, y0=104, r=78, y_top=48):
+    """Потайная головка: конус к стержню."""
+    return [(C-hw, y0), (C-r, y_top), (C+r, y_top), (C+hw, y0)]
+
+
+def head_dome(hw=26, y0=104, r=64):
+    """Полусферическая головка."""
+    return [(C-hw, y0), (C-r, y0)] + arc(C, y0, r, math.pi, 2*math.pi, 32) + [(C+hw, y0)]
+
+
+def head_hex(hw=26, y0=104, r=62, y_top=42):
+    """Шестигранная головка, вид сбоку."""
+    return [(C-hw, y0), (C-r, y0), (C-r, y_top+24), (C-r*0.52, y_top),
+            (C+r*0.52, y_top), (C+r, y_top+24), (C+r, y0), (C+hw, y0)]
+
+
+def head_press(hw=26, y0=104, r=82, y_top=50, rim=24):
+    """Пресс-шайба: широкий плоский поясок под головкой."""
+    return [(C-hw, y0), (C-r, y0), (C-r, y0-rim), (C-42, y0-rim), (C-42, y_top),
+            (C+42, y_top), (C+42, y0-rim), (C+r, y0-rim), (C+r, y0), (C+hw, y0)]
+
+
+def head_roof(hw=26, y0=112, r=54, y_top=44, wr=86):
+    """Шестигранная головка с прижимной шайбой — кровельный саморез."""
+    return [(C-hw, y0), (C-wr, y0), (C-wr, y0-22), (C-r, y0-22), (C-r, y_top+20),
+            (C-r*0.55, y_top), (C+r*0.55, y_top), (C+r, y_top+20), (C+r, y0-22),
+            (C+wr, y0-22), (C+wr, y0), (C+hw, y0)]
+
+
+def slot_cross(y, w=42):
+    return line((C-w, y), (C+w, y)) + line((C, y-w*0.62), (C, y+w*0.62))
+
+
+def slot_line(y, w=46):
+    return line((C-w, y), (C+w, y))
+
+
+def window_screw():
+    """Саморез оконный острый: мелкая частая резьба, потайная головка."""
+    return fastener(head_flat(r=62, y_top=54), tooth=18, teeth=12,
+                    extra=slot_cross(80, 34))
+
+
+def window_drill_screw():
+    """Саморез оконный со сверлом: та же головка, наконечник-сверло."""
+    return fastener(head_flat(r=62, y_top=54), tooth=18, teeth=11, tip='drill',
+                    extra=slot_cross(80, 34))
+
+
+def dome_screw():
+    """Шуруп с полусферической головкой."""
+    return fastener(head_dome(), extra=slot_cross(74, 34))
+
+
+def press_screw():
+    """Саморез с пресс-шайбой острый."""
+    return fastener(head_press(), extra=slot_cross(74, 30))
+
+
+def press_drill_screw():
+    """Саморез с пресс-шайбой со сверлом."""
+    return fastener(head_press(), teeth=8, tip='drill', extra=slot_cross(74, 30))
+
+
+def hex_screw():
+    """Шуруп с шестигранной головкой."""
+    return fastener(head_hex())
+
+
+def concrete_screw():
+    """Шуруп по бетону (нагель): редкая крупная резьба."""
+    return fastener(head_hex(), tooth=40, teeth=6)
+
+
+def roof_screw():
+    """Саморез кровельный: головка с прижимной шайбой и наконечник-сверло."""
+    return fastener(head_roof(), y0=112, teeth=8, tip='drill')
+
+
+def structural_screw():
+    """Шуруп конструкционный: длинный, с редкой крупной резьбой."""
+    return fastener(head_flat(r=84, y_top=44), tooth=44, teeth=7)
+
+
+def facade_screw():
+    """Саморез для фасадных систем: полусфера и наконечник-сверло."""
+    return fastener(head_dome(), teeth=8, tip='drill', extra=slot_line(74, 32))
+
+
+def panel_screw():
+    """Саморез для сэндвич-панелей: длинный, резьба только у наконечника."""
+    body = fastener(head_roof(), y0=112, y1=250, teeth=4, tip='drill', tooth=34)
+    return body
+
+
+def threaded_rod():
+    """Шпилька резьбовая: пруток с резьбой по всей длине, без головки."""
+    return fastener([(C-30, 58), (C+30, 58)], hw=30, teeth=12,
+                    y0=58, y1=302, tip='flat')
+
+
+def rivet():
+    """Заклёпки: тело с буртиком и вытяжной стержень."""
+    body = poly([(C-54, 100), (C+54, 100), (C+54, 126), (C+28, 126),
+                 (C+28, 306), (C-28, 306), (C-28, 126), (C-54, 126)])
+    return body + line((C, 100), (C, 34))
+
+
+def washer():
+    """Шайбы: плоское кольцо."""
+    return circle(C, C, 136) + circle(C, C, 60)
+
+
+def anchor_plate():
+    """Пластина анкерная: перфорированная полоса с отгибом под 90°."""
+    body = poly([(36, 168), (298, 168), (298, 58), (350, 58),
+                 (350, 216), (36, 216)])
+    holes = ''.join(circle(x, 192, 20) for x in (80, 146, 212))
+    return body + holes
+
+
+def support_bracket():
+    """Кронштейн опорный для отливов: полка с косым ребром."""
+    body = poly([(54, 68), (116, 68), (116, 258), (336, 258), (336, 320), (54, 320)])
+    return body + line((116, 148), (268, 258))
+
+
+def hook():
+    """Скобяные изделия: крюк с проушиной."""
+    return (circle(C, 76, 32) + line((C, 108), (C, 150))
+            + poly(arc(C, 226, 76, -math.pi/2, math.pi*0.92, 48), close=False))
+
+
+def nail_dowel():
+    """Дюбель-гвоздь: гильза с буртиком и забивной гвоздь."""
+    body = poly([(C-58, 96), (C+58, 96), (C+58, 122), (C+34, 122),
+                 (C+34, 306), (C-34, 306), (C-34, 122), (C-58, 122)])
+    ribs = line((C-34, 190), (C+34, 190)) + line((C-34, 240), (C+34, 240))
+    return body + ribs + line((C, 96), (C, 40))
+
+
+def plate_dowel():
+    """Дюбель для теплоизоляции: тарелка и распорная гильза."""
+    return poly([(44, 90), (340, 90), (296, 136), (C+34, 136), (C+34, 318),
+                 (C-34, 318), (C-34, 136), (88, 136)])
+
+
+def frame_dowel():
+    """Дюбель рамный: длинная гильза с потайным буртиком."""
+    body = poly([(C-58, 66), (C+58, 66), (C+34, 110), (C+34, 318),
+                 (C-34, 318), (C-34, 110)])
+    return body + line((C-34, 200), (C+34, 200)) + line((C-34, 252), (C+34, 252))
+
+
+def collet():
+    """Анкер латунный (цанга): втулка с буртиком, прорезями и конусом."""
+    body = poly([(C-64, 82), (C+64, 82), (C+64, 244), (C+40, 302),
+                 (C-40, 302), (C-64, 244)])
+    return (body + line((C-64, 118), (C+64, 118))
+            + line((C-24, 146), (C-24, 262)) + line((C+24, 146), (C+24, 262)))
+
+
+# ── Ленты ───────────────────────────────────────────────────────────────────
+
+def butyl_roll():
+    """Полнобутиловые ленты: рулон и отходящая подложка."""
+    return (circle(136, 158, 100) + circle(136, 158, 34) +
+            poly([(140, 254), (302, 240), (346, 284), (156, 300)]))
+
+
+def foil_butyl_roll():
+    """Лента ЛБА: тот же рулон, подложка металлизирована — штрихи бликов."""
+    sheen = ''.join(line((x, 258), (x + 16, 288)) for x in (196, 240, 284))
+    return butyl_roll() + sheen
+
+
+def double_sided_tape():
+    """Клейкая лента двухсторонняя: рулон и две подложки."""
+    roll = circle(132, 150, 92) + circle(132, 150, 32)
+    return (roll + poly([(146, 216), (334, 190), (340, 222), (152, 248)])
+            + poly([(146, 254), (340, 280), (334, 312), (152, 286)]))
+
+
+def _web(t0):
+    """Точка на полотне: t вдоль полотна, между верхней и нижней кромкой."""
+    top = (120 + (330-120)*t0, 230 + (208-230)*t0)
+    bot = (128 + (340-128)*t0, 314 + (292-314)*t0)
+    return top, bot
+
+
+def foil_roll():
+    """Алюминиевые ленты ALU: рулон и полотно с бликами.
+
+    Блики считаются по кромкам полотна, а не рисуются поверх: иначе штрихи
+    вылезали за край и полотно читалось флагом.
+    """
+    roll = circle(116, 146, 86) + circle(116, 146, 30)
+    web = poly([(120, 230), (330, 208), (340, 292), (128, 314)])
+    sheen = ''.join(line(*_web(t0)) for t0 in (0.34, 0.58, 0.82))
+    return roll + web + sheen
+
+
+def reinforced_roll():
+    """Армированные ленты TPL: полотно с тканевым переплетением."""
+    roll = circle(116, 146, 86) + circle(116, 146, 30)
+    web = poly([(120, 230), (330, 208), (340, 292), (128, 314)])
+    across = ''.join(line(*_web(t0)) for t0 in (0.3, 0.55, 0.8))
+    along = ''
+    for k in (0.36, 0.68):                      # продольные нити, между кромок
+        a, b = _web(0.06)
+        c, d = _web(0.96)
+        along += line((a[0] + (b[0]-a[0])*k, a[1] + (b[1]-a[1])*k),
+                      (c[0] + (d[0]-c[0])*k, c[1] + (d[1]-c[1])*k))
+    return roll + web + across + along
+
+
+def masking_roll():
+    """Малярная лента: рулон лёжа и приподнятый конец ленты.
+
+    Кольцо со свисающей полосой читалось медалью: круг сверху, лента снизу.
+    Рулон в перспективе с отогнутым концом такого прочтения не допускает.
+    """
+    y0, y1 = 158, 274
+    cy, ry, rx = (y0 + y1)/2, (y1 - y0)/2, 32
+    xl, xr = 124, 268
+    pts = ([(xl + rx*math.cos(t), cy + ry*math.sin(t))
+            for t in [math.pi/2 + math.pi*i/32 for i in range(33)]]
+           + [(xr + rx*math.cos(t), cy + ry*math.sin(t))
+              for t in [-math.pi/2 + math.pi*i/32 for i in range(33)]])
+    tab = poly([(124, 158), (268, 158), (306, 108), (162, 108)])
+    return (poly(pts) + ellipse(xr, cy, rx, ry) + ellipse(xr, cy, 15, 26) + tab)
+
+
+def insulating_roll():
+    """Изоляционные ленты: узкий рулон стоймя и подклеенный конец."""
+    return (standing_roll(cx=150, ry=38, rx=96, y_top=112, y_bot=250)
+            + poly([(246, 168), (330, 190), (330, 232), (246, 254)]))
+
+
+def batten_tape():
+    """Лента под контробрешётку: стропило, лента, брусок и гвоздь."""
+    return (rect(36, 236, 348, 318) + rect(84, 198, 300, 236)
+            + rect(122, 106, 264, 198) + line((193, 74), (193, 236)))
+
+
+def sound_tape():
+    """Звукоизоляционная лента: полоса гасит звуковые волны."""
+    waves = ''.join(poly(arc(238, 192, r, -math.pi/2.5, math.pi/2.5, 24), close=False)
+                    for r in (36, 74, 112))
+    return rect(38, 146, 224, 238) + waves
+
+
+def acoustic_tape():
+    """Шумопоглощающая лента: полоса с открытыми порами."""
+    pores = ''.join(circle(x, y, 16) for y in (164, 220) for x in (86, 142, 198, 254, 310))
+    return rect(38, 124, 348, 260) + pores
+
+
+def damper_tape():
+    """Демпферная лента: стена, лента по периметру и стяжка пола."""
+    return rect(54, 44, 122, 306) + rect(122, 112, 164, 306) + rect(164, 208, 348, 306)
+
+
+def sandwich_panel():
+    """Лента для сэндвич-панелей: две панели и лента в стыке."""
+    return (rect(34, 96, 166, 290) + rect(218, 96, 350, 290)
+            + rect(166, 124, 218, 262)
+            + line((34, 142), (166, 142)) + line((218, 142), (350, 142)))
+
+
+def flange_tape():
+    """Межфланцевая лента: полоса между двумя фланцами."""
+    return rect(56, 66, 126, 318) + rect(258, 66, 328, 318) + rect(126, 138, 258, 246)
+
+
+# ── Герметики, химия ────────────────────────────────────────────────────────
+
+def cartridge():
+    """Картридж герметика: туба с носиком и поршнем."""
+    return (rect(C-74, 110, C+74, 332)
+            + poly([(C-30, 110), (C-16, 44), (C+16, 44), (C+30, 110)])
+            + line((C-74, 162), (C+74, 162)) + line((C-74, 296), (C+74, 296)))
+
+
+def spray_can():
+    """Аэрозоль: баллон, колпачок и факел распыла."""
+    return (rect(108, 122, 232, 332) + line((108, 154), (232, 154))
+            + rect(138, 58, 202, 122)
+            + ''.join(circle(248 + 30*i, 96 - 14*i, 9) for i in range(3)))
+
+
+def bottle():
+    """Химия для окон: флакон с крышкой и этикеткой."""
+    return (rect(108, 132, 232, 332) + rect(144, 78, 196, 132)
+            + rect(136, 44, 204, 78) + rect(128, 190, 212, 272))
+
+
+def wedge():
+    """Клинья, заглушки: монтажный клин со ступенями."""
+    return poly([(40, 296), (348, 296), (348, 232), (244, 208),
+                 (244, 168), (140, 144), (140, 104), (40, 80)])
+
+
+# ── Резиновые уплотнители: сечения профилей ─────────────────────────────────
+
+def profile_p():
+    """Уплотнитель P: круглая полость и монтажная ножка."""
+    outer = poly([(96, 56), (206, 56)] + arc(206, 140, 84, -math.pi/2, math.pi/2, 32)
+                 + [(140, 224), (140, 330), (96, 330)])
+    inner = poly([(140, 96), (200, 96)] + arc(200, 140, 44, -math.pi/2, math.pi/2, 24)
+                 + [(140, 184)])
+    return outer + inner
+
+
+def profile_e():
+    """Уплотнитель E: три лепестка от спинки — сечение буквой E."""
+    return poly([(88, 56), (300, 56), (300, 104), (152, 104), (152, 168),
+                 (280, 168), (280, 216), (152, 216), (152, 280), (300, 280),
+                 (300, 328), (88, 328)])
+
+
+def profile_w():
+    """Уплотнитель W: сечение с двумя складками."""
+    return poly([(48, 116), (120, 262), (192, 116), (264, 262), (336, 116),
+                 (336, 176), (264, 322), (192, 176), (120, 322), (48, 176)])
+
+
+# ── Вентиляция ──────────────────────────────────────────────────────────────
+
+def clamp():
+    """Струбцины: скоба и прижимной винт."""
+    frame = poly([(66, 58), (300, 58), (300, 102), (110, 102),
+                  (110, 294), (300, 294), (300, 338), (66, 338)])
+    return (frame + line((226, 294), (226, 202)) + line((184, 202), (268, 202))
+            + rect(204, 166, 248, 202))
+
+
+def duct_staple():
+    """Скоба: полукольцевой хомут с лапками под крепёж."""
+    band = poly(arc(C, 220, 116, math.pi, 2*math.pi, 48)
+                + arc(C, 220, 80, 2*math.pi, math.pi, 48))
+    return band + rect(34, 220, 108, 258) + rect(276, 220, 350, 258)
+
+
+def hose_clamp():
+    """Хомуты: ленточный хомут с винтовым замком."""
+    return (circle(C, 214, 118) + circle(C, 214, 86)
+            + rect(150, 44, 234, 110)
+            + line((164, 66), (220, 66)) + line((164, 88), (220, 88)))
+
+
+def perf_band():
+    """Перфолента: полоса с рядом отверстий."""
+    holes = ''.join(circle(x, 192, 22) for x in (66, 120, 174, 228, 282, 336))
+    return rect(24, 150, 360, 234) + holes
+
+
+def lu_profiles():
+    """Профиль монтажный L, U: два сечения рядом."""
+    l_ = poly([(48, 64), (96, 64), (96, 268), (184, 268), (184, 316), (48, 316)])
+    u_ = poly([(212, 64), (260, 64), (260, 268), (296, 268), (296, 64),
+               (344, 64), (344, 316), (212, 316)])
+    return l_ + u_
+
+
+# ── Инструмент ──────────────────────────────────────────────────────────────
+
+def caulking_gun():
+    """Пистолет для герметика: скелетная рама, шток, рукоять и курок."""
+    return (rect(56, 116, 296, 146) + rect(56, 210, 296, 240)
+            + poly([(296, 146), (350, 162), (350, 194), (296, 210)])
+            + rect(12, 164, 56, 192)
+            + poly([(250, 240), (306, 240), (294, 336), (238, 336)])
+            + poly([(238, 248), (212, 288), (236, 302)], close=False))
+
+
+def paint_roller():
+    """Инструмент отделочный: малярный валик."""
+    return (rect(104, 50, 344, 130) + poly([(104, 90), (54, 90), (54, 206)], close=False)
+            + rect(28, 206, 80, 336))
+
+
+def utility_knife():
+    """Инструмент режущий: нож с выдвижным лезвием."""
+    return (rect(34, 150, 280, 234) + poly([(280, 158), (352, 158), (352, 196), (280, 226)])
+            + rect(118, 168, 174, 216))
+
+
+def tape_measure():
+    """Инструмент измерительный: рулетка — корпус, лента с делениями и зацеп.
+
+    Прямоугольный корпус с круглой катушкой посередине читался фотоаппаратом.
+    Скошенный угол, деления на ленте и зацеп на конце убирают это сходство.
+    """
+    case = poly([(48, 132), (192, 132), (232, 180), (232, 292), (48, 292)])
+    marks = ''.join(line((x, 198), (x, 216)) for x in (258, 286, 314))
+    return (case + circle(120, 212, 46) + rect(232, 198, 336, 240)
+            + rect(330, 182, 354, 256) + marks)
+
+
+def riveter():
+    """Инструмент крепёжный: заклёпочник — две рукояти и головка."""
+    return (rect(52, 124, 298, 170) + poly([(52, 218), (266, 190), (272, 234), (58, 262)])
+            + rect(298, 104, 348, 190) + line((323, 104), (323, 58)))
+
+
+def step_ladder():
+    """Лестницы, стремянки: стремянка со ступенями."""
+    steps = ''.join(line((84 + 72*t, 330 - 268*t), (252 - 72*t, 330 - 268*t))
+                    for t in (0.14, 0.42, 0.70))
+    return (line((84, 330), (156, 62)) + line((252, 330), (180, 62))
+            + steps + line((176, 68), (330, 330)))
+
+
+def suction_cup():
+    """Инструмент монтажный: стеклодомкрат — присоска с рукоятью."""
+    return (poly([(56, 202), (328, 202), (302, 268), (82, 268)])
+            + rect(138, 128, 246, 202)
+            + poly(arc(192, 128, 86, math.pi, 2*math.pi, 40), close=False))
+
+
+def power_drill():
+    """Электроинструмент: дрель с патроном и рукоятью."""
+    return (rect(92, 92, 268, 190) + rect(268, 114, 318, 168)
+            + line((318, 141), (358, 141))
+            + poly([(118, 190), (196, 190), (216, 332), (138, 332)]))
+
+
+# ── СИЗ ─────────────────────────────────────────────────────────────────────
+
+def glove():
+    """Перчатки: ладонь с пальцами, отставленный большой и крага."""
+    def finger(x, top, w=32):
+        return poly([(x, 182), (x, top + w/2)]
+                    + arc(x + w/2, top + w/2, w/2, math.pi, 2*math.pi, 16)
+                    + [(x + w, 182)])
+    return (rect(96, 150, 282, 288) + rect(84, 288, 294, 336)
+            + ''.join(finger(x, t) for x, t in ((108, 92), (152, 66), (196, 70), (240, 96)))
+            + poly([(96, 198), (46, 230), (66, 272), (110, 248)]))
+
+
+def goggles():
+    """Очки: две линзы, перемычка и дужки."""
+    return (ellipse(130, 192, 76, 54) + ellipse(254, 192, 76, 54)
+            + line((178, 182), (206, 182))
+            + line((56, 176), (22, 156)) + line((328, 176), (362, 156)))
+
+
+def respirator():
+    """Маски: складчатая полумаска с резинками.
+
+    Круглый клапан посередине купола читался глазом, а сам купол — лицом.
+    Складки вместо клапана дают силуэт респиратора, а не гримасу.
+    """
+    shell = poly([(66, 130), (318, 130), (300, 238), (192, 308), (84, 238)])
+    folds = line((72, 180), (312, 180)) + line((82, 228), (302, 228))
+    straps = line((66, 146), (24, 102)) + line((318, 146), (360, 102))
+    return shell + folds + straps
+
+
+def ear_muffs():
+    """Наушники: две чашки и оголовье."""
+    return (poly(arc(C, 192, 132, math.pi, 2*math.pi, 48), close=False)
+            + poly(arc(C, 192, 96, math.pi, 2*math.pi, 48), close=False)
+            + rect(28, 192, 96, 302) + rect(288, 192, 356, 302))
+
+
+def film_roll():
+    """Плёнка укрывочная: рулон и развёрнутое полотно."""
+    return (circle(96, 132, 76) + circle(96, 132, 26) + rect(36, 208, 348, 318))
+
+
+def stretch_film():
+    """Стрейч-плёнка: рулон стоймя и натянутое полотно."""
+    return (standing_roll(cx=112, ry=30, rx=72, y_top=108, y_bot=268)
+            + poly([(186, 126), (340, 152), (340, 300), (186, 280)]))
+
+
+def waste_bag():
+    """Мешки для строительного мусора: мешок с перехваченной горловиной."""
+    return (poly([(84, 152), (300, 152), (330, 332), (54, 332)])
+            + rect(140, 92, 244, 152) + line((140, 122), (244, 122)))
+
+
+def barrier_tape():
+    """Лента оградительная: полотно с косыми полосами."""
+    return rect(24, 134, 360, 242) + ''.join(line((x, 242), (x + 62, 134))
+                                             for x in (58, 148, 238))
+
+
+def knee_pad():
+    """Наколенники, пояса: наколенник с ремнями."""
+    shell = poly(arc(C, 212, 120, math.pi, 2*math.pi, 48) + [(C + 120, 288), (C - 120, 288)])
+    return shell + rect(22, 224, 72, 264) + rect(312, 224, 362, 264)
+
+
+def hard_hat():
+    """СИЗ и расходные материалы: каска с козырьком."""
+    return (poly(arc(C, 240, 118, math.pi, 2*math.pi, 48) + [(C + 118, 240)])
+            + rect(38, 240, 346, 280))
+
+
+# ── Оснастка к электроинструменту ───────────────────────────────────────────
+
+def twist_drill():
+    """Сверление: спиральное сверло с хвостовиком."""
+    flutes = ''.join(line((156, y), (228, y - 48)) for y in (166, 214, 262, 298))
+    return (rect(150, 40, 234, 104) + rect(156, 104, 228, 296) + flutes
+            + poly([(156, 296), (192, 342), (228, 296)], close=False))
+
+
+def sds_bit():
+    """Оснастка к электроинструменту: бур SDS — пазы хвостовика и спираль."""
+    flutes = ''.join(line((158, y), (226, y - 46)) for y in (170, 216, 262, 296))
+    return (rect(154, 36, 230, 114) + line((168, 52), (168, 100))
+            + line((216, 52), (216, 100)) + rect(158, 114, 226, 296) + flutes
+            + poly([(148, 296), (148, 330), (236, 330), (236, 296)]))
+
+
+def cutting_disc():
+    """Оснастка для угловых шлифмашин: отрезной круг с фланцем."""
+    return circle(C, C, 150) + circle(C, C, 118) + circle(C, C, 38)
+
+
+def diamond_disc():
+    """Алмазная резка: круг с сегментами по кромке."""
+    slots = ''.join(line((C + 98*math.cos(a), C + 98*math.sin(a)),
+                         (C + 144*math.cos(a), C + 144*math.sin(a)))
+                    for a in [math.radians(30*i) for i in range(12)])
+    return circle(C, C, 142) + circle(C, C, 38) + slots
+
+
+def hole_saw():
+    """Коронки: биметаллическая коронка с зубьями."""
+    teeth = ''.join(poly([(x, 296), (x + 16, 320), (x + 32, 296)], close=False)
+                    for x in (96, 160, 224))
+    return (poly([(96, 296), (96, 118), (288, 118), (288, 296)], close=False)
+            + teeth + rect(166, 56, 218, 118))
+
+
+def driver_bit():
+    """Оснастка для дрелей, шуруповертов: бита с шестигранным хвостовиком."""
+    return (rect(150, 58, 234, 208) + line((178, 58), (178, 208))
+            + line((206, 58), (206, 208)) + rect(166, 208, 218, 266)
+            + poly([(166, 266), (192, 322), (218, 266)], close=False))
+
+
+def chuck():
+    """Принадлежности для электроинструмента: сверлильный патрон."""
+    return (poly([(110, 92), (274, 92), (248, 262), (136, 262)])
+            + line((113, 148), (271, 148)) + line((121, 206), (263, 206))
+            + poly([(158, 262), (174, 322), (210, 322), (226, 262)], close=False))
+
+
+def router_bit():
+    """Фрезерование: концевая фреза."""
+    edges = ''.join(line((122, y), (262, y - 40)) for y in (234, 288))
+    return (rect(160, 42, 224, 166) + poly([(122, 166), (262, 166), (262, 286),
+                                            (192, 330), (122, 286)]) + edges)
+
+
+def sanding_disc():
+    """Шлифование и полирование: шлифкруг с отверстиями пылеотвода."""
+    holes = ''.join(circle(C + 98*math.cos(math.radians(60*i)),
+                           C + 98*math.sin(math.radians(60*i)), 18) for i in range(6))
+    return circle(C, C, 148) + holes + circle(C, C, 26)
+
+
+def chisel():
+    """Разрушение камня и бетона: пиковое зубило с хвостовиком SDS."""
+    return (rect(156, 40, 228, 138) + line((170, 56), (170, 122))
+            + line((214, 56), (214, 122))
+            + poly([(156, 138), (228, 138), (228, 266), (192, 338), (156, 266)]))
+
+
 ICONS = {
-    # материалы для монтажа окон
+    # ── Материалы для монтажа окон ──
+    'materialy-dlya-okon': window_frame(),
     'montazhnye-lenty-dlya-okon': tape_roll(),
     'samorasshiryayuschayasya-lenta-psul': psul_coil(),
+    'polnobutilovye-lenty': butyl_roll(),
     'pena-montazhnaya-ochistitel-dlya-peny': foam_gun(),
-    'germetiki-kleya-himiya-smazki': sealant_bead(),
-    'krepezh-dlya-okon-krovli-fasadov': anchor_bolt(),
-    'samorezy-i-shurupy': screw(),
-    'dyubelnaya-tehnika': dowel(),
-    'krovelnye-uplotniteli-kleykie-lenty': roof_seal(),
-    'uplotnitelnye-lenty-pes-samokleyaschiesy': pes_strip(),
-    'instrument-sizy': wrench(),
-    'uplotnitel-rezinovyy-d-p-e': rubber_profile(),
+    'klinya-zaglushki': wedge(),
     'penopolietilen-ppe-rulonnaya-izolyaciya': ppe_roll(),
-    # комплектующие для вентиляции
+
+    # ── Герметики ──
+    # Четыре подраздела различает химия, а не форма: картридж у всех один.
+    'germetiki': sealant_bead(),
+    'germetiki-silikonovye': cartridge(),
+    'germetiki-akrilovye': cartridge(),
+    'germetiki-akrilatnye': cartridge(),
+    'germetiki-poliuretanovye': cartridge(),
+
+    # ── Клей, химия, смазки ──
+    'kley-himiya-smazki': spray_can(),
+    'himiya-dlya-okon-cosmofen': bottle(),
+    'smazki-aerozolnye': spray_can(),
+    'klei-montazhnye': cartridge(),
+    'kraski-gruntovki': bottle(),
+
+    # ── Уплотнительные ленты ПЭС ──
+    'uplotnitelnye-lenty-pes-samokleyaschiesy': pes_strip(),
+    'zvukoizolyacionnaya-lenta': sound_tape(),
+    'pes-mezhflancevaya-lenta': flange_tape(),
+    'pes-lenta-pod-kontrobreshyotku': batten_tape(),
+    'lenta-dlya-sendvich-paneley': sandwich_panel(),
+    'shumopogloschayuschaya-lenta': acoustic_tape(),
+    'dempfernaya-lenta': damper_tape(),
+
+    # ── Кровельные уплотнительные клейкие ленты ──
+    'krovelnye-uplotniteli-kleykie-lenty': roof_seal(),
+    'lenta-pod-kontrobreshyotku': batten_tape(),
+    'uplotnitel-universalnyy-psul': psul_coil(),
+    'lenta-butilkauchukovaya-lb': butyl_roll(),
+    'lenta-butilkauchukovaya-lba': foil_butyl_roll(),
+    'kleykaya-lenta-dvuhstoronnyaya': double_sided_tape(),
+    'uplotnitel-krovelnyy': roof_seal(),
+
+    # ── Резиновые уплотнители: сечения профилей ──
+    'uplotnitel-rezinovyy-d-p-e': rubber_profile(),
+    'uplotnitel-d': rubber_profile(),
+    'uplotnitel-p': profile_p(),
+    'uplotnitel-e': profile_e(),
+    'uplotnitel-w': profile_w(),
+
+    # ── Крепёж: общий стержень, разные головки и наконечники ──
+    'krepezh': anchor_bolt(),
+    'anker-ramnyy': anchor_bolt(),
+    'plastina-ankernaya': anchor_plate(),
+    'kronshteyn-opornyy-dlya-otlivov': support_bracket(),
+    'shurup-po-betonu-nagel': concrete_screw(),
+    'shurup-universalnyy': screw(),
+    'samorez-okonnyy-ostryy': window_screw(),
+    'samorez-okonnyy-so-sverlom': window_drill_screw(),
+    'shurup-s-polusfericheskoy-golovkoy': dome_screw(),
+    'samorez-s-press-shayboy-ostryy': press_screw(),
+    'samorez-s-press-shayboy-so-sverlom': press_drill_screw(),
+    'dyubel-gvozd': nail_dowel(),
+    'samorez-dlya-sendvich-paneley': panel_screw(),
+    'zaklyopki': rivet(),
+    'samorez-dlya-fasadnyh-sistem': facade_screw(),
+    'samorez-krovelnyy': roof_screw(),
+    'dyubel-ramnyy': frame_dowel(),
+    'dyubel-dlya-teploizolyacii': plate_dowel(),
+    'shurup-s-shestigrannoy-golovkoy': hex_screw(),
+    'dyubel-raspornyy': dowel(),
+    'skobyanye-izdeliya': hook(),
+    'shayby': washer(),
+    'shurup-konstrukcionnyy': structural_screw(),
+
+    # ── Алюминиевые и армированные ленты ──
+    'alyuminievye-armirovannye-lenty': foil_roll(),
+    'alyuminievye-lenty-alu': foil_roll(),
+    'armirovannye-lenty-tpl': reinforced_roll(),
+    'malyarnaya-lenta': masking_roll(),
+    'izolyacionnye-lenty': insulating_roll(),
+
+    # ── Комплектующие для воздуховодов ──
+    'ventilyaciya': duct_elbow(),
     'flancevyy-profil-dlya-vozduhovodov': flange_profile(),
     'ugolki-montazhnye': corner_bracket(),
-    'krepezhnye-detali-dlya-vozduhovodov': z_bracket(),
+    'kronshteyny-l-v-z-p': z_bracket(),
+    'strubciny': clamp(),
+    'skoba': duct_staple(),
+    'homuty': hose_clamp(),
     'profil-montazhnyy-traversa': traverse_channel(),
-    'lenty-uplotnitelnye-samokleyaschiesya': two_rolls(),
-    'elementy-osnascheniya-vozduhovodov': damper_handle(),
-    # категории верхнего уровня и разделы мега-меню
-    'materialy-dlya-okon': window_frame(),
-    'ventilyaciya': duct_elbow(),
+    'profil-montazhnyy-l-u': lu_profiles(),
+    'perfolenta': perf_band(),
+    'mezhflancevaya-lenta': flange_tape(),
+    'anker-latunnyy-canga': collet(),
+    'shpilka-rezbovaya': threaded_rod(),
+    'sprey-aerozol-cinkovyy': spray_can(),
+    'elementy-osnascheniya': damper_handle(),
+
+    # ── Инструмент, оборудование ──
+    'instrument-oborudovanie': wrench(),
+    'pistolety-dlya-peny': foam_gun(),
+    'pistolety-dlya-germetika': caulking_gun(),
+    'instrument-otdelochnyy': paint_roller(),
+    'instrument-rezhuschiy': utility_knife(),
+    'instrument-izmeritelnyy': tape_measure(),
+    'instrument-krepyozhnyy': riveter(),
+    'instrument-slesarnyy': wrench(),
+    'lestnicy-stremyanki': step_ladder(),
+    'instrument-montazhnyy': suction_cup(),
+    'elektroinstrument': power_drill(),
+
+    # ── СИЗ и расходные материалы ──
+    'siz-rashodnye-materialy': hard_hat(),
+    'perchatki': glove(),
+    'ochki': goggles(),
+    'maski': respirator(),
+    'naushniki': ear_muffs(),
+    'plyonka-ukryvochnaya': film_roll(),
+    'streych-plyonka': stretch_film(),
+    'meshki-dlya-musora': waste_bag(),
+    'lenta-ograditelnaya': barrier_tape(),
+    'nakolenniki-poyasa': knee_pad(),
+
+    # ── Оснастка к электроинструменту ──
+    'osnastka-k-elektroinstrumentu': sds_bit(),
+    'almaznaya-rezka-shlifovanie-i-sverlenie': diamond_disc(),
+    'koronki': hole_saw(),
+    'osnastka-dlya-dreley-shurupovertov': driver_bit(),
+    'osnastka-dlya-uglovyh-shlifmashin': cutting_disc(),
+    'prinadlezhnosti-dlya-elektroinstrumenta': chuck(),
+    'razrushenie-kamnya-i-betona': chisel(),
+    'sverlenie': twist_drill(),
+    'frezerovanie': router_bit(),
+    'shlifovanie-i-polirovanie': sanding_disc(),
+
+    # ── Общие знаки ──
     'tapes': standing_roll(),
     'all': catalog_grid(),
 }
@@ -418,9 +1161,8 @@ ICONS = {
 body = ''.join(f"  '{k}': '{d}',\n" for k, d in ICONS.items())
 out = f'''/* Сгенерировано `scripts/sections/draw.py` — руками не править.
  *
- * Знаки всех восемнадцати подразделов каталога. Рисуются формулами на сетке
- * {S}x{S}: сплошной силуэт предмета, внутренняя структура вырезами, поэтому
- * при отрисовке нужен fill-rule evenodd.
+ * Знаки всех разделов и подразделов каталога. Рисуются формулами на сетке
+ * {S}x{S} и обводятся, а не заливаются — см. src/lib/sectionIcons.tsx.
  */
 
 export const DRAWN_ICONS: Record<string, string> = {{
