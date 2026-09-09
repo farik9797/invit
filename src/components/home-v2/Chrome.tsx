@@ -637,7 +637,7 @@ const CHANNELS: { key: string; label: string; href: string; bg: string; icon: st
   {
     key: 'telegram',
     label: 'Написать в Telegram',
-    href: 'https://t.me/invit_euroband_bot',
+    href: COMPANY.telegram,
     bg: 'bg-[#26A5E4] hover:bg-[#1e8fc7]',
     icon: telegramIcon
   },
@@ -892,6 +892,15 @@ export const FooterV2: React.FC = () => (
             className="flex items-center min-h-11 sm:min-h-0 text-sm hover:text-white transition-colors duration-[120ms]"
           >
             {COMPANY.email}
+          </a>
+          <a
+            href={COMPANY.telegram}
+            target="_blank"
+            rel="noopener"
+            className="flex items-center gap-2 min-h-11 sm:min-h-0 sm:mt-1 text-sm hover:text-white transition-colors duration-[120ms]"
+          >
+            <img src={telegramIcon} alt="" aria-hidden width={16} height={16} className="w-4 h-4 shrink-0" />
+            Заявка в Telegram
           </a>
         </div>
       </div>

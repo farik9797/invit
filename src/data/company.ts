@@ -19,7 +19,8 @@ export const COMPANY = {
   bankAddress: 'РБ, 223710, Минская обл., г. Солигорск, ул. Козлова, 37',
   email: 'info@invit.by',
   phoneMinsk: '+375 29 644-49-79',
-  phoneSoligorsk: '+375 174 32-50-22'
+  phoneSoligorsk: '+375 174 32-50-22',
+  telegram: 'https://t.me/invit_euroband_bot'
 };
 
 /**

@@ -6,6 +6,8 @@ import { Breadcrumbs } from '../components/Breadcrumbs';
 import { Fade, FadeGroup } from '../components/home-v2/Chrome';
 import { RequestForm } from '../components/home-v2/RequestForm';
 import { paths } from '../routes';
+import { COMPANY } from '../data/company';
+import telegramIcon from '../assets/icons/telegram.svg';
 
 /*
  * Контакты. Прежняя версия обещала то, чего клиент не подтверждал:
@@ -102,6 +104,15 @@ export const ContactsPage: React.FC = () => (
             >
               <Mail className="w-5 h-5 shrink-0" />
               info@invit.by
+            </a>
+            <a
+              href={COMPANY.telegram}
+              target="_blank"
+              rel="noopener"
+              className="inline-flex items-center gap-3 min-h-11 text-base font-semibold text-inv-on-deep hover:text-white transition-colors duration-[120ms]"
+            >
+              <img src={telegramIcon} alt="" aria-hidden width={20} height={20} className="w-5 h-5 shrink-0" />
+              Заявка в Telegram
             </a>
           </div>
         </div>
