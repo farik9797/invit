@@ -276,7 +276,11 @@ def main():
         if r['Type'] == 'variation':
             variations[r['Parent']].append(r)
 
-    cards = [r for r in rows if r['Type'] != 'variation']
+    # Published=0 — позиция выключена на invit.by. В выгрузку для магазина она
+    # идёт (черновиком), на витрине её нет.
+    hidden = [r for r in rows if r['Type'] != 'variation' and r['Published'].strip() == '0']
+    cards = [r for r in rows
+             if r['Type'] != 'variation' and r['Published'].strip() != '0']
 
     # Идентификаторы: сохраняем прежние, остальные собираем из названия
     ids, used = {}, set()
@@ -419,6 +423,7 @@ def main():
         encoding='utf-8')
 
     variants = sum(len(p.get('variants', [])) for p in products)
+    print(f'скрыто (Published=0): {len(hidden)}')
     print(f'разделов        : {len(sections)}')
     print(f'подразделов     : {sum(len(s["subcategories"]) for s in sections)}')
     print(f'карточек        : {len(products)}  (из них с вариациями '
