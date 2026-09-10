@@ -15,8 +15,8 @@ import { paths } from "../../routes";
 import { Fade, FadeGroup, CountUp, BlueButton } from "./Chrome";
 import { RequestForm } from "./RequestForm";
 import heroRoof from "../../assets/hero/roof-standing-seam.webp";
-import heroSlab from "../../assets/hero/tape-slab-joint.webp";
-import heroFloor from "../../assets/hero/floor-damper-tape.webp";
+import pesTapeRolls from "../../assets/hero/pes-tape-rolls.webp";
+import butylTapeRoll from "../../assets/hero/butyl-tape-roll.webp";
 import eurobandLogo from "../../assets/logo/euroband-color.svg";
 import eurobandMark from "../../assets/logo/euroband-color.svg";
 import {
@@ -59,6 +59,7 @@ interface HeroSlide {
   cta: string;
 }
 
+/* Кадры со съёмки клиента — те же, что на главной: своя лента, своя этикетка. */
 const HERO_SLIDES: HeroSlide[] = [
   {
     id: "about",
@@ -72,8 +73,7 @@ const HERO_SLIDES: HeroSlide[] = [
     id: "joint",
     title: "Защита от воды, шума и холода",
     text: "Межфланцевая уплотнительная лента ПЭС в стыках плит, панелей и металлоконструкций.",
-    image: heroSlab,
-    whole: true,
+    image: pesTapeRolls,
     href: `${paths.category("materialy-dlya-okon")}?sub=uplotnitelnye-lenty-pes-samokleyaschiesy`,
     cta: "Ленты ПЭС",
   },
@@ -81,7 +81,7 @@ const HERO_SLIDES: HeroSlide[] = [
     id: "floor",
     title: "Демпферная лента для стяжки пола",
     text: "Компенсирует расширение стяжки и отсекает ударный шум по периметру помещения.",
-    image: heroFloor,
+    image: butylTapeRoll,
     href: `${paths.category("materialy-dlya-okon")}?sub=uplotnitelnye-lenty-pes-samokleyaschiesy`,
     cta: "Ленты ПЭС",
   },

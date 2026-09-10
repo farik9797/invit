@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'motion/react';
 import { paths } from '../../routes';
 import eurobandMark from '../../assets/logo/euroband-color.svg';
-import windowTapes from '../../assets/hero/window-tapes.webp';
+import eurobandRange from '../../assets/hero/euroband-range.webp';
 import sandwichPanels from '../../assets/hero/sandwich-panels.webp';
 import roofStandingSeam from '../../assets/hero/roof-standing-seam.webp';
-import tapeSlabJoint from '../../assets/hero/tape-slab-joint.webp';
-import floorDamperTape from '../../assets/hero/floor-damper-tape.webp';
+import pesTapeRolls from '../../assets/hero/pes-tape-rolls.webp';
+import butylTapeRoll from '../../assets/hero/butyl-tape-roll.webp';
 import psulTape from '../../assets/hero/psul-tape.webp';
 
 interface HeroProps {
@@ -26,13 +26,19 @@ interface Slide {
   cta: string;
 }
 
+/*
+ * Кадры трёх слайдов — фотографии со склада клиента: его рулоны, его этикетка,
+ * его короба. Стояли красивые кадры со стоков, но лента и марка на них были
+ * чужие: на одном по ленте шла нечитаемая кириллица под видом надписи
+ * EUROBAND. Клиент прислал съёмку продукции — ставим её.
+ */
 const SLIDES: Slide[] = [
   {
     id: 'windows',
     lead: 'Монтажный шов окна —',
     accent: 'три слоя, три ленты',
     text: 'Внутри пароизоляционная ВЛ(а) или ВЛ, снаружи паропроницаемая НЛ, в четверти — саморасширяющаяся ПСУЛ. Шов держит тепло и выводит влагу наружу.',
-    image: windowTapes,
+    image: eurobandRange,
     href: `${paths.category('materialy-dlya-okon')}?sub=montazhnye-lenty-dlya-okon`,
     cta: 'Ленты для окон'
   },
@@ -59,8 +65,7 @@ const SLIDES: Slide[] = [
     lead: 'Стык плит и панелей —',
     accent: 'уплотнительная лента ПЭС',
     text: 'Самоклеящаяся лента из вспененного полиэтилена закрывает шов от воды, шума и холода: сэндвич-панели, перекрытия, металлоконструкции.',
-    image: tapeSlabJoint,
-    whole: true,
+    image: pesTapeRolls,
     href: `${paths.category('materialy-dlya-okon')}?sub=uplotnitelnye-lenty-pes-samokleyaschiesy`,
     cta: 'Ленты ПЭС'
   },
@@ -69,7 +74,7 @@ const SLIDES: Slide[] = [
     lead: 'Стыки оснований и покрытий —',
     accent: 'лента EUROBAND',
     text: 'Проклеиваем шов между бетоном и покрытием: кромка не задирается, пыль и влага в стык не идут.',
-    image: floorDamperTape,
+    image: butylTapeRoll,
     href: `${paths.category('materialy-dlya-okon')}?sub=uplotnitelnye-lenty-pes-samokleyaschiesy`,
     cta: 'Ленты ПЭС'
   },
