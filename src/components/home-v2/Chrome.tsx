@@ -1,5 +1,5 @@
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, Phone, ShoppingCart, Search, ChevronUp, MessageCircle } from 'lucide-react';
 import invitLogo from '../../assets/logo/invit-color.svg';
 import invitLight from '../../assets/logo/invit-light.svg';
@@ -647,6 +647,8 @@ export const FloatingActions: React.FC<{ expanded: boolean; onExpandedChange: (e
   onExpandedChange
 }) => {
   const [showTop, setShowTop] = useState(false);
+  const stackRef = useRef<HTMLDivElement>(null);
+  const { pathname } = useLocation();
 
   useEffect(() => {
     const onScroll = () => setShowTop(window.scrollY > window.innerHeight * 2);
@@ -654,6 +656,34 @@ export const FloatingActions: React.FC<{ expanded: boolean; onExpandedChange: (e
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  /*
+   * Закрываем по клику мимо и по Esc. Раскрытые каналы закрывались только
+   * крестиком, и посетитель, ткнув в страницу, оставался со столбиком кнопок
+   * поверх неё — на телефоне он занимает половину экрана.
+   */
+  useEffect(() => {
+    if (!expanded) return;
+
+    const onPointer = (e: PointerEvent) => {
+      if (!stackRef.current?.contains(e.target as Node)) onExpandedChange(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onExpandedChange(false);
+    };
+    document.addEventListener('pointerdown', onPointer);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('pointerdown', onPointer);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [expanded, onExpandedChange]);
+
+  // Ушли на другую страницу — столбик сворачиваем
+  useEffect(() => {
+    onExpandedChange(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
 
   const round =
     'w-12 h-12 sm:w-14 sm:h-14 rounded-full shadow-[0_6px_24px_rgba(22,44,88,0.22)] flex items-center justify-center cursor-pointer transition-[background-color,transform,opacity] duration-[120ms] ease-[cubic-bezier(0.4,0,0.2,1)] active:scale-[0.96]';
@@ -671,13 +701,14 @@ export const FloatingActions: React.FC<{ expanded: boolean; onExpandedChange: (e
         </button>
       )}
 
-      <div className="fixed bottom-5 right-4 sm:bottom-6 sm:right-6 z-40 flex flex-col items-center gap-3">
+      <div ref={stackRef} className="fixed bottom-5 right-4 sm:bottom-6 sm:right-6 z-40 flex flex-col items-center gap-3">
       {CHANNELS.map((channel, idx) => (
         <a
           key={channel.key}
           href={channel.href}
           target="_blank"
           rel="noopener"
+          onClick={() => onExpandedChange(false)}
           aria-label={channel.label}
           aria-hidden={!expanded}
           tabIndex={expanded ? 0 : -1}
