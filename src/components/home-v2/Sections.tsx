@@ -14,7 +14,8 @@ import aboutProduct from "../../assets/content/lenta-butilovaja-euroband-lba-3e2
 import { paths } from "../../routes";
 import { Fade, FadeGroup, CountUp, BlueButton } from "./Chrome";
 import { RequestForm } from "./RequestForm";
-import heroRoof from "../../assets/hero/roof-standing-seam.webp";
+import tapeRange from "../../assets/hero/tape-range.webp";
+import rollsPhoto from "../../assets/hero/euroband-rolls-photo.webp";
 import pesTapeRolls from "../../assets/hero/pes-tape-rolls.webp";
 import butylTapeRoll from "../../assets/hero/butyl-tape-roll.webp";
 import eurobandLogo from "../../assets/logo/euroband-color.svg";
@@ -65,7 +66,7 @@ const HERO_SLIDES: HeroSlide[] = [
     id: "about",
     title: "Уплотнительные и герметизирующие ленты",
     text: "Белорусский производитель с 2001 года. Уплотняем стыки в окнах, кровле, сэндвич-панелях и вентиляции.",
-    image: heroRoof,
+    image: tapeRange,
     href: paths.catalog,
     cta: "Смотреть каталог",
   },
@@ -365,7 +366,7 @@ export const TapeBento: React.FC = () => {
             >
               <img
                 data-bento-photo
-                src={heroRoof}
+                src={rollsPhoto}
                 alt=""
                 aria-hidden
                 className="absolute left-0 top-0 w-full h-[110%] object-cover"

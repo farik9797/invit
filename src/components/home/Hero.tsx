@@ -4,11 +4,11 @@ import { motion, useReducedMotion } from 'motion/react';
 import { paths } from '../../routes';
 import eurobandMark from '../../assets/logo/euroband-color.svg';
 import eurobandRange from '../../assets/hero/euroband-range.webp';
-import sandwichPanels from '../../assets/hero/sandwich-panels.webp';
-import roofStandingSeam from '../../assets/hero/roof-standing-seam.webp';
+import aluButylRolls from '../../assets/hero/alu-butyl-rolls.webp';
+import tapeRange from '../../assets/hero/tape-range.webp';
 import pesTapeRolls from '../../assets/hero/pes-tape-rolls.webp';
 import butylTapeRoll from '../../assets/hero/butyl-tape-roll.webp';
-import psulTape from '../../assets/hero/psul-tape.webp';
+import psulEuroband from '../../assets/hero/psul-euroband.webp';
 
 interface HeroProps {
   onOpenCallback: () => void;
@@ -27,10 +27,10 @@ interface Slide {
 }
 
 /*
- * Кадры трёх слайдов — фотографии со склада клиента: его рулоны, его этикетка,
- * его короба. Стояли красивые кадры со стоков, но лента и марка на них были
- * чужие: на одном по ленте шла нечитаемая кириллица под видом надписи
- * EUROBAND. Клиент прислал съёмку продукции — ставим её.
+ * Все шесть кадров — съёмка продукции клиента, собранная в баннеры скриптом
+ * scripts/make-hero-banner.py. Прежде здесь стояли стоковые кадры, и лента с
+ * маркой на них были чужие: на одном по ленте шла нечитаемая кириллица под
+ * видом надписи EUROBAND.
  */
 const SLIDES: Slide[] = [
   {
@@ -47,7 +47,7 @@ const SLIDES: Slide[] = [
     lead: 'Сэндвич-панели и профлист —',
     accent: 'герметизация стыков',
     text: 'Бутилкаучуковая ЛБ на продольных и поперечных нахлёстах, ПЭС под прижимные планки. Стык не течёт и не свистит на ветру.',
-    image: sandwichPanels,
+    image: aluButylRolls,
     href: `${paths.category('materialy-dlya-okon')}?sub=krovelnye-uplotniteli-kleykie-lenty`,
     cta: 'Кровельные ленты'
   },
@@ -56,7 +56,7 @@ const SLIDES: Slide[] = [
     lead: 'Уплотнительные и герметизирующие',
     accent: 'ленты',
     text: 'Белорусский производитель с 2001 года. Изготовим ленты нетипичных размеров под ваш проект.',
-    image: roofStandingSeam,
+    image: tapeRange,
     href: paths.catalog,
     cta: 'Смотреть каталог'
   },
@@ -83,7 +83,7 @@ const SLIDES: Slide[] = [
     lead: 'Саморасширяющаяся лента —',
     accent: 'ПСУЛ EUROBAND',
     text: 'Акриловая пропитка и открытая ячейка: после монтажа лента расширяется впятеро и держит шов сухим и паропроницаемым не менее 20 лет.',
-    image: psulTape,
+    image: psulEuroband,
     href: `${paths.category('materialy-dlya-okon')}?sub=samorasshiryayuschayasya-lenta-psul`,
     cta: 'Лента ПСУЛ'
   }

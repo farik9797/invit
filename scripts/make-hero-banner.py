@@ -32,8 +32,18 @@ ORANGE = (254, 123, 9)         # оранжевый оттуда же
 EDGE_TOP, EDGE_BOTTOM = 0.46, 0.28
 
 BANNERS = [
-    ('64.JPG', 'pes-tape-rolls.webp'),          # слайд «Стык плит и панелей»
-    ('_S4A8870.jpg', 'butyl-tape-roll.webp'),   # слайд «Стыки оснований и покрытий»
+    ('_S4A8882.jpg', 'euroband-range.webp'),      # «Монтажный шов окна»
+    ('_S4A8945 корр.jpg', 'alu-butyl-rolls.webp'),  # «Сэндвич-панели и профлист»
+    ('_S4A8025.jpg', 'tape-range.webp'),          # «Уплотнительные и герметизирующие ленты»
+    ('64.JPG', 'pes-tape-rolls.webp'),            # «Стык плит и панелей»
+    ('_S4A8870.jpg', 'butyl-tape-roll.webp'),     # «Стыки оснований и покрытий»
+    ('_S4A8904.jpg', 'psul-euroband.webp'),       # «Саморасширяющаяся лента ПСУЛ»
+]
+
+# Снимки без фирменной подачи: в мозаике разделов на /v2 фото лежит под
+# затемнением и своим заголовком, косая граница там была бы лишней деталью.
+PLAIN = [
+    ('_S4A8910.jpg', 'euroband-rolls-photo.webp'),
 ]
 
 
@@ -79,12 +89,27 @@ def build(source, target):
     return (OUT / target).stat().st_size // 1024
 
 
+def plain(source, target, width=1600):
+    """Снимок как есть, только уменьшенный: для мозаики и карточек."""
+    with Image.open(PHOTOS / source) as raw:
+        photo = raw.convert('RGB')
+        height = round(photo.height * width / photo.width)
+        photo.resize((width, height), Image.LANCZOS).save(
+            OUT / target, 'WEBP', quality=84, method=6)
+    return (OUT / target).stat().st_size // 1024
+
+
 def main():
     for source, target in BANNERS:
         if not (PHOTOS / source).exists():
             print(f'нет снимка: {source}')
             continue
         print(f'{target}: {W}x{H}  {build(source, target)} КБ')
+    for source, target in PLAIN:
+        if not (PHOTOS / source).exists():
+            print(f'нет снимка: {source}')
+            continue
+        print(f'{target}: без подачи, {plain(source, target)} КБ')
     return 0
 
 
