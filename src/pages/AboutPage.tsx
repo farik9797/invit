@@ -10,7 +10,7 @@ import { productImage } from '../lib/productImages';
 import { useShop } from '../context/ShopContext';
 import { paths } from '../routes';
 import eurobandMark from '../assets/logo/euroband-color.svg';
-import heroTape from '../assets/hero/tape-application.webp';
+import plant from '../assets/banners/euroband-plant.webp';
 
 /*
  * Страница о компании.
@@ -298,10 +298,10 @@ export const AboutPage: React.FC = () => {
 
             <div className="lg:col-span-6">
               <img
-                src={heroTape}
-                alt="Монтаж уплотнительной ленты EUROBAND"
-                width={1920}
-                height={1279}
+                src={plant}
+                alt="Производство EUROBAND"
+                width={842}
+                height={703}
                 className="w-full h-[240px] sm:h-[340px] lg:h-[420px] object-cover rounded-[8px]"
               />
             </div>

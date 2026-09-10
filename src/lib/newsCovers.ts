@@ -1,9 +1,9 @@
-import { PRODUCTS } from '../data/catalogData';
-import { certificateImage, productImage } from './productImages';
-import heroRoof from '../assets/hero/roof-standing-seam.webp';
-import heroTape from '../assets/hero/tape-application.webp';
-import heroSheets from '../assets/hero/roof-profile-sheets.webp';
-import heroSlab from '../assets/hero/tape-slab-joint.webp';
+import { certificateImage } from './productImages';
+import plant from '../assets/banners/euroband-plant.webp';
+import rangeNavy from '../assets/banners/euroband-range-navy.webp';
+import rangeWhite from '../assets/banners/euroband-range-white.webp';
+import aluPesRolls from '../assets/banners/alu-pes-rolls.webp';
+import pesTapeWindow from '../assets/banners/pes-tape-window.webp';
 
 /*
  * Обложки новостей.
@@ -11,25 +11,24 @@ import heroSlab from '../assets/hero/tape-slab-joint.webp';
  * К заметкам на invit.by приложен клипарт нулевых (эмблема палаты, картинка
  * телефона, печать «важная информация») — его мы не переносили. Настоящих
  * фотографий к событиям у клиента нет, поэтому обложка подбирается по теме:
- * новости про сертификацию получают скан самого сертификата, новость про
- * расширение складской программы — фото той ленты, о которой в ней речь,
- * остальные — кадры производства.
+ * переезд получает снимок производства, складская программа — ассортимент,
+ * остальные — кадры продукции.
+ *
+ * Две новости про сертификацию оставлены со сканами самих документов: скан
+ * говорит о событии больше, чем любой товарный кадр.
  *
  * Если клиент пришлёт настоящие фото, менять надо только эту карту.
  */
-
-const sandwichTape = PRODUCTS.find((p) => p.id === 'lenta-dlja-sjendvich-panelej');
-
 const COVERS: Record<string, string> = {
   'sertifikat-invit-2025-2027': certificateImage('cert-1', ''),
   'sertifikat-beltpp-2014': certificateImage('cert-2', ''),
-  'rasshirenie-skladskoj-programmy': sandwichTape ? productImage(sandwichTape) : heroSlab,
-  'invit-pereezd-na-mkad': heroSlab,
-  'invit-novye-nomera-telefonov': heroTape,
-  'invit-novye-rekvizity-2017': heroSheets
+  'rasshirenie-skladskoj-programmy': rangeWhite,
+  'invit-pereezd-na-mkad': plant,
+  'invit-novye-nomera-telefonov': pesTapeWindow,
+  'invit-novye-rekvizity-2017': aluPesRolls
 };
 
-export const newsCover = (id: string) => COVERS[id] || heroRoof;
+export const newsCover = (id: string) => COVERS[id] || rangeNavy;
 
 /** Сканы документов вписываем целиком, фото — кадрируем по месту. */
 export const newsCoverFit = (id: string) =>
