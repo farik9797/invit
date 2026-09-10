@@ -79,6 +79,7 @@ python3 scripts/build-catalog.py       # витрина          -> src/data + p
 | `Лестницы_стремянки.csv` | 232 КБ | выгрузка поставщика, лестницы и стремянки |
 | `invit-katalog.xlsx` | 68 КБ | каталог клиента: что оставить в выгрузке |
 | `site-photos/` | 7,6 МБ, 802 файла | фото импортированного крепежа |
+| `photos/` | 49 МБ, 21 файл | съёмка продукции клиента; из неё `scripts/make-hero-banner.py` собирает баннеры слайдера |
 | `woocommerce_import.before-ladders.csv` | 5,7 МБ | снимок выгрузки до лестниц |
 | `woocommerce_import.before-osnastka.csv` | 5,9 МБ | снимок выгрузки до оснастки |
 
