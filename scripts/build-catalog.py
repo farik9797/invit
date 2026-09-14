@@ -30,6 +30,7 @@ from collections import defaultdict
 ROOT = pathlib.Path(__file__).parent.parent
 SRC = ROOT / 'files/woocommerce_import_variations.csv'
 DST = ROOT / 'src/data/catalog.generated.ts'
+TEXTS = ROOT / 'src/data/catalogDescriptions.ts'
 IMAGES_IN = ROOT / 'files/images'
 IMAGES_OUT = ROOT / 'public/products'
 CONTENT = ROOT / 'src/data/productContent.ts'
@@ -199,12 +200,29 @@ def plain(text):
     return re.sub(r'\s+', ' ', text).strip()
 
 
-def excerpt(text, limit=200):
+def paragraphs(text):
+    """То же, но с сохранением абзацев — для полного описания на странице.
+
+    У поставщика описание размечено абзацами и переносами, а разделы внутри
+    отбиты строкой из дефисов. Склеенный в одну строку такой текст читается
+    сплошняком, поэтому границы блоков оставляем переносами, а строки-дефисы
+    выкидываем: на странице их роль играет сам отступ между абзацами.
+    """
+    text = re.sub(r'<br\s*/?>|</p>|</div>|</li>', '\n', text)
+    text = html.unescape(re.sub(r'<[^>]+>', '', text))
+    lines = [re.sub(r'[ \t]+', ' ', line).strip() for line in text.split('\n')]
+    return '\n'.join(line for line in lines if line and not re.fullmatch(r'[-–—]{2,}', line))
+
+
+EXCERPT = 200
+
+
+def excerpt(text, limit=EXCERPT):
     """Описание для карточки и шапки товара.
 
-    В карточке видно три строки, на странице товара подробности всё равно
-    приходят из `productContent.ts`. Полные тексты поставщика добавляли к
-    первой загрузке сайта больше мегабайта, поэтому режем до первых фраз.
+    Полные тексты поставщика — без малого три мегабайта, и в карточке нужны
+    только первые строки. Поэтому в витрину идёт начало, а полный текст лежит
+    в `catalogDescriptions.ts` и грузится отдельным куском на странице товара.
     """
     if len(text) <= limit:
         return text
@@ -320,6 +338,7 @@ def main():
 
     known = {(section, sub) for section, _, _, subs in STRUCTURE for sub, _ in subs}
     sections, products, extras, empty = [], [], [], []
+    texts = {}                      # полные описания, id -> текст
 
     def spec(row):
         out = []
@@ -341,6 +360,9 @@ def main():
     def build(row, category_slug, sub_slug):
         ident = ids[id(row)]
         safe = slugs[id(row)]
+        text = plain(row['Description'])
+        if len(text) > EXCERPT:
+            texts[ident] = paragraphs(row['Description'])
         kids = variations.get(row['SKU'], []) if row['Type'] == 'variable' else []
         # slug, shortTitle, subcategoryName, division, image и пустые features
         # с sourceUrl выводятся из остального — их достраивает catalogData.ts.
@@ -350,7 +372,7 @@ def main():
             'title': row['Name'],
             'categorySlug': category_slug,
             'subcategorySlug': sub_slug,
-            'description': excerpt(plain(row['Description'])),
+            'description': excerpt(text),
             'specs': spec(row),
         }
         if safe != ident:
@@ -422,6 +444,16 @@ def main():
         f'export const RAW_PRODUCTS: RawProduct[] = {dump(products)};\n',
         encoding='utf-8')
 
+    TEXTS.write_text(
+        '// Сгенерировано scripts/build-catalog.py — руками не править.\n'
+        '//\n'
+        '// Полные описания товаров. В витрине лежит только начало: три\n'
+        '// мегабайта текста в первой загрузке сайта не нужны никому, а здесь\n'
+        '// они уходят отдельным куском и грузятся на странице товара.\n\n'
+        'export const DESCRIPTIONS: Record<string, string> = '
+        f'{dump(texts)};\n',
+        encoding='utf-8')
+
     variants = sum(len(p.get('variants', [])) for p in products)
     print(f'скрыто (Published=0): {len(hidden)}')
     print(f'разделов        : {len(sections)}')
@@ -433,6 +465,8 @@ def main():
     print(f'сохранён прежний id: {sum(1 for p in products if p["id"] in keep_id)}'
           f'  (адрес отличается у {sum(1 for p in products if p.get("slug"))})')
     print(f'\n{DST.relative_to(ROOT)}: {DST.stat().st_size // 1024} КБ')
+    print(f'{TEXTS.relative_to(ROOT)}: {len(texts)} описаний, '
+          f'{TEXTS.stat().st_size // 1024} КБ')
     if extras:
         print(f'\nподразделы вне списка клиента ({len(extras)}):')
         for x in extras:

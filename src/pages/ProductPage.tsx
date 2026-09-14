@@ -20,6 +20,8 @@ export const ProductPage: React.FC = () => {
   const product = PRODUCTS.find((p) => productSlug(p) === slug);
 
   const [content, setContent] = useState<ProductContent | null>(null);
+  // Полное описание: в витрине лежит только начало, остальное приходит сюда
+  const [fullText, setFullText] = useState<string | null>(null);
   const [activePhoto, setActivePhoto] = useState(0);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [qty, setQty] = useState(1);
@@ -29,11 +31,15 @@ export const ProductPage: React.FC = () => {
   useEffect(() => {
     let cancelled = false;
     setContent(null);
+    setFullText(null);
     setActivePhoto(0);
     setVariant(null);
     import('../data/productContent').then(({ PRODUCT_CONTENT }) => {
       // Описания лежат по идентификатору товара, а не по адресу страницы
       if (!cancelled && product) setContent(PRODUCT_CONTENT[product.id] ?? null);
+    });
+    import('../data/catalogDescriptions').then(({ DESCRIPTIONS }) => {
+      if (!cancelled && product) setFullText(DESCRIPTIONS[product.id] ?? null);
     });
     return () => {
       cancelled = true;
@@ -53,7 +59,8 @@ export const ProductPage: React.FC = () => {
     (i) => i.product.id === product.id && (chosen === null || i.variant === chosen)
   );
 
-  const contentBlocks = dedupeContentBlocks(content?.blocks ?? [], product.description);
+  const description = fullText ?? product.description;
+  const contentBlocks = dedupeContentBlocks(content?.blocks ?? [], description);
 
   const gallery = productGallery(product, content?.images ?? []);
 
@@ -154,9 +161,9 @@ export const ProductPage: React.FC = () => {
               <h1 className="text-2xl sm:text-3xl font-bold text-ink tracking-tight leading-snug">
                 {product.title}
               </h1>
-              {product.description && (
-                <p className="text-sm text-ink/70 mt-4 leading-relaxed">
-                  {product.description}
+              {description && (
+                <p className="text-sm text-ink/70 mt-4 leading-relaxed whitespace-pre-line">
+                  {description}
                 </p>
               )}
             </div>
