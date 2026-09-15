@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronRight, X } from 'lucide-react';
+import { Check, ChevronRight, X } from 'lucide-react';
 import { Category, SubCategory } from '../../types';
 import { CATEGORIES, PRODUCTS } from '../../data/catalogData';
 import { SectionIcon } from '../../lib/sectionIcons';
@@ -13,6 +13,7 @@ import {
 } from '../../lib/catalogFilters';
 import { plural } from '../../lib/plural';
 import { FacetGroup } from './FacetGroup';
+import { FilterBlock } from './FilterBlock';
 import { paths } from '../../routes';
 
 /*
@@ -189,10 +190,15 @@ export const CatalogSidebar: React.FC<SidebarProps> = ({
       })}
     </nav>
 
-    <div className="border-t border-inv-border px-4 py-3">
-      <span className="flex items-center min-h-11 text-xs font-semibold uppercase tracking-[0.12em] text-inv-ink-muted">
-        Показывать
-      </span>
+    <h2 className="bg-inv-surface-1 px-4 py-3 text-xs font-semibold uppercase tracking-[0.12em] text-inv-ink-muted border-y border-inv-border">
+      Отбор
+    </h2>
+
+    <FilterBlock
+      title="Показывать"
+      count={filters.flags.length}
+      defaultOpen={filters.flags.length > 0}
+    >
       <ul>
         {(Object.keys(FLAG_LABEL) as Flag[]).map((flag) => {
           const on = filters.flags.includes(flag);
@@ -215,7 +221,7 @@ export const CatalogSidebar: React.FC<SidebarProps> = ({
                       : 'border-inv-border bg-white group-hover:border-inv-blue'
                   }`}
                 >
-                  {on && <span className="block w-2 h-2 rounded-[1px] bg-white" />}
+                  {on && <Check className="w-3 h-3" strokeWidth={3} />}
                 </span>
                 <span
                   className={`flex-1 text-[13px] leading-snug ${
@@ -230,7 +236,7 @@ export const CatalogSidebar: React.FC<SidebarProps> = ({
           );
         })}
       </ul>
-    </div>
+    </FilterBlock>
 
     <FacetGroup
       title="Бренд"
