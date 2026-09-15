@@ -50,7 +50,7 @@ export const PriceFilter: React.FC<PriceFilterProps> = ({ value, range, onChange
 
   return (
     <FilterBlock
-      title="Цена, р."
+      title="Цена"
       count={(value.min !== null ? 1 : 0) + (value.max !== null ? 1 : 0)}
       defaultOpen={value.min !== null || value.max !== null}
     >
