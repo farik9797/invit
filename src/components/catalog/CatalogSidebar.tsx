@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Check, ChevronRight, X } from 'lucide-react';
+import { Check, ChevronDown, ChevronRight, X } from 'lucide-react';
 import { Category, SubCategory } from '../../types';
 import { CATEGORIES, PRODUCTS } from '../../data/catalogData';
 import { SectionIcon } from '../../lib/sectionIcons';
@@ -128,12 +128,36 @@ export const CatalogSidebar: React.FC<SidebarProps> = ({
   onFlag,
   onReset,
   onNavigate
-}) => (
-  <div className="rounded-[8px] border border-inv-border bg-white overflow-hidden">
-    <h2 className="bg-inv-surface-1 px-4 py-3 text-xs font-semibold uppercase tracking-[0.12em] text-inv-ink-muted border-b border-inv-border">
-      Разделы
-    </h2>
+}) => {
+  // Дерево открыто: это основная навигация каталога. Но свернуть его можно —
+  // в оснастке с раскрытыми подразделами до отбора иначе не добраться.
+  const [tree, setTree] = useState(true);
 
+  return (
+  <div className="rounded-[8px] border border-inv-border bg-white overflow-hidden">
+    <button
+      type="button"
+      onClick={() => setTree((v) => !v)}
+      aria-expanded={tree}
+      className={`w-full flex items-center gap-2 bg-inv-surface-1 px-4 py-3 cursor-pointer group ${
+        tree ? 'border-b border-inv-border' : ''
+      }`}
+    >
+      <span className="text-xs font-semibold uppercase tracking-[0.12em] text-inv-ink-muted group-hover:text-inv-ink transition-colors duration-[120ms]">
+        Разделы
+      </span>
+      {/* Свёрнутое дерево всё равно должно отвечать, где мы находимся */}
+      <span className="flex-1 min-w-0 text-left text-[11px] text-inv-ink-muted truncate">
+        {!tree && (category ? category.name : 'Все позиции')}
+      </span>
+      <ChevronDown
+        className={`w-4 h-4 shrink-0 text-inv-ink-muted transition-transform duration-[240ms] ${
+          tree ? '' : '-rotate-90'
+        }`}
+      />
+    </button>
+
+    {tree && (
     <nav className="p-2">
       <Link
         to={paths.catalog}
@@ -189,8 +213,9 @@ export const CatalogSidebar: React.FC<SidebarProps> = ({
         );
       })}
     </nav>
+    )}
 
-    <h2 className="bg-inv-surface-1 px-4 py-3 text-xs font-semibold uppercase tracking-[0.12em] text-inv-ink-muted border-y border-inv-border">
+    <h2 className="bg-inv-surface-1 px-4 py-3 text-xs font-semibold uppercase tracking-[0.12em] text-inv-ink-muted border-t border-inv-border">
       Отбор
     </h2>
 
@@ -265,4 +290,5 @@ export const CatalogSidebar: React.FC<SidebarProps> = ({
       </div>
     )}
   </div>
-);
+  );
+};
