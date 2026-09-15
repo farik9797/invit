@@ -339,6 +339,7 @@ def main():
     known = {(section, sub) for section, _, _, subs in STRUCTURE for sub, _ in subs}
     sections, products, extras, empty = [], [], [], []
     texts = {}                      # полные описания, id -> текст
+    money_of = {}                   # цены, id -> (нижняя, верхняя)
 
     def spec(row):
         out = []
@@ -356,6 +357,14 @@ def main():
             if label and value:
                 out.append((label, value))
         return [{'label': a, 'value': b} for a, b in out]
+
+    def money(raw):
+        """Цена из выгрузки числом. Пусто — значит «по запросу», так и оставляем."""
+        value = raw.strip().replace(',', '.')
+        try:
+            return round(float(value), 2) if value else None
+        except ValueError:
+            return None
 
     def build(row, category_slug, sub_slug):
         ident = ids[id(row)]
@@ -385,6 +394,17 @@ def main():
             item['variantLabel'] = kids[0]['Attribute 3 name'] or 'Типоразмер'
             item['variants'] = [{'sku': k['SKU'], 'title': k['Name'],
                                  'value': k['Attribute 3 value(s)']} for k in kids]
+
+        # У карточки с исполнениями своей цены нет: показываем «от» самого
+        # дешёвого исполнения, а при разбросе — и верхнюю границу.
+        prices = ([money(k['Regular price']) for k in kids] if kids
+                  else [money(row['Regular price'])])
+        prices = sorted(p for p in prices if p is not None)
+        # Цены держим отдельными массивами, а не полями объекта: с ними
+        # TypeScript перестаёт выводить тип литерала из пяти тысяч объектов
+        # («union type is too complex»). Плоский список чисел ему по силам.
+        money_of[ident] = (prices[0], prices[-1] if prices and prices[-1] != prices[0] else None) \
+            if prices else (None, None)
         return item
 
     plan = [(name, slug, division, subs) for name, slug, division, subs in STRUCTURE]
@@ -441,7 +461,11 @@ def main():
         '  variants?: { sku: string; title: string; value: string }[];\n'
         '  photo?: boolean;\n}\n\n'
         f'export const CATEGORIES: Category[] = {dump(sections)};\n\n'
-        f'export const RAW_PRODUCTS: RawProduct[] = {dump(products)};\n',
+        f'export const RAW_PRODUCTS: RawProduct[] = {dump(products)};\n\n'
+        '/** Цены в порядке RAW_PRODUCTS: null — «цена по запросу». */\n'
+        f'export const PRICES: (number | null)[] = {dump([money_of.get(p["id"], (None, None))[0] for p in products])};\n\n'
+        '/** Верхняя граница там, где исполнения стоят по-разному. */\n'
+        f'export const PRICES_MAX: (number | null)[] = {dump([money_of.get(p["id"], (None, None))[1] for p in products])};\n',
         encoding='utf-8')
 
     TEXTS.write_text(
@@ -460,6 +484,7 @@ def main():
     print(f'подразделов     : {sum(len(s["subcategories"]) for s in sections)}')
     print(f'карточек        : {len(products)}  (из них с вариациями '
           f'{sum(1 for p in products if p.get("variants"))}, вариантов {variants})')
+    print(f'с ценой         : {sum(1 for p in products if money_of.get(p["id"], (None,))[0] is not None)}')
     print(f'с фото          : {sum(1 for p in products if p.get("photo"))}'
           f'  → {IMAGES_OUT.relative_to(ROOT)}/ ({len(photos)} файлов)')
     print(f'сохранён прежний id: {sum(1 for p in products if p["id"] in keep_id)}'

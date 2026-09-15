@@ -5,6 +5,7 @@ import { Product } from '../../types';
 import { productImage } from '../../lib/productImages';
 import { SectionIcon } from '../../lib/sectionIcons';
 import { specValue } from '../../lib/catalogFilters';
+import { hasPrice, priceLabel } from '../../lib/price';
 import { paths } from '../../routes';
 
 /*
@@ -91,7 +92,15 @@ const Row: React.FC<RowProps> = ({ product, isAdded, onAddToQuote }) => {
         )}
 
         {/* На узком экране действия уходят под текст: справа для них нет места */}
-        <span className="mt-2 flex sm:hidden items-center gap-3">
+        <span
+          className={`mt-1.5 flex sm:hidden font-semibold ${
+            hasPrice(product) ? 'text-[15px] text-inv-ink' : 'text-[13px] font-normal text-inv-ink-muted'
+          }`}
+        >
+          {priceLabel(product)}
+        </span>
+
+        <span className="mt-1 flex sm:hidden items-center gap-3">
           <Link
             to={paths.product(product)}
             className="inline-flex items-center gap-1.5 min-h-11 text-[13px] font-semibold text-inv-blue"
@@ -113,6 +122,14 @@ const Row: React.FC<RowProps> = ({ product, isAdded, onAddToQuote }) => {
       </div>
 
       <div className="hidden sm:flex shrink-0 flex-col items-end justify-center gap-2">
+        <span
+          className={`whitespace-nowrap font-semibold ${
+            hasPrice(product) ? 'text-[15px] text-inv-ink' : 'text-[13px] font-normal text-inv-ink-muted'
+          }`}
+        >
+          {priceLabel(product)}
+        </span>
+
         {product.variants?.length ? (
           <Link
             to={paths.product(product)}

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Plus, Check } from 'lucide-react';
 import { Product } from '../types';
 import { productImage } from '../lib/productImages';
+import { hasPrice, priceLabel } from '../lib/price';
 import { SectionIcon } from '../lib/sectionIcons';
 import { Reveal } from './Reveal';
 import { paths } from '../routes';
@@ -91,7 +92,17 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         </p>
       )}
 
-      <div className={`mt-auto flex items-center justify-between gap-2 ${compact ? 'pt-3' : 'pt-4'}`}>
+      {/* Цена отделена от действий: в плотной сетке кнопки ужимаются до
+          значков, а цена — то, ради чего в карточку смотрят. */}
+      <span
+        className={`mt-auto block font-semibold ${compact ? 'pt-3 text-sm' : 'pt-4 text-base'} ${
+          hasPrice(product) ? 'text-inv-ink' : 'text-inv-ink-muted font-normal text-sm'
+        }`}
+      >
+        {priceLabel(product)}
+      </span>
+
+      <div className={`flex items-center justify-between gap-2 ${compact ? 'pt-2' : 'pt-3'}`}>
         <Link
           to={paths.product(product)}
           className={`inline-flex items-center gap-1.5 min-h-11 font-semibold text-inv-blue hover:text-inv-blue-pressed transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue ${
@@ -136,13 +147,14 @@ interface ProductGridProps {
   onQuickView: (product: Product) => void;
   onAddToQuote: (product: Product) => void;
   /** Сколько карточек в ряду на широком экране. */
-  columns?: 3 | 4 | 6;
+  columns?: 3 | 4 | 5 | 6;
 }
 
 // Классы перечислены целиком: Tailwind не собирает имена по частям.
-const GRID_COLUMNS: Record<3 | 4 | 6, string> = {
+const GRID_COLUMNS: Record<3 | 4 | 5 | 6, string> = {
   3: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 items-stretch',
   4: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 items-stretch',
+  5: 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 items-stretch',
   6: 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 sm:gap-4 items-stretch'
 };
 
@@ -170,7 +182,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
             isAdded={quoteItemsIds.includes(product.id)}
             onQuickView={onQuickView}
             onAddToQuote={onAddToQuote}
-            compact={columns === 6}
+            compact={columns >= 5}
           />
         </Reveal>
       ))}

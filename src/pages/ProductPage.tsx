@@ -9,6 +9,7 @@ import { CATEGORIES, PRODUCTS } from '../data/catalogData';
 import { useShop } from '../context/ShopContext';
 import { paths, productSlug } from '../routes';
 import { sortForListing, dedupeContentBlocks } from '../lib/product';
+import { hasPrice, priceLabel } from '../lib/price';
 import { productGallery } from '../lib/contentImages';
 import { SectionIcon } from '../lib/sectionIcons';
 import { ProductContent } from '../types';
@@ -161,6 +162,16 @@ export const ProductPage: React.FC = () => {
               <h1 className="text-2xl sm:text-3xl font-bold text-ink tracking-tight leading-snug">
                 {product.title}
               </h1>
+
+              {/* Цена из выгрузки поставщика. У карточки с исполнениями она
+                  «от»: разные типоразмеры стоят по-разному. */}
+              <p
+                className={`mt-3 font-bold ${
+                  hasPrice(product) ? 'text-2xl text-ink' : 'text-base font-semibold text-ink/60'
+                }`}
+              >
+                {priceLabel(product)}
+              </p>
               {description && (
                 <p className="text-sm text-ink/70 mt-4 leading-relaxed whitespace-pre-line">
                   {description}

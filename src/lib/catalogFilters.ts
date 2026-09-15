@@ -13,10 +13,12 @@ import { SECTION_SIZES, SizeAxis, bySize, productSize } from './productSize';
  * было бы не на что.
  */
 
-export type SortMode = 'default' | 'name' | 'name-desc';
+export type SortMode = 'default' | 'price' | 'price-desc' | 'name' | 'name-desc';
 
 export const SORT_LABEL: Record<SortMode, string> = {
   default: 'Сортировать по',
+  price: 'Цена: сначала дешёвые',
+  'price-desc': 'Цена: сначала дорогие',
   name: 'Название: А → Я',
   'name-desc': 'Название: Я → А'
 };
@@ -28,6 +30,8 @@ export interface CatalogFilters {
   countries: string[];
   /** Размеры: у каждого раздела свои оси, см. SECTION_SIZES. */
   sizes: Record<SizeAxis, string[]>;
+  /** Цена «от» и «до»; null — граница не задана. */
+  price: { min: number | null; max: number | null };
   sort: SortMode;
 }
 
@@ -37,10 +41,17 @@ export const EMPTY_FILTERS: CatalogFilters = {
   brands: [],
   countries: [],
   sizes: { diameter: [], length: [] },
+  price: { min: null, max: null },
   sort: 'default'
 };
 
 const isSort = (value: string): value is SortMode => value in SORT_LABEL;
+
+/** Граница цены из адреса: мусор вроде «abc» считаем незаданной границей. */
+const money = (raw: string | null): number | null => {
+  const value = Number((raw ?? '').replace(',', '.'));
+  return raw && Number.isFinite(value) && value >= 0 ? value : null;
+};
 
 const many = (params: URLSearchParams, key: string) =>
   (params.get(key) ?? '')
@@ -56,6 +67,7 @@ export const readFilters = (params: URLSearchParams): CatalogFilters => {
     brands: many(params, 'brand'),
     countries: many(params, 'country'),
     sizes: { diameter: many(params, 'd'), length: many(params, 'l') },
+    price: { min: money(params.get('pmin')), max: money(params.get('pmax')) },
     sort: isSort(sort) ? sort : 'default'
   };
 };
@@ -68,6 +80,8 @@ export const writeFilters = (filters: CatalogFilters): URLSearchParams => {
   if (filters.countries.length) params.set('country', filters.countries.join(','));
   if (filters.sizes.diameter.length) params.set('d', filters.sizes.diameter.join(','));
   if (filters.sizes.length.length) params.set('l', filters.sizes.length.join(','));
+  if (filters.price.min !== null) params.set('pmin', String(filters.price.min));
+  if (filters.price.max !== null) params.set('pmax', String(filters.price.max));
   if (filters.sort !== 'default') params.set('sort', filters.sort);
   return params;
 };
@@ -80,7 +94,9 @@ export const isFiltered = (f: CatalogFilters) =>
       f.brands.length ||
       f.countries.length ||
       f.sizes.diameter.length ||
-      f.sizes.length.length
+      f.sizes.length.length ||
+      f.price.min !== null ||
+      f.price.max !== null
   );
 
 export const specValue = (product: Product, label: string) =>
@@ -91,6 +107,18 @@ export const toggle = <T,>(list: T[], value: T): T[] =>
 
 const applySort = (products: Product[], sort: SortMode) => {
   if (sort === 'default') return sortForListing(products);
+
+  if (sort === 'price' || sort === 'price-desc') {
+    const dir = sort === 'price' ? 1 : -1;
+    // Позиции без цены («по запросу») всегда в конце, в обе стороны: наверху
+    // списка они выглядели бы как самые дешёвые или самые дорогие.
+    return [...products].sort((a, b) => {
+      if (a.price === undefined) return b.price === undefined ? 0 : 1;
+      if (b.price === undefined) return -1;
+      return dir * (a.price - b.price);
+    });
+  }
+
   const dir = sort === 'name' ? 1 : -1;
   return [...products].sort((a, b) => dir * a.title.localeCompare(b.title, 'ru', { numeric: true }));
 };
@@ -123,6 +151,8 @@ export interface CatalogResult {
   countries: [string, number][];
   /** Оси размера этого раздела со значениями; в «Всех позициях» пусто. */
   sizes: { axis: SizeAxis; options: [string, number][] }[];
+  /** Самая дешёвая и самая дорогая позиция выборки — подсказка для полей «от» и «до». */
+  priceRange: { min: number; max: number } | null;
   /** Сколько позиций в разделе до отбора по бренду, стране и признакам. */
   scope: number;
 }
@@ -151,12 +181,25 @@ export const selectProducts = (
   };
   const byAllSizes = (p: Product) => axes.every((axis) => bySize_(axis)(p));
 
-  const products = base.filter((p) => byBrand(p) && byCountry(p) && byAllSizes(p));
+  const byPrice = (p: Product) => {
+    const { min, max } = filters.price;
+    if (min === null && max === null) return true;
+    if (p.price === undefined) return false;   // «по запросу» в диапазон не попадает
+    return (min === null || p.price >= min) && (max === null || p.price <= max);
+  };
+
+  const products = base.filter(
+    (p) => byBrand(p) && byCountry(p) && byAllSizes(p) && byPrice(p)
+  );
+
+  const priced = base
+    .filter((p) => byBrand(p) && byCountry(p) && byAllSizes(p) && p.price !== undefined)
+    .map((p) => p.price as number);
 
   return {
     products: applySort(products, filters.sort),
-    brands: countBy(base.filter((p) => byCountry(p) && byAllSizes(p)), 'Бренд'),
-    countries: countBy(base.filter((p) => byBrand(p) && byAllSizes(p)), 'Страна'),
+    brands: countBy(base.filter((p) => byCountry(p) && byAllSizes(p) && byPrice(p)), 'Бренд'),
+    countries: countBy(base.filter((p) => byBrand(p) && byAllSizes(p) && byPrice(p)), 'Страна'),
     sizes: axes.map((axis) => ({
       axis,
       options: countSizes(
@@ -164,11 +207,15 @@ export const selectProducts = (
           (p) =>
             byBrand(p) &&
             byCountry(p) &&
+            byPrice(p) &&
             axes.every((other) => other === axis || bySize_(other)(p))
         ),
         axis
       )
     })),
+    priceRange: priced.length
+      ? { min: Math.min(...priced), max: Math.max(...priced) }
+      : null,
     scope: base.length
   };
 };

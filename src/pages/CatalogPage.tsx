@@ -26,6 +26,7 @@ import {
   writeFilters
 } from '../lib/catalogFilters';
 import { SIZE_LABEL, SizeAxis, sizeChip } from '../lib/productSize';
+import { priceChip } from '../lib/price';
 import { plural } from '../lib/plural';
 import { paths } from '../routes';
 
@@ -161,6 +162,7 @@ export const CatalogPage: React.FC = () => {
       onSize={(axis, value) =>
         update({ sizes: { ...filters.sizes, [axis]: toggle(filters.sizes[axis], value) } })
       }
+      onPrice={(price) => update({ price })}
       onReset={() => setSearchParams(new URLSearchParams())}
       onNavigate={onNavigate}
     />
@@ -171,6 +173,7 @@ export const CatalogPage: React.FC = () => {
     filters.countries.length +
     filters.sizes.diameter.length +
     filters.sizes.length.length +
+    (filters.price.min !== null || filters.price.max !== null ? 1 : 0) +
     (filters.sub ? 1 : 0);
 
   return (
@@ -320,6 +323,12 @@ export const CatalogPage: React.FC = () => {
                       onRemove={() => update({ countries: toggle(filters.countries, country) })}
                     />
                   ))}
+                  {(filters.price.min !== null || filters.price.max !== null) && (
+                    <Chip
+                      label={priceChip(filters.price)}
+                      onRemove={() => update({ price: { min: null, max: null } })}
+                    />
+                  )}
                   {(Object.keys(SIZE_LABEL) as SizeAxis[]).flatMap((axis) =>
                     filters.sizes[axis].map((value) => (
                       <Chip
@@ -354,7 +363,7 @@ export const CatalogPage: React.FC = () => {
                       />
                     ) : (
                       <ProductGrid
-                        columns={view === 'dense' ? 6 : 3}
+                        columns={view === 'dense' ? 5 : 3}
                         products={products.slice(0, visible)}
                         quoteItemsIds={shop.quoteCart.map((i) => i.product.id)}
                         onQuickView={shop.openQuickView}

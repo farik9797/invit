@@ -9,6 +9,7 @@ import { CatalogFilters, CatalogResult, isFiltered } from '../../lib/catalogFilt
 import { SIZE_LABEL, SizeAxis } from '../../lib/productSize';
 import { plural } from '../../lib/plural';
 import { FacetGroup } from './FacetGroup';
+import { PriceFilter } from './PriceFilter';
 import { SectionsMenu } from './SectionsMenu';
 import { paths } from '../../routes';
 
@@ -194,6 +195,7 @@ export interface SidebarProps {
   onBrand: (value: string) => void;
   onCountry: (value: string) => void;
   onSize: (axis: SizeAxis, value: string) => void;
+  onPrice: (value: { min: number | null; max: number | null }) => void;
   onReset: () => void;
   /** Закрыть выдвижную панель на телефоне: в боковой колонке не нужен. */
   onNavigate?: () => void;
@@ -211,6 +213,7 @@ export const CatalogSidebar: React.FC<SidebarProps> = ({
   onBrand,
   onCountry,
   onSize,
+  onPrice,
   onReset,
   onNavigate,
   variant = 'aside',
@@ -234,6 +237,8 @@ export const CatalogSidebar: React.FC<SidebarProps> = ({
       <h2 className="bg-inv-surface-1 px-4 py-3 text-xs font-semibold uppercase tracking-[0.12em] text-inv-ink-muted">
         Фильтр
       </h2>
+
+      <PriceFilter value={filters.price} range={result.priceRange} onChange={onPrice} />
 
       <FacetGroup
         title="Бренд"

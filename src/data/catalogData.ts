@@ -1,5 +1,5 @@
 import { HeroSlide, CertificateItem, NewsArticle, Product } from '../types';
-import { CATEGORIES as SECTIONS, RAW_PRODUCTS } from './catalog.generated';
+import { CATEGORIES as SECTIONS, PRICES, PRICES_MAX, RAW_PRODUCTS } from './catalog.generated';
 
 /*
  * Витрина каталога. Разделы и товары собраны скриптом scripts/build-catalog.py
@@ -20,8 +20,12 @@ for (const section of SECTIONS) {
 const short = (title: string, limit = 70) =>
   title.length <= limit ? title : `${title.slice(0, limit).replace(/\s+\S*$/, '')}...`;
 
-export const PRODUCTS: Product[] = RAW_PRODUCTS.map((p) => ({
+export const PRODUCTS: Product[] = RAW_PRODUCTS.map((p, i) => ({
   ...p,
+  // Цены лежат отдельными массивами того же порядка: внутри объектов
+  // TypeScript переставал выводить тип литерала из пяти тысяч карточек.
+  price: PRICES[i] ?? undefined,
+  priceMax: PRICES_MAX[i] ?? undefined,
   // Идентификатор — ключ подробных описаний, адрес — то, что уходит в ссылку.
   // Расходятся они у позиций с invit.by: там в идентификаторе остался «%27».
   slug: p.slug ?? p.id,

@@ -62,6 +62,10 @@ export interface Product {
   imageLarge?: string;
   /** Артикул поставщика — есть только у товаров из прайса STARFIX/STARTUL. */
   sku?: string;
+  /** Цена в рублях. У карточки с исполнениями — самого дешёвого из них. */
+  price?: number;
+  /** Верхняя граница, если исполнения стоят по-разному. */
+  priceMax?: number;
   badge?: 'Хит' | 'Новинка' | 'Акция' | 'Собственное производство';
   specs: ProductSpec[];
   sizes?: ProductSizes;
