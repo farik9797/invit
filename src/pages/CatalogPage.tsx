@@ -1,6 +1,14 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useParams, useSearchParams, Navigate } from 'react-router-dom';
-import { Search, X, SlidersHorizontal, LayoutGrid, List } from 'lucide-react';
+import {
+  Search,
+  X,
+  SlidersHorizontal,
+  ChevronDown,
+  Grid3x3,
+  Grid2x2,
+  Rows3
+} from 'lucide-react';
 import { Breadcrumbs } from '../components/Breadcrumbs';
 import { ProductGrid } from '../components/ProductCard';
 import { ProductList } from '../components/catalog/ProductList';
@@ -32,11 +40,22 @@ import { paths } from '../routes';
 const WRAP = 'max-w-[1400px] mx-auto px-4 lg:px-8';
 const VIEW_KEY = 'invit:catalog-view';
 
-type ViewMode = 'grid' | 'list';
+type ViewMode = 'dense' | 'grid' | 'list';
+
+/** Три вида выдачи: плотная плитка, обычная плитка, список. */
+const VIEWS = [
+  { mode: 'dense' as const, Icon: Grid3x3, label: 'Плотной плиткой' },
+  { mode: 'grid' as const, Icon: Grid2x2, label: 'Плиткой' },
+  { mode: 'list' as const, Icon: Rows3, label: 'Списком' }
+];
+
+/** В плотной плитке карточки мельче, поэтому и порция больше. */
+const PAGE_SIZE: Record<ViewMode, number> = { dense: 48, grid: 24, list: 40 };
 
 const readView = (): ViewMode => {
   try {
-    return localStorage.getItem(VIEW_KEY) === 'list' ? 'list' : 'grid';
+    const saved = localStorage.getItem(VIEW_KEY);
+    return VIEWS.some((v) => v.mode === saved) ? (saved as ViewMode) : 'grid';
   } catch {
     return 'grid';
   }
@@ -76,7 +95,7 @@ export const CatalogPage: React.FC = () => {
     [category, filters]
   );
 
-  const pageSize = view === 'list' ? 40 : 24;
+  const pageSize = PAGE_SIZE[view];
   const [visible, setVisible] = useState(pageSize);
   const key = searchParams.toString();
   useEffect(() => setVisible(pageSize), [categorySlug, key, pageSize]);
@@ -208,14 +227,17 @@ export const CatalogPage: React.FC = () => {
               </form>
 
               {/* Панель управления выдачей */}
+              {/* На телефоне сортировка уходит на свою строку: вместе со
+                  значками вида она не помещается в 375 точек. */}
               <div className="mt-4 flex items-center gap-2 sm:gap-3 flex-wrap">
                 <button
                   type="button"
                   onClick={() => setDrawer(true)}
-                  className="lg:hidden inline-flex items-center gap-2 min-h-11 px-3.5 rounded-[4px] border border-inv-border bg-white text-sm font-semibold text-inv-ink cursor-pointer transition-colors duration-[120ms] hover:border-inv-blue hover:text-inv-blue"
+                  className="lg:hidden inline-flex items-center gap-2 min-h-11 px-3.5 rounded-[10px] border border-inv-border bg-white text-sm font-semibold text-inv-ink cursor-pointer transition-colors duration-[120ms] hover:border-inv-blue hover:text-inv-blue"
                 >
                   <SlidersHorizontal className="w-4 h-4" />
-                  Разделы и фильтр
+                  <span className="hidden sm:inline">Разделы и фильтр</span>
+                  <span className="sm:hidden">Фильтр</span>
                   {active > 0 && (
                     <span className="inline-flex items-center justify-center min-w-5 h-5 px-1.5 rounded-full bg-inv-blue text-white text-[11px] font-semibold tabular-nums">
                       {active}
@@ -223,21 +245,15 @@ export const CatalogPage: React.FC = () => {
                   )}
                 </button>
 
-                <span className="text-sm text-inv-ink-muted">
-                  {products.length
-                    ? `Показано ${shown} из ${products.length} ${plural(products.length, ['позиции', 'позиций', 'позиций'])}`
-                    : 'Ничего не нашлось'}
-                </span>
-
-                <span className="flex items-center gap-2 ml-auto">
+                <span className="relative order-last w-full sm:order-none sm:w-auto sm:ml-auto">
                   <label className="sr-only" htmlFor="catalog-sort">
-                    Порядок
+                    Сортировать по
                   </label>
                   <select
                     id="catalog-sort"
                     value={filters.sort}
                     onChange={(e) => update({ sort: e.target.value as SortMode })}
-                    className="min-h-11 pl-3 pr-8 rounded-[4px] border border-inv-border bg-white text-sm text-inv-ink cursor-pointer transition-colors duration-[120ms] hover:border-inv-blue focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-inv-blue"
+                    className="appearance-none w-full sm:w-auto min-h-11 pl-4 pr-10 rounded-[10px] border border-inv-border bg-white text-sm text-inv-ink cursor-pointer transition-colors duration-[120ms] hover:border-inv-blue focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-inv-blue"
                   >
                     {(Object.keys(SORT_LABEL) as SortMode[]).map((mode) => (
                       <option key={mode} value={mode}>
@@ -245,33 +261,35 @@ export const CatalogPage: React.FC = () => {
                       </option>
                     ))}
                   </select>
+                  <ChevronDown
+                    aria-hidden
+                    className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-inv-ink-muted"
+                  />
+                </span>
 
-                  <span
-                    role="group"
-                    aria-label="Вид выдачи"
-                    className="flex items-center rounded-[4px] border border-inv-border overflow-hidden"
-                  >
-                    {([
-                      ['grid', LayoutGrid, 'Плиткой'],
-                      ['list', List, 'Списком']
-                    ] as [ViewMode, typeof List, string][]).map(([mode, Icon, label]) => (
-                      <button
-                        key={mode}
-                        type="button"
-                        onClick={() => switchView(mode)}
-                        aria-pressed={view === mode}
-                        title={label}
-                        className={`inline-flex items-center gap-1.5 min-h-11 px-3 text-sm font-semibold cursor-pointer transition-colors duration-[120ms] ${
-                          view === mode
-                            ? 'bg-inv-blue text-white'
-                            : 'bg-white text-inv-ink-muted hover:text-inv-blue'
-                        }`}
-                      >
-                        <Icon className="w-4 h-4" />
-                        <span className="hidden sm:inline">{label}</span>
-                      </button>
-                    ))}
-                  </span>
+                {/* Вид выдачи: значки без подписей, выбранный красный */}
+                <span
+                  role="group"
+                  aria-label="Вид выдачи"
+                  className="flex items-center gap-1 p-1 rounded-[10px] border border-inv-border bg-white ml-auto sm:ml-0 shrink-0"
+                >
+                  {VIEWS.map(({ mode, Icon, label }) => (
+                    <button
+                      key={mode}
+                      type="button"
+                      onClick={() => switchView(mode)}
+                      aria-pressed={view === mode}
+                      aria-label={label}
+                      title={label}
+                      className={`w-9 h-9 flex items-center justify-center rounded-[7px] cursor-pointer transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue ${
+                        view === mode
+                          ? 'bg-inv-red text-white'
+                          : 'text-inv-ink-muted hover:text-inv-ink hover:bg-inv-surface-1'
+                      }`}
+                    >
+                      <Icon className="w-[18px] h-[18px]" />
+                    </button>
+                  ))}
                 </span>
               </div>
 
@@ -311,9 +329,15 @@ export const CatalogPage: React.FC = () => {
                 </div>
               )}
 
+              <p className="mt-3 text-sm text-inv-ink-muted">
+                {products.length
+                  ? `Показано ${shown} из ${products.length} ${plural(products.length, ['позиции', 'позиций', 'позиций'])}`
+                  : 'Ничего не нашлось'}
+              </p>
+
               {products.length ? (
                 <>
-                  <div className="mt-5">
+                  <div className="mt-4">
                     {view === 'list' ? (
                       <ProductList
                         products={products.slice(0, visible)}
@@ -322,7 +346,7 @@ export const CatalogPage: React.FC = () => {
                       />
                     ) : (
                       <ProductGrid
-                        columns={3}
+                        columns={view === 'dense' ? 6 : 3}
                         products={products.slice(0, visible)}
                         quoteItemsIds={shop.quoteCart.map((i) => i.product.id)}
                         onQuickView={shop.openQuickView}
