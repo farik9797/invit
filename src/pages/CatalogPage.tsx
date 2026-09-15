@@ -210,13 +210,16 @@ export const CatalogPage: React.FC = () => {
               />
 
               {/* Панель управления выдачей */}
-              {/* На телефоне сортировка уходит на свою строку: вместе со
-                  значками вида она не помещается в 375 точек. */}
+              {/*
+               * Одна строка: счётчик слева, сортировка и значки вида справа.
+               * В 375 точек это не влезает, поэтому на телефоне порядок другой —
+               * фильтр и значки сверху, под ними сортировка, затем счётчик.
+               */}
               <div className="mt-4 flex items-center gap-2 sm:gap-3 flex-wrap">
                 <button
                   type="button"
                   onClick={() => setDrawer(true)}
-                  className="lg:hidden inline-flex items-center gap-2 min-h-11 px-3.5 rounded-[10px] border border-inv-border bg-white text-sm font-semibold text-inv-ink cursor-pointer transition-colors duration-[120ms] hover:border-inv-blue hover:text-inv-blue"
+                  className="order-1 sm:order-2 lg:hidden inline-flex items-center gap-2 min-h-11 px-3.5 rounded-[10px] border border-inv-border bg-white text-sm font-semibold text-inv-ink cursor-pointer transition-colors duration-[120ms] hover:border-inv-blue hover:text-inv-blue"
                 >
                   <SlidersHorizontal className="w-4 h-4" />
                   <span className="hidden sm:inline">Разделы и фильтр</span>
@@ -228,7 +231,13 @@ export const CatalogPage: React.FC = () => {
                   )}
                 </button>
 
-                <span className="relative order-last w-full sm:order-none sm:w-auto sm:ml-auto">
+                <span className="order-4 w-full text-sm text-inv-ink-muted sm:order-1 sm:w-auto">
+                  {products.length
+                    ? `Показано ${shown} из ${products.length} ${plural(products.length, ['позиции', 'позиций', 'позиций'])}`
+                    : 'Ничего не нашлось'}
+                </span>
+
+                <span className="relative order-3 w-full sm:w-auto sm:ml-auto">
                   <label className="sr-only" htmlFor="catalog-sort">
                     Сортировать по
                   </label>
@@ -254,7 +263,7 @@ export const CatalogPage: React.FC = () => {
                 <span
                   role="group"
                   aria-label="Вид выдачи"
-                  className="flex items-center gap-1 p-1 rounded-[10px] border border-inv-border bg-white ml-auto sm:ml-0 shrink-0"
+                  className="order-2 ml-auto shrink-0 sm:order-4 sm:ml-0 flex items-center gap-1 p-1 rounded-[10px] border border-inv-border bg-white"
                 >
                   {VIEWS.map(({ mode, Icon, label }) => (
                     <button
@@ -311,12 +320,6 @@ export const CatalogPage: React.FC = () => {
                   </button>
                 </div>
               )}
-
-              <p className="mt-3 text-sm text-inv-ink-muted">
-                {products.length
-                  ? `Показано ${shown} из ${products.length} ${plural(products.length, ['позиции', 'позиций', 'позиций'])}`
-                  : 'Ничего не нашлось'}
-              </p>
 
               {products.length ? (
                 <>
