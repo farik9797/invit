@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useParams, useSearchParams, Navigate } from 'react-router-dom';
+import { useParams, useSearchParams, Navigate, useNavigate } from 'react-router-dom';
 import {
-  Search,
   X,
   SlidersHorizontal,
   ChevronDown,
@@ -13,6 +12,7 @@ import { Breadcrumbs } from '../components/Breadcrumbs';
 import { ProductGrid } from '../components/ProductCard';
 import { ProductList } from '../components/catalog/ProductList';
 import { CatalogSidebar } from '../components/catalog/CatalogSidebar';
+import { CatalogSearch } from '../components/catalog/CatalogSearch';
 import { CATEGORIES, PRODUCTS } from '../data/catalogData';
 import { useShop } from '../context/ShopContext';
 import {
@@ -79,13 +79,11 @@ const Chip: React.FC<{ label: string; onRemove: () => void }> = ({ label, onRemo
 export const CatalogPage: React.FC = () => {
   const { categorySlug } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const shop = useShop();
 
   const category = categorySlug ? CATEGORIES.find((c) => c.slug === categorySlug) ?? null : null;
   const filters = useMemo(() => readFilters(searchParams), [searchParams]);
-
-  const [draft, setDraft] = useState(filters.query);
-  useEffect(() => setDraft(filters.query), [filters.query]);
 
   const [view, setView] = useState<ViewMode>(readView);
   const [drawer, setDrawer] = useState(false);
@@ -118,6 +116,17 @@ export const CatalogPage: React.FC = () => {
   const update = (patch: Partial<CatalogFilters>) =>
     setSearchParams(writeFilters({ ...filters, ...patch }));
 
+  /*
+   * Подсказка ищет по всему каталогу, поэтому и «показать все» уводит в целый
+   * каталог: иначе число в подсказке не сошлось бы с выдачей — в открытом
+   * разделе нашлось бы куда меньше. Пустой запрос просто снимается, раздел и
+   * бренды при этом остаются.
+   */
+  const runSearch = (value: string) => {
+    if (value) navigate(`${paths.catalog}?q=${encodeURIComponent(value)}`);
+    else update({ query: '' });
+  };
+
   const switchView = (next: ViewMode) => {
     setView(next);
     try {
@@ -137,6 +146,11 @@ export const CatalogPage: React.FC = () => {
   const sidebar = (variant: 'aside' | 'drawer', onNavigate?: () => void) => (
     <CatalogSidebar
       variant={variant}
+      search={
+        variant === 'aside' ? (
+          <CatalogSearch query={filters.query} onSubmit={runSearch} />
+        ) : null
+      }
       category={category}
       filters={filters}
       result={result}
@@ -187,44 +201,13 @@ export const CatalogPage: React.FC = () => {
             </aside>
 
             <div className="lg:col-span-9">
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  update({ query: draft });
-                }}
-                className="flex gap-2"
-              >
-                <span className="relative flex-1">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-inv-ink-muted" />
-                  <input
-                    value={draft}
-                    onChange={(e) => setDraft(e.target.value)}
-                    placeholder="Поиск по каталогу: лента, ПСУЛ, артикул…"
-                    aria-label="Поиск по каталогу"
-                    className="w-full min-h-11 pl-9 pr-9 rounded-[4px] border border-inv-border bg-white text-base text-inv-ink placeholder:text-inv-ink-muted focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-inv-blue"
-                  />
-                  {draft && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setDraft('');
-                        update({ query: '' });
-                      }}
-                      aria-label="Очистить поиск"
-                      className="absolute right-1 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center text-inv-ink-muted hover:text-inv-ink cursor-pointer"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  )}
-                </span>
-
-                <button
-                  type="submit"
-                  className="min-h-11 px-6 rounded-[4px] bg-inv-blue text-white text-sm font-semibold whitespace-nowrap cursor-pointer transition-[background-color,transform] duration-[120ms] hover:bg-inv-blue-hover active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
-                >
-                  Найти
-                </button>
-              </form>
+              {/* На телефоне колонки нет, поэтому поиск остаётся над выдачей */}
+              <CatalogSearch
+                query={filters.query}
+                onSubmit={runSearch}
+                withButton
+                className="lg:hidden"
+              />
 
               {/* Панель управления выдачей */}
               {/* На телефоне сортировка уходит на свою строку: вместе со

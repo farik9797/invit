@@ -1,107 +1,127 @@
 import { Product } from '../types';
 
 /*
- * Поиск был плоским includes() по title+shortTitle+subcategoryName без
- * ранжирования и без транслитерации. Отсюда две жалобы клиента:
+ * Поиск по каталогу.
  *
- * 1. Запрос «очиститель» — это слово входит в НАЗВАНИЕ ПОДКАТЕГОРИИ
- *    «Пена монтажная, очиститель для пены», поэтому в выдачу попадала
- *    вся пена этой подкатегории (15 позиций), а настоящие очистители
- *    (8 позиций) тонули среди них вперемешку. Без ранжирования подкатегория
- *    и заголовок весили одинаково.
- * 2. Запрос «космофен» ничего не находил: в каталоге бренд написан
- *    латиницей — COSMOFEN. Обычный includes() кириллицу с латиницей
- *    не сопоставляет.
+ * Данные поставщиков написаны как придётся: бренды латиницей (STARFIX,
+ * MAKITA), названия кириллицей, размеры то через точку, то через запятую
+ * («3.2х8» и «3,2x8»), а «х» в размере бывает и кириллическая, и латинская —
+ * на глаз они неотличимы, и человек набирает ту, что под рукой.
  *
- * Правки: (а) совпадение в заголовке весит больше совпадения в названии
- * подкатегории, результат сортируется по весу; (б) кириллические названия
- * брендов (и общая транслитерация запроса) добавляются как алиасы поиска.
+ * Поэтому и запрос, и текст товара приводятся к одному виду: нижний регистр,
+ * «ё» как «е», точка и запятая — один знак, обе «х» — один знак, кириллица
+ * переписывается латиницей. Дальше сравниваются уже одинаково написанные
+ * строки.
+ *
+ * Слова запроса ищутся независимо и в любом порядке: «лента псул» находит
+ * «Лента ПСУЛ EUROBAND» и «ПСУЛ-лента для окон».
  */
 
-/** Кириллические варианты брендов каталога — пишутся в товарах латиницей. */
-const BRAND_ALIASES: Record<string, string> = {
-  старфикс: 'starfix',
-  стартул: 'startul',
-  евробанд: 'euroband',
-  миксфор: 'mixfor',
-  топтул: 'toptul',
-  космофен: 'cosmofen',
-  космо: 'cosmo',
-  вортекс: 'wortex',
-  джета: 'jeta',
-  соудал: 'soudal',
-  судал: 'soudal',
-  фискарс: 'fiskars',
-  бернер: 'berner',
-  арктик: 'arctic',
-  хаузер: 'hauser',
-  ультима: 'ultima',
-  зум: 'zoom'
+/** Кириллица латиницей. «х» здесь нет: она разбирается раньше, вместе с «x». */
+const CYRILLIC: Record<string, string> = {
+  а: 'a', б: 'b', в: 'v', г: 'g', д: 'd', е: 'e', ж: 'zh', з: 'z', и: 'i',
+  й: 'y', к: 'k', л: 'l', м: 'm', н: 'n', о: 'o', п: 'p', р: 'r', с: 's',
+  т: 't', у: 'u', ф: 'f', ц: 'c', ч: 'ch', ш: 'sh', щ: 'sch', ъ: '', ы: 'y',
+  ь: '', э: 'e', ю: 'yu', я: 'ya'
 };
 
-const TRANSLIT: Record<string, string> = {
-  а: 'a', б: 'b', в: 'v', г: 'g', д: 'd', е: 'e', ё: 'e', ж: 'zh', з: 'z', и: 'i',
-  й: 'y', к: 'k', л: 'l', м: 'm', н: 'n', о: 'o', п: 'p', р: 'r', с: 's', т: 't',
-  у: 'u', ф: 'f', х: 'h', ц: 'c', ч: 'ch', ш: 'sh', щ: 'sch', ъ: '', ы: 'y', ь: '',
-  э: 'e', ю: 'yu', я: 'ya'
+/**
+ * Единое написание строки. Применяется и к запросу, и к названию товара,
+ * поэтому важно не что получится, а чтобы получалось одинаково с обеих сторон.
+ */
+export const fold = (text: string): string =>
+  text
+    .toLowerCase()
+    .replace(/ё/g, 'е')
+    // Точка и запятая в размерах — один и тот же знак: «3,2» и «3.2»
+    .replace(/[.,]/g, '.')
+    // Кириллическая «х» и латинская «x» неотличимы на глаз: «10х100» и «10x100»
+    .replace(/[хx]/g, 'x')
+    .replace(/[а-я]/g, (ch) => CYRILLIC[ch] ?? ch)
+    // «кс» на конце — частый эквивалент «x» в брендах: старфикс → starfix
+    .replace(/ks\b/g, 'x')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+/**
+ * Бренды, которые переписыванием не сходятся: в каталоге они латиницей, а
+ * кириллическое написание даёт другие буквы (к vs c, дж vs j).
+ * Ключи и значения уже приведены fold().
+ */
+const ALIAS: Record<string, string> = {
+  bosh: 'bosch',
+  evroband: 'euroband',
+  miksfor: 'mixfor',
+  kosmofen: 'cosmofen',
+  kosmo: 'cosmo',
+  dzheta: 'jeta',
+  arktik: 'arctic',
+  xauzer: 'hauser',
+  zum: 'zoom',
+  sudal: 'soudal',
+  abrafors: 'abraforce',
+  lugaabraziv: 'lugaabrasiv',
+  daymond: 'diamond'
 };
 
-const transliterate = (s: string) =>
-  s
-    .split('')
-    .map((ch) => TRANSLIT[ch] ?? ch)
-    .join('')
-    // «кс» на конце частый эквивалент «x» в бренд-именах (старфикс -> starfix,
-    // а не starfiks)
-    .replace(/ks\b/g, 'x');
-
-/** Запрос как есть плюс латинские варианты через транслитерацию и алиасы брендов. */
-const expandQuery = (rawNeedle: string): string[] => {
-  const terms = new Set<string>([rawNeedle]);
-
-  for (const [ru, latin] of Object.entries(BRAND_ALIASES)) {
-    if (rawNeedle.includes(ru)) terms.add(rawNeedle.replace(ru, latin));
-  }
-
-  const translit = transliterate(rawNeedle);
-  if (translit && translit !== rawNeedle) terms.add(translit);
-
-  return [...terms];
+/** Написания одного слова запроса, которые считаем равными. */
+const variants = (term: string): string[] => {
+  const alias = ALIAS[term];
+  return alias ? [term, alias] : [term];
 };
 
 /*
- * Ищем только по названию и артикулу — так просил клиент. Раньше в поиск
- * попадало и название подкатегории: запрос «очиститель» вытаскивал всю пену
- * из раздела «Пена монтажная, очиститель для пены», хотя в самих товарах
- * этого слова нет.
- *
- * Вес: точный артикул > начало названия > название целиком.
+ * Приведённые названия держим в памяти: 5124 товара, и пересчитывать их на
+ * каждое нажатие клавиши в подсказке — заметная работа впустую.
  */
-const scoreProduct = (product: Product, terms: string[]): number => {
-  const title = product.title.toLowerCase();
-  const short = product.shortTitle.toLowerCase();
-  const sku = product.sku?.toLowerCase() ?? '';
+const CACHE = new WeakMap<Product, { title: string; sku: string }>();
 
-  let best = 0;
-  for (const term of terms) {
-    if (!term) continue;
-    if (sku && sku === term) best = Math.max(best, 4);
-    else if (sku && sku.includes(term)) best = Math.max(best, 3);
-    else if (title.startsWith(term) || short.startsWith(term)) best = Math.max(best, 2);
-    else if (title.includes(term) || short.includes(term)) best = Math.max(best, 1);
+const folded = (product: Product) => {
+  let entry = CACHE.get(product);
+  if (!entry) {
+    entry = { title: fold(product.title), sku: fold(product.sku ?? '') };
+    CACHE.set(product, entry);
   }
-  return best;
+  return entry;
 };
 
-/** Фильтрует и сортирует товары по релевантности запросу; пустой запрос — список без изменений. */
+const atWordStart = (hay: string, term: string) =>
+  hay.startsWith(term) || hay.includes(` ${term}`) || hay.includes(`-${term}`);
+
+/*
+ * Вес: точный артикул > артикул частью > все слова с начала слова в названии >
+ * просто вхождение. Ищем только по названию и артикулу — в названии подраздела
+ * искать нельзя: запрос «очиститель» вытаскивал всю пену из раздела
+ * «Пена монтажная, очиститель для пены», хотя в самих товарах слова нет.
+ */
+const scoreProduct = (product: Product, query: string, terms: string[]): number => {
+  const { title, sku } = folded(product);
+
+  if (sku && sku === query) return 5;
+  if (sku && sku.includes(query)) return 4;
+
+  const found = terms.every((term) =>
+    variants(term).some((v) => title.includes(v) || (sku && sku.includes(v)))
+  );
+  if (!found) return 0;
+
+  const heads = terms.filter((term) =>
+    variants(term).some((v) => atWordStart(title, v))
+  ).length;
+
+  if (heads === terms.length) return 3;
+  return title.includes(query) ? 2 : 1;
+};
+
+/** Фильтрует и сортирует товары по соответствию запросу; пустой запрос — список без изменений. */
 export const searchProducts = (products: Product[], query: string): Product[] => {
-  const needle = query.trim().toLowerCase();
+  const needle = fold(query);
   if (!needle) return products;
 
-  const terms = expandQuery(needle);
+  const terms = needle.split(' ').filter(Boolean);
 
   return products
-    .map((product) => ({ product, score: scoreProduct(product, terms) }))
+    .map((product) => ({ product, score: scoreProduct(product, needle, terms) }))
     .filter((entry) => entry.score > 0)
     .sort((a, b) => b.score - a.score)
     .map((entry) => entry.product);

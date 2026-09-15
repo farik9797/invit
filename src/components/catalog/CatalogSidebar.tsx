@@ -197,6 +197,8 @@ export interface SidebarProps {
   onNavigate?: () => void;
   /** В выдвижной панели разделы показываем деревом, а не мега-меню. */
   variant?: 'aside' | 'drawer';
+  /** Поиск по каталогу — под разделами, как просил клиент. */
+  search?: React.ReactNode;
 }
 
 export const CatalogSidebar: React.FC<SidebarProps> = ({
@@ -208,7 +210,8 @@ export const CatalogSidebar: React.FC<SidebarProps> = ({
   onCountry,
   onReset,
   onNavigate,
-  variant = 'aside'
+  variant = 'aside',
+  search
 }) => (
   <div className="space-y-4">
     {variant === 'aside' ? (
@@ -221,6 +224,8 @@ export const CatalogSidebar: React.FC<SidebarProps> = ({
         onNavigate={onNavigate}
       />
     )}
+
+    {search}
 
     <div className="rounded-[8px] border border-inv-border bg-white overflow-hidden">
       <h2 className="bg-inv-surface-1 px-4 py-3 text-xs font-semibold uppercase tracking-[0.12em] text-inv-ink-muted">
