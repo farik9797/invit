@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FilterBlock } from './FilterBlock';
+import { formatPrice } from '../../lib/price';
 
 /*
  * Цена «от» и «до» двумя полями, а не ползунком: разброс в каталоге от 17
@@ -24,7 +25,8 @@ const parse = (raw: string): number | null => {
   return raw.trim() && Number.isFinite(value) && value >= 0 ? value : null;
 };
 
-const round = (value: number) => Math.round(value * 100) / 100;
+/** Подсказка пишется так же, как цены в карточках: «0,17», а не «0.17». */
+const hint = (value: number) => formatPrice(value).replace(' р.', '');
 
 export const PriceFilter: React.FC<PriceFilterProps> = ({ value, range, onChange }) => {
   const [from, setFrom] = useState(text(value.min));
@@ -63,7 +65,7 @@ export const PriceFilter: React.FC<PriceFilterProps> = ({ value, range, onChange
             onChange={(e) => setFrom(e.target.value)}
             onBlur={apply}
             onKeyDown={(e) => e.key === 'Enter' && apply()}
-            placeholder={range ? `от ${round(range.min)}` : 'от'}
+            placeholder={range ? `от ${hint(range.min)}` : 'от'}
             className={field}
           />
         </label>
@@ -78,7 +80,7 @@ export const PriceFilter: React.FC<PriceFilterProps> = ({ value, range, onChange
             onChange={(e) => setTo(e.target.value)}
             onBlur={apply}
             onKeyDown={(e) => e.key === 'Enter' && apply()}
-            placeholder={range ? `до ${round(range.max)}` : 'до'}
+            placeholder={range ? `до ${hint(range.max)}` : 'до'}
             className={field}
           />
         </label>
