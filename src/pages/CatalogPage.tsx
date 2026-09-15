@@ -208,7 +208,7 @@ export const CatalogPage: React.FC = () => {
                   className="lg:hidden inline-flex items-center gap-2 min-h-11 px-3.5 rounded-[4px] border border-inv-border bg-white text-sm font-semibold text-inv-ink cursor-pointer transition-colors duration-[120ms] hover:border-inv-blue hover:text-inv-blue"
                 >
                   <SlidersHorizontal className="w-4 h-4" />
-                  Разделы и отбор
+                  Разделы и фильтр
                   {active > 0 && (
                     <span className="inline-flex items-center justify-center min-w-5 h-5 px-1.5 rounded-full bg-inv-blue text-white text-[11px] font-semibold tabular-nums">
                       {active}
@@ -341,7 +341,7 @@ export const CatalogPage: React.FC = () => {
                   <p className="text-base text-inv-ink">
                     {filters.query
                       ? `По запросу «${filters.query}» ничего не нашлось.`
-                      : 'Под выбранный отбор ничего не подошло.'}
+                      : 'Под выбранный фильтр ничего не подошло.'}
                   </p>
                   <p className="mt-2 text-sm text-inv-ink-muted">
                     Снимите часть условий или позвоните — подскажем по наличию.
@@ -352,7 +352,7 @@ export const CatalogPage: React.FC = () => {
                       onClick={() => setSearchParams(new URLSearchParams())}
                       className="mt-4 inline-flex items-center gap-1.5 min-h-11 px-5 rounded-[4px] bg-inv-blue text-white text-sm font-semibold cursor-pointer transition-colors duration-[120ms] hover:bg-inv-blue-hover"
                     >
-                      Сбросить отбор
+                      Сбросить фильтр
                     </button>
                   )}
                 </div>
@@ -362,7 +362,7 @@ export const CatalogPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Разделы и отбор на телефоне */}
+      {/* Разделы и фильтр на телефоне */}
       <div
         className={`lg:hidden fixed inset-0 z-50 ${drawer ? '' : 'pointer-events-none'}`}
         aria-hidden={!drawer}
@@ -376,13 +376,13 @@ export const CatalogPage: React.FC = () => {
         <div
           role="dialog"
           aria-modal="true"
-          aria-label="Разделы и отбор"
+          aria-label="Разделы и фильтр"
           className={`absolute inset-y-0 left-0 w-[min(92vw,380px)] bg-white shadow-[0_0_40px_rgba(22,44,88,0.25)] overflow-y-auto transition-transform duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:transition-none ${
             drawer ? 'translate-x-0' : '-translate-x-full'
           }`}
         >
           <header className="sticky top-0 z-10 flex items-center gap-2 px-4 py-3 bg-white border-b border-inv-border">
-            <span className="flex-1 text-sm font-semibold text-inv-ink">Разделы и отбор</span>
+            <span className="flex-1 text-sm font-semibold text-inv-ink">Разделы и фильтр</span>
             <button
               type="button"
               onClick={() => setDrawer(false)}

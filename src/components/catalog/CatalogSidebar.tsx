@@ -224,7 +224,7 @@ export const CatalogSidebar: React.FC<SidebarProps> = ({
 
     <div className="rounded-[8px] border border-inv-border bg-white overflow-hidden">
       <h2 className="bg-inv-surface-1 px-4 py-3 text-xs font-semibold uppercase tracking-[0.12em] text-inv-ink-muted">
-        Отбор
+        Фильтр
       </h2>
 
       <FacetGroup
@@ -249,7 +249,7 @@ export const CatalogSidebar: React.FC<SidebarProps> = ({
             className="w-full inline-flex items-center justify-center gap-1.5 min-h-11 rounded-[4px] border border-inv-border bg-white text-sm font-semibold text-inv-ink cursor-pointer transition-colors duration-[120ms] hover:border-inv-red hover:text-inv-red"
           >
             <X className="w-4 h-4" />
-            Сбросить отбор
+            Сбросить фильтр
           </button>
         </div>
       )}
