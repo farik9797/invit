@@ -6,6 +6,7 @@ import { CATEGORIES, PRODUCTS } from '../../data/catalogData';
 import { COUNT_CATEGORY, COUNT_SUB } from '../../lib/catalogCounts';
 import { SectionIcon } from '../../lib/sectionIcons';
 import { CatalogFilters, CatalogResult, isFiltered } from '../../lib/catalogFilters';
+import { SIZE_LABEL, SizeAxis } from '../../lib/productSize';
 import { plural } from '../../lib/plural';
 import { FacetGroup } from './FacetGroup';
 import { SectionsMenu } from './SectionsMenu';
@@ -192,6 +193,7 @@ export interface SidebarProps {
   onSub: (slug: string | null) => void;
   onBrand: (value: string) => void;
   onCountry: (value: string) => void;
+  onSize: (axis: SizeAxis, value: string) => void;
   onReset: () => void;
   /** Закрыть выдвижную панель на телефоне: в боковой колонке не нужен. */
   onNavigate?: () => void;
@@ -208,6 +210,7 @@ export const CatalogSidebar: React.FC<SidebarProps> = ({
   onSub,
   onBrand,
   onCountry,
+  onSize,
   onReset,
   onNavigate,
   variant = 'aside',
@@ -245,6 +248,19 @@ export const CatalogSidebar: React.FC<SidebarProps> = ({
         onToggle={onCountry}
         preview={6}
       />
+
+      {/* Размеры есть не у каждого раздела: в крепеже диаметр и длина, в
+          оснастке только диаметр — второе число там толщина круга. */}
+      {result.sizes.map(({ axis, options }) => (
+        <FacetGroup
+          key={axis}
+          title={SIZE_LABEL[axis]}
+          options={options}
+          selected={filters.sizes[axis]}
+          onToggle={(value) => onSize(axis, value)}
+          preview={10}
+        />
+      ))}
 
       {isFiltered(filters) && (
         <div className="border-t border-inv-border p-4">

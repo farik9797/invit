@@ -25,6 +25,7 @@ import {
   toggle,
   writeFilters
 } from '../lib/catalogFilters';
+import { SIZE_LABEL, SizeAxis, sizeChip } from '../lib/productSize';
 import { plural } from '../lib/plural';
 import { paths } from '../routes';
 
@@ -157,12 +158,20 @@ export const CatalogPage: React.FC = () => {
       onSub={(slug) => update({ sub: slug })}
       onBrand={(value) => update({ brands: toggle(filters.brands, value) })}
       onCountry={(value) => update({ countries: toggle(filters.countries, value) })}
+      onSize={(axis, value) =>
+        update({ sizes: { ...filters.sizes, [axis]: toggle(filters.sizes[axis], value) } })
+      }
       onReset={() => setSearchParams(new URLSearchParams())}
       onNavigate={onNavigate}
     />
   );
 
-  const active = filters.brands.length + filters.countries.length + (filters.sub ? 1 : 0);
+  const active =
+    filters.brands.length +
+    filters.countries.length +
+    filters.sizes.diameter.length +
+    filters.sizes.length.length +
+    (filters.sub ? 1 : 0);
 
   return (
     <>
@@ -311,6 +320,19 @@ export const CatalogPage: React.FC = () => {
                       onRemove={() => update({ countries: toggle(filters.countries, country) })}
                     />
                   ))}
+                  {(Object.keys(SIZE_LABEL) as SizeAxis[]).flatMap((axis) =>
+                    filters.sizes[axis].map((value) => (
+                      <Chip
+                        key={`${axis}-${value}`}
+                        label={sizeChip(axis, value)}
+                        onRemove={() =>
+                          update({
+                            sizes: { ...filters.sizes, [axis]: toggle(filters.sizes[axis], value) }
+                          })
+                        }
+                      />
+                    ))
+                  )}
                   <button
                     type="button"
                     onClick={() => setSearchParams(new URLSearchParams())}

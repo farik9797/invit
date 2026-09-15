@@ -1,6 +1,7 @@
 import { Product } from '../types';
 import { sortForListing } from './product';
 import { searchProducts } from './search';
+import { SECTION_SIZES, SizeAxis, bySize, productSize } from './productSize';
 
 /*
  * Отбор товаров в каталоге: раздел, подраздел, поиск, бренд, страна, признаки
@@ -15,7 +16,7 @@ import { searchProducts } from './search';
 export type SortMode = 'default' | 'name' | 'name-desc';
 
 export const SORT_LABEL: Record<SortMode, string> = {
-  default: 'Сначала наши и со снимком',
+  default: 'Сортировать по',
   name: 'Название: А → Я',
   'name-desc': 'Название: Я → А'
 };
@@ -25,6 +26,8 @@ export interface CatalogFilters {
   query: string;
   brands: string[];
   countries: string[];
+  /** Размеры: у каждого раздела свои оси, см. SECTION_SIZES. */
+  sizes: Record<SizeAxis, string[]>;
   sort: SortMode;
 }
 
@@ -33,6 +36,7 @@ export const EMPTY_FILTERS: CatalogFilters = {
   query: '',
   brands: [],
   countries: [],
+  sizes: { diameter: [], length: [] },
   sort: 'default'
 };
 
@@ -51,6 +55,7 @@ export const readFilters = (params: URLSearchParams): CatalogFilters => {
     query: params.get('q') ?? '',
     brands: many(params, 'brand'),
     countries: many(params, 'country'),
+    sizes: { diameter: many(params, 'd'), length: many(params, 'l') },
     sort: isSort(sort) ? sort : 'default'
   };
 };
@@ -61,13 +66,22 @@ export const writeFilters = (filters: CatalogFilters): URLSearchParams => {
   if (filters.query.trim()) params.set('q', filters.query.trim());
   if (filters.brands.length) params.set('brand', filters.brands.join(','));
   if (filters.countries.length) params.set('country', filters.countries.join(','));
+  if (filters.sizes.diameter.length) params.set('d', filters.sizes.diameter.join(','));
+  if (filters.sizes.length.length) params.set('l', filters.sizes.length.join(','));
   if (filters.sort !== 'default') params.set('sort', filters.sort);
   return params;
 };
 
 /** Отбор тронут — значит есть что сбрасывать (раздел в адресе, а не здесь). */
 export const isFiltered = (f: CatalogFilters) =>
-  Boolean(f.sub || f.query || f.brands.length || f.countries.length);
+  Boolean(
+    f.sub ||
+      f.query ||
+      f.brands.length ||
+      f.countries.length ||
+      f.sizes.diameter.length ||
+      f.sizes.length.length
+  );
 
 export const specValue = (product: Product, label: string) =>
   product.specs.find((s) => s.label === label)?.value ?? '';
@@ -93,10 +107,22 @@ export const countBy = (products: Product[], label: string): [string, number][] 
   );
 };
 
+/** Значения размера со счётчиками, по возрастанию. */
+const countSizes = (products: Product[], axis: SizeAxis): [string, number][] => {
+  const counts = new Map<string, number>();
+  for (const product of products) {
+    const value = productSize(product)[axis];
+    if (value) counts.set(value, (counts.get(value) ?? 0) + 1);
+  }
+  return [...counts.entries()].sort(bySize);
+};
+
 export interface CatalogResult {
   products: Product[];
   brands: [string, number][];
   countries: [string, number][];
+  /** Оси размера этого раздела со значениями; в «Всех позициях» пусто. */
+  sizes: { axis: SizeAxis; options: [string, number][] }[];
   /** Сколько позиций в разделе до отбора по бренду, стране и признакам. */
   scope: number;
 }
@@ -116,10 +142,33 @@ export const selectProducts = (
   const byCountry = (p: Product) =>
     !filters.countries.length || filters.countries.includes(specValue(p, 'Страна'));
 
+  // Размеры показываем только внутри раздела: в общем каталоге 125 мм круга
+  // встали бы в один список с 3.5 мм самореза.
+  const axes = (categorySlug && SECTION_SIZES[categorySlug]) ?? [];
+  const bySize_ = (axis: SizeAxis) => (p: Product) => {
+    const chosen = filters.sizes[axis];
+    return !chosen.length || chosen.includes(productSize(p)[axis]);
+  };
+  const byAllSizes = (p: Product) => axes.every((axis) => bySize_(axis)(p));
+
+  const products = base.filter((p) => byBrand(p) && byCountry(p) && byAllSizes(p));
+
   return {
-    products: applySort(base.filter((p) => byBrand(p) && byCountry(p)), filters.sort),
-    brands: countBy(base.filter(byCountry), 'Бренд'),
-    countries: countBy(base.filter(byBrand), 'Страна'),
+    products: applySort(products, filters.sort),
+    brands: countBy(base.filter((p) => byCountry(p) && byAllSizes(p)), 'Бренд'),
+    countries: countBy(base.filter((p) => byBrand(p) && byAllSizes(p)), 'Страна'),
+    sizes: axes.map((axis) => ({
+      axis,
+      options: countSizes(
+        base.filter(
+          (p) =>
+            byBrand(p) &&
+            byCountry(p) &&
+            axes.every((other) => other === axis || bySize_(other)(p))
+        ),
+        axis
+      )
+    })),
     scope: base.length
   };
 };
