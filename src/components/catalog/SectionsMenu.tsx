@@ -90,7 +90,7 @@ export const SectionsMenu: React.FC<SectionsMenuProps> = ({ category, activeSub,
         >
           <div className="flex rounded-[8px] border border-inv-border bg-white shadow-[0_6px_24px_rgba(22,44,88,0.16)] overflow-hidden">
             {/* Разделы. Выбранный красный, как в мега-меню шапки */}
-            <ul className="w-[272px] shrink-0 border-r border-inv-border bg-inv-surface-1 py-2 max-h-[70vh] overflow-y-auto">
+            <ul className="w-[330px] shrink-0 border-r border-inv-border bg-inv-surface-1 py-2 max-h-[70vh] overflow-y-auto">
               <li>
                 <Link
                   to={paths.catalog}
