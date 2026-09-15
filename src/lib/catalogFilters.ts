@@ -13,13 +13,6 @@ import { searchProducts } from './search';
  */
 
 export type SortMode = 'default' | 'name' | 'name-desc';
-export type Flag = 'own' | 'photo' | 'variants';
-
-export const FLAG_LABEL: Record<Flag, string> = {
-  own: 'Собственное производство',
-  photo: 'Со снимком',
-  variants: 'С исполнениями'
-};
 
 export const SORT_LABEL: Record<SortMode, string> = {
   default: 'Сначала наши и со снимком',
@@ -32,7 +25,6 @@ export interface CatalogFilters {
   query: string;
   brands: string[];
   countries: string[];
-  flags: Flag[];
   sort: SortMode;
 }
 
@@ -41,11 +33,9 @@ export const EMPTY_FILTERS: CatalogFilters = {
   query: '',
   brands: [],
   countries: [],
-  flags: [],
   sort: 'default'
 };
 
-const isFlag = (value: string): value is Flag => value in FLAG_LABEL;
 const isSort = (value: string): value is SortMode => value in SORT_LABEL;
 
 const many = (params: URLSearchParams, key: string) =>
@@ -61,7 +51,6 @@ export const readFilters = (params: URLSearchParams): CatalogFilters => {
     query: params.get('q') ?? '',
     brands: many(params, 'brand'),
     countries: many(params, 'country'),
-    flags: many(params, 'only').filter(isFlag),
     sort: isSort(sort) ? sort : 'default'
   };
 };
@@ -72,26 +61,19 @@ export const writeFilters = (filters: CatalogFilters): URLSearchParams => {
   if (filters.query.trim()) params.set('q', filters.query.trim());
   if (filters.brands.length) params.set('brand', filters.brands.join(','));
   if (filters.countries.length) params.set('country', filters.countries.join(','));
-  if (filters.flags.length) params.set('only', filters.flags.join(','));
   if (filters.sort !== 'default') params.set('sort', filters.sort);
   return params;
 };
 
 /** Отбор тронут — значит есть что сбрасывать (раздел в адресе, а не здесь). */
 export const isFiltered = (f: CatalogFilters) =>
-  Boolean(f.sub || f.query || f.brands.length || f.countries.length || f.flags.length);
+  Boolean(f.sub || f.query || f.brands.length || f.countries.length);
 
 export const specValue = (product: Product, label: string) =>
   product.specs.find((s) => s.label === label)?.value ?? '';
 
 export const toggle = <T,>(list: T[], value: T): T[] =>
   list.includes(value) ? list.filter((v) => v !== value) : [...list, value];
-
-const hasFlag = (product: Product, flag: Flag) => {
-  if (flag === 'own') return product.badge === 'Собственное производство';
-  if (flag === 'photo') return Boolean(product.image);
-  return Boolean(product.variants?.length);
-};
 
 const applySort = (products: Product[], sort: SortMode) => {
   if (sort === 'default') return sortForListing(products);
@@ -115,7 +97,6 @@ export interface CatalogResult {
   products: Product[];
   brands: [string, number][];
   countries: [string, number][];
-  flags: Record<Flag, number>;
   /** Сколько позиций в разделе до отбора по бренду, стране и признакам. */
   scope: number;
 }
@@ -134,20 +115,11 @@ export const selectProducts = (
     !filters.brands.length || filters.brands.includes(specValue(p, 'Бренд'));
   const byCountry = (p: Product) =>
     !filters.countries.length || filters.countries.includes(specValue(p, 'Страна'));
-  const byFlags = (p: Product) => filters.flags.every((flag) => hasFlag(p, flag));
-
-  const products = base.filter((p) => byBrand(p) && byCountry(p) && byFlags(p));
-  const forFlags = base.filter((p) => byBrand(p) && byCountry(p));
 
   return {
-    products: applySort(products, filters.sort),
-    brands: countBy(base.filter((p) => byCountry(p) && byFlags(p)), 'Бренд'),
-    countries: countBy(base.filter((p) => byBrand(p) && byFlags(p)), 'Страна'),
-    flags: {
-      own: forFlags.filter((p) => hasFlag(p, 'own')).length,
-      photo: forFlags.filter((p) => hasFlag(p, 'photo')).length,
-      variants: forFlags.filter((p) => hasFlag(p, 'variants')).length
-    },
+    products: applySort(base.filter((p) => byBrand(p) && byCountry(p)), filters.sort),
+    brands: countBy(base.filter(byCountry), 'Бренд'),
+    countries: countBy(base.filter(byBrand), 'Страна'),
     scope: base.length
   };
 };

@@ -9,8 +9,6 @@ import { CATEGORIES, PRODUCTS } from '../data/catalogData';
 import { useShop } from '../context/ShopContext';
 import {
   CatalogFilters,
-  Flag,
-  FLAG_LABEL,
   SORT_LABEL,
   SortMode,
   isFiltered,
@@ -125,14 +123,12 @@ export const CatalogPage: React.FC = () => {
       onSub={(slug) => update({ sub: slug })}
       onBrand={(value) => update({ brands: toggle(filters.brands, value) })}
       onCountry={(value) => update({ countries: toggle(filters.countries, value) })}
-      onFlag={(flag: Flag) => update({ flags: toggle(filters.flags, flag) })}
       onReset={() => setSearchParams(new URLSearchParams())}
       onNavigate={onNavigate}
     />
   );
 
-  const active = filters.brands.length + filters.countries.length + filters.flags.length
-    + (filters.sub ? 1 : 0);
+  const active = filters.brands.length + filters.countries.length + (filters.sub ? 1 : 0);
 
   return (
     <>
@@ -280,13 +276,6 @@ export const CatalogPage: React.FC = () => {
                   {filters.query && (
                     <Chip label={`«${filters.query}»`} onRemove={() => update({ query: '' })} />
                   )}
-                  {filters.flags.map((flag) => (
-                    <Chip
-                      key={flag}
-                      label={FLAG_LABEL[flag]}
-                      onRemove={() => update({ flags: toggle(filters.flags, flag) })}
-                    />
-                  ))}
                   {filters.brands.map((brand) => (
                     <Chip
                       key={brand}

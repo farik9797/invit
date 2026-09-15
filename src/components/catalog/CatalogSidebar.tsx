@@ -1,19 +1,12 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Check, ChevronDown, ChevronRight, X } from 'lucide-react';
+import { ChevronDown, ChevronRight, X } from 'lucide-react';
 import { Category, SubCategory } from '../../types';
 import { CATEGORIES, PRODUCTS } from '../../data/catalogData';
 import { SectionIcon } from '../../lib/sectionIcons';
-import {
-  CatalogFilters,
-  CatalogResult,
-  Flag,
-  FLAG_LABEL,
-  isFiltered
-} from '../../lib/catalogFilters';
+import { CatalogFilters, CatalogResult, isFiltered } from '../../lib/catalogFilters';
 import { plural } from '../../lib/plural';
 import { FacetGroup } from './FacetGroup';
-import { FilterBlock } from './FilterBlock';
 import { paths } from '../../routes';
 
 /*
@@ -112,7 +105,6 @@ export interface SidebarProps {
   onSub: (slug: string | null) => void;
   onBrand: (value: string) => void;
   onCountry: (value: string) => void;
-  onFlag: (flag: Flag) => void;
   onReset: () => void;
   /** Закрыть выдвижную панель на телефоне: в боковой колонке не нужен. */
   onNavigate?: () => void;
@@ -125,7 +117,6 @@ export const CatalogSidebar: React.FC<SidebarProps> = ({
   onSub,
   onBrand,
   onCountry,
-  onFlag,
   onReset,
   onNavigate
 }) => {
@@ -218,50 +209,6 @@ export const CatalogSidebar: React.FC<SidebarProps> = ({
     <h2 className="bg-inv-surface-1 px-4 py-3 text-xs font-semibold uppercase tracking-[0.12em] text-inv-ink-muted border-t border-inv-border">
       Отбор
     </h2>
-
-    <FilterBlock
-      title="Показывать"
-      count={filters.flags.length}
-      defaultOpen={filters.flags.length > 0}
-    >
-      <ul>
-        {(Object.keys(FLAG_LABEL) as Flag[]).map((flag) => {
-          const on = filters.flags.includes(flag);
-          const count = result.flags[flag];
-          return (
-            <li key={flag}>
-              <button
-                type="button"
-                onClick={() => onFlag(flag)}
-                aria-pressed={on}
-                disabled={!count && !on}
-                className={`w-full flex items-center gap-2.5 min-h-9 py-1 text-left rounded-[4px] transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue ${
-                  !count && !on ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer group'
-                }`}
-              >
-                <span
-                  className={`w-[18px] h-[18px] shrink-0 rounded-[3px] border flex items-center justify-center transition-colors duration-[120ms] ${
-                    on
-                      ? 'bg-inv-blue border-inv-blue text-white'
-                      : 'border-inv-border bg-white group-hover:border-inv-blue'
-                  }`}
-                >
-                  {on && <Check className="w-3 h-3" strokeWidth={3} />}
-                </span>
-                <span
-                  className={`flex-1 text-[13px] leading-snug ${
-                    on ? 'text-inv-ink font-semibold' : 'text-inv-ink group-hover:text-inv-blue'
-                  }`}
-                >
-                  {FLAG_LABEL[flag]}
-                </span>
-                <span className="text-[11px] tabular-nums text-inv-ink-muted">{count}</span>
-              </button>
-            </li>
-          );
-        })}
-      </ul>
-    </FilterBlock>
 
     <FacetGroup
       title="Бренд"
