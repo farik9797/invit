@@ -1,86 +1,138 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Link, useParams, useSearchParams, Navigate } from 'react-router-dom';
-import { Search, X, ChevronRight } from 'lucide-react';
+import { useParams, useSearchParams, Navigate } from 'react-router-dom';
+import { Search, X, SlidersHorizontal, LayoutGrid, List } from 'lucide-react';
 import { Breadcrumbs } from '../components/Breadcrumbs';
 import { ProductGrid } from '../components/ProductCard';
+import { ProductList } from '../components/catalog/ProductList';
+import { CatalogSidebar } from '../components/catalog/CatalogSidebar';
 import { CATEGORIES, PRODUCTS } from '../data/catalogData';
 import { useShop } from '../context/ShopContext';
-import { sortForListing } from '../lib/product';
-import { searchProducts } from '../lib/search';
-import { SectionIcon } from '../lib/sectionIcons';
+import {
+  CatalogFilters,
+  Flag,
+  FLAG_LABEL,
+  SORT_LABEL,
+  SortMode,
+  isFiltered,
+  readFilters,
+  selectProducts,
+  toggle,
+  writeFilters
+} from '../lib/catalogFilters';
+import { plural } from '../lib/plural';
 import { paths } from '../routes';
 
 /*
- * Каталог по образцу обычного интернет-магазина (референс labzerde.com/shop):
- * слева дерево категорий, сверху поиск, справа сетка карточек.
+ * Каталог по образцу обычного интернет-магазина: слева разделы и отбор,
+ * сверху поиск и переключатель вида, справа выдача плиткой или списком.
  *
- * Одна страница обслуживает и `/catalog`, и `/catalog/:categorySlug` — раньше
- * это были два разных компонента с почти одинаковой разметкой, а верхний блок
- * с двумя большими карточками разделов клиент попросил убрать как лишний.
+ * Весь отбор хранится в адресе страницы, поэтому ссылку с выбранным брендом
+ * можно переслать, а «назад» возвращает предыдущий набор. Исключение — вид
+ * выдачи: это привычка человека, а не свойство ссылки, и живёт он в localStorage.
  */
 
 const WRAP = 'max-w-[1400px] mx-auto px-4 lg:px-8';
-const PAGE_SIZE = 24;
+const VIEW_KEY = 'invit:catalog-view';
 
-const plural = (n: number, forms: [string, string, string]) => {
-  const mod100 = n % 100;
-  if (mod100 >= 11 && mod100 <= 14) return forms[2];
-  const mod10 = n % 10;
-  if (mod10 === 1) return forms[0];
-  if (mod10 >= 2 && mod10 <= 4) return forms[1];
-  return forms[2];
+type ViewMode = 'grid' | 'list';
+
+const readView = (): ViewMode => {
+  try {
+    return localStorage.getItem(VIEW_KEY) === 'list' ? 'list' : 'grid';
+  } catch {
+    return 'grid';
+  }
 };
 
-const countIn = (categorySlug: string) =>
-  PRODUCTS.filter((p) => p.categorySlug === categorySlug).length;
+const SUB_NAME = new Map<string, string>();
+for (const cat of CATEGORIES) for (const sub of cat.subcategories) SUB_NAME.set(sub.slug, sub.name);
 
-const countInSub = (subSlug: string) =>
-  PRODUCTS.filter((p) => p.subcategorySlug === subSlug).length;
+/** Выбранное значение отдельной плашкой: видно, что сузило выдачу, и снимается одним нажатием. */
+const Chip: React.FC<{ label: string; onRemove: () => void }> = ({ label, onRemove }) => (
+  <button
+    type="button"
+    onClick={onRemove}
+    className="inline-flex items-center gap-1.5 h-8 pl-3 pr-2 rounded-full border border-inv-border bg-inv-surface-1 text-[13px] text-inv-ink cursor-pointer transition-colors duration-[120ms] hover:border-inv-red hover:text-inv-red focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
+  >
+    {label}
+    <X className="w-3.5 h-3.5" />
+  </button>
+);
 
 export const CatalogPage: React.FC = () => {
   const { categorySlug } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const shop = useShop();
 
-  const category = categorySlug ? CATEGORIES.find((c) => c.slug === categorySlug) : null;
-  const activeSub = searchParams.get('sub');
-  const query = searchParams.get('q') ?? '';
-  const [draft, setDraft] = useState(query);
+  const category = categorySlug ? CATEGORIES.find((c) => c.slug === categorySlug) ?? null : null;
+  const filters = useMemo(() => readFilters(searchParams), [searchParams]);
 
-  useEffect(() => setDraft(query), [query]);
+  const [draft, setDraft] = useState(filters.query);
+  useEffect(() => setDraft(filters.query), [filters.query]);
 
-  const products = useMemo(() => {
-    let list = PRODUCTS;
-    if (category) list = list.filter((p) => p.categorySlug === category.slug);
-    if (activeSub) list = list.filter((p) => p.subcategorySlug === activeSub);
+  const [view, setView] = useState<ViewMode>(readView);
+  const [drawer, setDrawer] = useState(false);
 
-    list = searchProducts(list, query);
+  const result = useMemo(
+    () => selectProducts(PRODUCTS, category?.slug ?? null, filters),
+    [category, filters]
+  );
 
-    return sortForListing(list);
-  }, [category, activeSub, query]);
+  const pageSize = view === 'list' ? 40 : 24;
+  const [visible, setVisible] = useState(pageSize);
+  const key = searchParams.toString();
+  useEffect(() => setVisible(pageSize), [categorySlug, key, pageSize]);
 
-  const [visible, setVisible] = useState(PAGE_SIZE);
-  useEffect(() => setVisible(PAGE_SIZE), [categorySlug, activeSub, query]);
+  // Выдвижная панель закрывается по Esc и не даёт странице прокручиваться под собой
+  useEffect(() => {
+    if (!drawer) return;
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setDrawer(false);
+    document.addEventListener('keydown', onKey);
+    const { overflow } = document.body.style;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = overflow;
+    };
+  }, [drawer]);
 
   if (categorySlug && !category) return <Navigate to={paths.catalog} replace />;
 
-  const applySearch = (value: string) => {
-    const next = new URLSearchParams(searchParams);
-    if (value.trim()) next.set('q', value.trim());
-    else next.delete('q');
-    setSearchParams(next);
+  const update = (patch: Partial<CatalogFilters>) =>
+    setSearchParams(writeFilters({ ...filters, ...patch }));
+
+  const switchView = (next: ViewMode) => {
+    setView(next);
+    try {
+      localStorage.setItem(VIEW_KEY, next);
+    } catch {
+      /* приватный режим — вид просто не запомнится */
+    }
   };
 
-  const selectSub = (slug: string | null) => {
-    const next = new URLSearchParams(searchParams);
-    if (slug) next.set('sub', slug);
-    else next.delete('sub');
-    setSearchParams(next);
-  };
+  const products = result.products;
+  const shown = Math.min(visible, products.length);
 
   const crumbs = category
     ? [{ label: 'Каталог', to: paths.catalog }, { label: category.name }]
     : [{ label: 'Каталог' }];
+
+  const sidebar = (onNavigate?: () => void) => (
+    <CatalogSidebar
+      category={category}
+      filters={filters}
+      result={result}
+      onSub={(slug) => update({ sub: slug })}
+      onBrand={(value) => update({ brands: toggle(filters.brands, value) })}
+      onCountry={(value) => update({ countries: toggle(filters.countries, value) })}
+      onFlag={(flag: Flag) => update({ flags: toggle(filters.flags, flag) })}
+      onReset={() => setSearchParams(new URLSearchParams())}
+      onNavigate={onNavigate}
+    />
+  );
+
+  const active = filters.brands.length + filters.countries.length + filters.flags.length
+    + (filters.sub ? 1 : 0);
 
   return (
     <>
@@ -100,107 +152,19 @@ export const CatalogPage: React.FC = () => {
       </section>
 
       <section className="bg-white">
-        <div className={`${WRAP} py-8 sm:py-10 lg:py-12`}>
+        <div className={`${WRAP} py-6 sm:py-8 lg:py-12`}>
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10">
-            {/* Категории слева */}
-            <aside className="lg:col-span-3">
-              <div className="lg:sticky lg:top-24 rounded-[8px] border border-inv-border overflow-hidden">
-                <h2 className="bg-inv-surface-1 px-5 py-3 text-xs font-semibold uppercase tracking-[0.12em] text-inv-ink-muted border-b border-inv-border">
-                  Категории
-                </h2>
-
-                <nav className="p-2">
-                  <Link
-                    to={paths.catalog}
-                    className={`flex items-center gap-2.5 min-h-11 px-2.5 rounded-[4px] text-sm transition-colors duration-[120ms] ${
-                      !category
-                        ? 'bg-inv-surface-1 text-inv-red font-semibold'
-                        : 'text-inv-ink hover:text-inv-blue'
-                    }`}
-                  >
-                    <SectionIcon slug="all" size={20} className="w-5 h-5 shrink-0 text-inv-blue" />
-                    <span className="flex-1">Все позиции</span>
-                    <span className="text-xs text-inv-ink-muted tabular-nums">
-                      {PRODUCTS.length}
-                    </span>
-                  </Link>
-
-                  {CATEGORIES.map((cat) => {
-                    const isOpen = category?.slug === cat.slug;
-
-                    return (
-                      <div key={cat.id} className="mt-1">
-                        <Link
-                          to={paths.category(cat.slug)}
-                          className={`flex items-center gap-2.5 min-h-11 px-2.5 rounded-[4px] text-sm transition-colors duration-[120ms] ${
-                            isOpen
-                              ? 'bg-inv-surface-1 text-inv-red font-semibold'
-                              : 'text-inv-ink hover:text-inv-blue'
-                          }`}
-                        >
-                          <SectionIcon
-                            slug={cat.slug}
-                            size={20}
-                            className={`w-5 h-5 shrink-0 ${
-                              isOpen ? 'text-inv-red' : 'text-inv-blue'
-                            }`}
-                          />
-                          <span className="flex-1">{cat.name}</span>
-                          <span className="text-xs text-inv-ink-muted tabular-nums">
-                            {countIn(cat.slug)}
-                          </span>
-                          <ChevronRight
-                            className={`w-4 h-4 shrink-0 transition-transform duration-[240ms] ${
-                              isOpen ? 'rotate-90' : ''
-                            }`}
-                          />
-                        </Link>
-
-                        {/* Подразделы раскрываются только у выбранной категории */}
-                        {isOpen && (
-                          <ul className="mt-1 ml-3 border-l border-inv-border">
-                            {cat.subcategories.map((sub) => (
-                              <li key={sub.id}>
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    selectSub(activeSub === sub.slug ? null : sub.slug)
-                                  }
-                                  className={`w-full flex items-center gap-2.5 min-h-11 pl-2 pr-2.5 text-left text-sm cursor-pointer transition-colors duration-[120ms] ${
-                                    activeSub === sub.slug
-                                      ? 'text-inv-red font-semibold'
-                                      : 'text-inv-ink-muted hover:text-inv-blue'
-                                  }`}
-                                >
-                                  <SectionIcon
-                                    slug={sub.slug}
-                                    size={18}
-                                    className={`w-[18px] h-[18px] shrink-0 ${
-                                      activeSub === sub.slug ? 'text-inv-red' : 'text-inv-blue'
-                                    }`}
-                                  />
-                                  <span className="flex-1 leading-snug">{sub.name}</span>
-                                  <span className="text-xs tabular-nums">
-                                    {countInSub(sub.slug)}
-                                  </span>
-                                </button>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </div>
-                    );
-                  })}
-                </nav>
+            <aside className="hidden lg:block lg:col-span-3">
+              <div className="lg:sticky lg:top-24 max-h-[calc(100vh-7rem)] overflow-y-auto">
+                {sidebar()}
               </div>
             </aside>
 
-            {/* Поиск и товары */}
             <div className="lg:col-span-9">
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
-                  applySearch(draft);
+                  update({ query: draft });
                 }}
                 className="flex gap-2"
               >
@@ -209,7 +173,7 @@ export const CatalogPage: React.FC = () => {
                   <input
                     value={draft}
                     onChange={(e) => setDraft(e.target.value)}
-                    placeholder="Поиск по каталогу: лента, ПСУЛ, профиль…"
+                    placeholder="Поиск по каталогу: лента, ПСУЛ, артикул…"
                     aria-label="Поиск по каталогу"
                     className="w-full min-h-11 pl-9 pr-9 rounded-[4px] border border-inv-border bg-white text-base text-inv-ink placeholder:text-inv-ink-muted focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-inv-blue"
                   />
@@ -218,7 +182,7 @@ export const CatalogPage: React.FC = () => {
                       type="button"
                       onClick={() => {
                         setDraft('');
-                        applySearch('');
+                        update({ query: '' });
                       }}
                       aria-label="Очистить поиск"
                       className="absolute right-1 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center text-inv-ink-muted hover:text-inv-ink cursor-pointer"
@@ -236,42 +200,142 @@ export const CatalogPage: React.FC = () => {
                 </button>
               </form>
 
-              <div className="mt-4 flex items-center justify-between gap-3 flex-wrap">
+              {/* Панель управления выдачей */}
+              <div className="mt-4 flex items-center gap-2 sm:gap-3 flex-wrap">
+                <button
+                  type="button"
+                  onClick={() => setDrawer(true)}
+                  className="lg:hidden inline-flex items-center gap-2 min-h-11 px-3.5 rounded-[4px] border border-inv-border bg-white text-sm font-semibold text-inv-ink cursor-pointer transition-colors duration-[120ms] hover:border-inv-blue hover:text-inv-blue"
+                >
+                  <SlidersHorizontal className="w-4 h-4" />
+                  Разделы и отбор
+                  {active > 0 && (
+                    <span className="inline-flex items-center justify-center min-w-5 h-5 px-1.5 rounded-full bg-inv-blue text-white text-[11px] font-semibold tabular-nums">
+                      {active}
+                    </span>
+                  )}
+                </button>
+
                 <span className="text-sm text-inv-ink-muted">
                   {products.length
-                    ? `Показано ${Math.min(visible, products.length)} из ${products.length} ${plural(products.length, ['позиции', 'позиций', 'позиций'])}`
+                    ? `Показано ${shown} из ${products.length} ${plural(products.length, ['позиции', 'позиций', 'позиций'])}`
                     : 'Ничего не нашлось'}
                 </span>
 
-                {(activeSub || query) && (
+                <span className="flex items-center gap-2 ml-auto">
+                  <label className="sr-only" htmlFor="catalog-sort">
+                    Порядок
+                  </label>
+                  <select
+                    id="catalog-sort"
+                    value={filters.sort}
+                    onChange={(e) => update({ sort: e.target.value as SortMode })}
+                    className="min-h-11 pl-3 pr-8 rounded-[4px] border border-inv-border bg-white text-sm text-inv-ink cursor-pointer transition-colors duration-[120ms] hover:border-inv-blue focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-inv-blue"
+                  >
+                    {(Object.keys(SORT_LABEL) as SortMode[]).map((mode) => (
+                      <option key={mode} value={mode}>
+                        {SORT_LABEL[mode]}
+                      </option>
+                    ))}
+                  </select>
+
+                  <span
+                    role="group"
+                    aria-label="Вид выдачи"
+                    className="flex items-center rounded-[4px] border border-inv-border overflow-hidden"
+                  >
+                    {([
+                      ['grid', LayoutGrid, 'Плиткой'],
+                      ['list', List, 'Списком']
+                    ] as [ViewMode, typeof List, string][]).map(([mode, Icon, label]) => (
+                      <button
+                        key={mode}
+                        type="button"
+                        onClick={() => switchView(mode)}
+                        aria-pressed={view === mode}
+                        title={label}
+                        className={`inline-flex items-center gap-1.5 min-h-11 px-3 text-sm font-semibold cursor-pointer transition-colors duration-[120ms] ${
+                          view === mode
+                            ? 'bg-inv-blue text-white'
+                            : 'bg-white text-inv-ink-muted hover:text-inv-blue'
+                        }`}
+                      >
+                        <Icon className="w-4 h-4" />
+                        <span className="hidden sm:inline">{label}</span>
+                      </button>
+                    ))}
+                  </span>
+                </span>
+              </div>
+
+              {/* Что сейчас выбрано */}
+              {isFiltered(filters) && (
+                <div className="mt-3 flex items-center gap-2 flex-wrap">
+                  {filters.sub && (
+                    <Chip
+                      label={SUB_NAME.get(filters.sub) ?? filters.sub}
+                      onRemove={() => update({ sub: null })}
+                    />
+                  )}
+                  {filters.query && (
+                    <Chip label={`«${filters.query}»`} onRemove={() => update({ query: '' })} />
+                  )}
+                  {filters.flags.map((flag) => (
+                    <Chip
+                      key={flag}
+                      label={FLAG_LABEL[flag]}
+                      onRemove={() => update({ flags: toggle(filters.flags, flag) })}
+                    />
+                  ))}
+                  {filters.brands.map((brand) => (
+                    <Chip
+                      key={brand}
+                      label={brand}
+                      onRemove={() => update({ brands: toggle(filters.brands, brand) })}
+                    />
+                  ))}
+                  {filters.countries.map((country) => (
+                    <Chip
+                      key={country}
+                      label={country}
+                      onRemove={() => update({ countries: toggle(filters.countries, country) })}
+                    />
+                  ))}
                   <button
                     type="button"
                     onClick={() => setSearchParams(new URLSearchParams())}
-                    className="inline-flex items-center gap-1.5 min-h-11 sm:min-h-0 text-sm font-semibold text-inv-red hover:text-inv-red-hover cursor-pointer transition-colors duration-[120ms]"
+                    className="inline-flex items-center gap-1.5 h-8 px-2 text-[13px] font-semibold text-inv-red hover:text-inv-red-hover cursor-pointer transition-colors duration-[120ms]"
                   >
-                    <X className="w-4 h-4" />
-                    Сбросить фильтр
+                    Сбросить всё
                   </button>
-                )}
-              </div>
+                </div>
+              )}
 
               {products.length ? (
                 <>
-                  <div className="mt-6">
-                    <ProductGrid
-                      columns={3}
-                      products={products.slice(0, visible)}
-                      quoteItemsIds={shop.quoteCart.map((i) => i.product.id)}
-                      onQuickView={shop.openQuickView}
-                      onAddToQuote={shop.addToQuote}
-                    />
+                  <div className="mt-5">
+                    {view === 'list' ? (
+                      <ProductList
+                        products={products.slice(0, visible)}
+                        quoteItemsIds={shop.quoteCart.map((i) => i.product.id)}
+                        onAddToQuote={shop.addToQuote}
+                      />
+                    ) : (
+                      <ProductGrid
+                        columns={3}
+                        products={products.slice(0, visible)}
+                        quoteItemsIds={shop.quoteCart.map((i) => i.product.id)}
+                        onQuickView={shop.openQuickView}
+                        onAddToQuote={shop.addToQuote}
+                      />
+                    )}
                   </div>
 
                   {visible < products.length && (
                     <div className="mt-8 flex justify-center">
                       <button
                         type="button"
-                        onClick={() => setVisible((v) => v + PAGE_SIZE)}
+                        onClick={() => setVisible((v) => v + pageSize)}
                         className="min-h-11 px-6 rounded-[4px] border border-inv-border bg-white text-sm font-semibold text-inv-ink cursor-pointer transition-colors duration-[120ms] hover:border-inv-blue hover:text-inv-blue"
                       >
                         Показать ещё ({products.length - visible})
@@ -282,18 +346,73 @@ export const CatalogPage: React.FC = () => {
               ) : (
                 <div className="mt-6 rounded-[8px] border border-inv-border bg-inv-surface-1 p-8 text-center">
                   <p className="text-base text-inv-ink">
-                    По запросу «{query}» ничего не нашлось.
+                    {filters.query
+                      ? `По запросу «${filters.query}» ничего не нашлось.`
+                      : 'Под выбранный отбор ничего не подошло.'}
                   </p>
                   <p className="mt-2 text-sm text-inv-ink-muted">
-                    Попробуйте короче: «ПСУЛ», «ВЛ», «профиль». Или позвоните, подскажем
-                    по наличию.
+                    Снимите часть условий или позвоните — подскажем по наличию.
                   </p>
+                  {isFiltered(filters) && (
+                    <button
+                      type="button"
+                      onClick={() => setSearchParams(new URLSearchParams())}
+                      className="mt-4 inline-flex items-center gap-1.5 min-h-11 px-5 rounded-[4px] bg-inv-blue text-white text-sm font-semibold cursor-pointer transition-colors duration-[120ms] hover:bg-inv-blue-hover"
+                    >
+                      Сбросить отбор
+                    </button>
+                  )}
                 </div>
               )}
             </div>
           </div>
         </div>
       </section>
+
+      {/* Разделы и отбор на телефоне */}
+      <div
+        className={`lg:hidden fixed inset-0 z-50 ${drawer ? '' : 'pointer-events-none'}`}
+        aria-hidden={!drawer}
+      >
+        <div
+          onClick={() => setDrawer(false)}
+          className={`absolute inset-0 bg-inv-deep/50 transition-opacity duration-[240ms] motion-reduce:transition-none ${
+            drawer ? 'opacity-100' : 'opacity-0'
+          }`}
+        />
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Разделы и отбор"
+          className={`absolute inset-y-0 left-0 w-[min(92vw,380px)] bg-white shadow-[0_0_40px_rgba(22,44,88,0.25)] overflow-y-auto transition-transform duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:transition-none ${
+            drawer ? 'translate-x-0' : '-translate-x-full'
+          }`}
+        >
+          <header className="sticky top-0 z-10 flex items-center gap-2 px-4 py-3 bg-white border-b border-inv-border">
+            <span className="flex-1 text-sm font-semibold text-inv-ink">Разделы и отбор</span>
+            <button
+              type="button"
+              onClick={() => setDrawer(false)}
+              aria-label="Закрыть"
+              className="w-11 h-11 -mr-2 flex items-center justify-center text-inv-ink-muted hover:text-inv-ink cursor-pointer"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </header>
+
+          <div className="p-3">{sidebar(() => setDrawer(false))}</div>
+
+          <div className="sticky bottom-0 p-3 bg-white border-t border-inv-border">
+            <button
+              type="button"
+              onClick={() => setDrawer(false)}
+              className="w-full min-h-11 rounded-[4px] bg-inv-blue text-white text-sm font-semibold cursor-pointer transition-colors duration-[120ms] hover:bg-inv-blue-hover"
+            >
+              Показать {products.length} {plural(products.length, ['позицию', 'позиции', 'позиций'])}
+            </button>
+          </div>
+        </div>
+      </div>
     </>
   );
 };
