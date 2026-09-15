@@ -115,8 +115,9 @@ export const CatalogPage: React.FC = () => {
     ? [{ label: 'Каталог', to: paths.catalog }, { label: category.name }]
     : [{ label: 'Каталог' }];
 
-  const sidebar = (onNavigate?: () => void) => (
+  const sidebar = (variant: 'aside' | 'drawer', onNavigate?: () => void) => (
     <CatalogSidebar
+      variant={variant}
       category={category}
       filters={filters}
       result={result}
@@ -150,10 +151,13 @@ export const CatalogPage: React.FC = () => {
       <section className="bg-white">
         <div className={`${WRAP} py-6 sm:py-8 lg:py-12`}>
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10">
+            {/* Прилипающая колонка без своей прокрутки: её обрезка съедала бы
+                панель мега-меню, которая выходит за края колонки. */}
             <aside className="hidden lg:block lg:col-span-3">
-              <div className="lg:sticky lg:top-24 max-h-[calc(100vh-7rem)] overflow-y-auto">
-                {sidebar()}
-              </div>
+              {/* z-30: position:sticky заводит свой контекст наложения, и без
+                  этого панель мега-меню уходила под карточки товаров —
+                  у них своё наложение от анимации появления. */}
+              <div className="lg:sticky lg:top-24 z-30">{sidebar('aside')}</div>
             </aside>
 
             <div className="lg:col-span-9">
@@ -389,7 +393,7 @@ export const CatalogPage: React.FC = () => {
             </button>
           </header>
 
-          <div className="p-3">{sidebar(() => setDrawer(false))}</div>
+          <div className="p-3">{sidebar('drawer', () => setDrawer(false))}</div>
 
           <div className="sticky bottom-0 p-3 bg-white border-t border-inv-border">
             <button

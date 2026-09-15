@@ -3,29 +3,24 @@ import { Link } from 'react-router-dom';
 import { ChevronDown, ChevronRight, X } from 'lucide-react';
 import { Category, SubCategory } from '../../types';
 import { CATEGORIES, PRODUCTS } from '../../data/catalogData';
+import { COUNT_CATEGORY, COUNT_SUB } from '../../lib/catalogCounts';
 import { SectionIcon } from '../../lib/sectionIcons';
 import { CatalogFilters, CatalogResult, isFiltered } from '../../lib/catalogFilters';
 import { plural } from '../../lib/plural';
 import { FacetGroup } from './FacetGroup';
+import { SectionsMenu } from './SectionsMenu';
 import { paths } from '../../routes';
 
 /*
- * Левая колонка каталога: дерево разделов и отбор по признакам.
+ * Левая колонка каталога: разделы и отбор по признакам.
  *
- * Счётчики разделов раньше считались фильтром по всем 5124 позициям на каждую
- * строку и при каждой перерисовке. Теперь это две карты, собранные один раз
- * при загрузке модуля.
+ * На широком экране разделы — мега-меню: закрытое это одна строка, открытое
+ * перекрывает выдачу и показывает все подразделы в два-три столбца. В
+ * выдвижной панели на телефоне перекрывать нечем, поэтому там остаётся дерево.
  */
 
-const COUNT_CATEGORY = new Map<string, number>();
-const COUNT_SUB = new Map<string, number>();
-for (const product of PRODUCTS) {
-  COUNT_CATEGORY.set(product.categorySlug, (COUNT_CATEGORY.get(product.categorySlug) ?? 0) + 1);
-  COUNT_SUB.set(product.subcategorySlug, (COUNT_SUB.get(product.subcategorySlug) ?? 0) + 1);
-}
-
 /*
- * Подразделы выбранного раздела. В крепеже их тридцать, и если вывести все,
+ * Подразделы выбранного раздела. В крепеже их двадцать два, и если вывести все,
  * отбор по бренду уезжает на экран вниз. Показываем восемь, остальные — по
  * нажатию; выбранный подраздел виден всегда.
  */
@@ -98,6 +93,98 @@ const SubList: React.FC<{
   );
 };
 
+/** Дерево разделов для выдвижной панели на телефоне. */
+const SectionsTree: React.FC<{
+  category: Category | null;
+  activeSub: string | null;
+  onSub: (slug: string | null) => void;
+  onNavigate?: () => void;
+}> = ({ category, activeSub, onSub, onNavigate }) => {
+  const [open, setOpen] = useState(true);
+
+  return (
+    <div className="rounded-[8px] border border-inv-border bg-white overflow-hidden">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className={`w-full flex items-center gap-2 bg-inv-surface-1 px-4 py-3 cursor-pointer group ${
+          open ? 'border-b border-inv-border' : ''
+        }`}
+      >
+        <span className="text-xs font-semibold uppercase tracking-[0.12em] text-inv-ink-muted group-hover:text-inv-ink transition-colors duration-[120ms]">
+          Разделы
+        </span>
+        {/* Свёрнутое дерево всё равно должно отвечать, где мы находимся */}
+        <span className="flex-1 min-w-0 text-left text-[11px] text-inv-ink-muted truncate">
+          {!open && (category ? category.name : 'Все позиции')}
+        </span>
+        <ChevronDown
+          className={`w-4 h-4 shrink-0 text-inv-ink-muted transition-transform duration-[240ms] ${
+            open ? '' : '-rotate-90'
+          }`}
+        />
+      </button>
+
+      {open && (
+        <nav className="p-2">
+          <Link
+            to={paths.catalog}
+            onClick={onNavigate}
+            className={`flex items-center gap-2.5 min-h-11 px-2.5 rounded-[4px] text-sm transition-colors duration-[120ms] ${
+              !category
+                ? 'bg-inv-surface-1 text-inv-red font-semibold'
+                : 'text-inv-ink hover:text-inv-blue'
+            }`}
+          >
+            <SectionIcon slug="all" size={20} className="w-5 h-5 shrink-0 text-inv-blue" />
+            <span className="flex-1">Все позиции</span>
+            <span className="text-xs text-inv-ink-muted tabular-nums">{PRODUCTS.length}</span>
+          </Link>
+
+          {CATEGORIES.map((cat) => {
+            const isOpen = category?.slug === cat.slug;
+
+            return (
+              <div key={cat.id} className="mt-1">
+                <Link
+                  to={paths.category(cat.slug)}
+                  onClick={onNavigate}
+                  className={`flex items-center gap-2.5 min-h-11 px-2.5 rounded-[4px] text-sm transition-colors duration-[120ms] ${
+                    isOpen
+                      ? 'bg-inv-surface-1 text-inv-red font-semibold'
+                      : 'text-inv-ink hover:text-inv-blue'
+                  }`}
+                >
+                  <SectionIcon
+                    slug={cat.slug}
+                    size={20}
+                    className={`w-5 h-5 shrink-0 ${isOpen ? 'text-inv-red' : 'text-inv-blue'}`}
+                  />
+                  <span className="flex-1">{cat.name}</span>
+                  <span className="text-xs text-inv-ink-muted tabular-nums">
+                    {COUNT_CATEGORY.get(cat.slug) ?? 0}
+                  </span>
+                  <ChevronRight
+                    className={`w-4 h-4 shrink-0 transition-transform duration-[240ms] ${
+                      isOpen ? 'rotate-90' : ''
+                    }`}
+                  />
+                </Link>
+
+                {/* Подразделы раскрываются только у выбранного раздела */}
+                {isOpen && (
+                  <SubList subcategories={cat.subcategories} active={activeSub} onSub={onSub} />
+                )}
+              </div>
+            );
+          })}
+        </nav>
+      )}
+    </div>
+  );
+};
+
 export interface SidebarProps {
   category: Category | null;
   filters: CatalogFilters;
@@ -108,6 +195,8 @@ export interface SidebarProps {
   onReset: () => void;
   /** Закрыть выдвижную панель на телефоне: в боковой колонке не нужен. */
   onNavigate?: () => void;
+  /** В выдвижной панели разделы показываем деревом, а не мега-меню. */
+  variant?: 'aside' | 'drawer';
 }
 
 export const CatalogSidebar: React.FC<SidebarProps> = ({
@@ -118,124 +207,52 @@ export const CatalogSidebar: React.FC<SidebarProps> = ({
   onBrand,
   onCountry,
   onReset,
-  onNavigate
-}) => {
-  // Дерево открыто: это основная навигация каталога. Но свернуть его можно —
-  // в оснастке с раскрытыми подразделами до отбора иначе не добраться.
-  const [tree, setTree] = useState(true);
-
-  return (
-  <div className="rounded-[8px] border border-inv-border bg-white overflow-hidden">
-    <button
-      type="button"
-      onClick={() => setTree((v) => !v)}
-      aria-expanded={tree}
-      className={`w-full flex items-center gap-2 bg-inv-surface-1 px-4 py-3 cursor-pointer group ${
-        tree ? 'border-b border-inv-border' : ''
-      }`}
-    >
-      <span className="text-xs font-semibold uppercase tracking-[0.12em] text-inv-ink-muted group-hover:text-inv-ink transition-colors duration-[120ms]">
-        Разделы
-      </span>
-      {/* Свёрнутое дерево всё равно должно отвечать, где мы находимся */}
-      <span className="flex-1 min-w-0 text-left text-[11px] text-inv-ink-muted truncate">
-        {!tree && (category ? category.name : 'Все позиции')}
-      </span>
-      <ChevronDown
-        className={`w-4 h-4 shrink-0 text-inv-ink-muted transition-transform duration-[240ms] ${
-          tree ? '' : '-rotate-90'
-        }`}
+  onNavigate,
+  variant = 'aside'
+}) => (
+  <div className="space-y-4">
+    {variant === 'aside' ? (
+      <SectionsMenu category={category} activeSub={filters.sub} onSub={onSub} />
+    ) : (
+      <SectionsTree
+        category={category}
+        activeSub={filters.sub}
+        onSub={onSub}
+        onNavigate={onNavigate}
       />
-    </button>
-
-    {tree && (
-    <nav className="p-2">
-      <Link
-        to={paths.catalog}
-        onClick={onNavigate}
-        className={`flex items-center gap-2.5 min-h-11 px-2.5 rounded-[4px] text-sm transition-colors duration-[120ms] ${
-          !category ? 'bg-inv-surface-1 text-inv-red font-semibold' : 'text-inv-ink hover:text-inv-blue'
-        }`}
-      >
-        <SectionIcon slug="all" size={20} className="w-5 h-5 shrink-0 text-inv-blue" />
-        <span className="flex-1">Все позиции</span>
-        <span className="text-xs text-inv-ink-muted tabular-nums">{PRODUCTS.length}</span>
-      </Link>
-
-      {CATEGORIES.map((cat) => {
-        const isOpen = category?.slug === cat.slug;
-
-        return (
-          <div key={cat.id} className="mt-1">
-            <Link
-              to={paths.category(cat.slug)}
-              onClick={onNavigate}
-              className={`flex items-center gap-2.5 min-h-11 px-2.5 rounded-[4px] text-sm transition-colors duration-[120ms] ${
-                isOpen
-                  ? 'bg-inv-surface-1 text-inv-red font-semibold'
-                  : 'text-inv-ink hover:text-inv-blue'
-              }`}
-            >
-              <SectionIcon
-                slug={cat.slug}
-                size={20}
-                className={`w-5 h-5 shrink-0 ${isOpen ? 'text-inv-red' : 'text-inv-blue'}`}
-              />
-              <span className="flex-1">{cat.name}</span>
-              <span className="text-xs text-inv-ink-muted tabular-nums">
-                {COUNT_CATEGORY.get(cat.slug) ?? 0}
-              </span>
-              <ChevronRight
-                className={`w-4 h-4 shrink-0 transition-transform duration-[240ms] ${
-                  isOpen ? 'rotate-90' : ''
-                }`}
-              />
-            </Link>
-
-            {/* Подразделы раскрываются только у выбранного раздела */}
-            {isOpen && (
-              <SubList
-                subcategories={cat.subcategories}
-                active={filters.sub}
-                onSub={onSub}
-              />
-            )}
-          </div>
-        );
-      })}
-    </nav>
     )}
 
-    <h2 className="bg-inv-surface-1 px-4 py-3 text-xs font-semibold uppercase tracking-[0.12em] text-inv-ink-muted border-t border-inv-border">
-      Отбор
-    </h2>
+    <div className="rounded-[8px] border border-inv-border bg-white overflow-hidden">
+      <h2 className="bg-inv-surface-1 px-4 py-3 text-xs font-semibold uppercase tracking-[0.12em] text-inv-ink-muted">
+        Отбор
+      </h2>
 
-    <FacetGroup
-      title="Бренд"
-      options={result.brands}
-      selected={filters.brands}
-      onToggle={onBrand}
-    />
-    <FacetGroup
-      title="Страна"
-      options={result.countries}
-      selected={filters.countries}
-      onToggle={onCountry}
-      preview={6}
-    />
+      <FacetGroup
+        title="Бренд"
+        options={result.brands}
+        selected={filters.brands}
+        onToggle={onBrand}
+      />
+      <FacetGroup
+        title="Страна"
+        options={result.countries}
+        selected={filters.countries}
+        onToggle={onCountry}
+        preview={6}
+      />
 
-    {isFiltered(filters) && (
-      <div className="border-t border-inv-border p-4">
-        <button
-          type="button"
-          onClick={onReset}
-          className="w-full inline-flex items-center justify-center gap-1.5 min-h-11 rounded-[4px] border border-inv-border bg-white text-sm font-semibold text-inv-ink cursor-pointer transition-colors duration-[120ms] hover:border-inv-red hover:text-inv-red"
-        >
-          <X className="w-4 h-4" />
-          Сбросить отбор
-        </button>
-      </div>
-    )}
+      {isFiltered(filters) && (
+        <div className="border-t border-inv-border p-4">
+          <button
+            type="button"
+            onClick={onReset}
+            className="w-full inline-flex items-center justify-center gap-1.5 min-h-11 rounded-[4px] border border-inv-border bg-white text-sm font-semibold text-inv-ink cursor-pointer transition-colors duration-[120ms] hover:border-inv-red hover:text-inv-red"
+          >
+            <X className="w-4 h-4" />
+            Сбросить отбор
+          </button>
+        </div>
+      )}
+    </div>
   </div>
-  );
-};
+);
