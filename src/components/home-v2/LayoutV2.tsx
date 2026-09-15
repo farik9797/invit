@@ -4,6 +4,7 @@ import { HeaderV2, FooterV2, AwardBadge, FloatingActions } from './Chrome';
 import { ProductDetailModal } from '../Modals/ProductDetailModal';
 import { CallbackModal } from '../Modals/CallbackModal';
 import { useShop } from '../../context/ShopContext';
+import { paths } from '../../routes';
 
 /**
  * Обвязка каталога в цветах клиента: шапка с мега-меню и подвал из варианта 2,
@@ -31,7 +32,10 @@ export const LayoutV2: React.FC = () => {
 
       <FooterV2 />
 
-      <AwardBadge />
+      {/* В каталоге медали нет: она висит поверх выдачи и в списке ложится
+          прямо на снимок нижнего товара. Знак доверия нужен на первом
+          знакомстве, а не поверх работы с прайсом. */}
+      {!pathname.startsWith(paths.catalog) && <AwardBadge />}
 
       <FloatingActions expanded={contactsOpen} onExpandedChange={setContactsOpen} />
 
