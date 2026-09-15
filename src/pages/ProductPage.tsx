@@ -10,6 +10,8 @@ import { useShop } from '../context/ShopContext';
 import { paths, productSlug } from '../routes';
 import { sortForListing, dedupeContentBlocks } from '../lib/product';
 import { hasPrice, priceLabel } from '../lib/price';
+import { productUnit } from '../lib/unit';
+import { crossSell } from '../lib/crossSell';
 import { productGallery } from '../lib/contentImages';
 import { SectionIcon } from '../lib/sectionIcons';
 import { ProductContent } from '../types';
@@ -56,6 +58,7 @@ export const ProductPage: React.FC = () => {
   // Исполнение по умолчанию — первое в списке: он отсортирован по размеру.
   const chosen = variant ?? product.variants?.[0]?.value ?? null;
   const chosenSku = product.variants?.find((o) => o.value === chosen)?.sku;
+  const unit = productUnit(product);
   const isAdded = shop.quoteCart.some(
     (i) => i.product.id === product.id && (chosen === null || i.variant === chosen)
   );
@@ -80,6 +83,7 @@ export const ProductPage: React.FC = () => {
       p.subcategorySlug !== product.subcategorySlug
   );
   const related = [...sortForListing(siblings), ...sortForListing(nearby)].slice(0, 4);
+  const companions = crossSell(product);
 
   return (
     <>
@@ -264,7 +268,12 @@ export const ProductPage: React.FC = () => {
                     <Plus className="w-4 h-4" />
                   </button>
                 </div>
-                <span className="text-xs text-ink/50">рул. / шт.</span>
+                {/* Крепёж отгружают коробами: «1» — это короб на тысячу
+                    саморезов, и подписывать его штукой неверно. */}
+                <span className="text-xs text-ink/50">
+                  {unit.short}
+                  {unit.hint && <span className="ml-1 text-ink/40">{unit.hint}</span>}
+                </span>
               </div>
 
               <div className="flex flex-col sm:flex-row gap-3">
@@ -322,6 +331,22 @@ export const ProductPage: React.FC = () => {
           </div>
         </div>
       </section>
+
+      {companions.length > 0 && (
+        <section className="py-14 border-t border-line">
+          <div className="max-w-[1340px] mx-auto px-5 space-y-6">
+            <h2 className="text-xl font-bold text-ink tracking-tight">
+              С этим товаром часто покупают
+            </h2>
+            <ProductGrid
+              products={companions}
+              quoteItemsIds={shop.quoteCart.map((i) => i.product.id)}
+              onQuickView={shop.openQuickView}
+              onAddToQuote={shop.addToQuote}
+            />
+          </div>
+        </section>
+      )}
 
       {related.length > 0 && (
         <section className="py-14 bg-surface-soft border-t border-line">

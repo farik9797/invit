@@ -4,6 +4,7 @@ import { Minus, Plus, Trash2, Send, CheckCircle2, ShoppingCart, ArrowLeft } from
 import { Breadcrumbs } from '../components/Breadcrumbs';
 import { useShop } from '../context/ShopContext';
 import { productImage } from '../lib/productImages';
+import { productUnit } from '../lib/unit';
 import { paths } from '../routes';
 
 /*
@@ -77,7 +78,7 @@ export const CartPage: React.FC = () => {
           </h1>
           <p className="mt-3 text-sm sm:text-base text-white/70">
             {items.length > 0
-              ? `${items.length} ${plural(items.length)}, всего ${total} шт.`
+              ? `${items.length} ${plural(items.length)}, всего ${total} ед.`
               : 'Здесь появятся позиции, которые вы отметите в каталоге.'}
           </p>
         </div>
@@ -162,6 +163,11 @@ export const CartPage: React.FC = () => {
                           <Plus className="w-4 h-4" />
                         </button>
                       </div>
+
+                      {/* Единица своя у каждой позиции: крепёж отгружают коробами */}
+                      <span className="text-xs text-inv-ink-muted whitespace-nowrap">
+                        {productUnit(product).short}
+                      </span>
 
                       <button
                         type="button"
