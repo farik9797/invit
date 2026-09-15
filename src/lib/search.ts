@@ -64,6 +64,29 @@ const ALIAS: Record<string, string> = {
   daymond: 'diamond'
 };
 
+/*
+ * Русская раскладка, набранная латиницей: человек забыл переключить клавиатуру
+ * и получил «uthvtnbr» вместо «герметик». Сопоставление идёт по клавишам
+ * ЙЦУКЕН, поэтому работает в обе стороны — «ыефкашч» тоже находит STARFIX.
+ */
+const LAYOUT: Record<string, string> = {
+  q: 'й', w: 'ц', e: 'у', r: 'к', t: 'е', y: 'н', u: 'г', i: 'ш', o: 'щ',
+  p: 'з', '[': 'х', ']': 'ъ', a: 'ф', s: 'ы', d: 'в', f: 'а', g: 'п',
+  h: 'р', j: 'о', k: 'л', l: 'д', ';': 'ж', "'": 'э', z: 'я', x: 'ч',
+  c: 'с', v: 'м', b: 'и', n: 'т', m: 'ь', ',': 'б', '.': 'ю', '/': '.'
+};
+
+const BACK: Record<string, string> = Object.fromEntries(
+  Object.entries(LAYOUT).map(([latin, cyrillic]) => [cyrillic, latin])
+);
+
+const swapLayout = (text: string) =>
+  text
+    .toLowerCase()
+    .split('')
+    .map((ch) => LAYOUT[ch] ?? BACK[ch] ?? ch)
+    .join('');
+
 /** Написания одного слова запроса, которые считаем равными. */
 const variants = (term: string): string[] => {
   const alias = ALIAS[term];
@@ -113,11 +136,7 @@ const scoreProduct = (product: Product, query: string, terms: string[]): number 
   return title.includes(query) ? 2 : 1;
 };
 
-/** Фильтрует и сортирует товары по соответствию запросу; пустой запрос — список без изменений. */
-export const searchProducts = (products: Product[], query: string): Product[] => {
-  const needle = fold(query);
-  if (!needle) return products;
-
+const run = (products: Product[], needle: string): Product[] => {
   const terms = needle.split(' ').filter(Boolean);
 
   return products
@@ -125,4 +144,19 @@ export const searchProducts = (products: Product[], query: string): Product[] =>
     .filter((entry) => entry.score > 0)
     .sort((a, b) => b.score - a.score)
     .map((entry) => entry.product);
+};
+
+/** Фильтрует и сортирует товары по соответствию запросу; пустой запрос — список без изменений. */
+export const searchProducts = (products: Product[], query: string): Product[] => {
+  const needle = fold(query);
+  if (!needle) return products;
+
+  const found = run(products, needle);
+  if (found.length) return found;
+
+  // Ничего не нашлось — возможно, забыли переключить раскладку. Пробуем ещё
+  // раз с переложенными клавишами, но только вторым заходом: у запроса,
+  // который и так что-то находит, подменять буквы нельзя.
+  const swapped = fold(swapLayout(query));
+  return swapped && swapped !== needle ? run(products, swapped) : [];
 };
