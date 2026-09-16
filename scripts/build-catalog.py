@@ -356,6 +356,11 @@ def main():
             label, value = row[f'Attribute {n} name'].strip(), row[f'Attribute {n} value(s)'].strip()
             if label and value:
                 out.append((label, value))
+        # У своих лент бренда в выгрузке нет: их заводили не из прайса
+        # поставщика, а со старого сайта, где поля бренда не было вовсе.
+        # Без него они не попадали и в отбор по бренду.
+        if 'EUROBAND' in row['Name'] and not any(a == 'Бренд' for a, _ in out):
+            out.append(('Бренд', 'EUROBAND'))
         return [{'label': a, 'value': b} for a, b in out]
 
     def money(raw):
