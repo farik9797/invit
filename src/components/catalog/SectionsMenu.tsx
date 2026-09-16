@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
 import { Category } from '../../types';
@@ -6,6 +6,9 @@ import { CATEGORIES, PRODUCTS } from '../../data/catalogData';
 import { COUNT_CATEGORY, COUNT_SUB } from '../../lib/catalogCounts';
 import { SectionIcon } from '../../lib/sectionIcons';
 import { paths } from '../../routes';
+
+/** Высота шапки сайта: ниже неё панель не должна подниматься. */
+const HEADER_BOTTOM = 134;
 
 /*
  * Разделы каталога списком в боковой колонке; подразделы выезжают вбок при
@@ -36,7 +39,10 @@ export const SectionsMenu: React.FC<SectionsMenuProps> = ({
   search
 }) => {
   const [hovered, setHovered] = useState<string | null>(null);
+  /** Вертикальное смещение панели внутри блока: она встаёт у своей строки. */
+  const [anchor, setAnchor] = useState(0);
   const wrap = useRef<HTMLDivElement>(null);
+  const panel = useRef<HTMLDivElement>(null);
   const location = useLocation();
 
   // Открытый раздел — первым, остальные в прежнем порядке
@@ -55,6 +61,26 @@ export const SectionsMenu: React.FC<SectionsMenuProps> = ({
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, [hovered]);
+
+  /*
+   * Панель прижимается к строке, на которую навели, а не к верху блока: список
+   * из тринадцати строк выше экрана, и при прокрутке верх блока уходил под
+   * шапку вместе с началом панели — видно было только её низ.
+   *
+   * После отрисовки поправляем смещение, чтобы панель целиком помещалась в
+   * окно: у крепежа в ней двадцать два подраздела, и от нижних строк она
+   * уезжала бы за нижний край.
+   */
+  useLayoutEffect(() => {
+    if (!hovered || !panel.current || !wrap.current) return;
+    const box = wrap.current.getBoundingClientRect();
+    const height = panel.current.getBoundingClientRect().height;
+    const top = box.top + anchor;
+    const lowest = window.innerHeight - height - 12;
+    const highest = HEADER_BOTTOM + 12;
+    const fixed = Math.max(highest, Math.min(top, lowest));
+    if (Math.abs(fixed - top) > 1) setAnchor(fixed - box.top);
+  }, [hovered, anchor]);
 
   const shown = hovered ? CATEGORIES.find((c) => c.slug === hovered) ?? null : null;
 
@@ -96,8 +122,14 @@ export const SectionsMenu: React.FC<SectionsMenuProps> = ({
             <Link
               key={cat.id}
               to={paths.category(cat.slug)}
-              onMouseEnter={() => setHovered(cat.slug)}
-              onFocus={() => setHovered(cat.slug)}
+              onMouseEnter={(e) => {
+                setAnchor(e.currentTarget.offsetTop);
+                setHovered(cat.slug);
+              }}
+              onFocus={(e) => {
+                setAnchor(e.currentTarget.offsetTop);
+                setHovered(cat.slug);
+              }}
               aria-current={isHere}
               className={`mt-0.5 flex items-center gap-2.5 min-h-11 px-2.5 rounded-[4px] text-sm transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-inv-blue ${
                 isOpen ? 'bg-inv-surface-1' : ''
@@ -119,7 +151,11 @@ export const SectionsMenu: React.FC<SectionsMenuProps> = ({
 
       {/* Подразделы раздела, на который навели: панель поверх выдачи */}
       {shown && (
-        <div className="absolute left-full top-0 z-40 pl-2 w-[min(720px,calc(100vw-22rem))]">
+        <div
+          ref={panel}
+          style={{ top: anchor }}
+          className="absolute left-full z-40 pl-2 w-[min(720px,calc(100vw-22rem))]"
+        >
           <div className="rounded-[8px] border border-inv-border bg-white shadow-[0_6px_24px_rgba(22,44,88,0.16)] p-5 max-h-[70vh] overflow-y-auto">
             <Link
               to={paths.category(shown.slug)}
