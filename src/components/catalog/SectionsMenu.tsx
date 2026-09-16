@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ChevronDown, ChevronRight, LayoutGrid } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import { Category } from '../../types';
 import { CATEGORIES, PRODUCTS } from '../../data/catalogData';
 import { COUNT_CATEGORY, COUNT_SUB } from '../../lib/catalogCounts';
@@ -8,13 +8,16 @@ import { SectionIcon } from '../../lib/sectionIcons';
 import { paths } from '../../routes';
 
 /*
- * Разделы каталога в виде мега-меню — как в шапке сайта (референс stmg.by):
- * слева столбец разделов, справа широкая панель подразделов.
+ * Разделы каталога списком в боковой колонке; подразделы выезжают вбок при
+ * наведении.
  *
- * Деревом в боковой колонке это занимало до двух тысяч точек по высоте: у
- * крепежа двадцать два подраздела, у оснастки — семьдесят. В мега-меню все
- * подразделы раздела видны сразу в два-три столбца, а закрытое меню — одна
- * строка, и отбор по бренду оказывается на первом экране.
+ * Деревом здесь стояли все подразделы сразу — у крепежа их двадцать два, у
+ * оснастки семьдесят, и колонка вытягивалась на две тысячи точек. Выпадающая
+ * панель убирает эту высоту, но список разделов остаётся на виду: по нему
+ * ходят чаще всего.
+ *
+ * Выбранный раздел поднимается наверх списка: в нём человек сейчас и работает,
+ * а искать его глазами среди двенадцати одинаковых строк не нужно.
  */
 
 interface SectionsMenuProps {
@@ -25,162 +28,136 @@ interface SectionsMenuProps {
 }
 
 export const SectionsMenu: React.FC<SectionsMenuProps> = ({ category, activeSub, onSub }) => {
-  const [open, setOpen] = useState(false);
-  const [preview, setPreview] = useState(() =>
-    Math.max(CATEGORIES.findIndex((c) => c.slug === category?.slug), 0)
-  );
+  const [hovered, setHovered] = useState<string | null>(null);
   const wrap = useRef<HTMLDivElement>(null);
   const { pathname, search } = useLocation();
 
+  // Открытый раздел — первым, остальные в прежнем порядке
+  const ordered = useMemo(() => {
+    if (!category) return CATEGORIES;
+    const here = CATEGORIES.find((c) => c.slug === category.slug);
+    return here ? [here, ...CATEGORIES.filter((c) => c.slug !== category.slug)] : CATEGORIES;
+  }, [category]);
+
+  // Ушли на другую страницу — панель закрывается
+  useEffect(() => setHovered(null), [pathname, search]);
+
   useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
-    const onDown = (e: MouseEvent) => {
-      if (!wrap.current?.contains(e.target as Node)) setOpen(false);
-    };
+    if (!hovered) return;
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setHovered(null);
     document.addEventListener('keydown', onKey);
-    document.addEventListener('mousedown', onDown);
-    return () => {
-      document.removeEventListener('keydown', onKey);
-      document.removeEventListener('mousedown', onDown);
-    };
-  }, [open]);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [hovered]);
 
-  // Перешли на другую страницу — меню закрывается
-  useEffect(() => setOpen(false), [pathname, search]);
-
-  // Открыли меню — показываем подразделы того раздела, где находимся
-  useEffect(() => {
-    if (open) setPreview(Math.max(CATEGORIES.findIndex((c) => c.slug === category?.slug), 0));
-  }, [open, category]);
-
-  const shown = CATEGORIES[preview];
+  const shown = hovered ? CATEGORIES.find((c) => c.slug === hovered) ?? null : null;
 
   return (
-    <div ref={wrap} className="relative">
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        aria-expanded={open}
-        aria-controls="catalog-sections"
-        className={`w-full flex items-center gap-2.5 min-h-12 px-4 rounded-[8px] border cursor-pointer transition-colors duration-[120ms] group ${
-          open
-            ? 'border-inv-blue bg-inv-surface-1'
-            : 'border-inv-border bg-white hover:border-inv-blue'
-        }`}
-      >
-        <LayoutGrid className="w-4 h-4 shrink-0 text-inv-blue" />
-        <span className="text-xs font-semibold uppercase tracking-[0.12em] text-inv-ink-muted group-hover:text-inv-ink transition-colors duration-[120ms]">
-          Разделы
-        </span>
-        <span className="flex-1 min-w-0 text-left text-[13px] text-inv-ink truncate">
-          {category ? category.name : 'Все позиции'}
-        </span>
-        <ChevronDown
-          className={`w-4 h-4 shrink-0 text-inv-ink-muted transition-transform duration-[240ms] ${
-            open ? 'rotate-180' : ''
+    <div
+      ref={wrap}
+      // Панель висит рядом со строкой, поэтому закрываем её по уходу со всего
+      // блока, а не со строки: иначе она гасла по дороге к подразделам.
+      onMouseLeave={() => setHovered(null)}
+      className="relative rounded-[8px] border border-inv-border bg-white"
+    >
+      <h2 className="bg-inv-surface-1 px-4 py-3 text-xs font-semibold uppercase tracking-[0.12em] text-inv-ink-muted border-b border-inv-border rounded-t-[8px]">
+        Разделы
+      </h2>
+
+      <nav className="p-2">
+        <Link
+          to={paths.catalog}
+          onMouseEnter={() => setHovered(null)}
+          className={`flex items-center gap-2.5 min-h-11 px-2.5 rounded-[4px] text-sm transition-colors duration-[120ms] ${
+            category ? 'text-inv-ink hover:text-inv-blue' : 'bg-inv-surface-1 text-inv-red font-semibold'
           }`}
-        />
-      </button>
-
-      {open && (
-        <div
-          id="catalog-sections"
-          className="absolute left-0 top-full z-40 pt-2 w-[min(1080px,calc(100vw-3rem))]"
         >
-          <div className="flex rounded-[8px] border border-inv-border bg-white shadow-[0_6px_24px_rgba(22,44,88,0.16)] overflow-hidden">
-            {/* Разделы. Выбранный красный, как в мега-меню шапки */}
-            <ul className="w-[330px] shrink-0 border-r border-inv-border bg-inv-surface-1 py-2 max-h-[70vh] overflow-y-auto">
-              <li>
-                <Link
-                  to={paths.catalog}
-                  className={`flex items-center gap-3 min-h-11 px-4 text-sm transition-colors duration-[120ms] ${
-                    category ? 'text-inv-ink hover:text-inv-red' : 'bg-white text-inv-red font-semibold'
-                  }`}
-                >
-                  <SectionIcon slug="all" size={20} className="w-5 h-5 shrink-0 text-inv-blue" />
-                  <span className="flex-1">Все позиции</span>
-                  <span className="text-xs text-inv-ink-muted tabular-nums">{PRODUCTS.length}</span>
-                </Link>
-              </li>
+          <SectionIcon slug="all" size={20} className="w-5 h-5 shrink-0 text-inv-blue" />
+          <span className="flex-1">Все позиции</span>
+          <span className="text-xs text-inv-ink-muted tabular-nums">{PRODUCTS.length}</span>
+        </Link>
 
-              {CATEGORIES.map((cat, idx) => {
-                const isHere = cat.slug === category?.slug;
+        {ordered.map((cat) => {
+          const isHere = cat.slug === category?.slug;
+          const isOpen = cat.slug === hovered;
+
+          return (
+            <Link
+              key={cat.id}
+              to={paths.category(cat.slug)}
+              onMouseEnter={() => setHovered(cat.slug)}
+              onFocus={() => setHovered(cat.slug)}
+              aria-current={isHere}
+              className={`mt-0.5 flex items-center gap-2.5 min-h-11 px-2.5 rounded-[4px] text-sm transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-inv-blue ${
+                isOpen ? 'bg-inv-surface-1' : ''
+              } ${isHere ? 'text-inv-red font-semibold' : 'text-inv-ink hover:text-inv-blue'}`}
+            >
+              <SectionIcon
+                slug={cat.slug}
+                size={20}
+                className={`w-5 h-5 shrink-0 ${isHere ? 'text-inv-red' : 'text-inv-blue'}`}
+              />
+              <span className="flex-1 leading-snug">{cat.name}</span>
+              <span className="text-xs text-inv-ink-muted tabular-nums">
+                {COUNT_CATEGORY.get(cat.slug) ?? 0}
+              </span>
+              <ChevronRight
+                className={`w-4 h-4 shrink-0 transition-colors duration-[120ms] ${
+                  isOpen ? 'text-inv-blue' : 'text-inv-ink-muted/60'
+                }`}
+              />
+            </Link>
+          );
+        })}
+      </nav>
+
+      {/* Подразделы раздела, на который навели: панель поверх выдачи */}
+      {shown && (
+        <div className="absolute left-full top-0 z-40 pl-2 w-[min(720px,calc(100vw-22rem))]">
+          <div className="rounded-[8px] border border-inv-border bg-white shadow-[0_6px_24px_rgba(22,44,88,0.16)] p-5 max-h-[70vh] overflow-y-auto">
+            <Link
+              to={paths.category(shown.slug)}
+              className="inline-flex items-center gap-2 text-sm font-semibold text-inv-ink hover:text-inv-blue transition-colors duration-[120ms]"
+            >
+              {shown.name}
+              <ChevronRight className="w-4 h-4" />
+            </Link>
+
+            <ul className="mt-3 columns-2 gap-6">
+              {shown.subcategories.map((sub) => {
+                const chosen = sub.slug === activeSub && shown.slug === category?.slug;
 
                 return (
-                  <li key={cat.id}>
+                  <li key={sub.id} className="break-inside-avoid">
                     <Link
-                      to={paths.category(cat.slug)}
-                      onMouseEnter={() => setPreview(idx)}
-                      onFocus={() => setPreview(idx)}
-                      aria-current={isHere}
-                      className={`flex items-center gap-3 min-h-11 px-4 text-sm transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-inv-blue ${
-                        idx === preview ? 'bg-white' : ''
-                      } ${isHere ? 'text-inv-red font-semibold' : 'text-inv-ink hover:text-inv-red'}`}
+                      to={`${paths.category(shown.slug)}?sub=${sub.slug}`}
+                      onClick={(e) => {
+                        // Свой раздел — это отбор, а не переход: бренд и поиск остаются
+                        if (shown.slug === category?.slug) {
+                          e.preventDefault();
+                          onSub(chosen ? null : sub.slug);
+                          setHovered(null);
+                        }
+                      }}
+                      className={`flex items-center gap-2.5 min-h-10 py-1 pr-2 text-[13px] leading-snug transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue ${
+                        chosen ? 'text-inv-red font-semibold' : 'text-inv-ink hover:text-inv-blue'
+                      }`}
                     >
                       <SectionIcon
-                        slug={cat.slug}
-                        size={20}
-                        className={`w-5 h-5 shrink-0 ${isHere ? 'text-inv-red' : 'text-inv-blue'}`}
+                        slug={sub.slug}
+                        size={18}
+                        className={`w-[18px] h-[18px] shrink-0 ${
+                          chosen ? 'text-inv-red' : 'text-inv-blue'
+                        }`}
                       />
-                      <span className="flex-1 leading-snug">{cat.name}</span>
-                      <span className="text-xs text-inv-ink-muted tabular-nums">
-                        {COUNT_CATEGORY.get(cat.slug) ?? 0}
+                      <span className="flex-1">{sub.name}</span>
+                      <span className="text-[11px] tabular-nums text-inv-ink-muted">
+                        {COUNT_SUB.get(sub.slug) ?? 0}
                       </span>
-                      <ChevronRight className="w-4 h-4 shrink-0 opacity-60" />
                     </Link>
                   </li>
                 );
               })}
             </ul>
-
-            {/* Подразделы раздела, на который навели */}
-            <div className="flex-1 p-5 max-h-[70vh] overflow-y-auto">
-              <Link
-                to={paths.category(shown.slug)}
-                className="inline-flex items-center gap-2 text-sm font-semibold text-inv-ink hover:text-inv-blue transition-colors duration-[120ms]"
-              >
-                {shown.name}
-                <ChevronRight className="w-4 h-4" />
-              </Link>
-
-              <ul className="mt-3 columns-2 xl:columns-3 gap-6">
-                {shown.subcategories.map((sub) => {
-                  const chosen = sub.slug === activeSub && shown.slug === category?.slug;
-
-                  return (
-                    <li key={sub.id} className="break-inside-avoid">
-                      <Link
-                        to={`${paths.category(shown.slug)}?sub=${sub.slug}`}
-                        onClick={(e) => {
-                          // Свой раздел — это отбор, а не переход: бренд и поиск остаются
-                          if (shown.slug === category?.slug) {
-                            e.preventDefault();
-                            onSub(chosen ? null : sub.slug);
-                            setOpen(false);
-                          }
-                        }}
-                        className={`flex items-center gap-2.5 min-h-10 py-1 pr-2 text-[13px] leading-snug transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue ${
-                          chosen ? 'text-inv-red font-semibold' : 'text-inv-ink hover:text-inv-blue'
-                        }`}
-                      >
-                        <SectionIcon
-                          slug={sub.slug}
-                          size={18}
-                          className={`w-[18px] h-[18px] shrink-0 ${
-                            chosen ? 'text-inv-red' : 'text-inv-blue'
-                          }`}
-                        />
-                        <span className="flex-1">{sub.name}</span>
-                        <span className="text-[11px] tabular-nums text-inv-ink-muted">
-                          {COUNT_SUB.get(sub.slug) ?? 0}
-                        </span>
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
           </div>
         </div>
       )}
