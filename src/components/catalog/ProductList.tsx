@@ -78,11 +78,6 @@ const Row: React.FC<RowProps> = ({ product, isAdded, onAddToQuote }) => {
               <span className="text-inv-ink">{product.variants.length} шт.</span>
             </span>
           ) : null}
-          {product.badge === 'Собственное производство' && (
-            <span className="inline-flex items-center px-1.5 py-0.5 rounded-[3px] bg-inv-red/10 text-inv-red font-semibold">
-              Наше производство
-            </span>
-          )}
         </span>
 
         {product.description && (
