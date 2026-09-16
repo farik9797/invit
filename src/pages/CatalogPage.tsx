@@ -13,6 +13,7 @@ import { ProductGrid } from '../components/ProductCard';
 import { ProductList } from '../components/catalog/ProductList';
 import { CatalogSidebar } from '../components/catalog/CatalogSidebar';
 import { CatalogSearch } from '../components/catalog/CatalogSearch';
+import { FilterBar } from '../components/catalog/FilterBar';
 import { CATEGORIES, PRODUCTS } from '../data/catalogData';
 import { useShop } from '../context/ShopContext';
 import {
@@ -89,6 +90,9 @@ export const CatalogPage: React.FC = () => {
 
   const [view, setView] = useState<ViewMode>(readView);
   const [drawer, setDrawer] = useState(false);
+  // Пришли по ссылке с отбором — строка фильтров сразу раскрыта, иначе
+  // непонятно, почему в выдаче не всё.
+  const [bar, setBar] = useState(() => isFiltered(readFilters(searchParams)));
 
   const result = useMemo(
     () => selectProducts(PRODUCTS, category?.slug ?? null, filters),
@@ -243,13 +247,37 @@ export const CatalogPage: React.FC = () => {
                   )}
                 </button>
 
+                {/* Фильтры рядом с сортировкой: всё управление выдачей в одном
+                    месте. На телефоне их место занимает выдвижная панель. */}
+                <button
+                  type="button"
+                  onClick={() => setBar((v) => !v)}
+                  aria-expanded={bar}
+                  className={`hidden lg:inline-flex order-2 lg:ml-auto items-center gap-2 min-h-11 px-3.5 rounded-[10px] border bg-white text-sm font-semibold cursor-pointer transition-colors duration-[120ms] ${
+                    bar || active > 0
+                      ? 'border-inv-blue text-inv-ink'
+                      : 'border-inv-border text-inv-ink hover:border-inv-blue'
+                  }`}
+                >
+                  <SlidersHorizontal className="w-4 h-4" />
+                  Фильтры
+                  {active > 0 && (
+                    <span className="inline-flex items-center justify-center min-w-5 h-5 px-1.5 rounded-full bg-inv-blue text-white text-[11px] font-semibold tabular-nums">
+                      {active}
+                    </span>
+                  )}
+                  <ChevronDown
+                    className={`w-4 h-4 transition-transform duration-[240ms] ${bar ? 'rotate-180' : ''}`}
+                  />
+                </button>
+
                 <span className="order-4 w-full text-sm text-inv-ink-muted sm:order-1 sm:w-auto">
                   {products.length
                     ? `Показано ${shown} из ${products.length} ${plural(products.length, ['позиции', 'позиций', 'позиций'])}`
                     : 'Ничего не нашлось'}
                 </span>
 
-                <span className="relative order-3 w-full sm:w-auto sm:ml-auto">
+                <span className="relative order-3 w-full sm:w-auto sm:ml-auto lg:ml-0">
                   <label className="sr-only" htmlFor="catalog-sort">
                     Сортировать по
                   </label>
@@ -296,6 +324,16 @@ export const CatalogPage: React.FC = () => {
                   ))}
                 </span>
               </div>
+
+              {bar && (
+                <div className="hidden lg:block">
+                  <FilterBar
+                    filters={filters}
+                    result={result}
+                    onChange={update}
+                  />
+                </div>
+              )}
 
               {/* Что сейчас выбрано */}
               {isFiltered(filters) && (

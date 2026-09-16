@@ -71,7 +71,6 @@ export const SectionsMenu: React.FC<SectionsMenuProps> = ({ category, activeSub,
             category ? 'text-inv-ink hover:text-inv-blue' : 'bg-inv-surface-1 text-inv-red font-semibold'
           }`}
         >
-          <SectionIcon slug="all" size={20} className="w-5 h-5 shrink-0 text-inv-blue" />
           <span className="flex-1">Все позиции</span>
           <span className="text-xs text-inv-ink-muted tabular-nums">{PRODUCTS.length}</span>
         </Link>
@@ -91,11 +90,6 @@ export const SectionsMenu: React.FC<SectionsMenuProps> = ({ category, activeSub,
                 isOpen ? 'bg-inv-surface-1' : ''
               } ${isHere ? 'text-inv-red font-semibold' : 'text-inv-ink hover:text-inv-blue'}`}
             >
-              <SectionIcon
-                slug={cat.slug}
-                size={20}
-                className={`w-5 h-5 shrink-0 ${isHere ? 'text-inv-red' : 'text-inv-blue'}`}
-              />
               <span className="flex-1 leading-snug">{cat.name}</span>
               <span className="text-xs text-inv-ink-muted tabular-nums">
                 {COUNT_CATEGORY.get(cat.slug) ?? 0}

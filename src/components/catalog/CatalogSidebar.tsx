@@ -139,7 +139,6 @@ const SectionsTree: React.FC<{
                 : 'text-inv-ink hover:text-inv-blue'
             }`}
           >
-            <SectionIcon slug="all" size={20} className="w-5 h-5 shrink-0 text-inv-blue" />
             <span className="flex-1">Все позиции</span>
             <span className="text-xs text-inv-ink-muted tabular-nums">{PRODUCTS.length}</span>
           </Link>
@@ -158,11 +157,6 @@ const SectionsTree: React.FC<{
                       : 'text-inv-ink hover:text-inv-blue'
                   }`}
                 >
-                  <SectionIcon
-                    slug={cat.slug}
-                    size={20}
-                    className={`w-5 h-5 shrink-0 ${isOpen ? 'text-inv-red' : 'text-inv-blue'}`}
-                  />
                   <span className="flex-1">{cat.name}</span>
                   <span className="text-xs text-inv-ink-muted tabular-nums">
                     {COUNT_CATEGORY.get(cat.slug) ?? 0}
@@ -233,52 +227,54 @@ export const CatalogSidebar: React.FC<SidebarProps> = ({
 
     {search}
 
-    <div className="rounded-[8px] border border-inv-border bg-white overflow-hidden">
-      <h2 className="bg-inv-surface-1 px-4 py-3 text-xs font-semibold uppercase tracking-[0.12em] text-inv-ink-muted">
-        Фильтр
-      </h2>
+    {/* Признаки на широком экране живут строкой над выдачей (FilterBar) —
+        в колонке они остаются только в выдвижной панели на телефоне. */}
+    {variant === 'drawer' && (
+      <div className="rounded-[8px] border border-inv-border bg-white overflow-hidden">
+        <h2 className="bg-inv-surface-1 px-4 py-3 text-xs font-semibold uppercase tracking-[0.12em] text-inv-ink-muted">
+          Фильтр
+        </h2>
 
-      <PriceFilter value={filters.price} range={result.priceRange} onChange={onPrice} />
+        <PriceFilter value={filters.price} range={result.priceRange} onChange={onPrice} />
 
-      <FacetGroup
-        title="Бренд"
-        options={result.brands}
-        selected={filters.brands}
-        onToggle={onBrand}
-      />
-      <FacetGroup
-        title="Страна"
-        options={result.countries}
-        selected={filters.countries}
-        onToggle={onCountry}
-        preview={6}
-      />
-
-      {/* Размеры есть не у каждого раздела: в крепеже диаметр и длина, в
-          оснастке только диаметр — второе число там толщина круга. */}
-      {result.sizes.map(({ axis, options }) => (
         <FacetGroup
-          key={axis}
-          title={SIZE_LABEL[axis]}
-          options={options}
-          selected={filters.sizes[axis]}
-          onToggle={(value) => onSize(axis, value)}
-          preview={10}
+          title="Бренд"
+          options={result.brands}
+          selected={filters.brands}
+          onToggle={onBrand}
         />
-      ))}
+        <FacetGroup
+          title="Страна"
+          options={result.countries}
+          selected={filters.countries}
+          onToggle={onCountry}
+          preview={6}
+        />
 
-      {isFiltered(filters) && (
-        <div className="border-t border-inv-border p-4">
-          <button
-            type="button"
-            onClick={onReset}
-            className="w-full inline-flex items-center justify-center gap-1.5 min-h-11 rounded-[4px] border border-inv-border bg-white text-sm font-semibold text-inv-ink cursor-pointer transition-colors duration-[120ms] hover:border-inv-red hover:text-inv-red"
-          >
-            <X className="w-4 h-4" />
-            Сбросить фильтр
-          </button>
-        </div>
-      )}
-    </div>
+        {result.sizes.map(({ axis, options }) => (
+          <FacetGroup
+            key={axis}
+            title={SIZE_LABEL[axis]}
+            options={options}
+            selected={filters.sizes[axis]}
+            onToggle={(value) => onSize(axis, value)}
+            preview={10}
+          />
+        ))}
+
+        {isFiltered(filters) && (
+          <div className="border-t border-inv-border p-4">
+            <button
+              type="button"
+              onClick={onReset}
+              className="w-full inline-flex items-center justify-center gap-1.5 min-h-11 rounded-[4px] border border-inv-border bg-white text-sm font-semibold text-inv-ink cursor-pointer transition-colors duration-[120ms] hover:border-inv-red hover:text-inv-red"
+            >
+              <X className="w-4 h-4" />
+              Сбросить фильтр
+            </button>
+          </div>
+        )}
+      </div>
+    )}
   </div>
 );
