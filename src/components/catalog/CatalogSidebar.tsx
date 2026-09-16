@@ -215,7 +215,12 @@ export const CatalogSidebar: React.FC<SidebarProps> = ({
 }) => (
   <div className="space-y-4">
     {variant === 'aside' ? (
-      <SectionsMenu category={category} activeSub={filters.sub} onSub={onSub} />
+      <SectionsMenu
+        category={category}
+        activeSub={filters.sub}
+        onSub={onSub}
+        search={search}
+      />
     ) : (
       <SectionsTree
         category={category}
@@ -224,8 +229,6 @@ export const CatalogSidebar: React.FC<SidebarProps> = ({
         onNavigate={onNavigate}
       />
     )}
-
-    {search}
 
     {/* Признаки на широком экране живут строкой над выдачей (FilterBar) —
         в колонке они остаются только в выдвижной панели на телефоне. */}

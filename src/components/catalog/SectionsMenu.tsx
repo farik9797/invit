@@ -25,12 +25,19 @@ interface SectionsMenuProps {
   activeSub: string | null;
   /** Выбор подраздела внутри текущего раздела — без сброса бренда и поиска. */
   onSub: (slug: string | null) => void;
+  /** Поиск стоит первым в этом же блоке: разделы и поиск — один способ найти товар. */
+  search?: React.ReactNode;
 }
 
-export const SectionsMenu: React.FC<SectionsMenuProps> = ({ category, activeSub, onSub }) => {
+export const SectionsMenu: React.FC<SectionsMenuProps> = ({
+  category,
+  activeSub,
+  onSub,
+  search
+}) => {
   const [hovered, setHovered] = useState<string | null>(null);
   const wrap = useRef<HTMLDivElement>(null);
-  const { pathname, search } = useLocation();
+  const location = useLocation();
 
   // Открытый раздел — первым, остальные в прежнем порядке
   const ordered = useMemo(() => {
@@ -40,7 +47,7 @@ export const SectionsMenu: React.FC<SectionsMenuProps> = ({ category, activeSub,
   }, [category]);
 
   // Ушли на другую страницу — панель закрывается
-  useEffect(() => setHovered(null), [pathname, search]);
+  useEffect(() => setHovered(null), [location.pathname, location.search]);
 
   useEffect(() => {
     if (!hovered) return;
@@ -59,7 +66,13 @@ export const SectionsMenu: React.FC<SectionsMenuProps> = ({ category, activeSub,
       onMouseLeave={() => setHovered(null)}
       className="relative rounded-[8px] border border-inv-border bg-white"
     >
-      <h2 className="bg-inv-surface-1 px-4 py-3 text-xs font-semibold uppercase tracking-[0.12em] text-inv-ink-muted border-b border-inv-border rounded-t-[8px]">
+      {search && (
+        <div className="p-3 border-b border-inv-border" onMouseEnter={() => setHovered(null)}>
+          {search}
+        </div>
+      )}
+
+      <h2 className="bg-inv-surface-1 px-4 py-3 text-xs font-semibold uppercase tracking-[0.12em] text-inv-ink-muted border-b border-inv-border">
         Разделы
       </h2>
 
