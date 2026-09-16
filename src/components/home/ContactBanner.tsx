@@ -2,7 +2,7 @@ import React from 'react';
 import { Phone, Mail, MapPin } from 'lucide-react';
 import { Reveal } from '../Reveal';
 import { RequestForm } from '../home-v2/RequestForm';
-import tapeApplication from '../../assets/hero/tape-application.webp';
+import pesRollsMacro from '../../assets/hero/pes-rolls-macro.webp';
 
 /*
  * Раньше здесь было широкое фото на всю ширину с тёмной карточкой поверх,
@@ -13,7 +13,7 @@ import tapeApplication from '../../assets/hero/tape-application.webp';
 export const ContactBanner: React.FC = () => (
   <section className="relative bg-ink overflow-hidden">
     <img
-      src={tapeApplication}
+      src={pesRollsMacro}
       alt=""
       aria-hidden="true"
       loading="lazy"

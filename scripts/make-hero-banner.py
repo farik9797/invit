@@ -40,10 +40,13 @@ BANNERS = [
     ('_S4A8904.jpg', 'psul-euroband.webp'),       # «Саморасширяющаяся лента ПСУЛ»
 ]
 
-# Снимки без фирменной подачи: в мозаике разделов на /v2 фото лежит под
-# затемнением и своим заголовком, косая граница там была бы лишней деталью.
+# Снимки без фирменной подачи: они лежат фоном под затемнением и своим
+# заголовком, косая граница там была бы лишней деталью.
 PLAIN = [
-    ('_S4A8910.jpg', 'euroband-rolls-photo.webp'),
+    ('_S4A8910.jpg', 'euroband-rolls-photo.webp', 84),   # мозаика разделов на /v2
+    # Макро лент: лежит фоном под затемнением во всю ширину, детали не видны,
+    # поэтому качество ниже — иначе один снимок весит как весь слайдер.
+    ('DSC01869.jpg', 'pes-rolls-macro.webp', 62),        # блок «запросить расчёт»
 ]
 
 
@@ -89,27 +92,35 @@ def build(source, target):
     return (OUT / target).stat().st_size // 1024
 
 
-def plain(source, target, width=1600):
-    """Снимок как есть, только уменьшенный: для мозаики и карточек."""
+def plain(source, target, width=1600, quality=84):
+    """Снимок как есть, только уменьшенный: для мозаики и фоновых блоков."""
     with Image.open(PHOTOS / source) as raw:
         photo = raw.convert('RGB')
         height = round(photo.height * width / photo.width)
         photo.resize((width, height), Image.LANCZOS).save(
-            OUT / target, 'WEBP', quality=84, method=6)
+            OUT / target, 'WEBP', quality=quality, method=6)
     return (OUT / target).stat().st_size // 1024
 
 
 def main():
+    # Баннеры слайдера клиент рисует сам и кладёт в src/assets/hero под теми же
+    # именами. Поэтому по умолчанию готовые файлы не трогаем — перерисовать их
+    # из съёмки можно ключом --force.
+    force = '--force' in sys.argv
+
     for source, target in BANNERS:
+        if (OUT / target).exists() and not force:
+            print(f'{target}: уже есть, пропускаю (--force перерисует)')
+            continue
         if not (PHOTOS / source).exists():
             print(f'нет снимка: {source}')
             continue
         print(f'{target}: {W}x{H}  {build(source, target)} КБ')
-    for source, target in PLAIN:
+    for source, target, quality in PLAIN:
         if not (PHOTOS / source).exists():
             print(f'нет снимка: {source}')
             continue
-        print(f'{target}: без подачи, {plain(source, target)} КБ')
+        print(f'{target}: без подачи, {plain(source, target, quality=quality)} КБ')
     return 0
 
 
