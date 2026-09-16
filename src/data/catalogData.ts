@@ -1,5 +1,6 @@
 import { HeroSlide, CertificateItem, NewsArticle, Product } from '../types';
 import { CATEGORIES as SECTIONS, PRICES, PRICES_MAX, RAW_PRODUCTS } from './catalog.generated';
+import { DATASHEETS } from './datasheets';
 
 /*
  * Витрина каталога. Разделы и товары собраны скриптом scripts/build-catalog.py
@@ -36,6 +37,8 @@ export const PRODUCTS: Product[] = RAW_PRODUCTS.map((p, i) => ({
   // productImage(), поэтому здесь остаётся только признак «снимок есть».
   image: p.photo ? `${p.slug ?? p.id}.webp` : '',
   features: [],
+  // Технический лист есть у пяти позиций — кнопка на странице товара
+  datasheetUrl: DATASHEETS[p.id],
   sourceUrl: ''
 }));
 
