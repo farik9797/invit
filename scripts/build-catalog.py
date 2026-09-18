@@ -37,6 +37,8 @@ CONTENT = ROOT / 'src/data/productContent.ts'
 
 # Раздел клиента -> (slug, подразделы в порядке клиента). Ключ подраздела —
 # как он называется в выгрузке; None означает «в выгрузке такого нет».
+DOWELS = 'Дюбельная техника'
+
 STRUCTURE = [
     ('Материалы для монтажа окон', 'materialy-dlya-okon', 'windows', [
         ('Монтажные ленты для окон', 'montazhnye-lenty-dlya-okon'),
@@ -78,7 +80,7 @@ STRUCTURE = [
         ('Уплотнитель W', 'uplotnitel-w'),
     ]),
     ('Крепёж', 'krepezh', 'windows', [
-        ('Анкерный крепёж', 'ankernyy-krepyozh'),
+        ('Анкерный крепёж', 'anker-ramnyy'),
         ('Пластина анкерная', 'plastina-ankernaya'),
         ('Кронштейн опорный для отливов', 'kronshteyn-opornyy-dlya-otlivov'),
         ('Шуруп по бетону (нагель)', 'shurup-po-betonu-nagel'),
@@ -88,23 +90,23 @@ STRUCTURE = [
         ('Шуруп с полусферической головкой', 'shurup-s-polusfericheskoy-golovkoy'),
         ('Саморез с пресс-шайбой острый', 'samorez-s-press-shayboy-ostryy'),
         ('Саморез с пресс-шайбой со сверлом', 'samorez-s-press-shayboy-so-sverlom'),
-        ('Дюбель-гвоздь', 'dyubel-gvozd'),
         ('Саморез для сэндвич-панелей', 'samorez-dlya-sendvich-paneley'),
         ('Заклёпки', 'zaklyopki'),
         ('Саморез для фасадных систем', 'samorez-dlya-fasadnyh-sistem'),
         ('Саморез кровельный', 'samorez-krovelnyy'),
-        ('Дюбель рамный', 'dyubel-ramnyy'),
-        ('Дюбель для теплоизоляции', 'dyubel-dlya-teploizolyacii'),
         ('Шуруп с шестигранной головкой', 'shurup-s-shestigrannoy-golovkoy'),
         ('Шуруп конструкционный', 'shurup-konstrukcionnyy'),
-        # Дюбельную технику клиент собрал в одну группу; уровня для неё в
-        # каталоге нет, поэтому виды идут подряд.
-        ('Дюбель распорный', 'dyubel-rasporny'),
-        ('Дюбель металлический для пустотелых конструкций', 'dyubel-metallicheskiy-pustotelyy'),
+        # Третий элемент — группа: подразделы с одинаковой группой идут подряд
+        # под её заголовком. Так клиент собрал дюбели правкой от 15.09.
+        ('Дюбель-гвоздь', 'dyubel-gvozd', DOWELS),
+        ('Дюбель распорный', 'dyubel-raspornyy', DOWELS),
+        ('Дюбель рамный', 'dyubel-ramnyy', DOWELS),
+        ('Дюбель для теплоизоляции', 'dyubel-dlya-teploizolyacii', DOWELS),
+        ('Дюбель металлический для пустотелых конструкций', 'dyubel-metallicheskiy-pustotelyy', DOWELS),
         ('Скобяные изделия', 'skobyanye-izdeliya'),
-        ('Перфолента', 'krepezh-perfolenta'),
+        ('Перфолента', 'perfolenta'),
         ('Хомуты', 'krepezh-homuty'),
-        ('Шпилька резьбовая', 'krepezh-shpilka-rezbovaya'),
+        ('Шпилька резьбовая', 'shpilka-rezbovaya'),
     ]),
     ('Алюминиевые и армированные ленты (скотч)', 'alyuminievye-armirovannye-lenty', 'windows', [
         ('Алюминиевые ленты ALU', 'alyuminievye-lenty-alu'),
@@ -116,14 +118,14 @@ STRUCTURE = [
     # правка клиента от 15.09.
     ('Комплектующие для воздуховодов и систем вентиляции', 'ventilyaciya', 'hvac', [
         ('Уголки монтажные', 'ugolki-montazhnye'),
-        ('Кронштейн', 'kronshteyn'),
+        ('Кронштейн', 'kronshteyny-l-v-z-p'),
         ('Струбцины', 'strubciny'),
         ('Скоба', 'skoba'),
         ('Хомуты', 'homuty'),
         ('Траверса', 'profil-montazhnyy-traversa'),
         ('Профиль монтажный L, U', 'profil-montazhnyy-l-u'),
         ('Анкер латунный (цанга)', 'anker-latunnyy-canga'),
-        ('Спрей-аэрозоль', 'sprey-aerozol'),
+        ('Спрей-аэрозоль', 'sprey-aerozol-cinkovyy'),
         ('Элементы оснащения', 'elementy-osnascheniya'),
     ]),
     ('Инструмент, оборудование', 'instrument-oborudovanie', 'windows', [
@@ -345,7 +347,7 @@ def main():
     for r in cards:
         by_place[place(r)].append(r)
 
-    known = {(section, sub) for section, _, _, subs in STRUCTURE for sub, _ in subs}
+    known = {(section, entry[0]) for section, _, _, subs in STRUCTURE for entry in subs}
     sections, products, extras, empty = [], [], [], []
     texts = {}                      # полные описания, id -> текст
     money_of = {}                   # цены, id -> (нижняя, верхняя)
@@ -432,19 +434,23 @@ def main():
                      [(s, slugify(s)) for s in osnastka_subs]))
 
     for name, slug, division, subs in plan:
-        listed = [s for s, _ in subs]
+        listed = [entry[0] for entry in subs]
         found = {sub for section, sub in by_place if section == name}
         tail = sorted(found - set(listed))
         subcategories, count_total = [], 0
-        for sub_name, sub_slug in subs + [(s, slugify(s)) for s in tail]:
+        for entry in subs + [(s, slugify(s)) for s in tail]:
+            sub_name, sub_slug = entry[0], entry[1]
+            group = entry[2] if len(entry) > 2 else ''
             items = by_place.get((name, sub_name), [])
             if not items:
                 empty.append(f'{name} > {sub_name}')
                 continue
             if sub_name in tail:
                 extras.append(f'{name} > {sub_name} ({len(items)})')
-            subcategories.append({'id': sub_slug, 'name': sub_name,
-                                  'slug': sub_slug, 'count': len(items)})
+            sub = {'id': sub_slug, 'name': sub_name, 'slug': sub_slug, 'count': len(items)}
+            if group:
+                sub['group'] = group
+            subcategories.append(sub)
             count_total += len(items)
             for row in items:
                 products.append(build(row, slug, sub_slug))

@@ -3,6 +3,8 @@ export interface SubCategory {
   name: string;
   slug: string;
   count?: number;
+  /** Группа внутри раздела: подразделы с одинаковой идут подряд под её заголовком. */
+  group?: string;
 }
 
 export interface Category {

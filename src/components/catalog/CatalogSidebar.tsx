@@ -47,8 +47,14 @@ const SubList: React.FC<{
   return (
     <>
       <ul className="mt-1 ml-3 border-l border-inv-border">
-        {visible.map((sub) => (
+        {visible.map((sub, idx) => (
           <li key={sub.id}>
+            {/* Заголовок группы: показываем, когда она сменилась */}
+            {sub.group && sub.group !== visible[idx - 1]?.group && (
+              <span className="mt-2 mb-0.5 block pl-2 text-[11px] font-semibold uppercase tracking-[0.1em] text-inv-ink-muted">
+                {sub.group}
+              </span>
+            )}
             <button
               type="button"
               onClick={() => onSub(active === sub.slug ? null : sub.slug)}

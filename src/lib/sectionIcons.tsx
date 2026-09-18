@@ -30,6 +30,17 @@ import { DRAWN_ICONS } from './sectionIconsDrawn';
 /** Толщина обводки в единицах сетки 384. */
 const STROKE = 18;
 
+/*
+ * Новые подразделы из правки клиента от 15.09, для которых знака не рисовали:
+ * берём соседний по смыслу. «Хомуты» в крепеже — те же хомуты, что в
+ * вентиляции, просто под другим слагом; дюбель для пустотелых конструкций —
+ * ближайший к распорному.
+ */
+const ALIAS: Record<string, string> = {
+  'krepezh-homuty': 'homuty',
+  'dyubel-metallicheskiy-pustotelyy': 'dyubel-raspornyy'
+};
+
 export const SectionIcon: React.FC<{
   slug: string;
   className?: string;
@@ -48,6 +59,6 @@ export const SectionIcon: React.FC<{
     aria-hidden="true"
     focusable="false"
   >
-    <path d={DRAWN_ICONS[slug] ?? DRAWN_ICONS.all} />
+    <path d={DRAWN_ICONS[slug] ?? DRAWN_ICONS[ALIAS[slug]] ?? DRAWN_ICONS.all} />
   </svg>
 );

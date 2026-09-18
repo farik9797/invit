@@ -1,7 +1,7 @@
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
-import { Category } from '../../types';
+import { Category, SubCategory } from '../../types';
 import { CATEGORIES, PRODUCTS } from '../../data/catalogData';
 import { COUNT_CATEGORY, COUNT_SUB } from '../../lib/catalogCounts';
 import { SectionIcon } from '../../lib/sectionIcons';
@@ -83,6 +83,22 @@ export const SectionsMenu: React.FC<SectionsMenuProps> = ({
   }, [hovered, anchor]);
 
   const shown = hovered ? CATEGORIES.find((c) => c.slug === hovered) ?? null : null;
+
+  /*
+   * Подразделы одной группы («Дюбельная техника») идут одним блоком, чтобы
+   * заголовок не оторвался от своих строк при разбивке на столбцы.
+   * Подраздел без группы — блок из одной строки.
+   */
+  const blocks = useMemo(() => {
+    const out: { group: string; items: SubCategory[] }[] = [];
+    for (const sub of shown?.subcategories ?? []) {
+      const group = sub.group ?? '';
+      const last = out[out.length - 1];
+      if (group && last && last.group === group) last.items.push(sub);
+      else out.push({ group, items: [sub] });
+    }
+    return out;
+  }, [shown]);
 
   return (
     <div
@@ -166,12 +182,19 @@ export const SectionsMenu: React.FC<SectionsMenuProps> = ({
             </Link>
 
             <ul className="mt-3 columns-2 gap-6">
-              {shown.subcategories.map((sub) => {
-                const chosen = sub.slug === activeSub && shown.slug === category?.slug;
+              {blocks.map((block) => (
+                <li key={block.group || block.items[0].id} className="break-inside-avoid">
+                  {block.group && (
+                    <span className="mt-2 mb-1 block text-[11px] font-semibold uppercase tracking-[0.1em] text-inv-ink-muted">
+                      {block.group}
+                    </span>
+                  )}
+                  {block.items.map((sub) => {
+                    const chosen = sub.slug === activeSub && shown.slug === category?.slug;
 
-                return (
-                  <li key={sub.id} className="break-inside-avoid">
+                    return (
                     <Link
+                      key={sub.id}
                       to={`${paths.category(shown.slug)}?sub=${sub.slug}`}
                       onClick={(e) => {
                         // Свой раздел — это отбор, а не переход: бренд и поиск остаются
@@ -197,9 +220,10 @@ export const SectionsMenu: React.FC<SectionsMenuProps> = ({
                         {COUNT_SUB.get(sub.slug) ?? 0}
                       </span>
                     </Link>
-                  </li>
-                );
-              })}
+                    );
+                  })}
+                </li>
+              ))}
             </ul>
           </div>
         </div>
