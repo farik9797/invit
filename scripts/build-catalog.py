@@ -78,7 +78,7 @@ STRUCTURE = [
         ('Уплотнитель W', 'uplotnitel-w'),
     ]),
     ('Крепёж', 'krepezh', 'windows', [
-        ('Анкер рамный', 'anker-ramnyy'),
+        ('Анкерный крепёж', 'ankernyy-krepyozh'),
         ('Пластина анкерная', 'plastina-ankernaya'),
         ('Кронштейн опорный для отливов', 'kronshteyn-opornyy-dlya-otlivov'),
         ('Шуруп по бетону (нагель)', 'shurup-po-betonu-nagel'),
@@ -96,6 +96,15 @@ STRUCTURE = [
         ('Дюбель рамный', 'dyubel-ramnyy'),
         ('Дюбель для теплоизоляции', 'dyubel-dlya-teploizolyacii'),
         ('Шуруп с шестигранной головкой', 'shurup-s-shestigrannoy-golovkoy'),
+        ('Шуруп конструкционный', 'shurup-konstrukcionnyy'),
+        # Дюбельную технику клиент собрал в одну группу; уровня для неё в
+        # каталоге нет, поэтому виды идут подряд.
+        ('Дюбель распорный', 'dyubel-rasporny'),
+        ('Дюбель металлический для пустотелых конструкций', 'dyubel-metallicheskiy-pustotelyy'),
+        ('Скобяные изделия', 'skobyanye-izdeliya'),
+        ('Перфолента', 'krepezh-perfolenta'),
+        ('Хомуты', 'krepezh-homuty'),
+        ('Шпилька резьбовая', 'krepezh-shpilka-rezbovaya'),
     ]),
     ('Алюминиевые и армированные ленты (скотч)', 'alyuminievye-armirovannye-lenty', 'windows', [
         ('Алюминиевые ленты ALU', 'alyuminievye-lenty-alu'),
@@ -103,20 +112,19 @@ STRUCTURE = [
         ('Малярная лента', 'malyarnaya-lenta'),
         ('Изоляционные ленты', 'izolyacionnye-lenty'),
     ]),
+    # Перфолента, хомуты и шпильки уехали в крепёж, кронштейны переименованы —
+    # правка клиента от 15.09.
     ('Комплектующие для воздуховодов и систем вентиляции', 'ventilyaciya', 'hvac', [
-        ('Фланцевый профиль воздуховодов', 'flancevyy-profil-dlya-vozduhovodov'),
         ('Уголки монтажные', 'ugolki-montazhnye'),
-        ('Кронштейны L, V, Z, П-образные', 'kronshteyny-l-v-z-p'),
+        ('Кронштейн', 'kronshteyn'),
         ('Струбцины', 'strubciny'),
         ('Скоба', 'skoba'),
         ('Хомуты', 'homuty'),
         ('Траверса', 'profil-montazhnyy-traversa'),
         ('Профиль монтажный L, U', 'profil-montazhnyy-l-u'),
-        ('Перфолента', 'perfolenta'),
-        ('Межфланцевая лента', 'mezhflancevaya-lenta'),
         ('Анкер латунный (цанга)', 'anker-latunnyy-canga'),
-        ('Шпилька резьбовая', 'shpilka-rezbovaya'),
-        ('Спрей-аэрозоль цинковый', 'sprey-aerozol-cinkovyy'),
+        ('Спрей-аэрозоль', 'sprey-aerozol'),
+        ('Элементы оснащения', 'elementy-osnascheniya'),
     ]),
     ('Инструмент, оборудование', 'instrument-oborudovanie', 'windows', [
         ('Пистолеты для пены', 'pistolety-dlya-peny'),
@@ -149,7 +157,8 @@ OSNASTKA = ('Оснастка к электроинструменту', 'osnastk
 MOVES = [
     (r'ПСУЛ EUROBAND для монтажа окон',
      ('Материалы для монтажа окон', 'Саморасширяющаяся лента ПСУЛ')),
-    (r'EUROBAND ЛБ,|EUROBAND ЛБА,',
+    # ЛБ клиент правкой от 15.09 отправил в кровельные ленты, осталась ЛБА
+    (r'EUROBAND ЛБА,',
      ('Материалы для монтажа окон', 'Полнобутиловые ленты')),
     # Лента ПЭС: клиент называет её и в кровельных, и в ПЭС. Товар из ПЭС,
     # поэтому кладём по материалу.
