@@ -351,6 +351,7 @@ def main():
     sections, products, extras, empty = [], [], [], []
     texts = {}                      # полные описания, id -> текст
     money_of = {}                   # цены, id -> (нижняя, верхняя)
+    shared_photo = {}               # id -> имя чужого снимка, если он общий
 
     def spec(row):
         out = []
@@ -405,8 +406,16 @@ def main():
         }
         if safe != ident:
             item['slug'] = safe
-        if row['Images'].split(', ')[0].strip() in photos:
+        first = row['Images'].split(', ')[0].strip()
+        if first in photos:
+            # Один снимок на несколько товаров — у бывших исполнений одной
+            # карточки. Файл пишется один раз, под первым товаром; остальные
+            # ссылаются на него по имени, а не получают свою копию.
             item['photo'] = True
+            if photos[first] != safe:
+                # Строку в объект не кладём: смешанные true/строка в пяти тысячах
+                # литералов роняют вывод типов TypeScript. Отдельная таблица.
+                shared_photo[ident] = photos[first]
         if 'EUROBAND' in row['Name']:
             item['badge'] = 'Собственное производство'
         if kids:
@@ -487,6 +496,8 @@ def main():
         f'export const RAW_PRODUCTS: RawProduct[] = {dump(products)};\n\n'
         '/** Цены в порядке RAW_PRODUCTS: null — «цена по запросу». */\n'
         f'export const PRICES: (number | null)[] = {dump([money_of.get(p["id"], (None, None))[0] for p in products])};\n\n'
+        '/** Снимок, общий с другим товаром: id -> имя файла без .webp. */\n'
+        f'export const SHARED_PHOTOS: Record<string, string> = {dump(shared_photo)};\n\n'
         '/** Верхняя граница там, где исполнения стоят по-разному. */\n'
         f'export const PRICES_MAX: (number | null)[] = {dump([money_of.get(p["id"], (None, None))[1] for p in products])};\n',
         encoding='utf-8')

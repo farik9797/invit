@@ -57,8 +57,19 @@ python3 scripts/build-woocommerce.py   # каталог клиента + лес�
 python3 scripts/build-osnastka.py      # + оснастка
 python3 scripts/merge-site.py          # + товары сайта   -> woocommerce_import_merged.csv
 python3 scripts/build-variations.py    # свод вариаций    -> woocommerce_import_variations.csv
+python3 scripts/apply-corrections.py   # правки клиента от 15.09 (удаления, переносы)
+python3 scripts/build-plugs.py         # + заглушки
+python3 scripts/build-from-old.py "PT5" "Крепёж > Саморез кровельный"
+python3 scripts/build-from-old.py "нерж.сталь (А2), DIN 7504" "Крепёж > Саморез для фасадных систем"
+python3 scripts/build-from-old.py "Анкер-шуруп" "Крепёж > Анкерный крепёж"
+python3 scripts/split-variations.py    # исполнения -> обычные товары (просьба клиента)
 python3 scripts/build-catalog.py       # витрина          -> src/data + public/products
 ```
+
+Рабочий файл после `build-variations.py` — `woocommerce_import_variations.csv`: правки и
+добавления пишутся в него, а не в плоскую выгрузку. Каждый шаг оставляет рядом копию
+«до» с суффиксом `.before-…` и сам себя не повторяет, так что прогон с середины безопасен.
+Вариативных карточек на витрине нет: клиент попросил каждое исполнение отдельным товаром.
 
 Ещё два скрипта отдельно от конвейера: `scripts/sections/draw.py` перерисовывает знаки
 разделов, а `scripts/build-site-export.py` делает выгрузку каталога из админки invit.by —

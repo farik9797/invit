@@ -1,5 +1,5 @@
 import { HeroSlide, CertificateItem, NewsArticle, Product } from '../types';
-import { CATEGORIES as SECTIONS, PRICES, PRICES_MAX, RAW_PRODUCTS } from './catalog.generated';
+import { CATEGORIES as SECTIONS, PRICES, PRICES_MAX, RAW_PRODUCTS, SHARED_PHOTOS } from './catalog.generated';
 import { DATASHEETS } from './datasheets';
 
 /*
@@ -35,7 +35,8 @@ export const PRODUCTS: Product[] = RAW_PRODUCTS.map((p, i) => ({
   division: DIVISION[p.categorySlug] ?? 'windows',
   // Фото лежит в public/products под именем товара; адрес собирает
   // productImage(), поэтому здесь остаётся только признак «снимок есть».
-  image: p.photo ? `${p.slug ?? p.id}.webp` : '',
+  // Общий снимок нескольких товаров лежит одним файлом под первым из них
+  image: p.photo ? `${SHARED_PHOTOS[p.id] ?? p.slug ?? p.id}.webp` : '',
   features: [],
   // Технический лист есть у пяти позиций — кнопка на странице товара
   datasheetUrl: DATASHEETS[p.id],
