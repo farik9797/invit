@@ -5,6 +5,7 @@ import { Category, SubCategory } from '../../types';
 import { CATEGORIES, PRODUCTS } from '../../data/catalogData';
 import { COUNT_CATEGORY, COUNT_SUB } from '../../lib/catalogCounts';
 import { SectionMark } from '../../lib/sectionPhotos';
+import { PRICES_SHOWN } from '../../lib/price';
 import { CatalogFilters, CatalogResult, isFiltered } from '../../lib/catalogFilters';
 import { SIZE_LABEL, SizeAxis } from '../../lib/productSize';
 import { plural } from '../../lib/plural';
@@ -244,7 +245,9 @@ export const CatalogSidebar: React.FC<SidebarProps> = ({
           Фильтр
         </h2>
 
-        <PriceFilter value={filters.price} range={result.priceRange} onChange={onPrice} />
+        {PRICES_SHOWN && (
+          <PriceFilter value={filters.price} range={result.priceRange} onChange={onPrice} />
+        )}
 
         <FacetGroup
           title="Бренд"

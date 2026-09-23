@@ -2,6 +2,7 @@ import { Product } from '../types';
 import { sortForListing } from './product';
 import { searchProducts } from './search';
 import { SECTION_SIZES, SizeAxis, bySize, productSize } from './productSize';
+import { PRICES_SHOWN } from './price';
 
 /*
  * Отбор товаров в каталоге: раздел, подраздел, поиск, бренд, страна, признаки
@@ -22,6 +23,11 @@ export const SORT_LABEL: Record<SortMode, string> = {
   name: 'Название: А → Я',
   'name-desc': 'Название: Я → А'
 };
+
+/** Что показывать в списке сортировки: с выключенными ценами — только название. */
+export const SORT_OPTIONS: SortMode[] = PRICES_SHOWN
+  ? ['default', 'price', 'price-desc', 'name', 'name-desc']
+  : ['default', 'name', 'name-desc'];
 
 export interface CatalogFilters {
   sub: string | null;
@@ -67,7 +73,10 @@ export const readFilters = (params: URLSearchParams): CatalogFilters => {
     brands: many(params, 'brand'),
     countries: many(params, 'country'),
     sizes: { diameter: many(params, 'd'), length: many(params, 'l') },
-    price: { min: money(params.get('pmin')), max: money(params.get('pmax')) },
+    // С выключенными ценами прежние ссылки с ?pmin= ничего не отбирают
+    price: PRICES_SHOWN
+      ? { min: money(params.get('pmin')), max: money(params.get('pmax')) }
+      : { min: null, max: null },
     sort: isSort(sort) ? sort : 'default'
   };
 };
@@ -213,7 +222,7 @@ export const selectProducts = (
         axis
       )
     })),
-    priceRange: priced.length
+    priceRange: PRICES_SHOWN && priced.length
       ? { min: Math.min(...priced), max: Math.max(...priced) }
       : null,
     scope: base.length

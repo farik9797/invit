@@ -19,6 +19,7 @@ import { useShop } from '../context/ShopContext';
 import {
   CatalogFilters,
   SORT_LABEL,
+  SORT_OPTIONS,
   SortMode,
   isFiltered,
   readFilters,
@@ -287,7 +288,7 @@ export const CatalogPage: React.FC = () => {
                     onChange={(e) => update({ sort: e.target.value as SortMode })}
                     className="appearance-none w-full sm:w-auto min-h-11 pl-4 pr-10 rounded-[10px] border border-inv-border bg-white text-sm text-inv-ink cursor-pointer transition-colors duration-[120ms] hover:border-inv-blue focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-inv-blue"
                   >
-                    {(Object.keys(SORT_LABEL) as SortMode[]).map((mode) => (
+                    {SORT_OPTIONS.map((mode) => (
                       <option key={mode} value={mode}>
                         {SORT_LABEL[mode]}
                       </option>

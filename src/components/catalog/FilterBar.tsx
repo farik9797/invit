@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { CatalogFilters, CatalogResult, toggle } from '../../lib/catalogFilters';
 import { SIZE_LABEL, SizeAxis } from '../../lib/productSize';
-import { formatPrice } from '../../lib/price';
+import { PRICES_SHOWN, formatPrice } from '../../lib/price';
 import { FacetList } from './FacetList';
 
 /*
@@ -123,7 +123,9 @@ export const FilterBar: React.FC<FilterBarProps> = ({ filters, result, onChange 
     <div className="mt-3 rounded-[10px] border border-inv-border bg-inv-surface-1 p-3">
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-2 sm:gap-3">
         {/* Цена двумя полями: разброс от 17 копеек до 2390 рублей, ползунок
-            на таком отрезке в первой трети бесполезен. */}
+            на таком отрезке в первой трети бесполезен. Пока цены скрыты,
+            полей нет вовсе — отбирать не по чему. */}
+        {PRICES_SHOWN && (
         <div className="flex items-center gap-2">
           <span className="text-sm text-inv-ink-muted shrink-0">Цена</span>
           <input
@@ -150,6 +152,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({ filters, result, onChange 
             className={field}
           />
         </div>
+        )}
 
         <Facet
           title="Бренд"
