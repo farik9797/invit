@@ -79,7 +79,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
               {/* Technical Specifications Table */}
               <div className="border border-line rounded-xl overflow-hidden">
                 <div className="bg-surface-soft px-3 py-2 font-semibold text-ink border-b border-line">
-                  Технические характеристики
+                  Параметры
                 </div>
                 <div className="divide-y divide-line p-2 space-y-1 text-ink/80">
                   {product.specs.map((spec) => (
