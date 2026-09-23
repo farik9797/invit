@@ -7,8 +7,10 @@ interface Props {
   onImageClick: (src: string) => void;
 }
 
+type Illustration = { src: string; title?: string };
+
 /** После группировки одиночных `image` не остаётся — только `gallery`. */
-type Group = Exclude<ContentBlock, { kind: 'image' }> | { kind: 'gallery'; images: string[] };
+type Group = Exclude<ContentBlock, { kind: 'image' }> | { kind: 'gallery'; images: Illustration[] };
 
 /**
  * Идущие подряд иллюстрации собираем в одну группу: по три в ряд они читаются
@@ -21,9 +23,9 @@ const groupImages = (blocks: ContentBlock[]): Group[] => {
   for (const block of blocks) {
     const last = out[out.length - 1];
     if (block.kind === 'image' && last && last.kind === 'gallery') {
-      last.images.push(block.src);
+      last.images.push({ src: block.src, title: block.title });
     } else if (block.kind === 'image') {
-      out.push({ kind: 'gallery', images: [block.src] });
+      out.push({ kind: 'gallery', images: [{ src: block.src, title: block.title }] });
     } else {
       out.push(block);
     }
@@ -116,21 +118,25 @@ export const ProductContentBlocks: React.FC<Props> = ({ blocks, onImageClick }) 
           key={idx}
           className={alone ? '' : 'grid grid-cols-2 sm:grid-cols-3 gap-3'}
         >
-          {block.images.map((src) => (
-            <button
-              key={src}
-              onClick={() => onImageClick(src)}
-              className={`aspect-4/3 flex items-center justify-center border border-line rounded-xl overflow-hidden bg-white hover:border-brand-sky transition-colors cursor-zoom-in ${
-                alone ? 'w-full max-w-[420px]' : ''
-              }`}
-            >
-              <img
-                src={contentImage(src)}
-                alt=""
-                loading="lazy"
-                className="w-full h-full object-contain p-2"
-              />
-            </button>
+          {block.images.map(({ src, title }) => (
+            <figure key={src} className={alone ? 'w-full max-w-[420px]' : ''}>
+              <button
+                onClick={() => onImageClick(src)}
+                title={title}
+                className="w-full aspect-4/3 flex items-center justify-center border border-line rounded-xl overflow-hidden bg-white hover:border-brand-sky transition-colors cursor-zoom-in"
+              >
+                <img
+                  src={contentImage(src)}
+                  alt={title ?? ''}
+                  loading="lazy"
+                  className="w-full h-full object-contain p-2"
+                />
+              </button>
+              {/* Подпись с invit.by: без неё схемы монтажа читаются как набор картинок */}
+              {title && (
+                <figcaption className="pt-1.5 text-xs text-ink/55 leading-snug">{title}</figcaption>
+              )}
+            </figure>
           ))}
         </div>
       );

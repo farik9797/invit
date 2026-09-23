@@ -12,7 +12,7 @@ import { sortForListing, dedupeContentBlocks } from '../lib/product';
 import { hasPrice, priceLabel } from '../lib/price';
 import { productUnit } from '../lib/unit';
 import { crossSell } from '../lib/crossSell';
-import { productGallery } from '../lib/contentImages';
+import { contentImage, productGallery } from '../lib/contentImages';
 import { SectionIcon } from '../lib/sectionIcons';
 import { ProductContent } from '../types';
 
@@ -69,6 +69,17 @@ export const ProductPage: React.FC = () => {
   const gallery = productGallery(product, content?.images ?? []);
 
   /*
+   * Подписи к кадрам галереи. Иллюстрации идут в её хвосте в том же порядке,
+   * что и блоки описания, поэтому длина хвоста и даёт смещение: снимка товара
+   * может не быть вовсе, и тогда галерея состоит из одних иллюстраций.
+   */
+  const illustrations = (content?.blocks ?? []).filter((b) => b.kind === 'image');
+  const captions = gallery.map((_, idx) => {
+    const shift = gallery.length - illustrations.length;
+    return (idx >= shift && illustrations[idx - shift].title) || product.title;
+  });
+
+  /*
    * Сопутствующие: сначала соседи по подразделу, потом остальной раздел.
    * В подразделе бывает один-единственный товар (лента для сэндвич-панелей),
    * и блок оставался пустым — а он теперь заменяет перечень ссылок, который
@@ -108,7 +119,7 @@ export const ProductPage: React.FC = () => {
                 {/* w-auto/h-auto: фото не растягивается выше своего разрешения */}
                 <img
                   src={gallery[activePhoto]}
-                  alt={product.title}
+                  alt={captions[activePhoto]}
                   width={500}
                   height={500}
                   className="w-auto h-auto max-w-full max-h-full object-contain p-4"
@@ -132,7 +143,13 @@ export const ProductPage: React.FC = () => {
                       idx === activePhoto ? 'border-brand-blue' : 'border-line hover:border-brand-sky'
                     }`}
                   >
-                    <img src={src} alt="" loading="lazy" className="w-full h-full object-contain p-1.5" />
+                    <img
+                      src={src}
+                      alt={captions[idx]}
+                      title={captions[idx]}
+                      loading="lazy"
+                      className="w-full h-full object-contain p-1.5"
+                    />
                   </button>
                 ))}
               </div>
@@ -322,7 +339,9 @@ export const ProductPage: React.FC = () => {
               <ProductContentBlocks
                 blocks={contentBlocks}
                 onImageClick={(src) => {
-                  const idx = gallery.indexOf(src);
+                  // В галерее лежит локальная копия, а в описании — исходный
+                  // адрес invit.by: без перевода клик открывал первый кадр.
+                  const idx = gallery.indexOf(contentImage(src));
                   setLightboxIndex(idx >= 0 ? idx : 0);
                   if (idx >= 0) setActivePhoto(idx);
                 }}
@@ -367,7 +386,7 @@ export const ProductPage: React.FC = () => {
       <Lightbox
         images={gallery}
         index={lightboxIndex}
-        alt={product.title}
+        alt={lightboxIndex === null ? product.title : captions[lightboxIndex]}
         onClose={() => setLightboxIndex(null)}
         onChange={(idx) => {
           setLightboxIndex(idx);

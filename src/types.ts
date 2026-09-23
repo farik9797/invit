@@ -24,7 +24,7 @@ export type ContentBlock =
   | { kind: 'text'; text: string }
   | { kind: 'list'; items: string[] }
   | { kind: 'table'; headers: string[]; rows: string[][] }
-  | { kind: 'image'; src: string };
+  | { kind: 'image'; src: string; title?: string };
 
 export interface ProductContent {
   images: string[];

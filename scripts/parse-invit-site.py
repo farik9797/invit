@@ -35,15 +35,15 @@ def original(url):
 def is_heading(node):
     """Заголовок: весь текст абзаца жирный. На сайте они ещё и синие.
 
-    Двоеточие и тире на конце часто остаются за пределами <strong>, поэтому
-    сравниваем без хвостовых знаков.
+    Сравниваем без пробелов и хвостовых знаков: слово нередко разорвано парой
+    <strong>, а двоеточие в конце остаётся за их пределами.
     """
-    tail = re.compile(r'[\s:.,;\u2013\u2014-]+$')
     text = clean(node.get_text())
     if not text or len(text) > 120:
         return False
-    bold = ' '.join(clean(b.get_text()) for b in node.find_all(['strong', 'b']))
-    return bool(bold) and tail.sub('', clean(bold)) == tail.sub('', text)
+    bold = ''.join(b.get_text() for b in node.find_all(['strong', 'b']))
+    squeeze = lambda value: re.sub(r'[\s:.,;\u2013\u2014-]+$', '', re.sub(r'\s+', '', value))
+    return bool(bold.strip()) and squeeze(clean(bold)) == squeeze(text)
 
 
 def table_of(node):
@@ -71,9 +71,30 @@ def table_of(node):
     return {'kind': 'table', 'headers': headers, 'rows': body}
 
 
+def caption_of(img):
+    """Подпись под иллюстрацию: она на сайте живёт в title ссылки и картинки."""
+    link = img.find_parent('a')
+    for source in ((link.get('title') if link else None), img.get('title'), img.get('alt')):
+        text = clean(source or '')
+        if text:
+            return text
+    return ''
+
+
 def blocks_of(desc):
     """Описание -> блоки в исходном порядке. Ссылки на PDF уходят отдельно."""
     blocks, images, pdfs = [], [], []
+
+    def add_image(img):
+        src = original(img.get('src', ''))
+        if not src:
+            return
+        images.append(src)
+        block = {'kind': 'image', 'src': src}
+        caption = caption_of(img)
+        if caption:
+            block['title'] = caption
+        blocks.append(block)
 
     def walk(node):
         for child in node.children:
@@ -95,10 +116,7 @@ def blocks_of(desc):
                     blocks.append({'kind': 'list', 'items': items})
                 continue
             if name == 'img':
-                src = original(child.get('src', ''))
-                if src:
-                    images.append(src)
-                    blocks.append({'kind': 'image', 'src': src})
+                add_image(child)
                 continue
             if name in ('script', 'style'):
                 continue
@@ -121,10 +139,7 @@ def blocks_of(desc):
                 if text and not DOWNLOAD.search(text):
                     blocks.append({'kind': 'heading' if is_heading(child) else 'text', 'text': text})
                 for img in child.find_all('img'):
-                    src = original(img.get('src', ''))
-                    if src:
-                        images.append(src)
-                        blocks.append({'kind': 'image', 'src': src})
+                    add_image(img)
                 continue
             walk(child)
 

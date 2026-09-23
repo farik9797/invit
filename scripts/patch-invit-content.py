@@ -66,7 +66,8 @@ def render(block):
     if kind in ('heading', 'text'):
         return f"      {{ kind: '{kind}', text: {quote(block['text'])} }},"
     if kind == 'image':
-        return f"      {{ kind: 'image', src: {quote(block['src'])} }},"
+        title = f", title: {quote(block['title'])}" if block.get('title') else ''
+        return f"      {{ kind: 'image', src: {quote(block['src'])}{title} }},"
     if kind == 'list':
         items = ', '.join(quote(i) for i in block['items'])
         return f"      {{ kind: 'list', items: [{items}] }},"
