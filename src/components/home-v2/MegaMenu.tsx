@@ -130,7 +130,7 @@ export const MegaMenu: React.FC = () => {
           <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
             <div className="flex rounded-[8px] border border-inv-border bg-white shadow-[0_6px_24px_rgba(22,44,88,0.16)] overflow-hidden">
               {/* Разделы. Выбранный красный, как просил клиент */}
-              <ul className="w-[264px] shrink-0 border-r border-inv-border bg-inv-surface-1 py-2">
+              <ul className="w-[350px] shrink-0 border-r border-inv-border bg-inv-surface-1 py-2 max-h-[70vh] overflow-y-auto">
                 {SECTIONS.map((item, idx) => {
                   const isActive = idx === active;
 
