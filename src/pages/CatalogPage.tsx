@@ -202,7 +202,7 @@ export const CatalogPage: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10">
             {/* Прилипающая колонка без своей прокрутки: её обрезка съедала бы
                 панель мега-меню, которая выходит за края колонки. */}
-            <aside className="hidden lg:block lg:col-span-3">
+            <aside className="hidden lg:block lg:col-span-4">
               {/*
                * Колонка не прилипает. Со списком разделов в ней 1093px, а на
                * экране 900 остаётся 750 — нижняя треть с фильтром просто не
@@ -216,7 +216,7 @@ export const CatalogPage: React.FC = () => {
               <div className="relative z-10">{sidebar('aside')}</div>
             </aside>
 
-            <div className="lg:col-span-9">
+            <div className="lg:col-span-8">
               {/* На телефоне колонки нет, поэтому поиск остаётся над выдачей */}
               <CatalogSearch
                 query={filters.query}

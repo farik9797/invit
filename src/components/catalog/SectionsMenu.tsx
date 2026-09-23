@@ -126,6 +126,8 @@ export const SectionsMenu: React.FC<SectionsMenuProps> = ({
             category ? 'text-inv-ink hover:text-inv-blue' : 'bg-inv-surface-1 text-inv-red font-semibold'
           }`}
         >
+          {/* Пустое место под снимок: иначе строка съезжает влево от остальных */}
+          <span aria-hidden className="w-8 shrink-0" />
           <span className="flex-1">Все позиции</span>
           <span className="text-xs text-inv-ink-muted tabular-nums">{PRODUCTS.length}</span>
         </Link>
@@ -151,6 +153,7 @@ export const SectionsMenu: React.FC<SectionsMenuProps> = ({
                 isOpen ? 'bg-inv-surface-1' : ''
               } ${isHere ? 'text-inv-red font-semibold' : 'text-inv-ink hover:text-inv-blue'}`}
             >
+              <SectionMark slug={cat.slug} size={32} className="w-8 h-8 shrink-0" />
               <span className="flex-1 leading-snug">{cat.name}</span>
               <span className="text-xs text-inv-ink-muted tabular-nums">
                 {COUNT_CATEGORY.get(cat.slug) ?? 0}
