@@ -14,6 +14,15 @@ import { SectionIcon } from './sectionIcons';
  * У 25 подразделов (крепёж россыпью, плёнки, маски) снимка нет ни у одного
  * товара — там остаётся прежняя пиктограмма.
  */
+/*
+ * Ручной выбор там, где первый товар представляет раздел плохо. У кровельных
+ * лент им оказался уплотнитель под конёк, снятый на бирюзовом фоне.
+ * Ключ — адрес раздела или подраздела, значение — идентификатор товара.
+ */
+const PICKED: Record<string, string> = {
+  'krovelnye-uplotniteli-kleykie-lenty': 'lenta-butilkauchukovaja-euroband-lb'
+};
+
 const CATEGORY = new Map<string, string>();
 const SUBCATEGORY = new Map<string, string>();
 
@@ -22,6 +31,12 @@ for (const product of PRODUCTS) {
   if (!photo) continue;
   if (!CATEGORY.has(product.categorySlug)) CATEGORY.set(product.categorySlug, photo);
   if (!SUBCATEGORY.has(product.subcategorySlug)) SUBCATEGORY.set(product.subcategorySlug, photo);
+}
+
+for (const [slug, ident] of Object.entries(PICKED)) {
+  const product = PRODUCTS.find((p) => p.id === ident);
+  const photo = product ? productImage(product) : '';
+  if (photo) (CATEGORY.has(slug) ? CATEGORY : SUBCATEGORY).set(slug, photo);
 }
 
 /** Снимок раздела или подраздела; пустая строка, если снимка нет. */
