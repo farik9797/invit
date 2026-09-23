@@ -76,6 +76,22 @@ python3 scripts/build-catalog.py       # витрина          -> src/data + p
 он читает снимок админки `files/invit-admin-dump.json` (1,5 МБ), который без доступа
 в админку заново не собрать.
 
+## Содержимое карточек с invit.by
+
+Описания, таблицы и иллюстрации карточек взяты со старого сайта клиента. Он
+заменяется новым, поэтому копия сайта лежит у нас целиком:
+
+```
+python3 scripts/fetch-invit-site.py     # обход invit.by   -> files/invit-site/pages/*.html
+python3 scripts/parse-invit-site.py     # разбор страниц   -> files/invit-site.json
+python3 scripts/fetch-invit-photos.py   # снимки тех карточек, где в выгрузке фото нет
+python3 scripts/patch-invit-content.py  # описания         -> src/data/productContent.ts
+```
+
+`fetch-invit-photos.py` пишет в рабочую выгрузку, поэтому после него нужен
+`build-catalog.py`. Иллюстрации описаний уже лежат в `src/assets/content/`
+(карта адресов — `src/lib/contentImageMap.ts`), технические листы — в `public/docs/`.
+
 ## Данные (`files/`) — что копировать на новую машину
 
 Папки нет в git: там архив фото на 1.1 ГБ и выгрузки поставщиков. Скрипты выше читают
