@@ -8,7 +8,6 @@ import aluButylRolls from '../../assets/hero/alu-butyl-rolls.webp';
 import tapeRange from '../../assets/hero/tape-range.webp';
 import pesTapeRolls from '../../assets/hero/pes-tape-rolls.webp';
 import butylTapeRoll from '../../assets/hero/butyl-tape-roll.webp';
-import psulEuroband from '../../assets/hero/psul-euroband.webp';
 
 interface HeroProps {
   onOpenCallback: () => void;
@@ -27,7 +26,7 @@ interface Slide {
 }
 
 /*
- * Все шесть кадров — съёмка продукции клиента, собранная в баннеры скриптом
+ * Все кадры — съёмка продукции клиента, собранная в баннеры скриптом
  * scripts/make-hero-banner.py. Прежде здесь стояли стоковые кадры, и лента с
  * маркой на них были чужие: на одном по ленте шла нечитаемая кириллица под
  * видом надписи EUROBAND.
@@ -77,15 +76,6 @@ const SLIDES: Slide[] = [
     image: butylTapeRoll,
     href: `${paths.category('materialy-dlya-okon')}?sub=uplotnitelnye-lenty-pes-samokleyaschiesy`,
     cta: 'Ленты ПЭС'
-  },
-  {
-    id: 'psul',
-    lead: 'Саморасширяющаяся лента —',
-    accent: 'ПСУЛ EUROBAND',
-    text: 'Акриловая пропитка и открытая ячейка: после монтажа лента расширяется впятеро и держит шов сухим и паропроницаемым не менее 20 лет.',
-    image: psulEuroband,
-    href: `${paths.category('materialy-dlya-okon')}?sub=samorasshiryayuschayasya-lenta-psul`,
-    cta: 'Лента ПСУЛ'
   }
 ];
 
