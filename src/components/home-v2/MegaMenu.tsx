@@ -143,7 +143,7 @@ export const MegaMenu: React.FC = () => {
                         aria-current={isActive}
                         className={`flex items-center gap-3 min-h-11 px-5 text-sm transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-inv-blue ${
                           isActive
-                            ? 'bg-white text-inv-red font-semibold'
+                            ? 'bg-white text-inv-red'
                             : 'text-inv-ink hover:text-inv-red'
                         }`}
                       >
