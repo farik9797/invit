@@ -325,13 +325,17 @@ export const ProductPage: React.FC = () => {
                 </Link>
               )}
 
-              <p className="flex items-start gap-2 text-xs text-ink/50">
-                <ShieldCheck className="w-4 h-4 text-brand-sky shrink-0" />
-                Документы по качеству предоставляем с каждой партией —{' '}
-                <Link to={paths.certificates} className="text-brand-blue hover:underline">
-                  сертификаты
-                </Link>
-              </p>
+              {/* Сертификаты и декларации есть только на свои ленты: на товар
+                  прямой поставки документы даёт производитель, а не мы. */}
+              {product.badge === 'Собственное производство' && (
+                <p className="flex items-start gap-2 text-xs text-ink/50">
+                  <ShieldCheck className="w-4 h-4 text-brand-sky shrink-0" />
+                  Документы по качеству предоставляем с каждой партией —{' '}
+                  <Link to={paths.certificates} className="text-brand-blue hover:underline">
+                    сертификаты
+                  </Link>
+                </p>
+              )}
             </div>
 
             {/* Полное описание с сайта */}
