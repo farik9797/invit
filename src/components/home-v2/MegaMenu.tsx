@@ -58,7 +58,7 @@ const SECTIONS: MenuSection[] = [
   {
     id: 'tapes',
     label: 'Ленты EUROBAND',
-    href: paths.catalog,
+    href: `${paths.catalog}?brand=EUROBAND`,
     groups: TAPE_SUBCATEGORIES.map((slug) => groupFor(categoryOf(slug), slug, subName(slug)))
   },
   ...CATEGORIES.map((category) => ({

@@ -4,11 +4,20 @@ import { ChevronRight } from 'lucide-react';
 import { Category, SubCategory } from '../../types';
 import { CATEGORIES, PRODUCTS } from '../../data/catalogData';
 import { COUNT_CATEGORY, COUNT_SUB } from '../../lib/catalogCounts';
+import { specValue } from '../../lib/catalogFilters';
 import { SectionMark } from '../../lib/sectionPhotos';
 import { paths } from '../../routes';
 
 /** Высота шапки сайта: ниже неё панель не должна подниматься. */
 const HEADER_BOTTOM = 134;
+
+/*
+ * Ленты собственного производства лежат в четырёх разных разделах каталога,
+ * своего раздела у них нет. В мега-меню они стоят отдельной строкой, и в
+ * колонке каталога тоже: строка ведёт на отбор по бренду.
+ */
+const OWN_BRAND = 'EUROBAND';
+const OWN_COUNT = PRODUCTS.filter((p) => specValue(p, 'Бренд') === OWN_BRAND).length;
 
 /*
  * Разделы каталога списком в боковой колонке; подразделы выезжают вбок при
@@ -44,6 +53,7 @@ export const SectionsMenu: React.FC<SectionsMenuProps> = ({
   const wrap = useRef<HTMLDivElement>(null);
   const panel = useRef<HTMLDivElement>(null);
   const location = useLocation();
+  const ownOnly = new URLSearchParams(location.search).get('brand') === OWN_BRAND;
 
   // Открытый раздел — первым, остальные в прежнем порядке
   const ordered = useMemo(() => {
@@ -130,6 +140,18 @@ export const SectionsMenu: React.FC<SectionsMenuProps> = ({
           <span aria-hidden className="w-8 shrink-0" />
           <span className="flex-1">Все позиции</span>
           <span className="text-xs text-inv-ink-muted tabular-nums">{PRODUCTS.length}</span>
+        </Link>
+
+        <Link
+          to={`${paths.catalog}?brand=${OWN_BRAND}`}
+          onMouseEnter={() => setHovered(null)}
+          className={`mt-0.5 flex items-center gap-2.5 min-h-11 px-2.5 rounded-[4px] text-sm transition-colors duration-[120ms] ${
+            ownOnly ? 'text-inv-red font-semibold' : 'text-inv-ink hover:text-inv-blue'
+          }`}
+        >
+          <SectionMark slug="tapes" size={32} className="w-8 h-8 shrink-0" />
+          <span className="flex-1 leading-snug">Ленты EUROBAND</span>
+          <span className="text-xs text-inv-ink-muted tabular-nums">{OWN_COUNT}</span>
         </Link>
 
         {ordered.map((cat) => {

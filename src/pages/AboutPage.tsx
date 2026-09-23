@@ -10,7 +10,7 @@ import { productImage } from '../lib/productImages';
 import { useShop } from '../context/ShopContext';
 import { paths } from '../routes';
 import eurobandMark from '../assets/logo/euroband-color.svg';
-import plant from '../assets/banners/euroband-plant.webp';
+import plant from '../assets/banners/euroband-production.webp';
 
 /*
  * Страница о компании.
@@ -299,9 +299,9 @@ export const AboutPage: React.FC = () => {
             <div className="lg:col-span-6">
               <img
                 src={plant}
-                alt="Производство EUROBAND"
-                width={842}
-                height={703}
+                alt="Ленты EUROBAND собственного производства"
+                width={1200}
+                height={800}
                 className="w-full h-[240px] sm:h-[340px] lg:h-[420px] object-cover rounded-[8px]"
               />
             </div>

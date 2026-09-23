@@ -148,6 +148,8 @@ interface ProductGridProps {
   onAddToQuote: (product: Product) => void;
   /** Сколько карточек в ряду на широком экране. */
   columns?: 3 | 4 | 5 | 6;
+  /** Плотная плитка каталога: тесная сетка и сжатая карточка. */
+  dense?: boolean;
 }
 
 // Классы перечислены целиком: Tailwind не собирает имена по частям.
@@ -158,12 +160,17 @@ const GRID_COLUMNS: Record<3 | 4 | 5 | 6, string> = {
   6: 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 sm:gap-4 items-stretch'
 };
 
+/* Плотная плитка: две карточки на телефоне и до четырёх на широком экране.
+   Отдельно от таблицы выше, потому что счёт колонок там про обычную сетку. */
+const DENSE_GRID = 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 items-stretch';
+
 export const ProductGrid: React.FC<ProductGridProps> = ({
   products,
   quoteItemsIds,
   onQuickView,
   onAddToQuote,
-  columns = 4
+  columns = 4,
+  dense = false
 }) => {
   if (products.length === 0) {
     return (
@@ -174,7 +181,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
   }
 
   return (
-    <div className={GRID_COLUMNS[columns]}>
+    <div className={dense ? DENSE_GRID : GRID_COLUMNS[columns]}>
       {products.map((product, idx) => (
         <Reveal key={product.id} delay={Math.min(idx * 0.04, 0.24)} className="h-full">
           <ProductCard
@@ -182,7 +189,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
             isAdded={quoteItemsIds.includes(product.id)}
             onQuickView={onQuickView}
             onAddToQuote={onAddToQuote}
-            compact={columns >= 5}
+            compact={dense || columns >= 5}
           />
         </Reveal>
       ))}

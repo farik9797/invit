@@ -401,7 +401,8 @@ export const CatalogPage: React.FC = () => {
                       />
                     ) : (
                       <ProductGrid
-                        columns={view === 'dense' ? 5 : 3}
+                        columns={3}
+                        dense={view === 'dense'}
                         products={products.slice(0, visible)}
                         quoteItemsIds={shop.quoteCart.map((i) => i.product.id)}
                         onQuickView={shop.openQuickView}

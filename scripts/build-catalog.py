@@ -271,6 +271,16 @@ def place(row):
     return (parts[0], parts[1] if len(parts) > 1 else '')
 
 
+# Ленты собственного производства, в названии которых бренда нет: лента идёт
+# под бытовым названием, а EUROBAND стоит только в описании.
+OWN_NAMES = {'Демпферная лента для стяжки пола'}
+
+
+def own_made(name):
+    """Наша продукция: по бренду в названии или по списку исключений."""
+    return 'EUROBAND' in name or name.strip() in OWN_NAMES
+
+
 def convert_photos(wanted):
     """Фото карточек в webp 500px. Возвращает {файл выгрузки: имя webp}."""
     from PIL import Image
@@ -371,7 +381,7 @@ def main():
         # У своих лент бренда и страны в выгрузке нет: их заводили не из прайса
         # поставщика, а со старого сайта, где таких полей не было вовсе. Без них
         # наша продукция не попадала ни в отбор по бренду, ни по стране.
-        if 'EUROBAND' in row['Name']:
+        if own_made(row['Name']):
             if not any(a == 'Бренд' for a, _ in out):
                 out.append(('Бренд', 'EUROBAND'))
             if not any(a == 'Страна' for a, _ in out):
@@ -416,7 +426,7 @@ def main():
                 # Строку в объект не кладём: смешанные true/строка в пяти тысячах
                 # литералов роняют вывод типов TypeScript. Отдельная таблица.
                 shared_photo[ident] = photos[first]
-        if 'EUROBAND' in row['Name']:
+        if own_made(row['Name']):
             item['badge'] = 'Собственное производство'
         if kids:
             item['variantLabel'] = kids[0]['Attribute 3 name'] or 'Типоразмер'

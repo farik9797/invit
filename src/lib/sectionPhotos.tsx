@@ -20,7 +20,10 @@ import { SectionIcon } from './sectionIcons';
  * Ключ — адрес раздела или подраздела, значение — идентификатор товара.
  */
 const PICKED: Record<string, string> = {
-  'krovelnye-uplotniteli-kleykie-lenty': 'lenta-butilkauchukovaja-euroband-lb'
+  'krovelnye-uplotniteli-kleykie-lenty': 'lenta-butilkauchukovaja-euroband-lb',
+  // Сборная подборка лент собственного производства: своего подраздела у неё
+  // нет, поэтому снимок задаём вручную.
+  tapes: 'psul-euroband-dlja-okon'
 };
 
 const CATEGORY = new Map<string, string>();

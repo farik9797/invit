@@ -21,6 +21,7 @@ from PIL import Image, ImageDraw
 ROOT = pathlib.Path(__file__).parent.parent
 PHOTOS = ROOT / 'files/photos'      # съёмка продукции клиента, вне репозитория
 OUT = ROOT / 'src/assets/hero'
+BANNERS_OUT = ROOT / 'src/assets/banners'   # снимки для внутренних страниц
 
 W, H = 1920, 1080
 
@@ -47,6 +48,11 @@ PLAIN = [
     # Макро лент: лежит фоном под затемнением во всю ширину, детали не видны,
     # поэтому качество ниже — иначе один снимок весит как весь слайдер.
     ('DSC01869.jpg', 'pes-rolls-macro.webp', 62),        # блок «запросить расчёт»
+]
+
+# Снимки для внутренних страниц: кадр без подачи, только пережатие.
+PAGES = [
+    ('_S4A8903.jpg', 'euroband-production.webp', 1200, 82),   # «Производство EUROBAND» на /about
 ]
 
 
@@ -92,14 +98,15 @@ def build(source, target):
     return (OUT / target).stat().st_size // 1024
 
 
-def plain(source, target, width=1600, quality=84):
+def plain(source, target, width=1600, quality=84, out=None):
     """Снимок как есть, только уменьшенный: для мозаики и фоновых блоков."""
+    out = out or OUT
     with Image.open(PHOTOS / source) as raw:
         photo = raw.convert('RGB')
         height = round(photo.height * width / photo.width)
         photo.resize((width, height), Image.LANCZOS).save(
-            OUT / target, 'WEBP', quality=quality, method=6)
-    return (OUT / target).stat().st_size // 1024
+            out / target, 'WEBP', quality=quality, method=6)
+    return (out / target).stat().st_size // 1024
 
 
 def main():
@@ -121,6 +128,12 @@ def main():
             print(f'нет снимка: {source}')
             continue
         print(f'{target}: без подачи, {plain(source, target, quality=quality)} КБ')
+    for source, target, width, quality in PAGES:
+        if not (PHOTOS / source).exists():
+            print(f'нет снимка: {source}')
+            continue
+        size = plain(source, target, width=width, quality=quality, out=BANNERS_OUT)
+        print(f'{target}: страница, {size} КБ')
     return 0
 
 
