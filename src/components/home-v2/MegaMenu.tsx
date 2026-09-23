@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Menu, ChevronDown, ChevronRight } from 'lucide-react';
 import { CATEGORIES, PRODUCTS } from '../../data/catalogData';
 import { TAPE_SUBCATEGORIES } from '../../lib/product';
-import { SectionIcon } from '../../lib/sectionIcons';
+import { SectionMark } from '../../lib/sectionPhotos';
 import { paths } from '../../routes';
 
 /*
@@ -147,10 +147,10 @@ export const MegaMenu: React.FC = () => {
                             : 'text-inv-ink hover:text-inv-red'
                         }`}
                       >
-                        <SectionIcon
+                        <SectionMark
                           slug={item.id}
-                          size={20}
-                          className={`w-5 h-5 shrink-0 ${
+                          size={28}
+                          className={`w-7 h-7 shrink-0 ${
                             isActive ? 'text-inv-red' : 'text-inv-blue'
                           }`}
                         />
@@ -172,7 +172,7 @@ export const MegaMenu: React.FC = () => {
                         className="flex items-center gap-2.5 text-sm font-semibold text-inv-blue hover:text-inv-blue-pressed transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
                       >
                         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[4px] border border-inv-border bg-white">
-                          <SectionIcon slug={group.slug} size={28} className="w-7 h-7" />
+                          <SectionMark slug={group.slug} size={36} className="w-9 h-9" />
                         </span>
                         <span className="leading-snug">{group.name}</span>
                       </Link>

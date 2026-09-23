@@ -4,7 +4,7 @@ import { ChevronRight } from 'lucide-react';
 import { Category, SubCategory } from '../../types';
 import { CATEGORIES, PRODUCTS } from '../../data/catalogData';
 import { COUNT_CATEGORY, COUNT_SUB } from '../../lib/catalogCounts';
-import { SectionIcon } from '../../lib/sectionIcons';
+import { SectionMark } from '../../lib/sectionPhotos';
 import { paths } from '../../routes';
 
 /** Высота шапки сайта: ниже неё панель не должна подниматься. */
@@ -208,10 +208,10 @@ export const SectionsMenu: React.FC<SectionsMenuProps> = ({
                         chosen ? 'text-inv-red font-semibold' : 'text-inv-ink hover:text-inv-blue'
                       }`}
                     >
-                      <SectionIcon
+                      <SectionMark
                         slug={sub.slug}
-                        size={18}
-                        className={`w-[18px] h-[18px] shrink-0 ${
+                        size={24}
+                        className={`w-6 h-6 shrink-0 ${
                           chosen ? 'text-inv-red' : 'text-inv-blue'
                         }`}
                       />

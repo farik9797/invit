@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { CATEGORIES, PRODUCTS } from '../../data/catalogData';
-import { SectionIcon } from '../../lib/sectionIcons';
+import { SectionMark } from '../../lib/sectionPhotos';
 import { paths } from '../../routes';
 import { Reveal, RevealGroup } from '../Reveal';
 
@@ -10,9 +10,9 @@ import { Reveal, RevealGroup } from '../Reveal';
  * Категории на главной.
  *
  * Пробовали две крупные карточки с описанием и списком подразделов в две
- * колонки — клиент сказал, что читается тяжело. Потом ставили фото товаров.
- * В итоге клиент прислал tbmmarket.by: там линейные пиктограммы, их и ставим.
- * Плитка = иконка, название, счётчик. Ни описаний, ни вложенных списков.
+ * колонки — клиент сказал, что читается тяжело. Потом были пиктограммы, как на
+ * tbmmarket.by, а сейчас клиент попросил снимок товара из раздела.
+ * Плитка = снимок, название, счётчик. Ни описаний, ни вложенных списков.
  */
 
 const plural = (n: number) => {
@@ -79,11 +79,11 @@ export const CategoryTiles: React.FC = () => (
             to={paths.category(tile.slug)}
             className="group flex h-full flex-col rounded-xl border border-line bg-white overflow-hidden transition-[transform,box-shadow,border-color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:border-brand-blue hover:shadow-lg"
           >
-            <span className="flex h-24 sm:h-28 items-center justify-center bg-surface-soft text-brand-blue">
-              <SectionIcon
+            <span className="flex h-24 sm:h-28 items-center justify-center bg-white text-brand-blue">
+              <SectionMark
                 slug={tile.slug}
-                size={48}
-                className="w-11 h-11 sm:w-12 sm:h-12 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.08]"
+                size={96}
+                className="w-20 h-20 sm:w-24 sm:h-24 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.08]"
               />
             </span>
 
