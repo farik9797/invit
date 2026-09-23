@@ -3,7 +3,6 @@ import { useParams, Navigate, Link } from 'react-router-dom';
 import { Calendar, ArrowLeft } from 'lucide-react';
 import { Breadcrumbs } from '../components/Breadcrumbs';
 import { NEWS } from '../data/catalogData';
-import { newsCover, newsCoverFit } from '../lib/newsCovers';
 import { paths } from '../routes';
 
 export const NewsArticlePage: React.FC = () => {
@@ -60,15 +59,8 @@ export const NewsArticlePage: React.FC = () => {
                 <Link
                   key={n.id}
                   to={paths.newsArticle(n.id)}
-                  className="flex gap-3 p-3 rounded-xl border border-line hover:border-brand-sky hover:shadow-xs transition-all group"
+                  className="flex gap-3 p-4 rounded-xl border border-line hover:border-brand-sky hover:shadow-xs transition-all group"
                 >
-                  {/* Та же обложка, что в списке новостей: на invit.by к заметкам
-                      приложен клипарт нулевых, и сам сайт скоро заменят. */}
-                  <img
-                    src={newsCover(n.id)}
-                    alt={n.title}
-                    className={`w-20 h-20 ${newsCoverFit(n.id)} bg-white border border-line rounded-xl shrink-0`}
-                  />
                   <div className="min-w-0 space-y-1">
                     <span className="text-[11px] text-ink/45 font-semibold">{n.date}</span>
                     <span className="block text-xs font-semibold text-ink group-hover:text-brand-blue transition-colors line-clamp-3 leading-snug">

@@ -4,13 +4,14 @@ import { ArrowRight } from 'lucide-react';
 import { Breadcrumbs } from '../components/Breadcrumbs';
 import { FadeGroup } from '../components/home-v2/Chrome';
 import { NEWS } from '../data/catalogData';
-import { newsCover, newsCoverFit } from '../lib/newsCovers';
 import { paths } from '../routes';
 
 /*
- * Формат карточек клиент выбрал по референсу: обложка, дата, заголовок,
- * короткое описание. Обложки подбираются по теме заметки (см. newsCovers.ts) —
- * настоящих фотографий к событиям у клиента нет.
+ * Карточка новости: дата, раздел, заголовок и начало текста.
+ *
+ * Обложек нет: настоящих снимков к событиям у клиента не было, и вместо них
+ * подставлялись кадры продукции — к переезду офиса или смене реквизитов они
+ * отношения не имеют. Клиент попросил их убрать.
  */
 
 const WRAP = 'max-w-[1400px] mx-auto px-4 lg:px-8';
@@ -59,16 +60,6 @@ export const NewsPage: React.FC = () => (
                 to={paths.newsArticle(article.id)}
                 className="group flex h-full flex-col overflow-hidden rounded-[8px] border border-inv-border bg-white transition-[transform,box-shadow] duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(22,44,88,0.16)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
               >
-                <span className="block h-48 overflow-hidden bg-inv-surface-1">
-                  <img
-                    src={newsCover(article.id)}
-                    alt=""
-                    aria-hidden
-                    loading="lazy"
-                    className={`h-full w-full ${newsCoverFit(article.id)} transition-transform duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:scale-[1.04]`}
-                  />
-                </span>
-
                 <span className="flex flex-1 flex-col p-5">
                   <span className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-inv-ink-muted">
                     <span className="tabular-nums">{article.date}</span>

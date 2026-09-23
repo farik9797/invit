@@ -2,14 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { NEWS } from '../../data/catalogData';
-import { newsCover, newsCoverFit } from '../../lib/newsCovers';
 import { paths } from '../../routes';
 import { Reveal, RevealGroup } from '../Reveal';
 
 /*
- * Тот же формат карточки, что и на странице новостей: обложка, дата,
- * заголовок, короткое описание. Обложки подбираются по теме заметки,
- * см. newsCovers.ts — настоящих фото к событиям у клиента нет.
+ * Тот же формат карточки, что и на странице новостей: дата, раздел, заголовок
+ * и начало текста. Обложек нет — к событиям вроде переезда офиса подставлялись
+ * кадры продукции, и клиент попросил их убрать.
  */
 
 /**
@@ -45,16 +44,6 @@ export const NewsGrid: React.FC = () => (
               to={paths.newsArticle(article.id)}
               className="group flex h-full flex-col overflow-hidden rounded-xl border border-line bg-white transition-[transform,box-shadow] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:shadow-lg"
             >
-              <span className="block h-44 overflow-hidden bg-surface-soft">
-                <img
-                  src={newsCover(article.id)}
-                  alt=""
-                  aria-hidden
-                  loading="lazy"
-                  className={`h-full w-full ${newsCoverFit(article.id)} transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.06]`}
-                />
-              </span>
-
               <span className="flex flex-1 flex-col p-5">
                 <span className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-ink/55">
                   <span className="tabular-nums">{article.date}</span>
