@@ -79,7 +79,8 @@ const SLIDES: Slide[] = [
   }
 ];
 
-const DURATION = 7000;
+/** Кадр держится 3,5 секунды — так попросил клиент. */
+const DURATION = 3500;
 
 export const Hero: React.FC<HeroProps> = ({ onOpenCallback }) => {
   const reduced = useReducedMotion();

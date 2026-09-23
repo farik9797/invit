@@ -88,7 +88,7 @@ const HERO_SLIDES: HeroSlide[] = [
   },
 ];
 
-const HERO_DURATION = 7000;
+const HERO_DURATION = 3500;
 
 export const HeroV2: React.FC = () => {
   const [active, setActive] = useState(0);

@@ -31,6 +31,17 @@ export interface ProductContent {
   blocks: ContentBlock[];
 }
 
+/** Документ технической библиотеки: ГОСТ, ТКП, схема монтажа, листовка. */
+export interface LibraryDoc {
+  id: string;
+  title: string;
+  text: string;
+  /** Имя файла в public/docs/library. */
+  file: string;
+  /** Размер в байтах: показываем рядом со ссылкой. */
+  size: number;
+}
+
 export interface ProductSpec {
   label: string;
   value: string;
