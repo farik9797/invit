@@ -109,6 +109,8 @@ export interface CertificateItem {
   imageFull?: string;
   /** Страница-источник на invit.by, если документ опубликован там. */
   sourceUrl?: string;
+  /** Файл-оригинал в public/docs/certificates. По умолчанию `<id>.jpg`. */
+  file?: string;
   issuedBy?: string;
   validUntil?: string;
   pdfUrl?: string;

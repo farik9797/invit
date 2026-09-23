@@ -8,11 +8,14 @@ import { certificateImage } from '../../lib/productImages';
  * листами. На странице показывается пережатый webp, а скачивается исходный
  * JPEG — его принимают в закупках и открывает любая программа.
  */
-const original = (id: string) => `${import.meta.env.BASE_URL}docs/certificates/${id}.jpg`;
+const original = (certificate: CertificateItem) =>
+  `${import.meta.env.BASE_URL}docs/certificates/${certificate.file ?? `${certificate.id}.jpg`}`;
 
 /** Имя файла при скачивании: по названию документа, а не cert-7.jpg. */
-const fileName = (title: string) =>
-  `${title.replace(/[\\/:*?"<>|]/g, '').trim().slice(0, 80)}.jpg`;
+const fileName = (certificate: CertificateItem) => {
+  const suffix = (certificate.file ?? 'x.jpg').split('.').pop();
+  return `${certificate.title.replace(/[\\/:*?"<>|]/g, '').trim().slice(0, 80)}.${suffix}`;
+};
 
 interface CertificateModalProps {
   certificate: CertificateItem | null;
@@ -77,7 +80,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({ certificate,
           <div className="pt-2 flex justify-between items-center gap-2">
             <div className="flex items-center gap-4">
               <a
-                href={original(certificate.id)}
+                href={original(certificate)}
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-blue hover:text-brand-blue-hover transition-colors"
@@ -87,8 +90,8 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({ certificate,
               </a>
 
               <a
-                href={original(certificate.id)}
-                download={fileName(certificate.title)}
+                href={original(certificate)}
+                download={fileName(certificate)}
                 className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-blue hover:text-brand-blue-hover transition-colors"
               >
                 <Download className="w-3.5 h-3.5" />

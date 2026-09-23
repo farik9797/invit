@@ -48,9 +48,23 @@ def score(a, b):
 
 
 def ours():
-    """Карточки документов из catalogData.ts: идентификатор и название."""
+    """Карточки документов из catalogData.ts: идентификатор и название.
+
+    Карточки со своим файлом (`file:`) пропускаем: там документ от клиента
+    свежее того, что лежит на старом сайте, и перекачивать его нельзя.
+    """
     block = re.search(r'export const CERTIFICATES.*?\n\];', DATA.read_text(encoding='utf-8'), re.S)
-    return re.findall(r"id: '([^']+)',\s*\n\s*title: '((?:[^'\\]|\\.)*)'", block.group(0))
+    cards = []
+    for card in re.findall(r'\{(.*?)\n  \}', block.group(0), re.S):
+        ident = re.search(r"id: '([^']+)'", card)
+        title = re.search(r"title: '((?:[^'\\]|\\.)*)'", card)
+        if not ident or not title:
+            continue
+        if re.search(r"^\s*file: '", card, re.M):
+            print(f'  = {title.group(1)[:46]}: свой файл, с сайта не берём')
+            continue
+        cards.append((ident.group(1), title.group(1)))
+    return cards
 
 
 def main():

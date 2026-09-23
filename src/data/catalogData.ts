@@ -94,7 +94,11 @@ export const CERTIFICATES: CertificateItem[] = [
     type: 'Сертификат',
     image: '',
     imageFull: '',
-    sourceUrl: 'https://invit.by/index.php?route=information/gallery'
+    // Скан 2025-2027 прислал клиент: PDF из двух листов, второй — приложение
+    // с перечнем продукции. На invit.by лежит прежний, до 2023 года.
+    file: 'cert-1.pdf',
+    issuedBy: 'БелТПП',
+    validUntil: '8 декабря 2027'
   },
   {
     id: 'cert-2',
