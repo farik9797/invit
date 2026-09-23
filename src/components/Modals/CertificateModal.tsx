@@ -3,6 +3,17 @@ import { X, Award, ExternalLink, ShieldCheck, Download } from 'lucide-react';
 import { CertificateItem } from '../../types';
 import { certificateImage } from '../../lib/productImages';
 
+/*
+ * Оригинал скана: лежит в public/docs/certificates рядом с техническими
+ * листами. На странице показывается пережатый webp, а скачивается исходный
+ * JPEG — его принимают в закупках и открывает любая программа.
+ */
+const original = (id: string) => `${import.meta.env.BASE_URL}docs/certificates/${id}.jpg`;
+
+/** Имя файла при скачивании: по названию документа, а не cert-7.jpg. */
+const fileName = (title: string) =>
+  `${title.replace(/[\\/:*?"<>|]/g, '').trim().slice(0, 80)}.jpg`;
+
 interface CertificateModalProps {
   certificate: CertificateItem | null;
   onClose: () => void;
@@ -64,15 +75,26 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({ certificate,
           </div>
 
           <div className="pt-2 flex justify-between items-center gap-2">
-            <a
-              href={certificateImage(certificate.id, certificate.imageFull || certificate.image)}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-blue hover:text-brand-blue-hover transition-colors"
-            >
-              <ExternalLink className="w-3.5 h-3.5" />
-              <span>Открыть оригинал</span>
-            </a>
+            <div className="flex items-center gap-4">
+              <a
+                href={original(certificate.id)}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-blue hover:text-brand-blue-hover transition-colors"
+              >
+                <ExternalLink className="w-3.5 h-3.5" />
+                <span>Открыть оригинал</span>
+              </a>
+
+              <a
+                href={original(certificate.id)}
+                download={fileName(certificate.title)}
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-blue hover:text-brand-blue-hover transition-colors"
+              >
+                <Download className="w-3.5 h-3.5" />
+                <span>Скачать</span>
+              </a>
+            </div>
 
             <button
               onClick={onClose}
