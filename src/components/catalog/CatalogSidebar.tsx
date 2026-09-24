@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { ChevronDown, ChevronRight, X } from 'lucide-react';
 import { Category, SubCategory } from '../../types';
 import { CATEGORIES, PRODUCTS } from '../../data/catalogData';
-import { COUNT_CATEGORY, COUNT_SUB } from '../../lib/catalogCounts';
+import { COUNT_CATEGORY, COUNT_SUB, OWN_BRAND, OWN_COUNT } from '../../lib/catalogCounts';
 import { SectionMark } from '../../lib/sectionPhotos';
 import { PRICES_SHOWN } from '../../lib/price';
 import { CatalogFilters, CatalogResult, isFiltered } from '../../lib/catalogFilters';
@@ -146,8 +146,22 @@ const SectionsTree: React.FC<{
                 : 'text-inv-ink hover:text-inv-blue'
             }`}
           >
+            <span aria-hidden className="w-8 shrink-0" />
             <span className="flex-1">Все позиции</span>
             <span className="text-xs text-inv-ink-muted tabular-nums">{PRODUCTS.length}</span>
+          </Link>
+
+          {/* Ленты собственного производства лежат в четырёх разделах,
+              поэтому строка ведёт на отбор по бренду — как в колонке
+              на большом экране. */}
+          <Link
+            to={`${paths.catalog}?brand=${OWN_BRAND}`}
+            onClick={onNavigate}
+            className="mt-1 flex items-center gap-2.5 min-h-11 px-2.5 rounded-[4px] text-sm text-inv-ink hover:text-inv-blue transition-colors duration-[120ms]"
+          >
+            <SectionMark slug="tapes" size={32} className="w-8 h-8 shrink-0" />
+            <span className="flex-1 leading-snug">Ленты EUROBAND</span>
+            <span className="text-xs text-inv-ink-muted tabular-nums">{OWN_COUNT}</span>
           </Link>
 
           {CATEGORIES.map((cat) => {
@@ -164,7 +178,8 @@ const SectionsTree: React.FC<{
                       : 'text-inv-ink hover:text-inv-blue'
                   }`}
                 >
-                  <span className="flex-1">{cat.name}</span>
+                  <SectionMark slug={cat.slug} size={32} className="w-8 h-8 shrink-0" />
+                  <span className="flex-1 leading-snug">{cat.name}</span>
                   <span className="text-xs text-inv-ink-muted tabular-nums">
                     {COUNT_CATEGORY.get(cat.slug) ?? 0}
                   </span>

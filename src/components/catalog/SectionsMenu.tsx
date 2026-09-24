@@ -3,21 +3,12 @@ import { Link, useLocation } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
 import { Category, SubCategory } from '../../types';
 import { CATEGORIES, PRODUCTS } from '../../data/catalogData';
-import { COUNT_CATEGORY, COUNT_SUB } from '../../lib/catalogCounts';
-import { specValue } from '../../lib/catalogFilters';
+import { COUNT_CATEGORY, COUNT_SUB, OWN_BRAND, OWN_COUNT } from '../../lib/catalogCounts';
 import { SectionMark } from '../../lib/sectionPhotos';
 import { paths } from '../../routes';
 
 /** Высота шапки сайта: ниже неё панель не должна подниматься. */
 const HEADER_BOTTOM = 134;
-
-/*
- * Ленты собственного производства лежат в четырёх разных разделах каталога,
- * своего раздела у них нет. В мега-меню они стоят отдельной строкой, и в
- * колонке каталога тоже: строка ведёт на отбор по бренду.
- */
-const OWN_BRAND = 'EUROBAND';
-const OWN_COUNT = PRODUCTS.filter((p) => specValue(p, 'Бренд') === OWN_BRAND).length;
 
 /*
  * Разделы каталога списком в боковой колонке; подразделы выезжают вбок при
