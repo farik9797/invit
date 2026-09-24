@@ -57,6 +57,13 @@ for (const [slug, ident] of Object.entries(PICKED)) {
   if (photo) (CATEGORY.has(slug) ? CATEGORY : SUBCATEGORY).set(slug, photo);
 }
 
+/**
+ * Снимок раздела от клиента: снят под карточку целиком, поэтому его можно
+ * растягивать на всю ширину плитки. Товарный снимок так растягивать нельзя —
+ * от длинного болта на кадре осталась бы середина.
+ */
+export const sectionCover = (slug: string) => CLIENT[slug] ?? '';
+
 /** Снимок раздела или подраздела; пустая строка, если снимка нет. */
 export const sectionPhoto = (slug: string) =>
   CLIENT[slug] ?? SUBCATEGORY.get(slug) ?? CATEGORY.get(slug) ?? '';
