@@ -5,7 +5,8 @@
 для сборки: артикул, название, раздел, бренд, страна, цена, фото, описание.
 
   files/выгрузка-1-сайт.xlsx        — 7412 позиций витрины
-  files/выгрузка-2-поставщик.xlsx   — позиции старой выгрузки, которых нет на сайте
+  files/выгрузка-2-поставщик.xlsx   — позиции выгрузки поставщика, которых нет на сайте
+  files/выгрузка-общая.xlsx         — оба списка одной таблицей, колонка «Источник»
 
 Раздел для второго файла подбирается правилами из build-client-review.py:
 по названию группы поставщика и самого товара, иначе — голосованием внутри
@@ -26,6 +27,7 @@ WOO = ROOT / 'files/woocommerce_import_variations.csv'
 SUPPLIERS = [ROOT / 'files/Болты_гайки_шайбы_2026-09-17.xlsx']
 OUT_SITE = ROOT / 'files/выгрузка-1-сайт.xlsx'
 OUT_NEW = ROOT / 'files/выгрузка-2-поставщик.xlsx'
+OUT_ALL = ROOT / 'files/выгрузка-общая.xlsx'
 
 # Правила раскладки по нашим разделам лежат в соседнем скрипте: держать их
 # в двух местах нельзя, разъедутся.
@@ -209,8 +211,49 @@ def main():
     book.remove(book['Нет на сайте'])
     book.save(OUT_SITE)
 
+    # ---------- общая таблица: оба списка вместе ----------
+    merged = Workbook()
+    sheet = sheet_of(merged, 'Все товары', [
+        'Источник', 'ID', 'Артикул', 'Название', 'Раздел', 'Подраздел',
+        'Бренд', 'Страна', 'Цена', 'Остаток', 'Ед. изм.', 'Фото',
+        'Краткое описание', 'Описание и характеристики', 'Адрес страницы'
+    ], (12, 34, 18, 80, 34, 34, 16, 14, 10, 12, 10, 8, 40, 60, 46))
+
+    lines = []
+    for product in products:
+        spec = {s['label']: s['value'] for s in product['specs']}
+        row = woo.get(norm(product['title']), {})
+        slug = product.get('slug') or product['id']
+        lines.append([
+            'сайт', product['id'], spec.get('Артикул', ''), product['title'],
+            names[product['categorySlug']], subs.get(product['subcategorySlug'], ''),
+            spec.get('Бренд', ''), spec.get('Страна', ''),
+            float(row['Regular price']) if row.get('Regular price') else '',
+            '', row.get('Attribute 3 value(s)', '') or '',
+            'есть' if product.get('photo') else '',
+            product.get('description', '')[:400],
+            (full.get(product['id']) or '')[:3000],
+            f"https://farik9797.github.io/invit/catalog/{product['categorySlug']}/{slug}"
+        ])
+    for row in ordered:
+        section, _, subsection = route(row).partition(' > ')
+        lines.append([
+            'поставщик', row['ID'], row.get('ARTIKUL', ''), ' '.join(row['NAIMEN'].split()),
+            section, subsection, row.get('BRAND', ''), row.get('STRANA', ''),
+            money(row.get('REKOMEND_CENA')) or money(row.get('CENA_OPT_BEZ_NDS')),
+            (row.get('SKLAD_ALL') or '').strip(), row.get('EDIZM', ''), '',
+            '', ' '.join((row.get('XARAKT') or '').split())[:600], ''
+        ])
+
+    lines.sort(key=lambda line: (line[4], line[5], line[3].lower()))
+    for line in lines:
+        sheet.append(line)
+    finish(sheet, len(lines))
+    merged.save(OUT_ALL)
+
     print(f'сайт: {len(products)} позиций -> {OUT_SITE.name}')
     print(f'нет на сайте: {len(ordered)} позиций -> {OUT_NEW.name}')
+    print(f'общая таблица: {len(lines)} строк -> {OUT_ALL.name}')
     return 0
 
 
