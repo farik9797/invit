@@ -56,7 +56,7 @@ RULES: list[tuple[str, str]] = [
     # Крепёж
     (r'саморез кровельн|кровельн.{0,12}саморез', 'Крепёж > Саморез кровельный'),
     (r'сэндвич-панел', 'Крепёж > Саморез для сэндвич-панелей'),
-    (r'фасадн', 'Крепёж > Саморез для фасадных систем'),
+    (r'саморез.{0,30}фасадн|фасадн\w*\s+систем', 'Крепёж > Саморез для фасадных систем'),
     (r'пресс-шайб.{0,30}(?:сверл|бур)', 'Крепёж > Саморез с пресс-шайбой со сверлом'),
     (r'пресс-шайб', 'Крепёж > Саморез с пресс-шайбой острый'),
     (r'саморез оконн.{0,30}(?:сверл|бур)', 'Крепёж > Саморез оконный со сверлом'),
@@ -134,6 +134,37 @@ RULES: list[tuple[str, str]] = [
 COMPILED = [(re.compile(pattern), target) for pattern, target in RULES]
 
 
+def route_of(row, votes):
+    """Наш раздел для строки выгрузки поставщика.
+
+    Сначала правила по дереву поставщика, и только потом — по названию товара:
+    в названии каски встречается «из тканевых лент», и правило про ленты
+    уводило её в скотч.
+    """
+    branch = norm(' '.join(filter(None, (row['PARENTID_NAME0'], row['PARENTID_NAME1'],
+                                         row['PARENTID_NAME2']))))
+    for pattern, target in COMPILED:
+        if pattern.search(branch):
+            return target
+    with_name = f"{branch} {norm(row['NAIMEN'])}"
+    for pattern, target in COMPILED:
+        if pattern.search(with_name):
+            return target
+
+    group = votes[(row['PARENTID_NAME1'], row['PARENTID_NAME2'])]
+    if group:
+        return group.most_common(1)[0][0]
+
+    second = (row['PARENTID_NAME1'] or '').strip()
+    name = group_name(row['PARENTID_NAME2'] if second in BROAD else second or row['PARENTID_NAME2'])
+    top = LEVEL1.get(row['PARENTID_NAME0'])
+    if top and name:
+        return f'{top} > {name} (новый подраздел)'
+    if name:
+        return f'— новый раздел: {group_name(row["PARENTID_NAME0"])} > {name} —'
+    return UNSORTED
+
+
 def catalog():
     """Товары витрины: адрес раздела, название и артикул."""
     source = CATALOG.read_text(encoding='utf-8')
@@ -189,31 +220,12 @@ def main():
         if path:
             votes[(row['PARENTID_NAME1'], row['PARENTID_NAME2'])][path] += 1
 
-    def route(row):
-        haystack = norm(f"{row['PARENTID_NAME1']} {row['PARENTID_NAME2']} {row['NAIMEN']}")
-        for pattern, target in COMPILED:
-            if pattern.search(haystack):
-                return target
-        group = votes[(row['PARENTID_NAME1'], row['PARENTID_NAME2'])]
-        if group:
-            return group.most_common(1)[0][0]
-        ours_top = LEVEL1.get(row['PARENTID_NAME0'])
-        # Предлагаем подраздел уровнем выше: у поставщика третий уровень —
-        # это «Карабин», «Коуш», «Талреп», а у нас подразделы крупнее.
-        second = (row['PARENTID_NAME1'] or '').strip()
-        name = group_name(row['PARENTID_NAME2'] if second in BROAD else second or row['PARENTID_NAME2'])
-        if ours_top and name:
-            return f'{ours_top} > {name} (новый подраздел)'
-        if name:
-            return f'— новый раздел: {group_name(row["PARENTID_NAME0"])} > {name} —'
-        return UNSORTED
-
     items = [(p['id'], p['sku'], p['title'], p['path']) for p in ours]
     added = 0
     for row in rows:
         if norm(row['NAIMEN']) in known:
             continue
-        items.append((row['ID'], row['ARTIKUL'], ' '.join(row['NAIMEN'].split()), route(row)))
+        items.append((row['ID'], row['ARTIKUL'], ' '.join(row['NAIMEN'].split()), route_of(row, votes)))
         added += 1
 
     items.sort(key=lambda item: (item[3] == UNSORTED, item[3], item[2].lower()))
