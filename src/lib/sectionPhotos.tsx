@@ -2,6 +2,10 @@ import React from 'react';
 import { PRODUCTS } from '../data/catalogData';
 import { productImage } from './productImages';
 import { SectionIcon } from './sectionIcons';
+import windowMaterials from '../assets/section-photos/materialy-dlya-okon.webp';
+import sealants from '../assets/section-photos/germetiki.webp';
+import chemistry from '../assets/section-photos/kley-himiya-smazki.webp';
+import pesTapes from '../assets/section-photos/uplotnitelnye-lenty-pes-samokleyaschiesy.webp';
 
 /*
  * Знак раздела — снимок товара из него, а не пиктограмма.
@@ -26,6 +30,17 @@ const PICKED: Record<string, string> = {
   tapes: 'psul-euroband-dlja-okon'
 };
 
+/*
+ * Снимки разделов от клиента: сняты одним светом и показывают раздел целиком,
+ * а не одну позицию из него. Где такой снимок есть, он идёт вперёд товарного.
+ */
+const CLIENT: Record<string, string> = {
+  'materialy-dlya-okon': windowMaterials,
+  germetiki: sealants,
+  'kley-himiya-smazki': chemistry,
+  'uplotnitelnye-lenty-pes-samokleyaschiesy': pesTapes
+};
+
 const CATEGORY = new Map<string, string>();
 const SUBCATEGORY = new Map<string, string>();
 
@@ -44,7 +59,7 @@ for (const [slug, ident] of Object.entries(PICKED)) {
 
 /** Снимок раздела или подраздела; пустая строка, если снимка нет. */
 export const sectionPhoto = (slug: string) =>
-  SUBCATEGORY.get(slug) ?? CATEGORY.get(slug) ?? '';
+  CLIENT[slug] ?? SUBCATEGORY.get(slug) ?? CATEGORY.get(slug) ?? '';
 
 export const SectionMark: React.FC<{ slug: string; size: number; className?: string }> = ({
   slug,
