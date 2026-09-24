@@ -21,7 +21,9 @@ ROOT = Path(__file__).resolve().parent.parent
 CATALOG = ROOT / 'src/data/catalog.generated.ts'
 DESCRIPTIONS = ROOT / 'src/data/catalogDescriptions.ts'
 WOO = ROOT / 'files/woocommerce_import_variations.csv'
-SUPPLIER = ROOT / 'files/export_old_2026-09-01.csv'
+# Выгрузка поставщика на согласование. Клиент присылает её кусками (метизы,
+# заглушки, такелаж), поэтому источников может быть несколько: и csv, и xlsx.
+SUPPLIERS = [ROOT / 'files/Болты_гайки_шайбы_2026-09-17.xlsx']
 OUT_SITE = ROOT / 'files/выгрузка-1-сайт.xlsx'
 OUT_NEW = ROOT / 'files/выгрузка-2-поставщик.xlsx'
 
@@ -41,6 +43,33 @@ def load_rules():
 
 def norm(text):
     return ' '.join((text or '').split()).lower()
+
+
+def plain(value):
+    """Значение ячейки строкой: excel отдаёт числа как 966783.0."""
+    if value is None:
+        return ''
+    if isinstance(value, float) and value.is_integer():
+        return str(int(value))
+    return str(value).strip()
+
+
+def read_supplier(path):
+    """Строки выгрузки поставщика из csv или xlsx — колонки у них одинаковые."""
+    if path.suffix.lower() == '.csv':
+        with path.open(encoding='utf-8-sig', errors='replace', newline='') as f:
+            return [{k: plain(v) for k, v in row.items()} for row in csv.DictReader(f, delimiter=';')]
+
+    from openpyxl import load_workbook
+    sheet = load_workbook(path, read_only=True).active
+    rows = sheet.iter_rows(values_only=True)
+    header = [plain(h) for h in next(rows)]
+    out = []
+    for row in rows:
+        item = {key: plain(value) for key, value in zip(header, row)}
+        if item.get('NAIMEN'):
+            out.append(item)
+    return out
 
 
 def catalog():
@@ -116,8 +145,9 @@ def main():
     finish(sheet, len(products))
 
     # ---------- вторая выгрузка: поставщик ----------
-    with SUPPLIER.open(encoding='utf-8-sig', errors='replace', newline='') as f:
-        supplier = list(csv.DictReader(f, delimiter=';'))
+    supplier = []
+    for path in SUPPLIERS:
+        supplier += read_supplier(path)
 
     known = {norm(p['title']): f"{names[p['categorySlug']]} > {subs.get(p['subcategorySlug'], '')}"
              for p in products}
@@ -150,9 +180,9 @@ def main():
         group = ' > '.join(x for x in (row['PARENTID_NAME0'], row['PARENTID_NAME1'],
                                        row['PARENTID_NAME2']) if x)
         sheet.append([
-            row['ID'], row['ARTIKUL'], row['EAN'], ' '.join(row['NAIMEN'].split()),
-            section, subsection, group, row['BRAND'], row['STRANA'],
-            money(row['REKOMEND_CENA']) or money(row['CENA_OPT_BEZ_NDS']),
+            row['ID'], row.get('ARTIKUL', ''), row.get('EAN', ''), ' '.join(row['NAIMEN'].split()),
+            section, subsection, group, row.get('BRAND', ''), row.get('STRANA', ''),
+            money(row.get('REKOMEND_CENA')) or money(row.get('CENA_OPT_BEZ_NDS')),
             (row['SKLAD_ALL'] or '').strip(),
             row['EDIZM'], row['KRATN'], ' '.join((row['XARAKT'] or '').split())[:600]
         ])
