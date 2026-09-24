@@ -83,7 +83,7 @@ export const CategoryTiles: React.FC = () => (
               <SectionMark
                 slug={tile.slug}
                 size={96}
-                cover
+                fill
                 className="transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.08]"
               />
             </span>

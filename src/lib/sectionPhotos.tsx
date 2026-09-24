@@ -62,16 +62,16 @@ export const sectionPhoto = (slug: string) =>
   CLIENT[slug] ?? SUBCATEGORY.get(slug) ?? CATEGORY.get(slug) ?? '';
 
 /**
- * Знак раздела. `cover` растягивает снимок на всю плитку и срезает поля —
- * так снимок читается с расстояния; в меню и в списке разделов знак остаётся
- * квадратным и вписанным целиком.
+ * Знак раздела. `fill` отдаёт снимку всё поле — он вписывается в него целиком,
+ * ничего не обрезая; без него знак занимает заданный квадрат, как в меню и в
+ * списке разделов.
  */
 export const SectionMark: React.FC<{
   slug: string;
   size: number;
   className?: string;
-  cover?: boolean;
-}> = ({ slug, size, className = '', cover = false }) => {
+  fill?: boolean;
+}> = ({ slug, size, className = '', fill = false }) => {
   const photo = sectionPhoto(slug);
 
   if (!photo) return <SectionIcon slug={slug} size={size} className={className} />;
@@ -80,10 +80,10 @@ export const SectionMark: React.FC<{
     <img
       src={photo}
       alt=""
-      width={cover ? undefined : size}
-      height={cover ? undefined : size}
+      width={fill ? undefined : size}
+      height={fill ? undefined : size}
       loading="lazy"
-      className={cover ? `${className} w-full h-full object-cover` : `${className} object-contain`}
+      className={`${className} object-contain${fill ? ' w-full h-full' : ''}`}
     />
   );
 };
