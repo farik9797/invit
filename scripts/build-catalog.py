@@ -38,6 +38,7 @@ CONTENT = ROOT / 'src/data/productContent.ts'
 # Раздел клиента -> (slug, подразделы в порядке клиента). Ключ подраздела —
 # как он называется в выгрузке; None означает «в выгрузке такого нет».
 DOWELS = 'Дюбельная техника'
+METRIC = 'Метрический крепёж'
 
 STRUCTURE = [
     ('Материалы для монтажа окон', 'materialy-dlya-okon', 'windows', [
@@ -106,7 +107,12 @@ STRUCTURE = [
         ('Скобяные изделия', 'skobyanye-izdeliya'),
         ('Перфолента', 'perfolenta'),
         ('Хомуты', 'krepezh-homuty'),
-        ('Шпилька резьбовая', 'shpilka-rezbovaya'),
+        # Метрический крепёж: болты, гайки и шайбы завели по выгрузке
+        # «Болты, гайки, шайбы» — отдельной группой, как у поставщика.
+        ('Шпилька резьбовая', 'shpilka-rezbovaya', METRIC),
+        ('Болты', 'bolty', METRIC),
+        ('Гайки', 'gayki', METRIC),
+        ('Шайбы', 'shayby', METRIC),
     ]),
     ('Алюминиевые и армированные ленты (скотч)', 'alyuminievye-armirovannye-lenty', 'windows', [
         ('Алюминиевые ленты ALU', 'alyuminievye-lenty-alu'),
