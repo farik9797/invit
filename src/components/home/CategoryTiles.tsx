@@ -82,7 +82,7 @@ export const CategoryTiles: React.FC = () => (
             {/* Поле под пропорции снимков клиента (7:5): кадр вписывается в него
                 целиком и заполняет без остатка. Фон белый — у товарных снимков
                 он тоже белый, и поля по бокам не читаются как пустота. */}
-            <span className="flex aspect-[7/5] items-center justify-center overflow-hidden rounded-lg bg-white text-brand-blue">
+            <span className="grid aspect-[7/5] place-items-center overflow-hidden rounded-lg bg-white text-brand-blue">
               <SectionMark
                 slug={tile.slug}
                 size={96}
