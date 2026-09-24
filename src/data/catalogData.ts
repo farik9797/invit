@@ -31,6 +31,8 @@ export const PRODUCTS: Product[] = RAW_PRODUCTS.map((p, i) => ({
   // Расходятся они у позиций с invit.by: там в идентификаторе остался «%27».
   slug: p.slug ?? p.id,
   shortTitle: short(p.title),
+  // Артикул приходит в составе признаков; поиск ищет по нему отдельным полем
+  sku: p.specs.find((s) => s.label === 'Артикул')?.value ?? '',
   subcategoryName: SUB_NAME[p.subcategorySlug] ?? '',
   division: DIVISION[p.categorySlug] ?? 'windows',
   // Фото лежит в public/products под именем товара; адрес собирает

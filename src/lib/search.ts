@@ -112,6 +112,17 @@ const atWordStart = (hay: string, term: string) =>
   hay.startsWith(term) || hay.includes(` ${term}`) || hay.includes(`-${term}`);
 
 /*
+ * Похоже на артикул: «SM-94364-1», «smp-35482». Голое число сюда не попадает —
+ * «10» есть в половине артикулов (это количество в упаковке) и вытеснило бы
+ * из выдачи саморезы 10 мм, ради которых запрос и набирали.
+ */
+const looksLikeCode = (term: string) =>
+  term.length >= 4 && /\d/.test(term) && /[a-z-]/.test(term);
+
+const inSku = (sku: string, term: string) =>
+  Boolean(sku) && looksLikeCode(term) && sku.includes(term);
+
+/*
  * Вес: точный артикул > артикул частью > все слова с начала слова в названии >
  * просто вхождение. Ищем только по названию и артикулу — в названии подраздела
  * искать нельзя: запрос «очиститель» вытаскивал всю пену из раздела
@@ -121,10 +132,10 @@ const scoreProduct = (product: Product, query: string, terms: string[]): number 
   const { title, sku } = folded(product);
 
   if (sku && sku === query) return 5;
-  if (sku && sku.includes(query)) return 4;
+  if (inSku(sku, query)) return 4;
 
   const found = terms.every((term) =>
-    variants(term).some((v) => title.includes(v) || (sku && sku.includes(v)))
+    variants(term).some((v) => title.includes(v) || inSku(sku, v))
   );
   if (!found) return 0;
 
