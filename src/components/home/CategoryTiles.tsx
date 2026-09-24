@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { CATEGORIES, PRODUCTS } from '../../data/catalogData';
-import { SectionMark, sectionCover } from '../../lib/sectionPhotos';
+import { SectionMark } from '../../lib/sectionPhotos';
 import { paths } from '../../routes';
 import { Reveal, RevealGroup } from '../Reveal';
 
@@ -79,21 +79,13 @@ export const CategoryTiles: React.FC = () => (
             to={paths.category(tile.slug)}
             className="group flex h-full flex-col rounded-xl border border-line bg-white overflow-hidden transition-[transform,box-shadow,border-color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:border-brand-blue hover:shadow-lg"
           >
-            <span className="flex h-24 sm:h-28 items-center justify-center overflow-hidden bg-white text-brand-blue">
-              {sectionCover(tile.slug) ? (
-                <img
-                  src={sectionCover(tile.slug)}
-                  alt=""
-                  loading="lazy"
-                  className="w-full h-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.08]"
-                />
-              ) : (
-                <SectionMark
-                  slug={tile.slug}
-                  size={96}
-                  className="w-20 h-20 sm:w-24 sm:h-24 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.08]"
-                />
-              )}
+            <span className="flex h-28 sm:h-32 items-center justify-center overflow-hidden bg-white text-brand-blue">
+              <SectionMark
+                slug={tile.slug}
+                size={96}
+                cover
+                className="transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.08]"
+              />
             </span>
 
             <span className="flex flex-1 flex-col gap-1 border-t border-line p-3 sm:p-4">

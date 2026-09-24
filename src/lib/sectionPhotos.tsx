@@ -57,22 +57,21 @@ for (const [slug, ident] of Object.entries(PICKED)) {
   if (photo) (CATEGORY.has(slug) ? CATEGORY : SUBCATEGORY).set(slug, photo);
 }
 
-/**
- * Снимок раздела от клиента: снят под карточку целиком, поэтому его можно
- * растягивать на всю ширину плитки. Товарный снимок так растягивать нельзя —
- * от длинного болта на кадре осталась бы середина.
- */
-export const sectionCover = (slug: string) => CLIENT[slug] ?? '';
-
 /** Снимок раздела или подраздела; пустая строка, если снимка нет. */
 export const sectionPhoto = (slug: string) =>
   CLIENT[slug] ?? SUBCATEGORY.get(slug) ?? CATEGORY.get(slug) ?? '';
 
-export const SectionMark: React.FC<{ slug: string; size: number; className?: string }> = ({
-  slug,
-  size,
-  className = ''
-}) => {
+/**
+ * Знак раздела. `cover` растягивает снимок на всю плитку и срезает поля —
+ * так снимок читается с расстояния; в меню и в списке разделов знак остаётся
+ * квадратным и вписанным целиком.
+ */
+export const SectionMark: React.FC<{
+  slug: string;
+  size: number;
+  className?: string;
+  cover?: boolean;
+}> = ({ slug, size, className = '', cover = false }) => {
   const photo = sectionPhoto(slug);
 
   if (!photo) return <SectionIcon slug={slug} size={size} className={className} />;
@@ -81,10 +80,10 @@ export const SectionMark: React.FC<{ slug: string; size: number; className?: str
     <img
       src={photo}
       alt=""
-      width={size}
-      height={size}
+      width={cover ? undefined : size}
+      height={cover ? undefined : size}
       loading="lazy"
-      className={`${className} object-contain`}
+      className={cover ? `${className} w-full h-full object-cover` : `${className} object-contain`}
     />
   );
 };
