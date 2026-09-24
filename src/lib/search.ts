@@ -1,4 +1,5 @@
 import { Product } from '../types';
+import { CATEGORIES } from '../data/catalog.generated';
 
 /*
  * Поиск по каталогу.
@@ -108,6 +109,52 @@ const folded = (product: Product) => {
   return entry;
 };
 
+/*
+ * Раздел и подраздел товара одной строкой: «крепёж болты». Запрос, совпавший
+ * с названием раздела, показывает весь раздел целиком — иначе «уголки» не
+ * находили ничего, хотя в каталоге есть такой подраздел.
+ *
+ * Обратная сторона известна: «очиститель» вытащит и всю пену из подраздела
+ * «Пена монтажная, очиститель для пены». Поэтому вес у такого совпадения
+ * самый низкий: сначала идут карточки, где слово есть в названии.
+ */
+const SECTION_WORDS = new Map<string, string[]>();
+
+const wordsOf = (text: string) => fold(text).split(/[^a-z0-9]+/).filter(Boolean);
+
+for (const section of CATEGORIES) {
+  SECTION_WORDS.set(section.slug, wordsOf(section.name));
+  for (const sub of section.subcategories) {
+    SECTION_WORDS.set(sub.slug, wordsOf(`${section.name} ${sub.name}`));
+  }
+}
+
+/*
+ * Слово и его падежная форма: в названиях разделов «систем вентиляции» и
+ * «Уголки монтажные», а набирают «вентиляция» и «уголок». Считаем словá
+ * одинаковыми, когда они расходятся только окончанием: совпадает начало и
+ * длина отличается не больше чем на две буквы.
+ *
+ * Сравнивать просто по началу слова нельзя: «саморез» совпал бы с
+ * «саморасширяющаяся», а «к» из «Оснастки к электроинструменту» — со всем,
+ * что начинается на эту букву.
+ */
+const sameWord = (word: string, term: string) => {
+  if (word === term) return true;
+
+  const min = Math.min(word.length, term.length);
+  if (min < 4 || Math.abs(word.length - term.length) > 2) return false;
+
+  const head = min >= 6 ? min - 2 : min - 1;
+  return word.slice(0, head) === term.slice(0, head);
+};
+
+const inSection = (product: Product, term: string) => {
+  const words =
+    SECTION_WORDS.get(product.subcategorySlug) ?? SECTION_WORDS.get(product.categorySlug);
+  return Boolean(words?.some((word) => sameWord(word, term)));
+};
+
 const atWordStart = (hay: string, term: string) =>
   hay.startsWith(term) || hay.includes(` ${term}`) || hay.includes(`-${term}`);
 
@@ -119,14 +166,23 @@ const atWordStart = (hay: string, term: string) =>
 const looksLikeCode = (term: string) =>
   term.length >= 4 && /\d/.test(term) && /[a-z-]/.test(term);
 
-const inSku = (sku: string, term: string) =>
-  Boolean(sku) && looksLikeCode(term) && sku.includes(term);
+/*
+ * Голые цифры сверяем только с целым куском артикула: покупатель копирует
+ * из накладной середину кода («94364» из SM-94364-1). Частью куска искать
+ * нельзя — «100» есть в каждом третьем артикуле как количество в упаковке,
+ * поэтому и длина от пяти цифр.
+ */
+const isNumberPart = (term: string) => /^\d{5,}$/.test(term);
+
+const inSku = (sku: string, term: string) => {
+  if (!sku) return false;
+  if (looksLikeCode(term)) return sku.includes(term);
+  return isNumberPart(term) && sku.split('-').includes(term);
+};
 
 /*
  * Вес: точный артикул > артикул частью > все слова с начала слова в названии >
- * просто вхождение. Ищем только по названию и артикулу — в названии подраздела
- * искать нельзя: запрос «очиститель» вытаскивал всю пену из раздела
- * «Пена монтажная, очиститель для пены», хотя в самих товарах слова нет.
+ * просто вхождение в названии > товар из подходящего раздела.
  */
 const scoreProduct = (product: Product, query: string, terms: string[]): number => {
   const { title, sku } = folded(product);
@@ -137,7 +193,13 @@ const scoreProduct = (product: Product, query: string, terms: string[]): number 
   const found = terms.every((term) =>
     variants(term).some((v) => title.includes(v) || inSku(sku, v))
   );
-  if (!found) return 0;
+  if (!found) {
+    // Раздел целиком — последним весом, после карточек с прямым совпадением
+    const section = terms.every((term) =>
+      variants(term).some((v) => inSection(product, v))
+    );
+    return section ? 0.5 : 0;
+  }
 
   const heads = terms.filter((term) =>
     variants(term).some((v) => atWordStart(title, v))
