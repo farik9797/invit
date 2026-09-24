@@ -1,8 +1,10 @@
 """Снимки разделов от клиента в вид, пригодный для витрины.
 
-Присылают их кадром 1600×1200, где сам товар занимает четверть по центру,
-а остальное — белое поле. На плитке 48px от такого кадра остаётся точка,
-поэтому поле срезаем по краю непрозрачного содержимого и ужимаем до 600px.
+Кладём исходники в `files/section-photos/<адрес раздела>.webp` — имя файла и
+задаёт раздел. Первый набор пришёл кадром 1600×1200, где товар занимал
+четверть по центру, поэтому белое поле срезаем по краю содержимого; у уже
+обрезанных кадров это ничего не меняет. Ужимаем до 600px по большей стороне,
+не растягивая мелкие.
 
 Запуск: python3 scripts/make-section-photos.py
 """
@@ -12,17 +14,10 @@ from pathlib import Path
 from PIL import Image, ImageChops
 
 ROOT = Path(__file__).resolve().parent.parent
+SOURCES = ROOT / 'files/section-photos'
 OUT = ROOT / 'src/assets/section-photos'
 SIZE = 600
-QUALITY = 82
-
-# Файл от клиента -> адрес раздела в каталоге
-SOURCES = {
-    'Downloads/01_materialy_dlya_montazha_okon.jpg': 'materialy-dlya-okon',
-    'Downloads/02_germetiki.jpg': 'germetiki',
-    'Downloads/03_klei_himiya_smazki.jpg': 'kley-himiya-smazki',
-    'Downloads/04_uplotnitelnye_lenty_PGS.jpg': 'uplotnitelnye-lenty-pes-samokleyaschiesy',
-}
+QUALITY = 85
 
 
 def trimmed(image):
@@ -42,18 +37,18 @@ def trimmed(image):
 
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
-    home = Path.home()
+    if not SOURCES.exists():
+        print(f'нет папки с исходниками: {SOURCES.relative_to(ROOT)}')
+        return 1
 
-    for source, slug in SOURCES.items():
-        path = home / source
-        if not path.exists():
-            print(f'нет файла: {path}')
+    for path in sorted(SOURCES.iterdir()):
+        if path.suffix.lower() not in ('.jpg', '.jpeg', '.png', '.webp'):
             continue
 
         image = Image.open(path).convert('RGB')
         cropped = trimmed(image)
         cropped.thumbnail((SIZE, SIZE), Image.LANCZOS)
-        target = OUT / f'{slug}.webp'
+        target = OUT / f'{path.stem}.webp'
         cropped.save(target, 'WEBP', quality=QUALITY, method=6)
         print(f'{path.name} {image.size} -> {cropped.size} {target.relative_to(ROOT)}'
               f' ({target.stat().st_size // 1024} КБ)')
