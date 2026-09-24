@@ -77,9 +77,9 @@ export const CategoryTiles: React.FC = () => (
           <Link
             key={tile.slug}
             to={paths.category(tile.slug)}
-            className="group flex h-full flex-col rounded-xl border border-line bg-white overflow-hidden transition-[transform,box-shadow,border-color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:border-brand-blue hover:shadow-lg"
+            className="group flex h-full flex-col rounded-xl border border-line bg-white p-3 sm:p-4 transition-[transform,box-shadow,border-color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:border-brand-blue hover:shadow-lg"
           >
-            <span className="flex h-28 sm:h-32 items-center justify-center overflow-hidden bg-white text-brand-blue">
+            <span className="flex h-32 sm:h-40 items-center justify-center overflow-hidden rounded-lg bg-surface text-brand-blue">
               <SectionMark
                 slug={tile.slug}
                 size={96}
@@ -88,7 +88,7 @@ export const CategoryTiles: React.FC = () => (
               />
             </span>
 
-            <span className="flex flex-1 flex-col gap-1 border-t border-line p-3 sm:p-4">
+            <span className="flex flex-1 flex-col gap-1 pt-3">
               <span className="text-xs sm:text-[13px] font-semibold leading-snug text-ink group-hover:text-brand-blue transition-colors">
                 {tile.name}
               </span>
