@@ -82,8 +82,24 @@ const SLIDES: Slide[] = [
 /** Кадр держится 3,5 секунды — так попросил клиент. */
 const DURATION = 3500;
 
+/*
+ * Текст слайда выходит лесенкой: заголовок, за ним описание, за ним кнопки.
+ * Приём с сайта, который показал клиент: строки поднимаются на 24px и
+ * проявляются с разницей в 0,1 секунды. Больше разницу брать нельзя — кадр
+ * висит всего 3,5 секунды.
+ */
+const lines = (reduced: boolean) => ({
+  in: (step: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.55, delay: 0.22 + step * 0.1, ease: [0.16, 1, 0.3, 1] }
+  }),
+  out: { opacity: 0, y: reduced ? 0 : 24, transition: { duration: 0.2, ease: 'linear' } }
+});
+
 export const Hero: React.FC<HeroProps> = ({ onOpenCallback }) => {
   const reduced = useReducedMotion();
+  const line = lines(Boolean(reduced));
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
 
@@ -156,11 +172,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCallback }) => {
                 aria-hidden={!isActive}
                 className={`col-start-1 row-start-1 ${isActive ? '' : 'pointer-events-none'}`}
                 initial={false}
-                animate={
-                  reduced
-                    ? { opacity: isActive ? 1 : 0 }
-                    : { opacity: isActive ? 1 : 0, y: isActive ? 0 : 12 }
-                }
+                animate={isActive ? 'in' : 'out'}
+                variants={{ in: {}, out: {} }}
                 // Уходящий слайд гаснет быстро, входящий появляется с задержкой —
                 // иначе два текста накладываются друг на друга.
                 transition={
@@ -169,16 +182,28 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCallback }) => {
                     : { duration: 0.2, ease: 'linear' }
                 }
               >
-                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-[1.25] tracking-tight">
+                <motion.h1
+                  variants={line}
+                  custom={0}
+                  className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-[1.25] tracking-tight"
+                >
                   {slide.lead}{' '}
                   <span className="border-b-4 border-white pb-1">{slide.accent}</span>
-                </h1>
+                </motion.h1>
 
-                <p className="mt-7 text-base sm:text-lg text-white/85 leading-relaxed max-w-xl">
+                <motion.p
+                  variants={line}
+                  custom={1}
+                  className="mt-7 text-base sm:text-lg text-white/85 leading-relaxed max-w-xl"
+                >
                   {slide.text}
-                </p>
+                </motion.p>
 
-                <div className="mt-9 flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3">
+                <motion.div
+                  variants={line}
+                  custom={2}
+                  className="mt-9 flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3"
+                >
                   <Link
                     to={slide.href}
                     tabIndex={isActive ? 0 : -1}
@@ -190,11 +215,11 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCallback }) => {
                   <button
                     onClick={onOpenCallback}
                     tabIndex={isActive ? 0 : -1}
-                    className="inline-flex justify-center items-center border border-white/25 hover:bg-white/10 text-white text-sm font-semibold px-8 py-4 w-full sm:w-auto cursor-pointer transition-[background-color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px active:scale-[0.98]"
+                    className="shine inline-flex justify-center items-center border border-white/25 hover:bg-white/10 text-white text-sm font-semibold px-8 py-4 w-full sm:w-auto cursor-pointer transition-[background-color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px active:scale-[0.98]"
                   >
                     Запросить расчёт
                   </button>
-                </div>
+                </motion.div>
               </motion.div>
             );
           })}

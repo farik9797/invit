@@ -108,6 +108,51 @@ body {
   background: var(--color-surface);
 }
 
+/*
+ * Блик по кнопке при наведении: узкая светлая полоса проходит слева направо
+ * под наклоном. Приём с сайта, который показал клиент (zavodtm.belinfo.by) —
+ * там так подсвечена главная кнопка в шапке.
+ *
+ * Только для кнопок с заливкой: на белой кнопке светлая полоса не видна.
+ */
+.shine {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.shine::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -55%;
+  width: 40%;
+  background: linear-gradient(100deg, transparent, rgb(255 255 255 / 0.45), transparent);
+  transform: skewX(-20deg);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.shine:hover::before,
+.shine:focus-visible::before {
+  animation: shine-pass 0.75s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes shine-pass {
+  0% {
+    opacity: 0;
+    transform: skewX(-20deg) translateX(0);
+  }
+  12% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: skewX(-20deg) translateX(420%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

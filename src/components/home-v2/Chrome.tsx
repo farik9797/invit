@@ -162,7 +162,8 @@ const FOOTER_NAV = [NAV[0], { label: 'Каталог', to: paths.catalog }, ...N
 const BUTTON_BASE =
   'inline-flex items-center justify-center min-h-11 px-6 rounded-[4px] text-sm font-semibold whitespace-nowrap cursor-pointer transition-[background-color,transform] duration-[120ms] ease-[cubic-bezier(0.4,0,0.2,1)] active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2';
 
-const BLUE_BUTTON = `${BUTTON_BASE} bg-inv-blue text-white hover:bg-inv-blue-hover active:bg-inv-blue-pressed focus-visible:outline-inv-blue`;
+// shine — блик, проходящий по кнопке при наведении (описан в index.css)
+const BLUE_BUTTON = `${BUTTON_BASE} shine bg-inv-blue text-white hover:bg-inv-blue-hover active:bg-inv-blue-pressed focus-visible:outline-inv-blue`;
 
 /*
  * Тот же элемент на тёмной подложке. Синий inv-blue (#3f5b9e) на inv-deep
