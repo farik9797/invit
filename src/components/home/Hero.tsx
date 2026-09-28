@@ -133,7 +133,12 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCallback }) => {
 
   return (
     <section
-      className="relative bg-brand-navy overflow-hidden"
+      /*
+       * На большом экране кадр не выше 650px: клиент просил, чтобы первый
+       * экран кончался раньше и под него было видно начало страницы. Высоту
+       * даёт содержимое, поэтому вместе с потолком ужимаем поля.
+       */
+      className="relative bg-brand-navy overflow-hidden lg:max-h-[650px]"
       onFocusCapture={() => setPaused(true)}
       onBlurCapture={() => setPaused(false)}
     >
@@ -161,7 +166,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCallback }) => {
           не хватает, добавляем вертикальную. На десктопе не нужна. */}
       <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/40 via-40% to-ink/25 lg:hidden" />
 
-      <div className="relative max-w-[1340px] mx-auto px-5 py-20 sm:py-28 lg:py-32">
+      <div className="relative max-w-[1340px] mx-auto px-5 py-20 sm:py-28 lg:py-16">
         {/* Марка стоит над слайдами и не меняется: ленты у всех слайдов одни */}
         <span className="inline-flex items-center rounded-[4px] bg-white px-4 py-2.5 mb-6 lg:mb-8">
           <img src={eurobandMark} alt="EUROBAND" className="h-6 sm:h-7 lg:h-8 w-auto" />
@@ -232,7 +237,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCallback }) => {
         </div>
 
         {/* Переключатели */}
-        <div className="mt-14 flex items-center gap-4">
+        {/* На большом экране левый угол занимает стрелка «вниз» — отступаем от неё */}
+        <div className="mt-14 flex items-center gap-4 lg:pl-[104px]">
           <div className="flex items-center gap-2">
             {SLIDES.map((slide, idx) => (
               <button
