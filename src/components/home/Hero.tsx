@@ -102,6 +102,11 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCallback }) => {
   const reduced = useReducedMotion();
   const line = lines(Boolean(reduced));
   const [active, setActive] = useState(0);
+  /*
+   * Слайдер не встаёт под курсором: клиент просил листать всегда. Держим
+   * паузу только на время, пока клавиатурный фокус внутри кадра, — иначе
+   * кнопка, до которой дошли табом, уедет вместе со слайдом.
+   */
   const [paused, setPaused] = useState(false);
 
   // Шесть фоновых фото разом — больше мегабайта на первом экране, часть не
@@ -129,8 +134,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCallback }) => {
   return (
     <section
       className="relative bg-brand-navy overflow-hidden"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
+      onFocusCapture={() => setPaused(true)}
+      onBlurCapture={() => setPaused(false)}
     >
       {/* Фоны слайдов — плавная смена вместо подмены src */}
       {SLIDES.map((slide, idx) =>
