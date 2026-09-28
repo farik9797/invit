@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { ArrowDown } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import { paths } from '../../routes';
 import eurobandMark from '../../assets/logo/euroband-color.svg';
@@ -263,6 +264,25 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCallback }) => {
           )}
         </div>
       </div>
+
+      {/*
+        * Стрелка «вниз» в углу кадра: показывает, что под первым экраном
+        * есть страница. Приём с сайта, который показал клиент — там такой
+        * же квадрат в левом нижнем углу слайдера.
+        *
+        * Только на большом экране: на телефоне кадр и так кончается в
+        * половине экрана, а угол занят переключателями.
+        */}
+      <button
+        type="button"
+        onClick={() =>
+          window.scrollTo({ top: window.innerHeight * 0.92, behavior: reduced ? 'auto' : 'smooth' })
+        }
+        aria-label="Прокрутить вниз"
+        className="hidden lg:flex absolute left-0 bottom-0 w-[85px] h-[85px] items-center justify-center bg-ink-soft/90 text-white hover:bg-brand-red cursor-pointer transition-colors duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+      >
+        <ArrowDown className="w-6 h-6 motion-safe:animate-[nudge_2.4s_cubic-bezier(0.4,0,0.2,1)_infinite]" />
+      </button>
     </section>
   );
 };

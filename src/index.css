@@ -153,6 +153,18 @@ body {
   }
 }
 
+/* Стрелка «вниз» в первом экране: короткое покачивание, зовущее пролистать. */
+@keyframes nudge {
+  0%,
+  70%,
+  100% {
+    transform: translateY(0);
+  }
+  80% {
+    transform: translateY(5px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

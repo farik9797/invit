@@ -753,11 +753,54 @@ export const FloatingActions: React.FC<{ expanded: boolean; onExpandedChange: (e
   );
 };
 
+/*
+ * Шапка уезжает вверх, когда листают вниз, и съезжает обратно, когда листают
+ * вверх, — приём с сайта, который показал клиент. На телефоне это возвращает
+ * экрану 124px высоты, а шапка всегда в одном движении от пальца.
+ *
+ * Пока в шапке что-то раскрыто (меню каталога, поиск, мобильное меню), не
+ * прячем: она их держит, и они уехали бы вместе с ней. Раскрытое ищем по
+ * aria-expanded — состояние лежит внутри самих блоков, тянуть его наверх ради
+ * этой мелочи не стоит.
+ */
+const useHeaderSlide = (element: React.RefObject<HTMLElement | null>) => {
+  const [hidden, setHidden] = useState(false);
+  const [raised, setRaised] = useState(false);
+  const last = useRef(0);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const y = Math.max(window.scrollY, 0);
+      setRaised(y > 8);
+
+      const step = y - last.current;
+      if (Math.abs(step) < 6) return;
+      last.current = y;
+
+      const busy = Boolean(element.current?.querySelector('[aria-expanded="true"]'));
+      setHidden(!busy && step > 0 && y > 200);
+    };
+
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [element]);
+
+  return { hidden, raised };
+};
+
 export const HeaderV2: React.FC<{ onRequest?: () => void }> = ({ onRequest }) => {
   const [open, setOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
+  const { hidden, raised } = useHeaderSlide(headerRef);
 
   return (
-    <header className="sticky top-0 z-30 bg-white border-b border-inv-border">
+    <header
+      ref={headerRef}
+      className={`sticky top-0 z-30 bg-white border-b border-inv-border transition-[transform,box-shadow] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+        hidden && !open ? '-translate-y-full' : 'translate-y-0'
+      } ${raised ? 'shadow-[0_6px_24px_rgb(15_37_55_/_0.10)]' : ''}`}
+    >
       {/*
        * Десктоп: обе строки — одна сетка из трёх колонок, поэтому меню во
        * второй строке встаёт ровно по ширине поля поиска в первой. Двумя
