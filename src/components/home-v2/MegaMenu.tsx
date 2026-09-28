@@ -48,6 +48,8 @@ const groupFor = (categorySlug: string, subSlug: string, name: string): MenuGrou
   };
 };
 
+const hasProducts = (slug: string) => PRODUCTS.some((p) => p.subcategorySlug === slug);
+
 const subName = (slug: string) =>
   PRODUCTS.find((p) => p.subcategorySlug === slug)?.subcategoryName ?? slug;
 
@@ -59,7 +61,11 @@ const SECTIONS: MenuSection[] = [
     id: 'tapes',
     label: 'Ленты EUROBAND',
     href: `${paths.catalog}?brand=EUROBAND`,
-    groups: TAPE_SUBCATEGORIES.map((slug) => groupFor(categoryOf(slug), slug, subName(slug)))
+    // Подраздел без товаров пропускаем: название берётся у первого товара,
+    // и для пустого в меню вышел бы его адрес вместо человеческого имени.
+    groups: TAPE_SUBCATEGORIES.filter(hasProducts).map((slug) =>
+      groupFor(categoryOf(slug), slug, subName(slug))
+    )
   },
   ...CATEGORIES.map((category) => ({
     id: category.slug,
