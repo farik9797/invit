@@ -112,6 +112,18 @@ def main():
         rows = list(csv.DictReader(f))
     columns = list(rows[0].keys())
 
+    # Ссылки на файлы, которых больше нет: так уходят снятые заглушки
+    # «Нет изображения», которые магазин отдаёт вместо снимка.
+    dropped = 0
+    for row in rows:
+        names = [n.strip() for n in row['Images'].split(',') if n.strip()]
+        alive = [n for n in names if (IMAGES / n).exists()]
+        if len(alive) != len(names):
+            row['Images'] = ', '.join(alive)
+            dropped += 1
+    if dropped:
+        print(f'снято ссылок на пропавшие файлы: {dropped}')
+
     empty = [r for r in rows if not r['Images'].strip()]
     filled = 0
 

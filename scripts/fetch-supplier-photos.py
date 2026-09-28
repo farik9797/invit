@@ -14,7 +14,7 @@
 Запуск: python3 scripts/fetch-supplier-photos.py [сколько-позиций]
 Скрипт идемпотентен: строки, где фото уже есть, пропускаются.
 """
-import csv, gzip, re, sys, time, urllib.error, urllib.parse, urllib.request
+import csv, gzip, hashlib, re, sys, time, urllib.error, urllib.parse, urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -105,6 +105,25 @@ def original(url):
     return re.sub(r'-\d+x\d+(\.\w+)$', r'\1', url.replace('/image/cache/', '/image/'))
 
 
+# Слова, которые есть в половине названий и ничего не различают
+NOISE = {'мм', 'см', 'шт', 'для', 'из', 'в', 'с', 'и', 'на', 'по', 'уп'}
+
+
+def words(text):
+    return [w for w in title(text).replace('-', ' ').split() if len(w) > 2 and w not in NOISE]
+
+
+def same_thing(ours, theirs):
+    """Одна ли это позиция. Начало названия у магазина своё («Пена SOLIDE Foam 55»
+    против нашей «Пена монтажная бытовая всесезонная SOLIDE Foam 55»), поэтому
+    сверяем по словам: марка, модель и размер должны найтись все."""
+    mine, other = words(ours), set(words(theirs))
+    if len(mine) < 3:
+        return False
+    hit = sum(1 for w in mine if w in other)
+    return hit >= max(3, round(len(mine) * 0.7))
+
+
 def search(name):
     """Снимок позиции, найденной в магазине по названию."""
     query = ' '.join(re.sub(r'\([^)]*\)', ' ', name).split())[:60]
@@ -114,11 +133,24 @@ def search(name):
     except Exception as exc:
         print('   поиск:', exc)
         return ''
+    cards = CARD.findall(html)
     want = title(name)[:30]
-    for image, found in CARD.findall(html):
+    for image, found in cards:
         if title(found)[:30] == want:
             return image
+    for image, found in cards:
+        if same_thing(name, found):
+            return image
     return ''
+
+
+# Магазин на позицию без снимка отдаёт картинку «Нет изображения» — её нельзя
+# принимать за фото товара. Сверяем по контрольной сумме файла.
+PLACEHOLDER = '0050d604abf1dd648d99fbd9d18f721f'
+
+
+def is_placeholder(data):
+    return hashlib.md5(data).hexdigest() == PLACEHOLDER
 
 
 def fetch(url):
@@ -147,7 +179,7 @@ def photos_for(code, sku):
             names.append(target.name)
             continue
         data = fetch(f'{SHOP}/{code}/{number}.jpg')
-        if not data:
+        if not data or is_placeholder(data):
             break
         target.write_bytes(data)
         names.append(target.name)
@@ -195,7 +227,7 @@ def main():
         link = search(row['Name'])
         if link:
             data = fetch(original(link)) or fetch(link)
-            if data:
+            if data and not is_placeholder(data):
                 name = file_name(row['SKU'].strip(), 1)
                 (IMAGES / name).write_bytes(data)
                 row['Images'] = name
