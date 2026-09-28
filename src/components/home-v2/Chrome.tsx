@@ -789,6 +789,18 @@ const useHeaderSlide = (element: React.RefObject<HTMLElement | null>) => {
   return { hidden, raised };
 };
 
+/*
+ * Пункт меню в шапке: при наведении под ним вырастает линия — от левого края
+ * вправо, 200мс. Линия рисуется псевдоэлементом и не двигает соседей, в
+ * отличие от честного border-bottom.
+ */
+const NAV_LINK =
+  'relative text-sm text-inv-ink-muted hover:text-inv-blue transition-colors duration-[120ms] whitespace-nowrap ' +
+  'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue ' +
+  'after:absolute after:left-0 after:-bottom-1.5 after:h-0.5 after:w-full after:rounded-full after:bg-inv-blue ' +
+  'after:origin-left after:scale-x-0 after:transition-transform after:duration-200 ' +
+  'after:ease-[cubic-bezier(0.16,1,0.3,1)] hover:after:scale-x-100 focus-visible:after:scale-x-100';
+
 export const HeaderV2: React.FC<{ onRequest?: () => void }> = ({ onRequest }) => {
   const [open, setOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
@@ -832,11 +844,7 @@ export const HeaderV2: React.FC<{ onRequest?: () => void }> = ({ onRequest }) =>
 
         <nav className="flex items-center justify-between">
           {NAV.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              className="text-sm text-inv-ink-muted hover:text-inv-blue transition-colors duration-[120ms] whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
-            >
+            <NavLink key={item.to} to={item.to} className={NAV_LINK}>
               {item.label}
             </NavLink>
           ))}
