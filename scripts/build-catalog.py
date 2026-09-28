@@ -40,6 +40,16 @@ CONTENT = ROOT / 'src/data/productContent.ts'
 DOWELS = 'Дюбельная техника'
 METRIC = 'Метрический крепёж'
 
+# Название раздела на витрине, когда оно отличается от названия в выгрузке.
+# Ключ — адрес раздела: сами названия в STRUCTURE трогать нельзя, по ним строки
+# выгрузки раскладываются по местам.
+TITLES = {
+    'uplotnitelnye-lenty-pes-samokleyaschiesy': 'Уплотнительные ленты ПЭС самоклеящиеся',
+    'uplotnitel-rezinovyy-d-p-e': 'Уплотнители из EPDM для окон и дверей',
+    'krepezh': 'Крепёж для окон, кровли, фасадов',
+    'alyuminievye-armirovannye-lenty': 'Скотчи, клейкие ленты',
+}
+
 STRUCTURE = [
     ('Материалы для монтажа окон', 'materialy-dlya-okon', 'windows', [
         ('Монтажные ленты для окон', 'montazhnye-lenty-dlya-okon'),
@@ -187,8 +197,8 @@ DESCRIPTIONS = {
     'kley-himiya-smazki': 'Химия для окон COSMOFEN, аэрозольные смазки и составы для ухода за профилем.',
     'uplotnitelnye-lenty-pes-samokleyaschiesy': 'Ленты из вспененного полиэтилена EUROBAND: звукоизоляция, демпфирование, уплотнение стыков.',
     'krovelnye-uplotniteli-kleykie-lenty': 'Бутилкаучуковые и двухсторонние ленты, ПСУЛ и уплотнители для кровли.',
-    'uplotnitel-rezinovyy-d-p-e': 'Профили D, P, E и W для окон, дверей и вентиляционных соединений.',
-    'krepezh': 'Саморезы, шурупы, дюбели, заклёпки и анкеры для окон, кровли и фасадов.',
+    'uplotnitel-rezinovyy-d-p-e': 'Профили D, P, E и W — резина и EPDM для притворов и вентиляционных соединений.',
+    'krepezh': 'Саморезы, шурупы, дюбели, заклёпки, анкеры и метрический крепёж.',
     'alyuminievye-armirovannye-lenty': 'Ленты ALU и TPL, малярная и изоляционная — для воздуховодов, кровли и отделки.',
     'ventilyaciya': 'Фланцевый профиль, траверсы, кронштейны и крепёж для изготовления и монтажа воздуховодов.',
     'instrument-oborudovanie': 'Пистолеты для пены и герметика, режущий, слесарный и измерительный инструмент, лестницы.',
@@ -480,7 +490,7 @@ def main():
             for row in items:
                 products.append(build(row, slug, sub_slug))
         if subcategories:
-            sections.append({'id': slug, 'name': name, 'slug': slug,
+            sections.append({'id': slug, 'name': TITLES.get(slug, name), 'slug': slug,
                              'division': division,
                              'description': DESCRIPTIONS.get(slug, ''),
                              'iconName': 'Layers', 'image': '',

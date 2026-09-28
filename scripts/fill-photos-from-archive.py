@@ -56,11 +56,21 @@ def codes_from(path):
 
 PACKAGING = re.compile(
     r'\((?=[^)]*(?:шт|уп\.|упак|короб|пакет|зип-лок|мешк|ведр))[^)]*\)', re.I)
+SIZE = re.compile(
+    r'\b\d+([.,]\d+)?\s*[xх]\s*\d+([.,]\d+)?(\s*[xх]\s*\d+([.,]\d+)?)?\s*(мм|см|м)?\b', re.I)
+MEASURE = re.compile(r'\b\d+([.,]\d+)?\s*(мм|см|м|мл|л|кг|г)\b', re.I)
 
 
 def pack_free(name):
     """Название без фасовки: «Саморез 4.2х19 (50 шт в зип-локе)» -> «саморез 4.2х19»."""
     return ' '.join(PACKAGING.sub(' ', name).split()).lower()
+
+
+def family(name):
+    """Название без фасовки и размера: «Шуруп 3.5х13 мм полусф. головка, DIN 7981»
+    и «Шуруп 4.8х32 мм полусф. головка, DIN 7981» — одна семья."""
+    plain = MEASURE.sub(' ', SIZE.sub(' ', PACKAGING.sub(' ', name)))
+    return ' '.join(plain.split()).lower()
 
 
 def photos_for(archive, entries, sku):
@@ -104,6 +114,20 @@ def main():
 
     empty = [r for r in rows if not r['Images'].strip()]
     filled = 0
+
+    # Нулевым заходом — снимки, которые уже лежат в files/images под именем
+    # артикула: их мог положить любой из скриптов-сборщиков, а в выгрузке
+    # строка осталась пустой (например, скрипт упал, не дописав csv).
+    on_disk = 0
+    for row in empty:
+        sku = row['SKU'].strip().replace('/', '-')
+        names = [f'{sku}-{n}.jpg' for n in range(1, 5)]
+        names = [n for n in names if (IMAGES / n).exists()]
+        if names:
+            row['Images'] = ', '.join(names)
+            on_disk += 1
+    filled += on_disk
+    print(f'нашлось на диске: {on_disk}')
     for row in empty:
         sku = row['SKU'].strip()
         entries = pictures.get(codes.get(sku, ''), [])
@@ -129,7 +153,24 @@ def main():
         if images:
             row['Images'] = images
             shared += 1
-    filled += shared
+
+    # Третьим заходом — та же вещь другого размера: шуруп 3.5х13 и шуруп 4.8х32
+    # сняты одним кадром, на снимке видно шляпку и резьбу, а не миллиметры.
+    # Размер покупатель читает в названии и в характеристиках.
+    kin = {}
+    for row in rows:
+        if row['Images'].strip():
+            kin.setdefault(family(row['Name']), row['Images'])
+
+    relatives = 0
+    for row in rows:
+        if row['Images'].strip():
+            continue
+        images = kin.get(family(row['Name']))
+        if images:
+            row['Images'] = images
+            relatives += 1
+    filled += shared + relatives
 
     if filled:
         if not BACKUP.exists():
@@ -140,7 +181,8 @@ def main():
             writer.writerows(rows)
 
     print(f'строк без фото : {len(empty)}')
-    print(f'добавлено фото : {filled} (из них {shared} — общие с другой фасовкой)')
+    print(f'добавлено фото : {filled}'
+          f' (из них {shared} — общие с другой фасовкой, {relatives} — с другим размером)')
     print(f'осталось без   : {len(empty) - filled}')
     return 0
 
