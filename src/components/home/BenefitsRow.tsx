@@ -23,8 +23,13 @@ export const BenefitsRow: React.FC = () => (
     <div className="max-w-[1340px] mx-auto px-5">
       <Reveal>
         <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-y-8 gap-x-4 rounded-xl border border-line bg-white px-5 py-8 sm:px-8 sm:py-10">
+          {/* Пятый пункт на телефоне остаётся один в ряду — растягиваем его на
+              обе колонки, иначе он жмётся к левому краю */}
           {BENEFITS.map(({ icon: Icon, label }) => (
-            <li key={label} className="flex flex-col items-center gap-3 text-center">
+            <li
+              key={label}
+              className="flex flex-col items-center gap-3 text-center last:col-span-2 sm:last:col-span-1"
+            >
               <span className="flex items-center justify-center w-14 h-14 rounded-full bg-brand-green-soft text-brand-green">
                 <Icon className="w-7 h-7" strokeWidth={1.5} />
               </span>
