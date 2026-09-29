@@ -32,13 +32,13 @@ export const BenefitsRow: React.FC = () => (
               key={label}
               className="group flex flex-col items-center gap-3 text-center last:col-span-2 sm:last:col-span-1"
             >
-              <span className="relative flex items-center justify-center w-16 h-16">
+              <span className="relative flex items-center justify-center w-20 h-20 sm:w-24 sm:h-24">
                 {/* Пятно уходит влево-вверх из-под знака, как на образце */}
                 <span
                   aria-hidden
-                  className={`absolute left-1 top-1 w-9 h-9 rounded-full ${blob} transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-110`}
+                  className={`absolute left-0 top-0 w-12 h-12 sm:w-14 sm:h-14 rounded-full ${blob} transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-110`}
                 />
-                <Icon className="relative w-10 h-10 text-ink" strokeWidth={1.25} />
+                <Icon className="relative w-14 h-14 sm:w-16 sm:h-16 text-ink" strokeWidth={1.1} />
               </span>
               <span className="text-xs sm:text-[13px] font-semibold leading-snug text-ink max-w-[16ch]">
                 {label}
