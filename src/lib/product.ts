@@ -46,8 +46,7 @@ export const TAPE_SUBCATEGORIES = [
   'pes-lenta-pod-kontrobreshyotku',
   'lenta-dlya-sendvich-paneley',
   'shumopogloschayuschaya-lenta',
-  'dempfernaya-lenta',
-  'lenta-butilkauchukovaya-lb'
+  'dempfernaya-lenta'
 ];
 
 export const isTape = (product: Product) => TAPE_SUBCATEGORIES.includes(product.subcategorySlug);
