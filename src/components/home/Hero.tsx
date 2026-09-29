@@ -35,6 +35,15 @@ interface Slide {
  */
 const SLIDES: Slide[] = [
   {
+    id: 'about',
+    lead: 'Уплотнительные и герметизирующие',
+    accent: 'ленты',
+    text: 'Белорусский производитель с 2001 года. Изготовим ленты нетипичных размеров под ваш проект.',
+    image: eurobandBoxes,
+    href: paths.catalog,
+    cta: 'Смотреть каталог'
+  },
+  {
     id: 'windows',
     lead: 'Монтажный шов окна —',
     accent: 'три слоя, три ленты',
@@ -60,15 +69,6 @@ const SLIDES: Slide[] = [
     image: pesGreyRolls,
     href: `${paths.category('materialy-dlya-okon')}?sub=uplotnitelnye-lenty-pes-samokleyaschiesy`,
     cta: 'Ленты ПЭС'
-  },
-  {
-    id: 'about',
-    lead: 'Уплотнительные и герметизирующие',
-    accent: 'ленты',
-    text: 'Белорусский производитель с 2001 года. Изготовим ленты нетипичных размеров под ваш проект.',
-    image: eurobandBoxes,
-    href: paths.catalog,
-    cta: 'Смотреть каталог'
   },
   {
     id: 'floor',
