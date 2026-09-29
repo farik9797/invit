@@ -68,6 +68,9 @@ export interface Product {
   shortTitle: string;
   categorySlug: string;
   subcategorySlug: string;
+  /** Вторая прописка: товар виден и в этом разделе, карточка при этом одна. */
+  alsoCategorySlug?: string;
+  alsoSubcategorySlug?: string;
   subcategoryName: string;
   division: 'windows' | 'hvac';
   description: string;

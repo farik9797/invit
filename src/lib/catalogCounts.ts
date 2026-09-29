@@ -10,9 +10,16 @@ import { specValue } from './catalogFilters';
 export const COUNT_CATEGORY = new Map<string, number>();
 export const COUNT_SUB = new Map<string, number>();
 
+const bump = (counts: Map<string, number>, slug?: string) => {
+  if (slug) counts.set(slug, (counts.get(slug) ?? 0) + 1);
+};
+
 for (const product of PRODUCTS) {
-  COUNT_CATEGORY.set(product.categorySlug, (COUNT_CATEGORY.get(product.categorySlug) ?? 0) + 1);
-  COUNT_SUB.set(product.subcategorySlug, (COUNT_SUB.get(product.subcategorySlug) ?? 0) + 1);
+  bump(COUNT_CATEGORY, product.categorySlug);
+  bump(COUNT_SUB, product.subcategorySlug);
+  // Вторая прописка: товар считается в обоих разделах
+  bump(COUNT_CATEGORY, product.alsoCategorySlug);
+  bump(COUNT_SUB, product.alsoSubcategorySlug);
 }
 
 /*

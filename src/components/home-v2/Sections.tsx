@@ -7,7 +7,7 @@ import {
   NEWS,
   PRODUCTS,
 } from "../../data/catalogData";
-import { TAPE_SUBCATEGORIES } from "../../lib/product";
+import { TAPE_SUBCATEGORIES, inSubcategory } from "../../lib/product";
 import { productImage, certificateImage } from "../../lib/productImages";
 import aboutScene from "../../assets/content/montazh-lenty-pod-kontrrejku1-a5c80f.webp";
 import aboutProduct from "../../assets/content/lenta-butilovaja-euroband-lba-3e2afd.webp";
@@ -324,7 +324,7 @@ const TAPE_CELLS: TapeCell[] = [
   LEAD_SLUG,
   ...TAPE_SUBCATEGORIES.filter((slug) => slug !== LEAD_SLUG),
 ].map((slug) => {
-  const items = PRODUCTS.filter((p) => p.subcategorySlug === slug);
+  const items = PRODUCTS.filter((p) => inSubcategory(p, slug));
   return {
     slug,
     name: items[0]?.subcategoryName ?? slug,

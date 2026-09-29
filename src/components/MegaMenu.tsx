@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { ChevronDown, ArrowRight } from 'lucide-react';
 import { CATEGORIES, PRODUCTS } from '../data/catalogData';
-import { TAPE_SUBCATEGORIES } from '../lib/product';
+import { TAPE_SUBCATEGORIES, inCategory, inSubcategory } from '../lib/product';
 import { paths } from '../routes';
 
 interface MenuItem {
@@ -18,7 +18,7 @@ const OWN: MenuItem[] = CATEGORIES.flatMap((category) =>
     .filter((sub) => TAPE_SUBCATEGORIES.includes(sub.slug))
     .map((sub) => ({
       name: sub.name,
-      count: PRODUCTS.filter((p) => p.subcategorySlug === sub.slug).length,
+      count: PRODUCTS.filter((p) => inSubcategory(p, sub.slug)).length,
       href: `${paths.category(category.slug)}?sub=${sub.slug}`
     }))
 );
@@ -29,7 +29,7 @@ const OWN: MenuItem[] = CATEGORIES.flatMap((category) =>
  */
 const RELATED: MenuItem[] = CATEGORIES.map((category) => ({
   name: category.name,
-  count: PRODUCTS.filter((p) => p.categorySlug === category.slug).length,
+  count: PRODUCTS.filter((p) => inCategory(p, category.slug)).length,
   href: paths.category(category.slug)
 }));
 const PROMO = PRODUCTS.find((p) => p.slug === 'psul-euroband-dlja-okon') ?? PRODUCTS[0];

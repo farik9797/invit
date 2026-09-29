@@ -53,6 +53,17 @@ export const TAPE_SUBCATEGORIES = [
 export const isTape = (product: Product) => TAPE_SUBCATEGORIES.includes(product.subcategorySlug);
 
 /*
+ * Товар может числиться в двух местах: лента под контробрешётку сделана из
+ * ПЭС, но кладут её на кровлю, и клиент ждёт её в обоих разделах. Карточка при
+ * этом одна — вторая прописка только про то, где товар показывать.
+ */
+export const inCategory = (product: Product, slug: string) =>
+  product.categorySlug === slug || product.alsoCategorySlug === slug;
+
+export const inSubcategory = (product: Product, slug: string) =>
+  product.subcategorySlug === slug || product.alsoSubcategorySlug === slug;
+
+/*
  * «Также для монтажа кровли доступны:» и такие же перечни в конце описания.
  *
  * На invit.by это были ссылки на сопутствующие товары. При переносе разметка

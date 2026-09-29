@@ -81,7 +81,7 @@ STRUCTURE = [
     ('Кровельные уплотнительные клейкие ленты', 'krovelnye-uplotniteli-kleykie-lenty', 'windows', [
         ('Уплотнитель универсальный саморасширяющийся ПСУЛ', 'uplotnitel-universalnyy-psul'),
         ('Лента бутилкаучуковая EUROBAND ЛБ', 'lenta-butilkauchukovaya-lb'),
-        ('Клейкая лента двухсторонняя', 'kleykaya-lenta-dvuhstoronnyaya'),
+        ('Лента под контробрешётку', 'lenta-pod-kontrobreshyotku'),
     ]),
     ('Резиновые уплотнители для окон дверей и EPDM', 'uplotnitel-rezinovyy-d-p-e', 'windows', [
         ('Уплотнитель D', 'uplotnitel-d'),
@@ -126,6 +126,7 @@ STRUCTURE = [
     ('Алюминиевые и армированные ленты (скотч)', 'alyuminievye-armirovannye-lenty', 'windows', [
         ('Алюминиевые ленты ALU', 'alyuminievye-lenty-alu'),
         ('Армированные ленты TPL', 'armirovannye-lenty-tpl'),
+        ('Клейкая лента двухсторонняя', 'kleykaya-lenta-dvuhstoronnyaya'),
         ('Малярная лента', 'malyarnaya-lenta'),
         ('Изоляционные ленты', 'izolyacionnye-lenty'),
     ]),
@@ -168,6 +169,23 @@ STRUCTURE = [
 # отдельным разделом и по второму уровню дерева поставщика: третий даёт
 # семьдесят подразделов, в меню это нечитаемо.
 OSNASTKA = ('Оснастка к электроинструменту', 'osnastka-k-elektroinstrumentu', 'windows')
+
+# Подразделы, переезжающие целиком. Ключ — место в выгрузке, значение — место
+# в каталоге. Двухсторонние монтажные ленты лежали в кровельных, а это обычный
+# двухсторонний скотч — клиент правкой от 29.09 перенёс их к скотчам.
+SUBCATEGORY_MOVES = {
+    ('Кровельные уплотнительные клейкие ленты', 'Клейкая лента двухсторонняя'):
+        ('Алюминиевые и армированные ленты (скотч)', 'Клейкая лента двухсторонняя'),
+}
+
+# Вторая прописка: товар числится сразу в двух подразделах и виден в обоих,
+# но карточка одна — и адрес, и описание, и снимок у неё общие. Лента под
+# контробрешётку сделана из ПЭС, но кладут её на кровлю, поэтому клиент ждёт
+# её в обоих разделах.
+ALSO_IN = [
+    (r'ПЭС EUROBAND под контробрешётку',
+     ('Кровельные уплотнительные клейкие ленты', 'Лента под контробрешётку')),
+]
 
 # Товары, которые в выгрузке лежат не там, где их ждёт клиент. Ключ — кусок
 # названия, значение — куда положить.
@@ -276,6 +294,14 @@ def read_rows():
         return list(csv.DictReader(f))
 
 
+def also_place(row):
+    """Второе место товара по-русски или None."""
+    for pattern, target in ALSO_IN:
+        if re.search(pattern, row['Name']):
+            return target
+    return None
+
+
 def place(row):
     """Куда положить товар: (раздел, подраздел) по-русски."""
     name = row['Name']
@@ -283,7 +309,8 @@ def place(row):
         if re.search(pattern, name):
             return target
     parts = [p.strip() for p in row['Categories'].split(' > ')]
-    return (parts[0], parts[1] if len(parts) > 1 else '')
+    where = (parts[0], parts[1] if len(parts) > 1 else '')
+    return SUBCATEGORY_MOVES.get(where, where)
 
 
 # Ленты собственного производства, в названии которых бренда нет: лента идёт
@@ -431,6 +458,9 @@ def main():
         }
         if safe != ident:
             item['slug'] = safe
+        guest = also_place(row)
+        if guest and guest in slug_of:
+            item['alsoCategorySlug'], item['alsoSubcategorySlug'] = slug_of[guest]
         first = row['Images'].split(', ')[0].strip()
         if first in photos:
             # Один снимок на несколько товаров — у бывших исполнений одной
@@ -467,6 +497,16 @@ def main():
         plan.append((OSNASTKA[0], OSNASTKA[1], OSNASTKA[2],
                      [(s, slugify(s)) for s in osnastka_subs]))
 
+    # Адрес второго места товара нужен внутри build(), а слаги известны только
+    # здесь: собираем «место по-русски -> пара слагов» заранее.
+    slug_of = {(name, entry[0]): (slug, entry[1])
+               for name, slug, _, subs in plan for entry in subs}
+    guests = defaultdict(list)
+    for row in cards:
+        target = also_place(row)
+        if target and target in slug_of:
+            guests[target].append(row)
+
     for name, slug, division, subs in plan:
         listed = [entry[0] for entry in subs]
         found = {sub for section, sub in by_place if section == name}
@@ -476,16 +516,20 @@ def main():
             sub_name, sub_slug = entry[0], entry[1]
             group = entry[2] if len(entry) > 2 else ''
             items = by_place.get((name, sub_name), [])
-            if not items:
+            # Гости — товары с пропиской в другом подразделе: их здесь видно и
+            # они идут в счётчик, но карточка создаётся один раз, у себя дома.
+            visitors = guests.get((name, sub_name), [])
+            if not items and not visitors:
                 empty.append(f'{name} > {sub_name}')
                 continue
             if sub_name in tail:
                 extras.append(f'{name} > {sub_name} ({len(items)})')
-            sub = {'id': sub_slug, 'name': sub_name, 'slug': sub_slug, 'count': len(items)}
+            total = len(items) + len(visitors)
+            sub = {'id': sub_slug, 'name': sub_name, 'slug': sub_slug, 'count': total}
             if group:
                 sub['group'] = group
             subcategories.append(sub)
-            count_total += len(items)
+            count_total += total
             for row in items:
                 products.append(build(row, slug, sub_slug))
         if subcategories:
@@ -516,7 +560,7 @@ def main():
         "  specs: { label: string; value: string }[];\n"
         "  badge?: 'Собственное производство';\n  variantLabel?: string;\n"
         '  variants?: { sku: string; title: string; value: string }[];\n'
-        '  photo?: boolean;\n}\n\n'
+        '  photo?: boolean;\n  alsoCategorySlug?: string;\n  alsoSubcategorySlug?: string;\n}\n\n'
         f'export const CATEGORIES: Category[] = {dump(sections)};\n\n'
         f'export const RAW_PRODUCTS: RawProduct[] = {dump(products)};\n\n'
         '/** Цены в порядке RAW_PRODUCTS: null — «цена по запросу». */\n'

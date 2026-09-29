@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { CATEGORIES, PRODUCTS } from '../../data/catalogData';
 import { SectionMark } from '../../lib/sectionPhotos';
+import { inCategory } from '../../lib/product';
 import { paths } from '../../routes';
 import { Reveal, RevealGroup } from '../Reveal';
 
@@ -45,7 +46,7 @@ const columnsFor = (count: number) =>
 const TILES = CATEGORIES.map((category) => ({
   slug: category.slug,
   name: category.name,
-  count: PRODUCTS.filter((p) => p.categorySlug === category.slug).length
+  count: PRODUCTS.filter((p) => inCategory(p, category.slug)).length
 }));
 
 export const CategoryTiles: React.FC = () => (

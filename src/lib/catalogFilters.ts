@@ -1,5 +1,5 @@
 import { Product } from '../types';
-import { sortForListing } from './product';
+import { inCategory, inSubcategory, sortForListing } from './product';
 import { searchProducts } from './search';
 import { SECTION_SIZES, SizeAxis, bySize, productSize } from './productSize';
 import { PRICES_SHOWN } from './price';
@@ -172,8 +172,8 @@ export const selectProducts = (
   filters: CatalogFilters
 ): CatalogResult => {
   let base = all;
-  if (categorySlug) base = base.filter((p) => p.categorySlug === categorySlug);
-  if (filters.sub) base = base.filter((p) => p.subcategorySlug === filters.sub);
+  if (categorySlug) base = base.filter((p) => inCategory(p, categorySlug));
+  if (filters.sub) base = base.filter((p) => inSubcategory(p, filters.sub as string));
   base = searchProducts(base, filters.query);
 
   const byBrand = (p: Product) =>

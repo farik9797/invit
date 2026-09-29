@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, ChevronDown, ChevronRight } from 'lucide-react';
 import { CATEGORIES, PRODUCTS } from '../../data/catalogData';
-import { TAPE_SUBCATEGORIES } from '../../lib/product';
+import { TAPE_SUBCATEGORIES, inSubcategory } from '../../lib/product';
 import { SectionMark } from '../../lib/sectionPhotos';
 import { paths } from '../../routes';
 
@@ -36,7 +36,7 @@ const ownFirst = (a: { badge?: string }, b: { badge?: string }) =>
   (b.badge === 'Собственное производство' ? 0 : 1);
 
 const groupFor = (categorySlug: string, subSlug: string, name: string): MenuGroup => {
-  const items = PRODUCTS.filter((p) => p.subcategorySlug === subSlug).sort(ownFirst);
+  const items = PRODUCTS.filter((p) => inSubcategory(p, subSlug)).sort(ownFirst);
 
   return {
     name,
@@ -48,7 +48,7 @@ const groupFor = (categorySlug: string, subSlug: string, name: string): MenuGrou
   };
 };
 
-const hasProducts = (slug: string) => PRODUCTS.some((p) => p.subcategorySlug === slug);
+const hasProducts = (slug: string) => PRODUCTS.some((p) => inSubcategory(p, slug));
 
 const subName = (slug: string) =>
   PRODUCTS.find((p) => p.subcategorySlug === slug)?.subcategoryName ?? slug;

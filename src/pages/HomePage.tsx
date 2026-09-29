@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { Hero } from '../components/home/Hero';
 import { CategoryTiles } from '../components/home/CategoryTiles';
+import { BenefitsRow } from '../components/home/BenefitsRow';
 import { AboutIntro } from '../components/home/AboutIntro';
 import { SinceBlock } from '../components/home/SinceBlock';
 import { NewsGrid } from '../components/home/NewsGrid';
@@ -26,8 +27,10 @@ export const HomePage: React.FC = () => {
     <>
       <Hero onOpenCallback={() => shop.openCallback('Запрос расчёта с главной')} />
 
-      {/* Сразу после главного экрана — категории, следом товары */}
+      {/* Сразу после главного экрана — категории, полоса преимуществ, товары */}
       <CategoryTiles />
+
+      <BenefitsRow />
 
       <section className="py-16 sm:py-24 bg-surface-soft">
         <div className="max-w-[1340px] mx-auto px-5">
