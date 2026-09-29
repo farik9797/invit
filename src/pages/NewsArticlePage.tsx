@@ -3,6 +3,7 @@ import { useParams, Navigate, Link } from 'react-router-dom';
 import { Calendar, ArrowLeft } from 'lucide-react';
 import { Breadcrumbs } from '../components/Breadcrumbs';
 import { NEWS } from '../data/catalogData';
+import { newsCover, newsCoverFit } from '../lib/newsCovers';
 import { paths } from '../routes';
 
 export const NewsArticlePage: React.FC = () => {
@@ -35,6 +36,19 @@ export const NewsArticlePage: React.FC = () => {
 
         </div>
 
+        {/*
+          * Обложка заметки. Настоящих фотографий с событий у клиента нет,
+          * поэтому кадр подбирается по теме (см. lib/newsCovers): у новостей
+          * про сертификацию это скан самого документа, у переезда — снимок
+          * производства, у остальных — продукция.
+          */}
+        <img
+          src={newsCover(article.id)}
+          alt=""
+          loading="lazy"
+          className={`w-full h-56 sm:h-72 ${newsCoverFit(article.id)} rounded-xl border border-line bg-white`}
+        />
+
         <div className="text-sm text-ink/80 leading-relaxed space-y-4">
           {article.content.split('\n').map((paragraph, idx) => (
             <p key={idx}>{paragraph}</p>
@@ -59,8 +73,15 @@ export const NewsArticlePage: React.FC = () => {
                 <Link
                   key={n.id}
                   to={paths.newsArticle(n.id)}
-                  className="flex gap-3 p-4 rounded-xl border border-line hover:border-brand-sky hover:shadow-xs transition-all group"
+                  className="flex gap-3 p-3 rounded-xl border border-line hover:border-brand-sky hover:shadow-xs transition-all group"
                 >
+                  {/* Та же обложка, что в списке новостей: на invit.by к заметкам
+                      приложен клипарт нулевых, и сам сайт скоро заменят. */}
+                  <img
+                    src={newsCover(n.id)}
+                    alt={n.title}
+                    className={`w-20 h-20 ${newsCoverFit(n.id)} bg-white border border-line rounded-xl shrink-0`}
+                  />
                   <div className="min-w-0 space-y-1">
                     <span className="text-[11px] text-ink/45 font-semibold">{n.date}</span>
                     <span className="block text-xs font-semibold text-ink group-hover:text-brand-blue transition-colors line-clamp-3 leading-snug">
