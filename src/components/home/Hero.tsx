@@ -44,24 +44,6 @@ const SLIDES: Slide[] = [
     cta: 'Смотреть каталог'
   },
   {
-    id: 'windows',
-    lead: 'Монтажный шов окна —',
-    accent: 'три слоя, три ленты',
-    text: 'Внутри пароизоляционная ВЛ(а) или ВЛ, снаружи паропроницаемая НЛ, в четверти — саморасширяющаяся ПСУЛ. Шов держит тепло и выводит влагу наружу.',
-    image: windowTapes,
-    href: `${paths.category('materialy-dlya-okon')}?sub=montazhnye-lenty-dlya-okon`,
-    cta: 'Ленты для окон'
-  },
-  {
-    id: 'sandwich',
-    lead: 'Сэндвич-панели и профлист —',
-    accent: 'герметизация стыков',
-    text: 'Бутилкаучуковая ЛБ на продольных и поперечных нахлёстах, ПЭС под прижимные планки. Стык не течёт и не свистит на ветру.',
-    image: butylFoamRoll,
-    href: `${paths.category('materialy-dlya-okon')}?sub=krovelnye-uplotniteli-kleykie-lenty`,
-    cta: 'Кровельные ленты'
-  },
-  {
     id: 'joint',
     lead: 'Стык плит и панелей —',
     accent: 'уплотнительная лента ПЭС',
@@ -87,6 +69,24 @@ const SLIDES: Slide[] = [
     image: pesAndFoil,
     href: `${paths.category('uplotnitelnye-lenty-pes-samokleyaschiesy')}?sub=pes-mezhflancevaya-lenta`,
     cta: 'Межфланцевая лента'
+  },
+  {
+    id: 'sandwich',
+    lead: 'Сэндвич-панели и профлист —',
+    accent: 'герметизация стыков',
+    text: 'Бутилкаучуковая ЛБ на продольных и поперечных нахлёстах, ПЭС под прижимные планки. Стык не течёт и не свистит на ветру.',
+    image: butylFoamRoll,
+    href: `${paths.category('materialy-dlya-okon')}?sub=krovelnye-uplotniteli-kleykie-lenty`,
+    cta: 'Кровельные ленты'
+  },
+  {
+    id: 'windows',
+    lead: 'Монтажный шов окна —',
+    accent: 'три слоя, три ленты',
+    text: 'Внутри пароизоляционная ВЛ(а) или ВЛ, снаружи паропроницаемая НЛ, в четверти — саморасширяющаяся ПСУЛ. Шов держит тепло и выводит влагу наружу.',
+    image: windowTapes,
+    href: `${paths.category('materialy-dlya-okon')}?sub=montazhnye-lenty-dlya-okon`,
+    cta: 'Ленты для окон'
   }
 ];
 
