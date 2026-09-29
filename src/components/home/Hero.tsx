@@ -4,11 +4,12 @@ import { ArrowDown } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import { paths } from '../../routes';
 import eurobandMark from '../../assets/logo/euroband-color.svg';
-import eurobandRange from '../../assets/hero/euroband-range.webp';
-import aluButylRolls from '../../assets/hero/alu-butyl-rolls.webp';
-import tapeRange from '../../assets/hero/tape-range.webp';
-import pesTapeRolls from '../../assets/hero/pes-tape-rolls.webp';
-import butylTapeRoll from '../../assets/hero/butyl-tape-roll.webp';
+import windowTapes from '../../assets/hero/window-tapes-set.webp';
+import aluButylFoil from '../../assets/hero/alu-butyl-foil.webp';
+import eurobandBoxes from '../../assets/hero/euroband-boxes-range.webp';
+import pesGreyRolls from '../../assets/hero/pes-grey-rolls.webp';
+import butylFoamRoll from '../../assets/hero/butyl-foam-roll.webp';
+import pesAndFoil from '../../assets/hero/pes-and-foil-tapes.webp';
 
 interface HeroProps {
   onOpenCallback: () => void;
@@ -38,7 +39,7 @@ const SLIDES: Slide[] = [
     lead: 'Монтажный шов окна —',
     accent: 'три слоя, три ленты',
     text: 'Внутри пароизоляционная ВЛ(а) или ВЛ, снаружи паропроницаемая НЛ, в четверти — саморасширяющаяся ПСУЛ. Шов держит тепло и выводит влагу наружу.',
-    image: eurobandRange,
+    image: windowTapes,
     href: `${paths.category('materialy-dlya-okon')}?sub=montazhnye-lenty-dlya-okon`,
     cta: 'Ленты для окон'
   },
@@ -47,7 +48,7 @@ const SLIDES: Slide[] = [
     lead: 'Сэндвич-панели и профлист —',
     accent: 'герметизация стыков',
     text: 'Бутилкаучуковая ЛБ на продольных и поперечных нахлёстах, ПЭС под прижимные планки. Стык не течёт и не свистит на ветру.',
-    image: aluButylRolls,
+    image: aluButylFoil,
     href: `${paths.category('materialy-dlya-okon')}?sub=krovelnye-uplotniteli-kleykie-lenty`,
     cta: 'Кровельные ленты'
   },
@@ -56,7 +57,7 @@ const SLIDES: Slide[] = [
     lead: 'Уплотнительные и герметизирующие',
     accent: 'ленты',
     text: 'Белорусский производитель с 2001 года. Изготовим ленты нетипичных размеров под ваш проект.',
-    image: tapeRange,
+    image: eurobandBoxes,
     href: paths.catalog,
     cta: 'Смотреть каталог'
   },
@@ -65,7 +66,7 @@ const SLIDES: Slide[] = [
     lead: 'Стык плит и панелей —',
     accent: 'уплотнительная лента ПЭС',
     text: 'Самоклеящаяся лента из вспененного полиэтилена закрывает шов от воды, шума и холода: сэндвич-панели, перекрытия, металлоконструкции.',
-    image: pesTapeRolls,
+    image: pesGreyRolls,
     href: `${paths.category('materialy-dlya-okon')}?sub=uplotnitelnye-lenty-pes-samokleyaschiesy`,
     cta: 'Ленты ПЭС'
   },
@@ -74,9 +75,18 @@ const SLIDES: Slide[] = [
     lead: 'Стыки оснований и покрытий —',
     accent: 'лента EUROBAND',
     text: 'Проклеиваем шов между бетоном и покрытием: кромка не задирается, пыль и влага в стык не идут.',
-    image: butylTapeRoll,
+    image: butylFoamRoll,
     href: `${paths.category('materialy-dlya-okon')}?sub=uplotnitelnye-lenty-pes-samokleyaschiesy`,
     cta: 'Ленты ПЭС'
+  },
+  {
+    id: 'hvac',
+    lead: 'Воздуховоды и вентиляция —',
+    accent: 'межфланцевая лента ПЭС',
+    text: 'Лента проклеивается между фланцами: воздух не уходит через соединение, магистраль тише, затраты на подачу ниже.',
+    image: pesAndFoil,
+    href: `${paths.category('uplotnitelnye-lenty-pes-samokleyaschiesy')}?sub=pes-mezhflancevaya-lenta`,
+    cta: 'Межфланцевая лента'
   }
 ];
 
