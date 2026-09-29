@@ -48,7 +48,7 @@ const SLIDES: Slide[] = [
     lead: 'Сэндвич-панели и профлист —',
     accent: 'герметизация стыков',
     text: 'Бутилкаучуковая ЛБ на продольных и поперечных нахлёстах, ПЭС под прижимные планки. Стык не течёт и не свистит на ветру.',
-    image: aluButylFoil,
+    image: butylFoamRoll,
     href: `${paths.category('materialy-dlya-okon')}?sub=krovelnye-uplotniteli-kleykie-lenty`,
     cta: 'Кровельные ленты'
   },
@@ -57,7 +57,7 @@ const SLIDES: Slide[] = [
     lead: 'Уплотнительные и герметизирующие',
     accent: 'ленты',
     text: 'Белорусский производитель с 2001 года. Изготовим ленты нетипичных размеров под ваш проект.',
-    image: eurobandBoxes,
+    image: pesGreyRolls,
     href: paths.catalog,
     cta: 'Смотреть каталог'
   },
@@ -66,7 +66,7 @@ const SLIDES: Slide[] = [
     lead: 'Стык плит и панелей —',
     accent: 'уплотнительная лента ПЭС',
     text: 'Самоклеящаяся лента из вспененного полиэтилена закрывает шов от воды, шума и холода: сэндвич-панели, перекрытия, металлоконструкции.',
-    image: pesGreyRolls,
+    image: eurobandBoxes,
     href: `${paths.category('materialy-dlya-okon')}?sub=uplotnitelnye-lenty-pes-samokleyaschiesy`,
     cta: 'Ленты ПЭС'
   },
@@ -75,7 +75,7 @@ const SLIDES: Slide[] = [
     lead: 'Стыки оснований и покрытий —',
     accent: 'лента EUROBAND',
     text: 'Проклеиваем шов между бетоном и покрытием: кромка не задирается, пыль и влага в стык не идут.',
-    image: butylFoamRoll,
+    image: aluButylFoil,
     href: `${paths.category('materialy-dlya-okon')}?sub=uplotnitelnye-lenty-pes-samokleyaschiesy`,
     cta: 'Ленты ПЭС'
   },
