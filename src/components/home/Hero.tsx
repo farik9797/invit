@@ -53,22 +53,22 @@ const SLIDES: Slide[] = [
     cta: 'Кровельные ленты'
   },
   {
-    id: 'about',
-    lead: 'Уплотнительные и герметизирующие',
-    accent: 'ленты',
-    text: 'Белорусский производитель с 2001 года. Изготовим ленты нетипичных размеров под ваш проект.',
-    image: pesGreyRolls,
-    href: paths.catalog,
-    cta: 'Смотреть каталог'
-  },
-  {
     id: 'joint',
     lead: 'Стык плит и панелей —',
     accent: 'уплотнительная лента ПЭС',
     text: 'Самоклеящаяся лента из вспененного полиэтилена закрывает шов от воды, шума и холода: сэндвич-панели, перекрытия, металлоконструкции.',
-    image: eurobandBoxes,
+    image: pesGreyRolls,
     href: `${paths.category('materialy-dlya-okon')}?sub=uplotnitelnye-lenty-pes-samokleyaschiesy`,
     cta: 'Ленты ПЭС'
+  },
+  {
+    id: 'about',
+    lead: 'Уплотнительные и герметизирующие',
+    accent: 'ленты',
+    text: 'Белорусский производитель с 2001 года. Изготовим ленты нетипичных размеров под ваш проект.',
+    image: eurobandBoxes,
+    href: paths.catalog,
+    cta: 'Смотреть каталог'
   },
   {
     id: 'floor',
