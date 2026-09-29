@@ -49,6 +49,14 @@ for (const product of PRODUCTS) {
   if (!photo) continue;
   if (!CATEGORY.has(product.categorySlug)) CATEGORY.set(product.categorySlug, photo);
   if (!SUBCATEGORY.has(product.subcategorySlug)) SUBCATEGORY.set(product.subcategorySlug, photo);
+  // Вторая прописка: подраздел, где товар «в гостях», тоже получает его снимок,
+  // иначе у него остаётся пиктограмма — своих товаров там нет.
+  if (product.alsoCategorySlug && !CATEGORY.has(product.alsoCategorySlug)) {
+    CATEGORY.set(product.alsoCategorySlug, photo);
+  }
+  if (product.alsoSubcategorySlug && !SUBCATEGORY.has(product.alsoSubcategorySlug)) {
+    SUBCATEGORY.set(product.alsoSubcategorySlug, photo);
+  }
 }
 
 for (const [slug, ident] of Object.entries(PICKED)) {
