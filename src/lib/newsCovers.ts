@@ -1,5 +1,6 @@
-import { certificateImage } from './productImages';
 import windowMaterials from '../assets/news/vse-materialy-dlya-okon.webp';
+import phoneNotice from '../assets/news/izmenilsya-nomer-telefona.webp';
+import certificates from '../assets/news/sertifikaty.webp';
 import plant from '../assets/banners/euroband-plant.webp';
 import rangeNavy from '../assets/banners/euroband-range-navy.webp';
 import rangeWhite from '../assets/banners/euroband-range-white.webp';
@@ -14,19 +15,19 @@ import aluPesRolls from '../assets/banners/alu-pes-rolls.webp';
  * переезд получает снимок производства, складская программа — ассортимент,
  * остальные — кадры продукции.
  *
- * Две новости про сертификацию оставлены со сканами самих документов: скан
- * говорит о событии больше, чем любой товарный кадр.
+ * Двум новостям про сертификацию клиент прислал свою картинку со стопкой
+ * документов — она и стоит обложкой вместо сканов.
  *
  * Если клиент пришлёт настоящие фото, менять надо только эту карту: к заметке
- * о переезде он прислал свой плакат «Все материалы для монтажа окон», он и
- * стоит обложкой.
+ * о переезде он прислал плакат «Все материалы для монтажа окон», к заметке о
+ * телефонах — «Внимание! У нас изменился номер телефона».
  */
 const COVERS: Record<string, string> = {
-  'sertifikat-invit-2025-2027': certificateImage('cert-1', ''),
-  'sertifikat-beltpp-2014': certificateImage('cert-2', ''),
+  'sertifikat-invit-2025-2027': certificates,
+  'sertifikat-beltpp-2014': certificates,
   'rasshirenie-skladskoj-programmy': rangeWhite,
   'invit-pereezd-na-mkad': windowMaterials,
-  'invit-novye-nomera-telefonov': plant,
+  'invit-novye-nomera-telefonov': phoneNotice,
   'invit-novye-rekvizity-2017': aluPesRolls
 };
 
@@ -36,7 +37,7 @@ export const newsCover = (id: string) => COVERS[id] || rangeNavy;
  * Где на обложке есть текст — скан сертификата, плакат клиента, — кадр
  * показываем целиком: обрезка съела бы заголовок. Фотографии кадрируем.
  */
-const WHOLE = new Set(['invit-pereezd-na-mkad']);
+const WHOLE = new Set(['invit-pereezd-na-mkad', 'invit-novye-nomera-telefonov']);
 
 export const newsCoverFit = (id: string) =>
   id.startsWith('sertifikat') || WHOLE.has(id)
