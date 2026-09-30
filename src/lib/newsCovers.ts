@@ -1,10 +1,10 @@
 import windowMaterials from '../assets/news/vse-materialy-dlya-okon.webp';
 import phoneNotice from '../assets/news/izmenilsya-nomer-telefona.webp';
 import certificates from '../assets/news/sertifikaty.webp';
+import iban from '../assets/news/novye-rekvizity-iban.webp';
 import plant from '../assets/banners/euroband-plant.webp';
 import rangeNavy from '../assets/banners/euroband-range-navy.webp';
 import rangeWhite from '../assets/banners/euroband-range-white.webp';
-import aluPesRolls from '../assets/banners/alu-pes-rolls.webp';
 
 /*
  * Обложки новостей.
@@ -16,11 +16,13 @@ import aluPesRolls from '../assets/banners/alu-pes-rolls.webp';
  * остальные — кадры продукции.
  *
  * Двум новостям про сертификацию клиент прислал свою картинку со стопкой
- * документов — она и стоит обложкой вместо сканов.
+ * документов — она и стоит обложкой вместо сканов, к заметке о реквизитах —
+ * баннер IBAN.
  *
  * Если клиент пришлёт настоящие фото, менять надо только эту карту: к заметке
  * о переезде он прислал плакат «Все материалы для монтажа окон», к заметке о
- * телефонах — «Внимание! У нас изменился номер телефона».
+ * телефонах — «Внимание! У нас изменился номер телефона», к заметке о
+ * реквизитах — карточку IBAN.
  */
 const COVERS: Record<string, string> = {
   'sertifikat-invit-2025-2027': certificates,
@@ -28,7 +30,7 @@ const COVERS: Record<string, string> = {
   'rasshirenie-skladskoj-programmy': rangeWhite,
   'invit-pereezd-na-mkad': windowMaterials,
   'invit-novye-nomera-telefonov': phoneNotice,
-  'invit-novye-rekvizity-2017': aluPesRolls
+  'invit-novye-rekvizity-2017': iban
 };
 
 export const newsCover = (id: string) => COVERS[id] || rangeNavy;
