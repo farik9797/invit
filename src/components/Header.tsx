@@ -146,7 +146,7 @@ export const Header: React.FC<HeaderProps> = ({
                 placeholder="Поиск по каталогу"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 text-sm bg-white border border-line rounded-lg text-ink placeholder:text-ink/40 focus:outline-none focus:border-brand-green transition-colors"
+                className="w-full pl-10 pr-4 py-3 text-sm bg-white border border-line rounded-[4px] text-ink placeholder:text-ink/40 focus:outline-none focus:border-brand-green transition-colors"
               />
             </div>
 

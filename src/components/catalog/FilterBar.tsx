@@ -117,7 +117,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({ filters, result, onChange 
 
   const money = (value: number) => formatPrice(value).replace(' р.', '');
   const field =
-    'w-full min-h-11 px-3 rounded-[10px] border border-inv-border bg-white text-sm text-inv-ink placeholder:text-inv-ink-muted focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-inv-blue';
+    'w-full min-h-11 px-3 rounded-[4px] border border-inv-border bg-white text-sm text-inv-ink placeholder:text-inv-ink-muted focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-inv-blue';
 
   return (
     <div className="mt-3 rounded-[10px] border border-inv-border bg-inv-surface-1 p-3">

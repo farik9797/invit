@@ -79,7 +79,7 @@ export const CallbackModal: React.FC<CallbackModalProps> = ({ isOpen, onClose, c
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Анатолий"
-                  className="w-full p-2.5 bg-surface-soft border border-line rounded-lg text-ink font-medium"
+                  className="w-full p-2.5 bg-surface-soft border border-line rounded-[4px] text-ink font-medium"
                 />
               </div>
 
@@ -93,7 +93,7 @@ export const CallbackModal: React.FC<CallbackModalProps> = ({ isOpen, onClose, c
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="+375 (29) 000-00-00"
-                  className="w-full p-2.5 bg-surface-soft border border-line rounded-lg text-ink font-medium text-sm"
+                  className="w-full p-2.5 bg-surface-soft border border-line rounded-[4px] text-ink font-medium text-sm"
                 />
               </div>
 
@@ -106,7 +106,7 @@ export const CallbackModal: React.FC<CallbackModalProps> = ({ isOpen, onClose, c
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="mail@company.by"
-                  className="w-full p-2.5 bg-surface-soft border border-line rounded-lg text-ink font-medium"
+                  className="w-full p-2.5 bg-surface-soft border border-line rounded-[4px] text-ink font-medium"
                 />
               </div>
 
@@ -119,7 +119,7 @@ export const CallbackModal: React.FC<CallbackModalProps> = ({ isOpen, onClose, c
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
                   placeholder="Например: заказать прайс или консультацию по ПСУЛ..."
-                  className="w-full p-2.5 bg-surface-soft border border-line rounded-lg text-ink font-medium"
+                  className="w-full p-2.5 bg-surface-soft border border-line rounded-[4px] text-ink font-medium"
                 ></textarea>
               </div>
 

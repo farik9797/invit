@@ -77,7 +77,7 @@ export const CatalogSearch: React.FC<CatalogSearchProps> = ({
             onKeyDown={(e) => e.key === 'Escape' && setFocused(false)}
             placeholder="Поиск: лента, ПСУЛ, артикул…"
             aria-label="Поиск по каталогу"
-            className="w-full min-h-11 pl-9 pr-9 rounded-[10px] border border-inv-border bg-white text-sm text-inv-ink placeholder:text-inv-ink-muted transition-colors duration-[120ms] hover:border-inv-blue focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-inv-blue"
+            className="w-full min-h-11 pl-9 pr-9 rounded-[4px] border border-inv-border bg-white text-sm text-inv-ink placeholder:text-inv-ink-muted transition-colors duration-[120ms] hover:border-inv-blue focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-inv-blue"
           />
           {draft && (
             <button

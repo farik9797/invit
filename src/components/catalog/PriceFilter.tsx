@@ -48,7 +48,7 @@ export const PriceFilter: React.FC<PriceFilterProps> = ({ value, range, onChange
   };
 
   const field =
-    'w-full h-10 px-2.5 rounded-[6px] border border-inv-border bg-white text-[13px] text-inv-ink placeholder:text-inv-ink-muted focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-inv-blue';
+    'w-full h-10 px-2.5 rounded-[4px] border border-inv-border bg-white text-[13px] text-inv-ink placeholder:text-inv-ink-muted focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-inv-blue';
 
   return (
     <FilterBlock
