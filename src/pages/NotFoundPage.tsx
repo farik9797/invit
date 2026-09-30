@@ -13,13 +13,13 @@ export const NotFoundPage: React.FC = () => (
     <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
       <Link
         to={paths.catalog}
-        className="bg-brand-blue hover:bg-brand-blue-hover text-white font-bold text-sm px-6 py-3 rounded-xl transition-colors"
+        className="bg-brand-blue hover:bg-brand-blue-hover text-white font-bold text-sm px-6 py-3 rounded-[4px] transition-colors"
       >
         В каталог
       </Link>
       <Link
         to={paths.home}
-        className="border border-line hover:bg-surface-soft text-ink font-bold text-sm px-6 py-3 rounded-xl transition-colors"
+        className="border border-line hover:bg-surface-soft text-ink font-bold text-sm px-6 py-3 rounded-[4px] transition-colors"
       >
         На главную
       </Link>

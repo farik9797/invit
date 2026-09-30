@@ -36,7 +36,7 @@ export const CallbackModal: React.FC<CallbackModalProps> = ({ isOpen, onClose, c
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg hover:bg-white/20 text-white transition-colors cursor-pointer"
+            className="p-1 rounded-[4px] hover:bg-white/20 text-white transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -58,7 +58,7 @@ export const CallbackModal: React.FC<CallbackModalProps> = ({ isOpen, onClose, c
                   setSubmitted(false);
                   onClose();
                 }}
-                className="bg-brand-blue text-white font-bold text-xs px-4 py-2 rounded-lg"
+                className="bg-brand-blue text-white font-bold text-xs px-4 py-2 rounded-[4px]"
               >
                 Закрыть
               </button>
@@ -125,7 +125,7 @@ export const CallbackModal: React.FC<CallbackModalProps> = ({ isOpen, onClose, c
 
               <button
                 type="submit"
-                className="w-full bg-brand-red hover:bg-brand-red-hover text-white font-bold py-3 px-4 rounded-xl shadow transition-all flex items-center justify-center gap-2  cursor-pointer"
+                className="w-full bg-brand-red hover:bg-brand-red-hover text-white font-bold py-3 px-4 rounded-[4px] shadow transition-all flex items-center justify-center gap-2  cursor-pointer"
               >
                 <Send className="w-4 h-4" />
                 <span>Жду звонка инженера</span>

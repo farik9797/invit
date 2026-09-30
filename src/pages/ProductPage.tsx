@@ -160,7 +160,7 @@ export const ProductPage: React.FC = () => {
                 href={product.datasheetUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-2.5 px-4 py-3.5 border border-line rounded-xl text-sm font-semibold text-brand-blue hover:border-brand-sky transition-colors"
+                className="flex items-center gap-2.5 px-4 py-3.5 border border-line rounded-[4px] text-sm font-semibold text-brand-blue hover:border-brand-sky transition-colors"
               >
                 <Download className="w-4 h-4 shrink-0" />
                 Технический лист (PDF)
@@ -234,7 +234,7 @@ export const ProductPage: React.FC = () => {
                       key={option.sku}
                       type="button"
                       onClick={() => setVariant(option.value)}
-                      className={`px-3 py-2 rounded-lg border text-sm font-semibold transition-colors cursor-pointer focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand-blue ${
+                      className={`px-3 py-2 rounded-[4px] border text-sm font-semibold transition-colors cursor-pointer focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand-blue ${
                         option.value === chosen
                           ? 'border-brand-blue text-brand-blue bg-brand-blue/5'
                           : 'border-line text-ink hover:border-brand-sky'
@@ -296,7 +296,7 @@ export const ProductPage: React.FC = () => {
               <div className="flex flex-col sm:flex-row gap-3">
                 <button
                   onClick={() => shop.addToQuote(product, qty, chosen ?? undefined)}
-                  className={`flex-1 px-5 py-3.5 rounded-lg text-sm font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer ${
+                  className={`flex-1 px-5 py-3.5 rounded-[4px] text-sm font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer ${
                     isAdded
                       ? 'bg-brand-navy hover:bg-brand-navy/90 text-white'
                       : 'bg-brand-blue hover:bg-brand-blue-hover text-white'
@@ -308,7 +308,7 @@ export const ProductPage: React.FC = () => {
 
                 <button
                   onClick={() => shop.openCallback(`Запрос по позиции: ${product.title}`)}
-                  className="flex-1 px-5 py-3.5 rounded-lg border border-line text-ink text-sm font-semibold hover:border-brand-sky transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                  className="flex-1 px-5 py-3.5 rounded-[4px] border border-line text-ink text-sm font-semibold hover:border-brand-sky transition-colors flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Phone className="w-4 h-4 text-brand-blue" />
                   Уточнить цену
@@ -318,7 +318,7 @@ export const ProductPage: React.FC = () => {
               {isAdded && (
                 <Link
                   to={paths.cart}
-                  className="flex items-center justify-center gap-2 min-h-11 rounded-lg border border-brand-blue text-brand-blue text-sm font-semibold hover:bg-brand-blue/5 transition-colors"
+                  className="flex items-center justify-center gap-2 min-h-11 rounded-[4px] border border-brand-blue text-brand-blue text-sm font-semibold hover:bg-brand-blue/5 transition-colors"
                 >
                   <ShoppingCart className="w-4 h-4" />
                   Перейти в корзину

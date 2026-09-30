@@ -97,7 +97,7 @@ export const CatalogSearch: React.FC<CatalogSearchProps> = ({
         {withButton && (
           <button
             type="submit"
-            className="min-h-11 px-5 rounded-[10px] bg-inv-blue text-white text-sm font-semibold whitespace-nowrap cursor-pointer transition-[background-color,transform] duration-[120ms] hover:bg-inv-blue-hover active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
+            className="min-h-11 px-5 rounded-[4px] bg-inv-blue text-white text-sm font-semibold whitespace-nowrap cursor-pointer transition-[background-color,transform] duration-[120ms] hover:bg-inv-blue-hover active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
           >
             Найти
           </button>

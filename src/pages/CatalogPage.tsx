@@ -236,7 +236,7 @@ export const CatalogPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setDrawer(true)}
-                  className="order-1 sm:order-2 lg:hidden inline-flex items-center gap-2 min-h-11 px-3.5 rounded-[10px] border border-inv-border bg-white text-sm font-semibold text-inv-ink cursor-pointer transition-colors duration-[120ms] hover:border-inv-blue hover:text-inv-blue"
+                  className="order-1 sm:order-2 lg:hidden inline-flex items-center gap-2 min-h-11 px-3.5 rounded-[4px] border border-inv-border bg-white text-sm font-semibold text-inv-ink cursor-pointer transition-colors duration-[120ms] hover:border-inv-blue hover:text-inv-blue"
                 >
                   <SlidersHorizontal className="w-4 h-4" />
                   <span className="hidden sm:inline">Разделы и фильтр</span>
@@ -254,7 +254,7 @@ export const CatalogPage: React.FC = () => {
                   type="button"
                   onClick={() => setBar((v) => !v)}
                   aria-expanded={bar}
-                  className={`hidden lg:inline-flex order-2 lg:ml-auto items-center gap-2 min-h-11 px-3.5 rounded-[10px] border bg-white text-sm font-semibold cursor-pointer transition-colors duration-[120ms] ${
+                  className={`hidden lg:inline-flex order-2 lg:ml-auto items-center gap-2 min-h-11 px-3.5 rounded-[4px] border bg-white text-sm font-semibold cursor-pointer transition-colors duration-[120ms] ${
                     bar || active > 0
                       ? 'border-inv-blue text-inv-ink'
                       : 'border-inv-border text-inv-ink hover:border-inv-blue'
@@ -314,7 +314,7 @@ export const CatalogPage: React.FC = () => {
                       aria-pressed={view === mode}
                       aria-label={label}
                       title={label}
-                      className={`w-9 h-9 flex items-center justify-center rounded-[7px] cursor-pointer transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue ${
+                      className={`w-9 h-9 flex items-center justify-center rounded-[4px] cursor-pointer transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue ${
                         view === mode
                           ? 'bg-inv-red text-white'
                           : 'text-inv-ink-muted hover:text-inv-ink hover:bg-inv-surface-1'

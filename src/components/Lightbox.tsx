@@ -39,7 +39,7 @@ export const Lightbox: React.FC<LightboxProps> = ({ images, index, alt, onClose,
     >
       <button
         onClick={onClose}
-        className="absolute top-4 right-4 p-2.5 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+        className="absolute top-4 right-4 p-2.5 rounded-[4px] text-white/70 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
         aria-label="Закрыть"
       >
         <X className="w-6 h-6" />

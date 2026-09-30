@@ -44,7 +44,7 @@ export const ManufacturingSection: React.FC<ManufacturingSectionProps> = ({
           <div className="bg-surface-soft p-1.5 rounded-xl flex gap-1 border border-line shrink-0">
             <button
               onClick={() => setActiveTab('about')}
-              className={`px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all cursor-pointer whitespace-nowrap ${
+              className={`px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-[4px] transition-all cursor-pointer whitespace-nowrap ${
                 activeTab === 'about'
                   ? 'bg-brand-blue text-white shadow-xs'
                   : 'text-ink/80 hover:bg-surface-soft'
@@ -54,7 +54,7 @@ export const ManufacturingSection: React.FC<ManufacturingSectionProps> = ({
             </button>
             <button
               onClick={() => setActiveTab('capacity')}
-              className={`px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all cursor-pointer whitespace-nowrap ${
+              className={`px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-[4px] transition-all cursor-pointer whitespace-nowrap ${
                 activeTab === 'capacity'
                   ? 'bg-brand-blue text-white shadow-xs'
                   : 'text-ink/80 hover:bg-surface-soft'
@@ -64,7 +64,7 @@ export const ManufacturingSection: React.FC<ManufacturingSectionProps> = ({
             </button>
             <button
               onClick={() => setActiveTab('standards')}
-              className={`px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all cursor-pointer whitespace-nowrap ${
+              className={`px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-[4px] transition-all cursor-pointer whitespace-nowrap ${
                 activeTab === 'standards'
                   ? 'bg-brand-blue text-white shadow-xs'
                   : 'text-ink/80 hover:bg-surface-soft'
@@ -112,13 +112,13 @@ export const ManufacturingSection: React.FC<ManufacturingSectionProps> = ({
                 <div className="pt-3 flex flex-wrap items-center gap-3">
                   <button
                     onClick={onOpenCallback}
-                    className="bg-brand-blue hover:bg-brand-blue-hover text-white font-semibold text-sm px-5 py-3 rounded-lg shadow transition-colors"
+                    className="bg-brand-blue hover:bg-brand-blue-hover text-white font-semibold text-sm px-5 py-3 rounded-[4px] shadow transition-colors"
                   >
                     Запросить презентацию компании
                   </button>
                   <button
                     onClick={onOpenCertificates}
-                    className="bg-surface-soft hover:bg-surface-soft text-ink font-semibold text-sm px-5 py-3 rounded-lg border border-line transition-colors"
+                    className="bg-surface-soft hover:bg-surface-soft text-ink font-semibold text-sm px-5 py-3 rounded-[4px] border border-line transition-colors"
                   >
                     Смотреть сертификаты СТБ
                   </button>
@@ -255,7 +255,7 @@ export const ManufacturingSection: React.FC<ManufacturingSectionProps> = ({
 
                 <button
                   onClick={onOpenCertificates}
-                  className="w-full bg-brand-blue hover:bg-brand-blue-hover text-white font-bold py-2.5 px-4 rounded-lg text-sm flex items-center justify-center gap-1.5"
+                  className="w-full bg-brand-blue hover:bg-brand-blue-hover text-white font-bold py-2.5 px-4 rounded-[4px] text-sm flex items-center justify-center gap-1.5"
                 >
                   <Award className="w-4 h-4 text-white" />
                   <span>Открыть реестр сертификатов</span>

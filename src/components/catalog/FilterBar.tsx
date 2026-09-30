@@ -52,7 +52,7 @@ const Facet: React.FC<{
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        className={`w-full flex items-center gap-2 min-h-11 px-3.5 rounded-[10px] border bg-white text-sm cursor-pointer transition-colors duration-[120ms] ${
+        className={`w-full flex items-center gap-2 min-h-11 px-3.5 rounded-[4px] border bg-white text-sm cursor-pointer transition-colors duration-[120ms] ${
           selected.length || open
             ? 'border-inv-blue text-inv-ink'
             : 'border-inv-border text-inv-ink hover:border-inv-blue'

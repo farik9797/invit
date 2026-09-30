@@ -39,7 +39,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({ certificate,
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg hover:bg-white/20 text-white transition-colors cursor-pointer"
+            className="p-1 rounded-[4px] hover:bg-white/20 text-white transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -101,7 +101,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({ certificate,
 
             <button
               onClick={onClose}
-              className="px-4 py-2 bg-surface-soft hover:bg-surface-soft text-ink font-semibold text-sm rounded-lg cursor-pointer"
+              className="px-4 py-2 bg-surface-soft hover:bg-surface-soft text-ink font-semibold text-sm rounded-[4px] cursor-pointer"
             >
               Закрыть
             </button>

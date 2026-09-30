@@ -228,7 +228,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCallback }) => {
                   <Link
                     to={slide.href}
                     tabIndex={isActive ? 0 : -1}
-                    className="inline-flex justify-center items-center bg-white hover:bg-brand-green-soft text-brand-navy text-sm font-semibold px-8 py-4 w-full sm:w-auto transition-[background-color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px active:scale-[0.98]"
+                    className="inline-flex justify-center items-center bg-white hover:bg-brand-green-soft text-brand-navy text-sm font-semibold rounded-[4px] px-8 py-4 w-full sm:w-auto transition-[background-color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px active:scale-[0.98]"
                   >
                     {slide.cta}
                   </Link>
@@ -236,7 +236,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCallback }) => {
                   <button
                     onClick={onOpenCallback}
                     tabIndex={isActive ? 0 : -1}
-                    className="shine inline-flex justify-center items-center border border-white/25 hover:bg-white/10 text-white text-sm font-semibold px-8 py-4 w-full sm:w-auto cursor-pointer transition-[background-color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px active:scale-[0.98]"
+                    className="shine inline-flex justify-center items-center border border-white/25 hover:bg-white/10 text-white text-sm font-semibold rounded-[4px] px-8 py-4 w-full sm:w-auto cursor-pointer transition-[background-color,transform] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-px active:scale-[0.98]"
                   >
                     Запросить расчёт
                   </button>

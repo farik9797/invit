@@ -33,7 +33,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg hover:bg-white/20 text-white transition-colors cursor-pointer"
+            className="p-1 rounded-[4px] hover:bg-white/20 text-white transition-colors cursor-pointer"
           >
             <X className="w-6 h-6" />
           </button>
@@ -119,7 +119,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
           <div className="flex items-center gap-2 w-full sm:w-auto">
             <button
               onClick={onClose}
-              className="flex-1 sm:flex-initial px-4 py-2.5 rounded-lg border border-line text-ink/80 font-semibold text-sm hover:bg-surface-soft transition-colors cursor-pointer"
+              className="flex-1 sm:flex-initial px-4 py-2.5 rounded-[4px] border border-line text-ink/80 font-semibold text-sm hover:bg-surface-soft transition-colors cursor-pointer"
             >
               Закрыть
             </button>
@@ -129,7 +129,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                 onAddToQuote(product);
                 onClose();
               }}
-              className="flex-1 sm:flex-initial px-5 py-2.5 rounded-lg bg-brand-blue hover:bg-brand-blue-hover text-white font-semibold text-sm shadow transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+              className="flex-1 sm:flex-initial px-5 py-2.5 rounded-[4px] bg-brand-blue hover:bg-brand-blue-hover text-white font-semibold text-sm shadow transition-all flex items-center justify-center gap-1.5 cursor-pointer"
             >
               <Plus className="w-4 h-4 text-white" />
               <span>Добавить в корзину</span>

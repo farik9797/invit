@@ -224,7 +224,7 @@ export const Header: React.FC<HeaderProps> = ({
               setMobileMenuOpen(false);
               onOpenCallback();
             }}
-            className="w-full mt-3 bg-brand-green text-white text-sm font-semibold py-3 rounded-lg cursor-pointer"
+            className="w-full mt-3 bg-brand-green text-white text-sm font-semibold py-3 rounded-[4px] cursor-pointer"
           >
             Запросить расчёт
           </button>
@@ -233,7 +233,7 @@ export const Header: React.FC<HeaderProps> = ({
               setMobileMenuOpen(false);
               navigate(paths.catalog);
             }}
-            className="w-full border border-line text-ink text-sm font-semibold py-3 rounded-lg cursor-pointer"
+            className="w-full border border-line text-ink text-sm font-semibold py-3 rounded-[4px] cursor-pointer"
           >
             Открыть каталог
           </button>
