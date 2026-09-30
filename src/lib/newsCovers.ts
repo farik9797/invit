@@ -1,9 +1,9 @@
 import { certificateImage } from './productImages';
 import windowMaterials from '../assets/news/vse-materialy-dlya-okon.webp';
+import plant from '../assets/banners/euroband-plant.webp';
 import rangeNavy from '../assets/banners/euroband-range-navy.webp';
 import rangeWhite from '../assets/banners/euroband-range-white.webp';
 import aluPesRolls from '../assets/banners/alu-pes-rolls.webp';
-import pesTapeWindow from '../assets/banners/pes-tape-window.webp';
 
 /*
  * Обложки новостей.
@@ -26,7 +26,7 @@ const COVERS: Record<string, string> = {
   'sertifikat-beltpp-2014': certificateImage('cert-2', ''),
   'rasshirenie-skladskoj-programmy': rangeWhite,
   'invit-pereezd-na-mkad': windowMaterials,
-  'invit-novye-nomera-telefonov': pesTapeWindow,
+  'invit-novye-nomera-telefonov': plant,
   'invit-novye-rekvizity-2017': aluPesRolls
 };
 
