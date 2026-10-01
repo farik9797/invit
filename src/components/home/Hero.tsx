@@ -4,7 +4,7 @@ import { ArrowDown } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import { paths } from '../../routes';
 import eurobandMark from '../../assets/logo/euroband-color.svg';
-import windowTapes from '../../assets/hero/window-tapes-set.webp';
+import butylWindowTapes from '../../assets/hero/butyl-window-tapes.webp';
 import aluButylFoil from '../../assets/hero/alu-butyl-foil.webp';
 import eurobandBoxes from '../../assets/hero/euroband-boxes-range.webp';
 import pesGreyRolls from '../../assets/hero/pes-grey-rolls.webp';
@@ -84,7 +84,7 @@ const SLIDES: Slide[] = [
     lead: 'Монтажный шов окна —',
     accent: 'три слоя, три ленты',
     text: 'Внутри пароизоляционная ВЛ(а) или ВЛ, снаружи паропроницаемая НЛ, в четверти — саморасширяющаяся ПСУЛ. Шов держит тепло и выводит влагу наружу.',
-    image: windowTapes,
+    image: butylWindowTapes,
     href: `${paths.category('materialy-dlya-okon')}?sub=montazhnye-lenty-dlya-okon`,
     cta: 'Ленты для окон'
   }
