@@ -17,13 +17,28 @@ interface Props {
   idPrefix?: string;
 }
 
+/*
+ * Заполнять нужно всё, кроме «Что нужно»: клиент правкой от 01.10 сделал
+ * компанию и почту обязательными — заявки приходят от организаций, и без
+ * названия и адреса ответить по ним нечем.
+ */
+interface Errors {
+  name?: string;
+  company?: string;
+  phone?: string;
+  email?: string;
+}
+
+/** Почта на вид: имя, собака, домен с точкой. Глубже проверит отправка. */
+const MAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export const RequestForm: React.FC<Props> = ({ idPrefix = 'zayavka' }) => {
   const [name, setName] = useState('');
   const [company, setCompany] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [task, setTask] = useState('');
-  const [errors, setErrors] = useState<{ name?: string; phone?: string }>({});
+  const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<'idle' | 'sending' | 'done'>('idle');
   const timer = useRef<number>();
 
@@ -31,9 +46,11 @@ export const RequestForm: React.FC<Props> = ({ idPrefix = 'zayavka' }) => {
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    const next: { name?: string; phone?: string } = {};
+    const next: Errors = {};
     if (!name.trim()) next.name = 'Укажите, как к вам обращаться';
+    if (!company.trim()) next.company = 'Укажите название организации или ИП';
     if (phone.replace(/\D/g, '').length < 9) next.phone = 'Введите номер телефона полностью';
+    if (!MAIL.test(email.trim())) next.email = 'Введите адрес почты, например mail@company.by';
     setErrors(next);
     if (Object.keys(next).length) return;
 
@@ -94,8 +111,16 @@ export const RequestForm: React.FC<Props> = ({ idPrefix = 'zayavka' }) => {
           id={id('company')}
           value={company}
           onChange={(e) => setCompany(e.target.value)}
-          className={`${FIELD} border-inv-border`}
+          aria-invalid={Boolean(errors.company)}
+          aria-describedby={errors.company ? id('company-error') : undefined}
+          className={`${FIELD} ${errors.company ? 'border-inv-error' : 'border-inv-border'}`}
         />
+        {errors.company && (
+          <p id={id('company-error')} className="flex items-center gap-1.5 text-sm text-inv-error">
+            <AlertCircle className="w-4 h-4 shrink-0" />
+            {errors.company}
+          </p>
+        )}
       </div>
 
       <div className="flex flex-col gap-2">
@@ -134,8 +159,16 @@ export const RequestForm: React.FC<Props> = ({ idPrefix = 'zayavka' }) => {
           inputMode="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className={`${FIELD} border-inv-border`}
+          aria-invalid={Boolean(errors.email)}
+          aria-describedby={errors.email ? id('email-error') : undefined}
+          className={`${FIELD} ${errors.email ? 'border-inv-error' : 'border-inv-border'}`}
         />
+        {errors.email && (
+          <p id={id('email-error')} className="flex items-center gap-1.5 text-sm text-inv-error">
+            <AlertCircle className="w-4 h-4 shrink-0" />
+            {errors.email}
+          </p>
+        )}
       </div>
 
       <div className="flex flex-col gap-2 sm:col-span-2">

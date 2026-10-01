@@ -99,10 +99,11 @@ export const CallbackModal: React.FC<CallbackModalProps> = ({ isOpen, onClose, c
 
               <div>
                 <label className="block font-bold text-ink/80 mb-1">
-                  Email:
+                  Email <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="email"
+                  required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="mail@company.by"

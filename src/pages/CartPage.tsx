@@ -245,7 +245,8 @@ export const CartPage: React.FC = () => {
                 <div className="space-y-3 pt-1">
                   <input
                     type="text"
-                    placeholder="Компания или ИП"
+                    required
+                    placeholder="Компания или ИП *"
                     value={companyName}
                     onChange={(e) => setCompanyName(e.target.value)}
                     className="w-full min-h-11 px-3 bg-white border border-inv-border rounded-[4px] text-sm text-inv-ink placeholder:text-inv-ink-muted focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-inv-blue"
@@ -260,7 +261,8 @@ export const CartPage: React.FC = () => {
                   />
                   <input
                     type="email"
-                    placeholder="Email"
+                    required
+                    placeholder="Email *"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full min-h-11 px-3 bg-white border border-inv-border rounded-[4px] text-sm text-inv-ink placeholder:text-inv-ink-muted focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-inv-blue"

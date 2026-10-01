@@ -25,19 +25,6 @@ const plural = (n: number) => {
   return 'позиций';
 };
 
-/** Классы перечислены целиком: Tailwind не собирает имена по частям. */
-const COLUMNS: Record<number, string> = {
-  3: 'lg:grid-cols-3',
-  4: 'lg:grid-cols-4',
-  5: 'lg:grid-cols-5',
-  6: 'lg:grid-cols-6'
-};
-
-/* Раскладку подбираем так, чтобы последний ряд не оставался с одной плиткой.
-   Шесть подразделов вентиляции клиент попросил ставить одной строкой. */
-const columnsFor = (count: number) =>
-  COLUMNS[count === 6 ? 6 : count % 5 === 0 ? 5 : count % 4 === 0 ? 4 : 3];
-
 /*
  * Плитка на раздел, а не на подраздел. Подразделов в каталоге девяносто пять —
  * на главной это была бы стена на десять экранов; вглубь покупатель идёт уже
@@ -72,7 +59,11 @@ export const CategoryTiles: React.FC = () => (
       </Reveal>
 
       <RevealGroup
-        className={`mt-10 grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 ${columnsFor(TILES.length)}`}
+        /* Четыре плитки в ряд — правка клиента от 01.10. Раньше раскладку
+           подбирали по числу разделов, чтобы последний ряд не оставался с
+           одной плиткой; теперь ширина ряда задана, и при тринадцати разделах
+           плитки встают в четыре ряда. */
+        className="mt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4"
       >
         {TILES.map((tile) => (
           <Link
