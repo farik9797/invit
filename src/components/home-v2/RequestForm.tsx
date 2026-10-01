@@ -96,7 +96,6 @@ export const RequestForm: React.FC<Props> = ({ idPrefix = 'zayavka' }) => {
           onChange={(e) => setCompany(e.target.value)}
           className={`${FIELD} border-inv-border`}
         />
-        <p className="text-sm text-inv-ink-muted">Необязательно</p>
       </div>
 
       <div className="flex flex-col gap-2">
@@ -137,7 +136,6 @@ export const RequestForm: React.FC<Props> = ({ idPrefix = 'zayavka' }) => {
           onChange={(e) => setEmail(e.target.value)}
           className={`${FIELD} border-inv-border`}
         />
-        <p className="text-sm text-inv-ink-muted">Необязательно</p>
       </div>
 
       <div className="flex flex-col gap-2 sm:col-span-2">
