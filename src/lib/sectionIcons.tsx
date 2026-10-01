@@ -41,12 +41,12 @@ const ALIAS: Record<string, string> = {
   'dyubel-metallicheskiy-pustotelyy': 'dyubel-raspornyy',
   // Правка клиента от 01.10: пена стала отдельным разделом и разошлась на три
   // подраздела. Баллон уже нарисован — берём его, клей-пене достаётся знак
-  // бывших «клеёв монтажных», гибридному герметику — общий знак герметиков.
+  // бывших «клеёв монтажных», специализированным герметикам — общий знак герметиков.
   'pena-montazhnaya': 'pena-montazhnaya-ochistitel-dlya-peny',
   'pena-montazhnaya-ppu': 'pena-montazhnaya-ochistitel-dlya-peny',
   'ochistiteli-peny': 'pena-montazhnaya-ochistitel-dlya-peny',
   'kley-pena': 'klei-montazhnye',
-  'germetiki-universalnye': 'germetiki'
+  'germetiki-specializirovannye': 'germetiki'
 };
 
 export const SectionIcon: React.FC<{
