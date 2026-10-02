@@ -794,12 +794,16 @@ const useHeaderSlide = (element: React.RefObject<HTMLElement | null>) => {
  * вправо, 200мс. Линия рисуется псевдоэлементом и не двигает соседей, в
  * отличие от честного border-bottom.
  */
+/*
+ * Ссылка верхнего меню. Под курсором заливается синим с белым текстом — так же,
+ * как строка раздела в мега-меню и как на сайте, который показал клиент.
+ * Заливка полупрозрачная: сквозь неё видно шапку. Прежнее подчёркивание с
+ * анимацией убрали — вместе с заливкой выходило слишком шумно.
+ */
 const NAV_LINK =
-  'relative text-sm text-inv-ink-muted hover:text-inv-blue transition-colors duration-[120ms] whitespace-nowrap ' +
-  'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue ' +
-  'after:absolute after:left-0 after:-bottom-1.5 after:h-0.5 after:w-full after:rounded-full after:bg-inv-blue ' +
-  'after:origin-left after:scale-x-0 after:transition-transform after:duration-200 ' +
-  'after:ease-[cubic-bezier(0.16,1,0.3,1)] hover:after:scale-x-100 focus-visible:after:scale-x-100';
+  'inline-flex items-center min-h-9 px-3 rounded-[4px] text-sm text-inv-ink-muted whitespace-nowrap ' +
+  'transition-colors duration-[120ms] hover:bg-inv-blue/85 hover:text-white ' +
+  'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue';
 
 export const HeaderV2: React.FC<{ onRequest?: () => void }> = ({ onRequest }) => {
   const [open, setOpen] = useState(false);
