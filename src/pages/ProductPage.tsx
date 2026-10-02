@@ -303,7 +303,7 @@ export const ProductPage: React.FC = () => {
                   }`}
                 >
                   {isAdded ? <Check className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
-                  {isAdded ? 'Добавить ещё' : 'Добавить в корзину'}
+                  {isAdded ? 'Добавить ещё' : 'В заявку на счёт'}
                 </button>
 
                 <button
@@ -321,7 +321,7 @@ export const ProductPage: React.FC = () => {
                   className="flex items-center justify-center gap-2 min-h-11 rounded-[4px] border border-brand-blue text-brand-blue text-sm font-semibold hover:bg-brand-blue/5 transition-colors"
                 >
                   <ShoppingCart className="w-4 h-4" />
-                  Перейти в корзину
+                  Перейти к заявке
                 </Link>
               )}
 

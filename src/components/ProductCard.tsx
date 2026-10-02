@@ -102,7 +102,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         {priceLabel(product)}
       </span>
 
-      <div className={`flex items-center justify-between gap-2 ${compact ? 'pt-2' : 'pt-3'}`}>
+      {/* В узкой колонке подпись кнопки не помещалась рядом с «Подробнее» и
+          обрезалась на полуслове — разрешаем строке переноситься. */}
+      <div className={`flex flex-wrap items-center justify-between gap-x-2 gap-y-1 ${compact ? 'pt-2' : 'pt-3'}`}>
         <Link
           to={paths.product(product)}
           className={`inline-flex items-center gap-1.5 min-h-11 font-semibold text-inv-blue hover:text-inv-blue-pressed transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue ${
@@ -119,13 +121,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             className="inline-flex items-center gap-1.5 min-h-11 px-3 rounded-[4px] text-sm font-semibold bg-inv-surface-1 text-inv-ink hover:bg-inv-surface-2 transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
           >
             <Plus className="w-4 h-4" />
-            {!compact && <span className="hidden sm:inline">Выбрать размер</span>}
+            {!compact && <span className="hidden sm:inline whitespace-nowrap">Выбрать размер</span>}
           </Link>
         ) : (
         <button
           type="button"
           onClick={() => onAddToQuote(product)}
-          aria-label={isAdded ? 'Уже в корзине' : 'Добавить в корзину'}
+          aria-label={isAdded ? 'Уже в заявке' : 'Добавить в заявку на счёт'}
           className={`inline-flex items-center gap-1.5 min-h-11 px-3 rounded-[4px] text-sm font-semibold cursor-pointer transition-[background-color,transform] duration-[120ms] active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue ${
             isAdded
               ? 'bg-inv-surface-2 text-inv-ink'
@@ -133,7 +135,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           }`}
         >
           {isAdded ? <Check className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
-          {!compact && <span className="hidden sm:inline">{isAdded ? 'В корзине' : 'В корзину'}</span>}
+          {!compact && (
+            <span className="hidden sm:inline whitespace-nowrap">{isAdded ? 'В заявке' : 'В заявку'}</span>
+          )}
         </button>
         )}
       </div>

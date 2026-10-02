@@ -62,7 +62,7 @@ export const Layout: React.FC = () => {
           <Link
             to={paths.cart}
             className="pointer-events-auto bg-brand-blue hover:bg-brand-blue-hover text-white p-3.5 rounded-full shadow-lg flex items-center gap-2 border-2 border-white transition-all transform hover:scale-105 cursor-pointer group"
-            title="Открыть корзину"
+            title="Открыть заявку на счёт"
           >
             <div className="relative">
               <ShoppingBag className="w-5 h-5 text-white" />
@@ -71,7 +71,7 @@ export const Layout: React.FC = () => {
               </span>
             </div>
             <span className="text-xs font-bold uppercase tracking-wider hidden sm:inline pr-1">
-              Корзина ({shop.quoteCart.length})
+              Заявка ({shop.quoteCart.length})
             </span>
           </Link>
         )}
@@ -79,7 +79,7 @@ export const Layout: React.FC = () => {
         <button
           onClick={() => shop.openCallback('Быстрый звонок с плавающей кнопки')}
           className="pointer-events-auto bg-brand-green hover:bg-brand-green-hover text-white p-4 rounded-full shadow-lg flex items-center justify-center border-2 border-white transition-all transform hover:scale-110 cursor-pointer group relative"
-          title="Заказать обратный звонок"
+          title="Обратный звонок"
         >
           <span className="absolute inset-0 rounded-full bg-brand-green opacity-40 animate-ping"></span>
           <PhoneCall className="w-6 h-6 relative z-10 text-white" />

@@ -112,12 +112,12 @@ export const CartPage: React.FC = () => {
 
   return (
     <>
-      <Breadcrumbs items={[{ label: 'Корзина' }]} />
+      <Breadcrumbs items={[{ label: 'Заявка на счёт' }]} />
 
       <section className="bg-inv-deep text-white">
         <div className="max-w-[1340px] mx-auto px-5 py-8 sm:py-12">
           <h1 className="text-2xl sm:text-3xl md:text-[40px] font-semibold tracking-[-0.01em] leading-[1.15]">
-            Корзина
+            Заявка на счёт
           </h1>
           <p className="mt-3 text-sm sm:text-base text-white/70">
             {items.length > 0
@@ -132,9 +132,9 @@ export const CartPage: React.FC = () => {
           {items.length === 0 ? (
             <div className="py-16 text-center rounded-[8px] border border-inv-border bg-inv-surface-1">
               <ShoppingCart className="w-12 h-12 text-inv-ink-muted/50 mx-auto" />
-              <h2 className="mt-4 text-base font-semibold text-inv-ink">Корзина пока пуста</h2>
+              <h2 className="mt-4 text-base font-semibold text-inv-ink">Заявка пока пуста</h2>
               <p className="mt-2 text-sm text-inv-ink-muted max-w-sm mx-auto leading-relaxed">
-                Нажмите «В корзину» в каталоге, чтобы собрать список нужных материалов.
+                Нажмите «В заявку» в каталоге, чтобы собрать список нужных материалов.
                 Нужные размеры и объём укажите в комментарии к заявке.
               </p>
               <Link
@@ -261,7 +261,7 @@ export const CartPage: React.FC = () => {
                       className="inline-flex items-center gap-2 min-h-11 px-4 rounded-[4px] border border-inv-border text-sm font-semibold text-inv-ink-muted hover:text-inv-red hover:border-inv-red transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-red"
                     >
                       <Trash2 className="w-4 h-4" />
-                      Очистить корзину
+                      Очистить заявку
                     </button>
                   )}
                 </div>

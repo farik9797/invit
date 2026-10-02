@@ -208,7 +208,7 @@ const CartButton: React.FC<{ className?: string }> = ({ className = '' }) => {
   return (
     <Link
       to={paths.cart}
-      aria-label={count ? `Корзина, позиций: ${count}` : 'Корзина пуста'}
+      aria-label={count ? `Заявка на счёт, позиций: ${count}` : 'Заявка пуста'}
       className={`relative flex items-center justify-center w-11 h-11 rounded-[4px] text-inv-ink hover:text-inv-blue hover:bg-inv-surface-1 transition-colors duration-[120ms] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue ${className}`}
     >
       <ShoppingCart className="w-5 h-5" />
@@ -1017,6 +1017,16 @@ export const FooterV2: React.FC = () => (
         >
           Все реквизиты и документы
         </Link>
+      </div>
+    </div>
+
+    {/* Оговорка стоит на всех страницах: сайт не торгует в розницу и не делает
+        публичной оферты. Подробная версия — в заявке, перед кнопкой отправки. */}
+    <div className="border-t border-white/15">
+      <div className="max-w-[1400px] mx-auto px-4 lg:px-8 pr-20 sm:pr-24 lg:pr-28 py-4 text-xs leading-relaxed text-white/60">
+        Сайт носит информационный характер, не является интернет-магазином и публичной
+        офертой. Продажа товаров физическим лицам (розничная торговля) не осуществляется:
+        работаем с юридическими лицами и индивидуальными предпринимателями по счёт-фактуре.
       </div>
     </div>
 

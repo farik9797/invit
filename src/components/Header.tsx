@@ -106,7 +106,7 @@ export const Header: React.FC<HeaderProps> = ({
           <Link
             to={paths.cart}
             className="relative self-center p-2.5 text-ink/70 hover:text-brand-green transition-colors cursor-pointer"
-            title="Корзина"
+            title="Заявка на счёт"
           >
             <ShoppingBag className="w-5 h-5" />
             {quoteCount > 0 && (

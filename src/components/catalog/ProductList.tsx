@@ -110,7 +110,7 @@ const Row: React.FC<RowProps> = ({ product, isAdded, onAddToQuote }) => {
               className="inline-flex items-center gap-1.5 min-h-11 px-3 rounded-[4px] text-[13px] font-semibold bg-inv-surface-1 text-inv-ink cursor-pointer active:scale-[0.98] transition-transform duration-[120ms]"
             >
               {isAdded ? <Check className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
-              {isAdded ? 'В корзине' : 'В корзину'}
+              {isAdded ? 'В заявке' : 'В заявку'}
             </button>
           )}
         </span>
@@ -137,13 +137,13 @@ const Row: React.FC<RowProps> = ({ product, isAdded, onAddToQuote }) => {
           <button
             type="button"
             onClick={() => onAddToQuote(product)}
-            aria-label={isAdded ? 'Уже в корзине' : 'Добавить в корзину'}
+            aria-label={isAdded ? 'Уже в заявке' : 'Добавить в заявку на счёт'}
             className={`inline-flex items-center gap-1.5 min-h-11 px-4 rounded-[4px] text-sm font-semibold whitespace-nowrap cursor-pointer transition-[background-color,transform] duration-[120ms] active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue ${
               isAdded ? 'bg-inv-surface-2 text-inv-ink' : 'bg-inv-surface-1 text-inv-ink hover:bg-inv-surface-2'
             }`}
           >
             {isAdded ? <Check className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
-            {isAdded ? 'В корзине' : 'В корзину'}
+            {isAdded ? 'В заявке' : 'В заявку'}
           </button>
         )}
 

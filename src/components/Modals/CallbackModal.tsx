@@ -31,7 +31,7 @@ export const CallbackModal: React.FC<CallbackModalProps> = ({ isOpen, onClose, c
           <div className="flex items-center gap-2">
             <PhoneCall className="w-5 h-5 text-white" />
             <span className="font-semibold text-sm uppercase tracking-wide">
-              Заказать звонок / Консультацию
+              Обратный звонок / консультация
             </span>
           </div>
           <button
@@ -119,7 +119,7 @@ export const CallbackModal: React.FC<CallbackModalProps> = ({ isOpen, onClose, c
                   rows={2}
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
-                  placeholder="Например: заказать прайс или консультацию по ПСУЛ..."
+                  placeholder="Например: запросить прайс или консультацию по ПСУЛ…"
                   className="w-full p-2.5 bg-surface-soft border border-line rounded-[4px] text-ink font-medium"
                 ></textarea>
               </div>

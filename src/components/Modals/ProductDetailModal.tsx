@@ -132,7 +132,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
               className="flex-1 sm:flex-initial px-5 py-2.5 rounded-[4px] bg-brand-blue hover:bg-brand-blue-hover text-white font-semibold text-sm shadow transition-all flex items-center justify-center gap-1.5 cursor-pointer"
             >
               <Plus className="w-4 h-4 text-white" />
-              <span>Добавить в корзину</span>
+              <span>В заявку на счёт</span>
             </button>
           </div>
         </div>
