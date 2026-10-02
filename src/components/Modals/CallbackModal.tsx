@@ -71,7 +71,7 @@ export const CallbackModal: React.FC<CallbackModalProps> = ({ isOpen, onClose, c
 
               <div>
                 <label className="block font-bold text-ink/80 mb-1">
-                  Ваше имя:
+                  Ваше имя <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -113,7 +113,7 @@ export const CallbackModal: React.FC<CallbackModalProps> = ({ isOpen, onClose, c
 
               <div>
                 <label className="block font-bold text-ink/80 mb-1">
-                  Комментарий / Запрос:
+                  Комментарий / запрос
                 </label>
                 <textarea
                   rows={2}
