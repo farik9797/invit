@@ -115,7 +115,7 @@ export const MegaMenu: React.FC = () => {
         aria-expanded={open}
         aria-controls="mega-menu"
         className={`inline-flex items-center gap-2 min-h-11 px-4 rounded-[4px] text-sm font-semibold text-white whitespace-nowrap cursor-pointer transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue ${
-          open ? 'bg-inv-blue-pressed' : 'bg-inv-blue hover:bg-inv-blue-hover'
+          open ? 'bg-inv-deep' : 'bg-inv-blue hover:bg-inv-deep'
         }`}
       >
         <Menu className="w-4 h-4" />
