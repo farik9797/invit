@@ -60,21 +60,21 @@ const SubList: React.FC<{
               type="button"
               onClick={() => onSub(active === sub.slug ? null : sub.slug)}
               aria-pressed={active === sub.slug}
-              className={`w-full flex items-center gap-2.5 min-h-11 pl-2 pr-2.5 text-left text-sm cursor-pointer transition-colors duration-[120ms] ${
-                active === sub.slug
-                  ? 'text-inv-red font-semibold'
-                  : 'text-inv-ink-muted hover:text-inv-red'
+              className={`group/sub w-full flex items-center gap-2.5 min-h-11 pl-2 pr-2.5 rounded-[4px] text-left text-sm cursor-pointer transition-colors duration-[120ms] hover:bg-inv-red/90 hover:text-white ${
+                active === sub.slug ? 'text-inv-red font-semibold' : 'text-inv-ink-muted'
               }`}
             >
               <SectionMark
                 slug={sub.slug}
                 size={24}
-                className={`w-6 h-6 shrink-0 ${
+                className={`w-6 h-6 shrink-0 group-hover/sub:text-white ${
                   active === sub.slug ? 'text-inv-red' : 'text-inv-blue'
                 }`}
               />
               <span className="flex-1 leading-snug">{sub.name}</span>
-              <span className="text-xs tabular-nums">{COUNT_SUB.get(sub.slug) ?? 0}</span>
+              <span className="text-xs tabular-nums group-hover/sub:text-white/70">
+                {COUNT_SUB.get(sub.slug) ?? 0}
+              </span>
             </button>
           </li>
         ))}

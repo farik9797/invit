@@ -236,21 +236,19 @@ export const SectionsMenu: React.FC<SectionsMenuProps> = ({
                           setHovered(null);
                         }
                       }}
-                      className={`flex items-center gap-2.5 min-h-10 py-1 pr-2 text-[13px] leading-snug transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue ${
-                        chosen
-                          ? 'text-inv-red font-semibold'
-                          : 'text-inv-ink hover:text-inv-red'
+                      className={`group/sub flex items-center gap-2.5 min-h-10 px-2 py-1 rounded-[4px] text-[13px] leading-snug transition-colors duration-[120ms] hover:bg-inv-red/90 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue ${
+                        chosen ? 'text-inv-red font-semibold' : 'text-inv-ink'
                       }`}
                     >
                       <SectionMark
                         slug={sub.slug}
                         size={24}
-                        className={`w-6 h-6 shrink-0 ${
+                        className={`w-6 h-6 shrink-0 group-hover/sub:text-white ${
                           chosen ? 'text-inv-red' : 'text-inv-blue'
                         }`}
                       />
                       <span className="flex-1">{sub.name}</span>
-                      <span className="text-[11px] tabular-nums text-inv-ink-muted">
+                      <span className="text-[11px] tabular-nums text-inv-ink-muted group-hover/sub:text-white/70">
                         {COUNT_SUB.get(sub.slug) ?? 0}
                       </span>
                     </Link>
