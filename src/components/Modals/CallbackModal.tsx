@@ -11,6 +11,7 @@ export const CallbackModal: React.FC<CallbackModalProps> = ({ isOpen, onClose, c
   if (!isOpen) return null;
 
   const [name, setName] = useState('');
+  const [company, setCompany] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [note, setNote] = useState(customNote || '');
@@ -79,6 +80,22 @@ export const CallbackModal: React.FC<CallbackModalProps> = ({ isOpen, onClose, c
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Анатолий"
+                  className="w-full p-2.5 bg-surface-soft border border-line rounded-[4px] text-ink font-medium"
+                />
+              </div>
+
+              {/* Компания — обязательное: заявки принимаем от юрлиц и ИП,
+                  по названию менеджер находит клиента в учёте. */}
+              <div>
+                <label className="block font-bold text-ink/80 mb-1">
+                  Компания <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={company}
+                  onChange={(e) => setCompany(e.target.value)}
+                  placeholder="ООО «Вектор» или ИП Иванов И. И."
                   className="w-full p-2.5 bg-surface-soft border border-line rounded-[4px] text-ink font-medium"
                 />
               </div>
