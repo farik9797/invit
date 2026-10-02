@@ -22,6 +22,12 @@ interface AddressMapProps {
   /** Что показать под картой. */
   title: string;
   address: string;
+  /**
+   * Подпись под картой: город и адрес. На контактах они стоят прямо над
+   * картой в карточке офиса, и повтор клиент правкой от 02.10 убрал — там
+   * подпись выключаем, остаётся только ссылка «Открыть карту».
+   */
+  caption?: boolean;
   /** Насколько широкий кусок карты показывать: меньше — крупнее. */
   span?: number;
   /** Высота окна карты. На контактах карта основная, поэтому там `tall`. */
@@ -40,6 +46,7 @@ export const AddressMap: React.FC<AddressMapProps> = ({
   lon,
   title,
   address,
+  caption = true,
   span = 0.008,
   size = 'default',
   className = ''
@@ -59,14 +66,20 @@ export const AddressMap: React.FC<AddressMapProps> = ({
         className={`w-full border-0 ${MAP_HEIGHT[size]}`}
       />
 
-      <div className="flex flex-wrap items-start justify-between gap-3 p-4 border-t border-inv-border">
-        <span className="flex gap-2.5 min-w-0">
-          <MapPin className="w-4 h-4 shrink-0 mt-0.5 text-inv-blue" />
-          <span className="min-w-0">
-            <span className="block text-sm font-semibold text-inv-ink">{title}</span>
-            <span className="block mt-0.5 text-sm text-inv-ink-muted">{address}</span>
+      <div
+        className={`flex flex-wrap items-start gap-3 p-4 border-t border-inv-border ${
+          caption ? 'justify-between' : 'justify-end'
+        }`}
+      >
+        {caption && (
+          <span className="flex gap-2.5 min-w-0">
+            <MapPin className="w-4 h-4 shrink-0 mt-0.5 text-inv-blue" />
+            <span className="min-w-0">
+              <span className="block text-sm font-semibold text-inv-ink">{title}</span>
+              <span className="block mt-0.5 text-sm text-inv-ink-muted">{address}</span>
+            </span>
           </span>
-        </span>
+        )}
 
         <a
           href={full}
