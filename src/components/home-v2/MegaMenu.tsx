@@ -115,7 +115,7 @@ export const MegaMenu: React.FC = () => {
         aria-expanded={open}
         aria-controls="mega-menu"
         className={`inline-flex items-center gap-2 min-h-11 px-4 rounded-[4px] text-sm font-semibold text-white whitespace-nowrap cursor-pointer transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue ${
-          open ? 'bg-inv-deep' : 'bg-inv-blue hover:bg-inv-deep'
+          open ? 'bg-inv-red' : 'bg-inv-blue hover:bg-inv-red'
         }`}
       >
         <Menu className="w-4 h-4" />
@@ -138,7 +138,7 @@ export const MegaMenu: React.FC = () => {
                 который показал клиент. Белого 92% хватает, чтобы текст
                 читался над любым кадром, размытие убирает рябь от снимков. */}
             <div className="flex rounded-[8px] border border-inv-border bg-white/92 backdrop-blur-md shadow-[0_6px_24px_rgba(22,44,88,0.16)] overflow-hidden">
-              {/* Разделы. Строка под курсором заливается тёмно-синим и просвечивает —
+              {/* Разделы. Строка под курсором заливается красным и просвечивает —
                   приём с сайта, который показал клиент (vozduhovod-alnor.ru):
                   сквозь заливку видно страницу под меню. */}
               <ul className="w-[350px] shrink-0 border-r border-inv-border bg-inv-surface-1/70 py-2 max-h-[70vh] overflow-y-auto">
@@ -153,7 +153,7 @@ export const MegaMenu: React.FC = () => {
                         onFocus={() => setActive(idx)}
                         aria-current={isActive}
                         className={`flex items-center gap-3 min-h-12 px-5 text-[15px] transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-inv-blue ${
-                          isActive ? 'bg-inv-deep/90 text-white' : 'text-inv-ink'
+                          isActive ? 'bg-inv-red/90 text-white' : 'text-inv-ink'
                         }`}
                       >
                         <SectionMark
