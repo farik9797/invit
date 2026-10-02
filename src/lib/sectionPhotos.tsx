@@ -6,6 +6,11 @@ import windowMaterials from '../assets/section-photos/materialy-dlya-okon.webp';
 import sealants from '../assets/section-photos/germetiki.webp';
 import chemistry from '../assets/section-photos/kley-himiya-smazki.webp';
 import pesTapes from '../assets/section-photos/uplotnitelnye-lenty-pes-samokleyaschiesy.webp';
+import epdm from '../assets/section-photos/uplotnitel-rezinovyy-d-p-e.webp';
+import fasteners from '../assets/section-photos/krepezh.webp';
+import tapes from '../assets/section-photos/alyuminievye-armirovannye-lenty.webp';
+import hvac from '../assets/section-photos/ventilyaciya.webp';
+import tools from '../assets/section-photos/instrument-oborudovanie.webp';
 
 /*
  * Знак раздела — снимок товара из него, а не пиктограмма.
@@ -38,7 +43,12 @@ const CLIENT: Record<string, string> = {
   'materialy-dlya-okon': windowMaterials,
   germetiki: sealants,
   'kley-himiya-smazki': chemistry,
-  'uplotnitelnye-lenty-pes-samokleyaschiesy': pesTapes
+  'uplotnitelnye-lenty-pes-samokleyaschiesy': pesTapes,
+  'uplotnitel-rezinovyy-d-p-e': epdm,
+  krepezh: fasteners,
+  'alyuminievye-armirovannye-lenty': tapes,
+  ventilyaciya: hvac,
+  'instrument-oborudovanie': tools
 };
 
 const CATEGORY = new Map<string, string>();
