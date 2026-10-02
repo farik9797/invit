@@ -138,7 +138,9 @@ export const MegaMenu: React.FC = () => {
                 который показал клиент. Белого 92% хватает, чтобы текст
                 читался над любым кадром, размытие убирает рябь от снимков. */}
             <div className="flex rounded-[8px] border border-inv-border bg-white/92 backdrop-blur-md shadow-[0_6px_24px_rgba(22,44,88,0.16)] overflow-hidden">
-              {/* Разделы. Выбранный красный, как просил клиент */}
+              {/* Разделы. Строка под курсором заливается синим и просвечивает —
+                  приём с сайта, который показал клиент (vozduhovod-alnor.ru):
+                  сквозь заливку видно страницу под меню. */}
               <ul className="w-[350px] shrink-0 border-r border-inv-border bg-inv-surface-1/70 py-2 max-h-[70vh] overflow-y-auto">
                 {SECTIONS.map((item, idx) => {
                   const isActive = idx === active;
@@ -151,16 +153,14 @@ export const MegaMenu: React.FC = () => {
                         onFocus={() => setActive(idx)}
                         aria-current={isActive}
                         className={`flex items-center gap-3 min-h-11 px-5 text-sm transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-inv-blue ${
-                          isActive
-                            ? 'bg-white/80 text-inv-red'
-                            : 'text-inv-ink hover:text-inv-red'
+                          isActive ? 'bg-inv-blue/85 text-white' : 'text-inv-ink'
                         }`}
                       >
                         <SectionMark
                           slug={item.id}
                           size={28}
                           className={`w-7 h-7 shrink-0 ${
-                            isActive ? 'text-inv-red' : 'text-inv-blue'
+                            isActive ? 'text-white' : 'text-inv-blue'
                           }`}
                         />
                         <span className="flex-1">{item.label}</span>
