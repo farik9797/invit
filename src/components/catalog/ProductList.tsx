@@ -27,24 +27,40 @@ const Row: React.FC<RowProps> = ({ product, isAdded, onAddToQuote }) => {
   const sku = specValue(product, 'Артикул');
 
   return (
-    <li className="group flex gap-3 sm:gap-5 p-3 sm:p-4 bg-white transition-colors duration-[120ms] hover:bg-inv-surface-1">
-      <Link
-        to={paths.product(product)}
-        className="shrink-0 w-16 h-16 sm:w-24 sm:h-24 rounded-[4px] border border-inv-border-subtle bg-white p-1.5 sm:p-2 overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
-      >
-        {productImage(product) ? (
-          <img
-            src={productImage(product)}
-            alt={product.title}
-            loading="lazy"
-            className="w-full h-full object-contain"
-          />
-        ) : (
-          <span className="w-full h-full flex items-center justify-center text-inv-border">
-            <SectionIcon slug={product.subcategorySlug} size={40} className="w-9 h-9" />
+    <li className="group flex gap-3 sm:gap-5 p-3 sm:p-4 bg-white transition-colors duration-[120ms] hover:bg-inv-surface-1 first:rounded-t-[8px] last:rounded-b-[8px]">
+      {/* Снимок в строке мелкий — на наведение показываем его крупно рядом.
+          Только мышью: на телефоне наведения нет, а место занял бы. */}
+      <span className="relative shrink-0 group/photo">
+        <Link
+          to={paths.product(product)}
+          className="block w-16 h-16 sm:w-24 sm:h-24 rounded-[4px] border border-inv-border-subtle bg-white p-1.5 sm:p-2 overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
+        >
+          {productImage(product) ? (
+            <img
+              src={productImage(product)}
+              alt={product.title}
+              loading="lazy"
+              className="w-full h-full object-contain"
+            />
+          ) : (
+            <span className="w-full h-full flex items-center justify-center text-inv-border">
+              <SectionIcon slug={product.subcategorySlug} size={40} className="w-9 h-9" />
+            </span>
+          )}
+        </Link>
+
+        {productImage(product) && (
+          <span className="pointer-events-none absolute left-full top-1/2 z-30 ml-3 hidden w-60 -translate-y-1/2 rounded-[8px] border border-inv-border bg-white p-3 opacity-0 shadow-[0_12px_40px_rgba(22,44,88,0.18)] transition-opacity duration-[160ms] lg:block group-hover/photo:opacity-100">
+            <img
+              src={productImage(product)}
+              alt=""
+              aria-hidden
+              loading="lazy"
+              className="w-full aspect-square object-contain"
+            />
           </span>
         )}
-      </Link>
+      </span>
 
       <div className="flex-1 min-w-0">
         <span className="flex items-center gap-2 text-inv-blue">
@@ -170,7 +186,9 @@ export const ProductList: React.FC<ProductListProps> = ({
   quoteItemsIds,
   onAddToQuote
 }) => (
-  <ul className="rounded-[8px] border border-inv-border overflow-hidden divide-y divide-inv-border-subtle">
+  // Без overflow-hidden: иначе крупный снимок при наведении срезался бы у
+  // первой и последней строки. Углы скругляем самим строкам.
+  <ul className="rounded-[8px] border border-inv-border divide-y divide-inv-border-subtle">
     {products.map((product) => (
       <Row
         key={product.id}
