@@ -11,6 +11,7 @@ import fasteners from '../assets/section-photos/krepezh.webp';
 import tapes from '../assets/section-photos/alyuminievye-armirovannye-lenty.webp';
 import hvac from '../assets/section-photos/ventilyaciya.webp';
 import tools from '../assets/section-photos/instrument-oborudovanie.webp';
+import roofing from '../assets/section-photos/krovelnye-uplotniteli-kleykie-lenty.webp';
 
 /*
  * Знак раздела — снимок товара из него, а не пиктограмма.
@@ -48,7 +49,10 @@ const CLIENT: Record<string, string> = {
   krepezh: fasteners,
   'alyuminievye-armirovannye-lenty': tapes,
   ventilyaciya: hvac,
-  'instrument-oborudovanie': tools
+  'instrument-oborudovanie': tools,
+  // Кадр с бутиловыми и алюминиевыми рулонами клиент правкой от 02.10
+  // перенёс сюда с материалов для монтажа окон — там вернулся прежний.
+  'krovelnye-uplotniteli-kleykie-lenty': roofing
 };
 
 const CATEGORY = new Map<string, string>();
