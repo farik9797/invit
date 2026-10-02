@@ -881,15 +881,17 @@ export const HeaderV2: React.FC<{ onRequest?: () => void }> = ({ onRequest }) =>
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
             aria-label={open ? 'Закрыть меню' : 'Открыть меню'}
-            className="w-11 h-11 -mr-2 flex items-center justify-center text-inv-ink cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
+            className="w-11 h-11 -mr-2 flex items-center justify-center rounded-[4px] text-inv-ink cursor-pointer focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-inv-blue"
           >
             {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
       </div>
 
+      {/* Отбивка между пунктами, а не только высота строки: у длинных названий
+          подпись переносится на две строки и без неё пункты слипались. */}
       {open && (
-        <div className="lg:hidden border-t border-inv-border bg-white px-4 py-4 space-y-1">
+        <div className="lg:hidden border-t border-inv-border bg-white px-4 py-4 space-y-1.5">
           <span className="block pt-1 pb-2 text-xs font-semibold uppercase tracking-[0.12em] text-inv-ink-muted">
             Каталог товаров
           </span>
@@ -898,7 +900,7 @@ export const HeaderV2: React.FC<{ onRequest?: () => void }> = ({ onRequest }) =>
               key={item.href}
               to={item.href}
               onClick={() => setOpen(false)}
-              className="flex items-center min-h-11 text-base font-semibold text-inv-ink"
+              className="flex items-center min-h-11 py-2 -mx-2 px-2 rounded-[4px] text-base font-semibold leading-snug text-inv-ink active:bg-inv-surface-1"
             >
               {item.label}
             </Link>
@@ -912,14 +914,14 @@ export const HeaderV2: React.FC<{ onRequest?: () => void }> = ({ onRequest }) =>
               key={item.to}
               to={item.to}
               onClick={() => setOpen(false)}
-              className="flex items-center min-h-11 text-base text-inv-ink"
+              className="flex items-center min-h-11 py-2 -mx-2 px-2 rounded-[4px] text-base leading-snug text-inv-ink active:bg-inv-surface-1"
             >
               {item.label}
             </NavLink>
           ))}
           <a
             href="tel:+375296444979"
-            className="flex items-center min-h-11 text-base font-semibold text-inv-ink"
+            className="flex items-center min-h-11 py-2 -mx-2 px-2 rounded-[4px] text-base font-semibold text-inv-ink active:bg-inv-surface-1"
           >
             +375 29 644-49-79
           </a>
