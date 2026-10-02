@@ -134,9 +134,12 @@ export const MegaMenu: React.FC = () => {
           className="absolute left-0 right-0 top-full z-40 pt-3"
         >
           <div className="max-w-[1400px] mx-auto px-4 lg:px-8">
-            <div className="flex rounded-[8px] border border-inv-border bg-white shadow-[0_6px_24px_rgba(22,44,88,0.16)] overflow-hidden">
+            {/* Панель просвечивает: сквозь неё видно страницу, как на сайте,
+                который показал клиент. Белого 92% хватает, чтобы текст
+                читался над любым кадром, размытие убирает рябь от снимков. */}
+            <div className="flex rounded-[8px] border border-inv-border bg-white/92 backdrop-blur-md shadow-[0_6px_24px_rgba(22,44,88,0.16)] overflow-hidden">
               {/* Разделы. Выбранный красный, как просил клиент */}
-              <ul className="w-[350px] shrink-0 border-r border-inv-border bg-inv-surface-1 py-2 max-h-[70vh] overflow-y-auto">
+              <ul className="w-[350px] shrink-0 border-r border-inv-border bg-inv-surface-1/70 py-2 max-h-[70vh] overflow-y-auto">
                 {SECTIONS.map((item, idx) => {
                   const isActive = idx === active;
 
@@ -149,7 +152,7 @@ export const MegaMenu: React.FC = () => {
                         aria-current={isActive}
                         className={`flex items-center gap-3 min-h-11 px-5 text-sm transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-inv-blue ${
                           isActive
-                            ? 'bg-white text-inv-red'
+                            ? 'bg-white/80 text-inv-red'
                             : 'text-inv-ink hover:text-inv-red'
                         }`}
                       >
