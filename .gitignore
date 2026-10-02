@@ -14,7 +14,9 @@ password.md
 .claude/settings.local.json
 scripts/sprite/out/
 # выгрузки поставщиков и архивы фото — данные, не код (в files/ лежит zip на 1.1 ГБ)
-files/
+files/*
+# ...кроме дописанных вручную позиций: без них каталог не пересобрать
+!files/dopolneniya.json
 
 # firecrawl local cache
 .firecrawl/

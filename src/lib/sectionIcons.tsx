@@ -48,7 +48,9 @@ const ALIAS: Record<string, string> = {
   'kley-pena': 'klei-montazhnye',
   'germetiki-specializirovannye': 'germetiki',
   // Бытовые клеи — тот же тюбик, что у монтажных
-  'klei-bytovye': 'klei-montazhnye'
+  'klei-bytovye': 'klei-montazhnye',
+  // Монтажная шина — тот же профиль, что L/U
+  'shina-montazhnaya': 'profil-montazhnyy-l-u'
 };
 
 export const SectionIcon: React.FC<{

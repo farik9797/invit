@@ -36,7 +36,7 @@ TEXTS = ROOT / 'src/data/catalogDescriptions.ts'
 IMAGES_IN = ROOT / 'files/images'
 IMAGES_OUT = ROOT / 'public/products'
 CONTENT = ROOT / 'src/data/productContent.ts'
-EXTRA = ROOT / 'files/dopolneniya-klei.json'
+EXTRA = ROOT / 'files/dopolneniya.json'
 
 # Куда класть позиции из файла дополнений: в нём указан только подраздел.
 SECTION_OF = {
@@ -44,6 +44,7 @@ SECTION_OF = {
     'Клеи бытовые': 'Клей, химия, смазки',
     'Герметики специализированные': 'Герметики',
     'Силиконовые': 'Герметики',
+    'Шина монтажная': 'Комплектующие для воздуховодов и систем вентиляции',
 }
 
 # Раздел клиента -> (slug, подразделы в порядке клиента). Ключ подраздела —
@@ -155,6 +156,7 @@ STRUCTURE = [
     # правка клиента от 15.09.
     ('Комплектующие для воздуховодов и систем вентиляции', 'ventilyaciya', 'hvac', [
         ('Уголки монтажные', 'ugolki-montazhnye'),
+        ('Шина монтажная', 'shina-montazhnaya'),
         ('Кронштейн', 'kronshteyny-l-v-z-p'),
         ('Струбцины', 'strubciny'),
         ('Скоба', 'skoba'),
