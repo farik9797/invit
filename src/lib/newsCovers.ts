@@ -1,14 +1,17 @@
 import windowMaterials from '../assets/news/vse-materialy-dlya-okon.webp';
 import phoneNotice from '../assets/news/izmenilsya-nomer-telefona.webp';
-import certificates from '../assets/news/sertifikaty.webp';
 import certificate2025 from '../assets/news/sertifikat-invit-2025-2027.webp';
+import certificate2014 from '../assets/news/sertifikat-beltpp-2014.webp';
 import iban from '../assets/news/novye-rekvizity-iban.webp';
-import plant from '../assets/banners/euroband-plant.webp';
 import rangeNavy from '../assets/banners/euroband-range-navy.webp';
-import rangeWhite from '../assets/banners/euroband-range-white.webp';
+import stockRange from '../assets/news/skladskaya-programma.webp';
 
 /*
  * Обложки новостей.
+ *
+ * Кадры обрезаны по содержимому: у исходного снимка складской программы
+ * половина высоты была пустым белым полем, и в карточке он показывался
+ * обрезком — товар уезжал за край.
  *
  * К заметкам на invit.by приложен клипарт нулевых (эмблема палаты, картинка
  * телефона, печать «важная информация») — его мы не переносили. Настоящих
@@ -16,9 +19,9 @@ import rangeWhite from '../assets/banners/euroband-range-white.webp';
  * переезд получает снимок производства, складская программа — ассортимент,
  * остальные — кадры продукции.
  *
- * К заметке о сертификате 2025–2027 клиент прислал скан самого документа —
- * он и стоит обложкой. У заметки про БелТПП 2014 скана нет, там осталась
- * картинка со стопкой документов; к заметке о реквизитах — баннер IBAN.
+ * К обеим заметкам о сертификации клиент прислал сканы самих документов:
+ * сертификат 2025–2027 и пару сертификатов 2014 года. К заметке о
+ * реквизитах — баннер IBAN.
  *
  * Если клиент пришлёт настоящие фото, менять надо только эту карту: к заметке
  * о переезде он прислал плакат «Все материалы для монтажа окон», к заметке о
@@ -27,8 +30,8 @@ import rangeWhite from '../assets/banners/euroband-range-white.webp';
  */
 const COVERS: Record<string, string> = {
   'sertifikat-invit-2025-2027': certificate2025,
-  'sertifikat-beltpp-2014': certificates,
-  'rasshirenie-skladskoj-programmy': rangeWhite,
+  'sertifikat-beltpp-2014': certificate2014,
+  'rasshirenie-skladskoj-programmy': stockRange,
   'invit-pereezd-na-mkad': windowMaterials,
   'invit-novye-nomera-telefonov': phoneNotice,
   'invit-novye-rekvizity-2017': iban
