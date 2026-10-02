@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Minus, Plus, Trash2, Send, CheckCircle2, ShoppingCart, ArrowLeft } from 'lucide-react';
+import { Minus, Plus, Trash2, Send, CheckCircle2, ShoppingCart, ArrowLeft, AlertCircle } from 'lucide-react';
 import { Breadcrumbs } from '../components/Breadcrumbs';
 import { useShop } from '../context/ShopContext';
 import { productImage } from '../lib/productImages';
@@ -23,14 +23,49 @@ const plural = (n: number) => {
   return 'позиций';
 };
 
+/*
+ * Заявка на счёт, а не заказ в магазине: клиент работает только с юрлицами и
+ * ИП, поэтому форма спрашивает реквизиты (организация, УНП, контактное лицо),
+ * а отправка закрыта подтверждением статуса покупателя. Без этой галочки
+ * кнопка не работает — так заявка не превращается в розничную покупку.
+ */
+interface Errors {
+  companyName?: string;
+  unp?: string;
+  person?: string;
+  email?: string;
+  phone?: string;
+}
+
+/** Почта на вид: имя, собака, домен с точкой. Глубже проверит отправка. */
+const MAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const FIELD =
+  'w-full min-h-11 px-3 bg-white border rounded-[4px] text-sm text-inv-ink placeholder:text-inv-ink-muted focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-inv-blue';
+
+const LABEL = 'block text-xs font-semibold text-inv-ink mb-1.5';
+
+/** Сообщение под полем: одинаковое во всей форме. */
+const Hint: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <p className="mt-1.5 flex items-center gap-1.5 text-xs text-inv-error">
+    <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+    {children}
+  </p>
+);
+
 export const CartPage: React.FC = () => {
   const shop = useShop();
   const items = shop.quoteCart;
 
   const [companyName, setCompanyName] = useState('');
+  const [unp, setUnp] = useState('');
+  const [person, setPerson] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
+  const [address, setAddress] = useState('');
   const [note, setNote] = useState('');
+  const [agree, setAgree] = useState(false);
+  const [errors, setErrors] = useState<Errors>({});
   const [submitted, setSubmitted] = useState(false);
   const [confirmClear, setConfirmClear] = useState(false);
 
@@ -38,7 +73,14 @@ export const CartPage: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!phone) return;
+    const next: Errors = {};
+    if (!companyName.trim()) next.companyName = 'Укажите организацию или ИП';
+    if (!/^\d{9}$/.test(unp.trim())) next.unp = 'УНП — ровно девять цифр';
+    if (!person.trim()) next.person = 'Укажите, с кем связаться';
+    if (!MAIL.test(email.trim())) next.email = 'Счёт придёт на этот адрес — проверьте его';
+    if (phone.replace(/\D/g, '').length < 9) next.phone = 'Введите номер телефона полностью';
+    setErrors(next);
+    if (Object.keys(next).length || !agree) return;
     setSubmitted(true);
     shop.clearQuoteCart();
   };
@@ -49,11 +91,12 @@ export const CartPage: React.FC = () => {
         <div className="max-w-[1340px] mx-auto px-5 py-20 sm:py-28 text-center">
           <CheckCircle2 className="w-14 h-14 text-inv-blue mx-auto" />
           <h1 className="mt-5 text-2xl sm:text-3xl font-semibold text-inv-ink">
-            Заявка отправлена
+            Заявка на получение счёта успешно отправлена
           </h1>
-          <p className="mt-4 text-sm sm:text-base text-inv-ink-muted leading-relaxed max-w-md mx-auto">
-            Менеджер ООО «ИНВИТ» посчитает объём и цены и свяжется с вами по указанному
-            телефону.
+          <p className="mt-4 text-sm sm:text-base text-inv-ink-muted leading-relaxed max-w-xl mx-auto">
+            Наши менеджеры уже проверяют наличие товара на складе и корректность
+            указанного УНП. Счёт-фактура для безналичного расчёта будет выслан на ваш
+            Email в течение 30 минут (в рабочее время).
           </p>
           <Link
             to={paths.catalog}
@@ -227,9 +270,9 @@ export const CartPage: React.FC = () => {
               {/* Заказ */}
               <form
                 onSubmit={handleSubmit}
-                className="lg:col-span-5 xl:col-span-4 lg:sticky lg:top-24 rounded-[8px] border border-inv-border bg-inv-surface-1 p-5 sm:p-6 space-y-4"
+                className="lg:col-span-5 xl:col-span-4 rounded-[8px] border border-inv-border bg-inv-surface-1 p-5 sm:p-6 space-y-4"
               >
-                <h2 className="text-lg font-semibold text-inv-ink">Оформить заявку</h2>
+                <h2 className="text-lg font-semibold text-inv-ink">Заявка на счёт-фактуру</h2>
 
                 <dl className="text-sm space-y-1.5">
                   <div className="flex justify-between gap-4">
@@ -242,51 +285,165 @@ export const CartPage: React.FC = () => {
                   </div>
                 </dl>
 
+                {/* Реквизиты запрашиваем те, без которых счёт не выписать. */}
                 <div className="space-y-3 pt-1">
-                  <input
-                    type="text"
-                    required
-                    placeholder="Компания или ИП *"
-                    value={companyName}
-                    onChange={(e) => setCompanyName(e.target.value)}
-                    className="w-full min-h-11 px-3 bg-white border border-inv-border rounded-[4px] text-sm text-inv-ink placeholder:text-inv-ink-muted focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-inv-blue"
-                  />
-                  <input
-                    type="tel"
-                    required
-                    placeholder="Телефон *"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    className="w-full min-h-11 px-3 bg-white border border-inv-border rounded-[4px] text-sm text-inv-ink placeholder:text-inv-ink-muted focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-inv-blue"
-                  />
-                  <input
-                    type="email"
-                    required
-                    placeholder="Email *"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full min-h-11 px-3 bg-white border border-inv-border rounded-[4px] text-sm text-inv-ink placeholder:text-inv-ink-muted focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-inv-blue"
-                  />
-                  <textarea
-                    rows={3}
-                    placeholder="Комментарий: сроки, доставка, нетиповые размеры"
-                    value={note}
-                    onChange={(e) => setNote(e.target.value)}
-                    className="w-full px-3 py-2.5 bg-white border border-inv-border rounded-[4px] text-sm text-inv-ink placeholder:text-inv-ink-muted resize-y focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-inv-blue"
-                  />
+                  <div>
+                    <label htmlFor="zayavka-org" className={LABEL}>
+                      Наименование организации / ИП <span className="text-inv-error">*</span>
+                    </label>
+                    <input
+                      id="zayavka-org"
+                      type="text"
+                      placeholder="ООО «Вектор» или ИП Иванов И. И."
+                      value={companyName}
+                      onChange={(e) => setCompanyName(e.target.value)}
+                      aria-invalid={Boolean(errors.companyName)}
+                      className={`${FIELD} ${errors.companyName ? 'border-inv-error' : 'border-inv-border'}`}
+                    />
+                    {errors.companyName && <Hint>{errors.companyName}</Hint>}
+                  </div>
+
+                  <div>
+                    <label htmlFor="zayavka-unp" className={LABEL}>
+                      УНП <span className="text-inv-error">*</span>
+                    </label>
+                    <input
+                      id="zayavka-unp"
+                      inputMode="numeric"
+                      maxLength={9}
+                      placeholder="9 цифр"
+                      value={unp}
+                      onChange={(e) => setUnp(e.target.value.replace(/\D/g, ''))}
+                      aria-invalid={Boolean(errors.unp)}
+                      className={`${FIELD} tabular-nums ${errors.unp ? 'border-inv-error' : 'border-inv-border'}`}
+                    />
+                    {errors.unp && <Hint>{errors.unp}</Hint>}
+                  </div>
+
+                  <div>
+                    <label htmlFor="zayavka-person" className={LABEL}>
+                      Контактное лицо (ФИО) <span className="text-inv-error">*</span>
+                    </label>
+                    <input
+                      id="zayavka-person"
+                      type="text"
+                      placeholder="Иванов Иван Иванович"
+                      value={person}
+                      onChange={(e) => setPerson(e.target.value)}
+                      aria-invalid={Boolean(errors.person)}
+                      className={`${FIELD} ${errors.person ? 'border-inv-error' : 'border-inv-border'}`}
+                    />
+                    {errors.person && <Hint>{errors.person}</Hint>}
+                  </div>
+
+                  <div>
+                    <label htmlFor="zayavka-email" className={LABEL}>
+                      Email для отправки счёта <span className="text-inv-error">*</span>
+                    </label>
+                    <input
+                      id="zayavka-email"
+                      type="email"
+                      inputMode="email"
+                      placeholder="buh@company.by"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      aria-invalid={Boolean(errors.email)}
+                      className={`${FIELD} ${errors.email ? 'border-inv-error' : 'border-inv-border'}`}
+                    />
+                    {errors.email && <Hint>{errors.email}</Hint>}
+                  </div>
+
+                  <div>
+                    <label htmlFor="zayavka-phone" className={LABEL}>
+                      Номер телефона <span className="text-inv-error">*</span>
+                    </label>
+                    <input
+                      id="zayavka-phone"
+                      type="tel"
+                      inputMode="tel"
+                      placeholder="+375 29 000-00-00"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      aria-invalid={Boolean(errors.phone)}
+                      className={`${FIELD} ${errors.phone ? 'border-inv-error' : 'border-inv-border'}`}
+                    />
+                    {errors.phone && <Hint>{errors.phone}</Hint>}
+                  </div>
+
+                  <div>
+                    <label htmlFor="zayavka-address" className={LABEL}>
+                      Юридический адрес
+                    </label>
+                    <input
+                      id="zayavka-address"
+                      type="text"
+                      placeholder="Необязательно"
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                      className={`${FIELD} border-inv-border`}
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="zayavka-note" className={LABEL}>
+                      Комментарий к заявке
+                    </label>
+                    <textarea
+                      id="zayavka-note"
+                      rows={3}
+                      placeholder="Сроки, доставка, нетиповые размеры"
+                      value={note}
+                      onChange={(e) => setNote(e.target.value)}
+                      className={`${FIELD} border-inv-border py-2.5 resize-y`}
+                    />
+                  </div>
                 </div>
+
+                {/* Оговорка стоит перед кнопкой: её читают там, где принимают
+                    решение отправить, а не в подвале страницы. */}
+                <div className="rounded-[4px] border border-inv-border bg-white p-4">
+                  <p className="text-xs font-semibold text-inv-ink">
+                    Важная информация для клиентов
+                  </p>
+                  <p className="mt-1.5 text-xs leading-relaxed text-inv-ink-muted">
+                    Сайт носит исключительно информационный характер, не является
+                    интернет-магазином и публичной офертой. Продажа товаров физическим
+                    лицам (розничная торговля) не осуществляется.
+                  </p>
+                  <p className="mt-2 text-xs leading-relaxed text-inv-ink-muted">
+                    Оформляя данную заявку, вы подтверждаете, что являетесь юридическим
+                    лицом или индивидуальным предпринимателем. На основании
+                    предоставленных данных вам будет сформирован и выслан счёт-фактура
+                    для безналичной оплаты.
+                  </p>
+                </div>
+
+                <label className="flex gap-2.5 items-start cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={agree}
+                    onChange={(e) => setAgree(e.target.checked)}
+                    className="mt-0.5 w-4 h-4 shrink-0 accent-inv-blue cursor-pointer"
+                  />
+                  <span className="text-xs leading-relaxed text-inv-ink">
+                    Я подтверждаю, что оформляю заказ от имени юридического лица (ИП), и
+                    даю согласие на обработку персональных данных в целях формирования
+                    индивидуального счёта-фактуры.
+                  </span>
+                </label>
 
                 <button
                   type="submit"
-                  className="w-full inline-flex items-center justify-center gap-2 min-h-11 rounded-[4px] bg-inv-blue hover:bg-inv-blue-hover text-white text-sm font-semibold transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
+                  disabled={!agree}
+                  className="w-full inline-flex items-center justify-center gap-2 min-h-11 rounded-[4px] bg-inv-blue hover:bg-inv-blue-hover text-white text-sm font-semibold transition-colors cursor-pointer disabled:bg-inv-border disabled:text-inv-ink-muted disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
                 >
                   <Send className="w-4 h-4" />
-                  Отправить заявку
+                  Получить счёт-фактуру
                 </button>
 
                 <p className="text-xs text-inv-ink-muted leading-relaxed">
                   Нужные размеры и объём напишите в комментарии — менеджер посчитает и
-                  пришлёт предложение. Нетиповые размеры считаем отдельно.
+                  пришлёт счёт. Нетиповые размеры считаем отдельно.
                 </p>
               </form>
             </div>
