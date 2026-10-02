@@ -124,7 +124,9 @@ export const SectionsMenu: React.FC<SectionsMenuProps> = ({
           to={paths.catalog}
           onMouseEnter={() => setHovered(null)}
           className={`flex items-center gap-2.5 min-h-11 px-2.5 rounded-[4px] text-sm transition-colors duration-[120ms] ${
-            category ? 'text-inv-ink hover:text-inv-blue' : 'bg-inv-surface-1 text-inv-red font-semibold'
+            category
+              ? 'text-inv-ink hover:bg-inv-red/90 hover:text-white'
+              : 'bg-inv-surface-1 text-inv-red font-semibold'
           }`}
         >
           {/* Пустое место под снимок: иначе строка съезжает влево от остальных */}
@@ -137,7 +139,9 @@ export const SectionsMenu: React.FC<SectionsMenuProps> = ({
           to={`${paths.catalog}?brand=${OWN_BRAND}`}
           onMouseEnter={() => setHovered(null)}
           className={`mt-0.5 flex items-center gap-2.5 min-h-11 px-2.5 rounded-[4px] text-sm transition-colors duration-[120ms] ${
-            ownOnly ? 'text-inv-red font-semibold' : 'text-inv-ink hover:text-inv-blue'
+            ownOnly
+              ? 'text-inv-red font-semibold'
+              : 'text-inv-ink hover:bg-inv-red/90 hover:text-white'
           }`}
         >
           <SectionMark slug="tapes" size={32} className="w-8 h-8 shrink-0" />
@@ -163,17 +167,29 @@ export const SectionsMenu: React.FC<SectionsMenuProps> = ({
               }}
               aria-current={isHere}
               className={`mt-0.5 flex items-center gap-2.5 min-h-11 px-2.5 rounded-[4px] text-sm transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-inv-blue ${
-                isOpen ? 'bg-inv-surface-1' : ''
-              } ${isHere ? 'text-inv-red font-semibold' : 'text-inv-ink hover:text-inv-blue'}`}
+                isOpen
+                  ? 'bg-inv-red/90 text-white font-semibold'
+                  : isHere
+                    ? 'text-inv-red font-semibold'
+                    : 'text-inv-ink'
+              }`}
             >
-              <SectionMark slug={cat.slug} size={32} className="w-8 h-8 shrink-0" />
+              <SectionMark
+                slug={cat.slug}
+                size={32}
+                className={`w-8 h-8 shrink-0 ${isOpen ? 'text-white' : ''}`}
+              />
               <span className="flex-1 leading-snug">{cat.name}</span>
-              <span className="text-xs text-inv-ink-muted tabular-nums">
+              <span
+                className={`text-xs tabular-nums ${
+                  isOpen ? 'text-white/70' : 'text-inv-ink-muted'
+                }`}
+              >
                 {COUNT_CATEGORY.get(cat.slug) ?? 0}
               </span>
               <ChevronRight
                 className={`w-4 h-4 shrink-0 transition-colors duration-[120ms] ${
-                  isOpen ? 'text-inv-blue' : 'text-inv-ink-muted/60'
+                  isOpen ? 'text-white' : 'text-inv-ink-muted/60'
                 }`}
               />
             </Link>
@@ -221,7 +237,9 @@ export const SectionsMenu: React.FC<SectionsMenuProps> = ({
                         }
                       }}
                       className={`flex items-center gap-2.5 min-h-10 py-1 pr-2 text-[13px] leading-snug transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue ${
-                        chosen ? 'text-inv-red font-semibold' : 'text-inv-ink hover:text-inv-blue'
+                        chosen
+                          ? 'text-inv-red font-semibold'
+                          : 'text-inv-ink hover:text-inv-red'
                       }`}
                     >
                       <SectionMark
