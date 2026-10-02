@@ -36,6 +36,15 @@ TEXTS = ROOT / 'src/data/catalogDescriptions.ts'
 IMAGES_IN = ROOT / 'files/images'
 IMAGES_OUT = ROOT / 'public/products'
 CONTENT = ROOT / 'src/data/productContent.ts'
+EXTRA = ROOT / 'files/dopolneniya-klei.json'
+
+# Куда класть позиции из файла дополнений: в нём указан только подраздел.
+SECTION_OF = {
+    'Клеи монтажные': 'Клей, химия, смазки',
+    'Клеи бытовые': 'Клей, химия, смазки',
+    'Герметики специализированные': 'Герметики',
+    'Силиконовые': 'Герметики',
+}
 
 # Раздел клиента -> (slug, подразделы в порядке клиента). Ключ подраздела —
 # как он называется в выгрузке; None означает «в выгрузке такого нет».
@@ -78,6 +87,8 @@ STRUCTURE = [
         ('Герметики специализированные', 'germetiki-specializirovannye'),
     ]),
     ('Клей, химия, смазки', 'kley-himiya-smazki', 'windows', [
+        ('Клеи монтажные', 'klei-montazhnye'),
+        ('Клеи бытовые', 'klei-bytovye'),
         ('Химия для окон COSMOFEN', 'himiya-dlya-okon-cosmofen'),
         ('Смазки аэрозольные', 'smazki-aerozolnye'),
     ]),
@@ -186,9 +197,6 @@ OSNASTKA = ('Оснастка к электроинструменту', 'osnastk
 SUBCATEGORY_MOVES = {
     ('Кровельные уплотнительные клейкие ленты', 'Клейкая лента двухсторонняя'):
         ('Алюминиевые и армированные ленты (скотч)', 'Клейкая лента двухсторонняя'),
-    # В «Клеях монтажных» одна позиция — гибридный клей-герметик MIXFOR.
-    # Раздел ради неё держать незачем, клиент правкой от 01.10 убрал его.
-    ('Клей, химия, смазки', 'Клеи монтажные'): ('Герметики', 'Герметики специализированные'),
 }
 
 # Раздел пены в выгрузке один, на витрине — три подраздела. Делим по названию:
@@ -242,6 +250,10 @@ MOVES = [
      ('Алюминиевые и армированные ленты (скотч)', 'Алюминиевые ленты ALU')),
     (r'^Лента ТПЛ армированная',
      ('Алюминиевые и армированные ленты (скотч)', 'Армированные ленты TPL')),
+    # Гибридный клей-герметик лежал у поставщика в «Клеях монтажных», но это
+    # не монтажный клей: клиент правкой от 01.10 отправил его в герметики.
+    (r'MIXFOR All FIX',
+     ('Герметики', 'Герметики специализированные')),
 ]
 
 # Подпись раздела в каталоге: одна строка о том, что внутри.
@@ -249,7 +261,7 @@ DESCRIPTIONS = {
     'materialy-dlya-okon': 'Ленты EUROBAND собственного производства, ПСУЛ, клинья — всё для монтажного шва.',
     'pena-montazhnaya': 'Монтажная пена, клей-пена и очистители — профессиональные и бытовые баллоны.',
     'germetiki': 'Силиконовые, акриловые, акрилатные, полиуретановые и гибридные составы для швов и стыков.',
-    'kley-himiya-smazki': 'Химия для окон COSMOFEN, аэрозольные смазки и составы для ухода за профилем.',
+    'kley-himiya-smazki': 'Монтажные и бытовые клеи, химия для окон COSMOFEN, аэрозольные смазки.',
     'uplotnitelnye-lenty-pes-samokleyaschiesy': 'Ленты из вспененного полиэтилена EUROBAND: звукоизоляция, демпфирование, уплотнение стыков.',
     'krovelnye-uplotniteli-kleykie-lenty': 'Бутилкаучуковые и двухсторонние ленты, ПСУЛ и уплотнители для кровли.',
     'uplotnitel-rezinovyy-d-p-e': 'Профили D, P, E и W — резина и EPDM для притворов и вентиляционных соединений.',
@@ -332,6 +344,42 @@ def read_rows():
         return list(csv.DictReader(f))
 
 
+def extra_rows(fields):
+    """Позиции, которых нет в выгрузке поставщика.
+
+    Клиент сверил каталог с разделом «Клей» на tools.by и прислал выгрузку
+    от 01.09, где эти товары есть, — держим их отдельным файлом, иначе
+    следующая выгрузка магазина их снова затрёт. Формат тот же, что у строки
+    CSV: так дальше по сборке их никак не отличить от остальных.
+    """
+    if not EXTRA.exists():
+        return []
+    items = json.loads(EXTRA.read_text(encoding='utf-8'))['items']
+    rows = []
+    for it in items:
+        row = {name: '' for name in fields}
+        body = ''.join(f'<p>{line}</p>' for line in it['text'].split('\n') if line.strip())
+        row.update({
+            'Type': 'simple',
+            'SKU': it['sku'],
+            'Name': it['name'],
+            'Published': '1',
+            'Visibility in catalog': 'visible',
+            'In stock?': '1',
+            'Description': body,
+            'Categories': f"{it['section']} > {it['sub']}" if 'section' in it else SECTION_OF[it['sub']] + ' > ' + it['sub'],
+            'Images': f"{it['sku']}-1.jpg",
+            'Attribute 1 name': 'Бренд',
+            'Attribute 1 value(s)': it['brand'],
+            'Attribute 1 visible': '1',
+            'Attribute 2 name': 'Страна',
+            'Attribute 2 value(s)': it['country'],
+            'Attribute 2 visible': '1',
+        })
+        rows.append(row)
+    return rows
+
+
 def also_place(row):
     """Второе место товара по-русски или None."""
     for pattern, target in ALSO_IN:
@@ -400,6 +448,7 @@ def convert_photos(wanted):
 
 def main():
     rows = read_rows()
+    rows += extra_rows(rows[0].keys() if rows else [])
     keep_id = site_ids()
 
     parents = {r['SKU']: r for r in rows if r['Type'] == 'variable'}
