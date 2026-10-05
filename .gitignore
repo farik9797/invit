@@ -20,3 +20,5 @@ files/*
 
 # firecrawl local cache
 .firecrawl/
+backups/
+wp-local/
