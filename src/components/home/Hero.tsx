@@ -7,7 +7,7 @@ import eurobandMark from '../../assets/logo/euroband-color.svg';
 import butylWindowTapes from '../../assets/hero/butyl-window-tapes.webp';
 import eurobandBoxes from '../../assets/hero/euroband-boxes-range.webp';
 import pesGreyRolls from '../../assets/hero/pes-grey-rolls.webp';
-import windowTapes from '../../assets/hero/window-tapes-set.webp';
+import aluButylFoil from '../../assets/hero/alu-butyl-foil.webp';
 import psulRolls from '../../assets/hero/psul-euroband.webp';
 
 interface HeroProps {
@@ -33,7 +33,8 @@ interface Slide {
  * видом надписи EUROBAND.
  *
  * Подписи — текст клиента из «Тексты на слайды 1» (05.10), пять штук: общий,
- * ПЭС, оконные ВЛ(а)/НЛ, бутиловые ЛБ/ЛБА и ПСУЛ. Прежние слайды про полы,
+ * ПЭС, оконные ВЛ(а)/НЛ, бутиловые ЛБ/ЛБА и ПСУЛ. На слайде про окна по просьбе
+ * клиента стоит прежний баннер с алюминиевой лентой. Прежние слайды про полы,
  * вентиляцию и сэндвич-панели ушли: текстов для них клиент не давал.
  */
 const SLIDES: Slide[] = [
@@ -60,7 +61,7 @@ const SLIDES: Slide[] = [
     lead: 'Защита стыков оконных проёмов —',
     accent: 'ленты EUROBAND ВЛ(а) и НЛ',
     text: 'Внутренняя пароизоляция примыкания окно/стена, наружная защита монтажного шва от ветра и дождя. Всегда в наличии на складе. Нетипичные размеры в любом сочетании клейких полос делаем под заказ.',
-    image: windowTapes,
+    image: aluButylFoil,
     href: `${paths.category('materialy-dlya-okon')}?sub=montazhnye-lenty-dlya-okon`,
     cta: 'Ленты для окон'
   },
