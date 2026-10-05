@@ -14,6 +14,9 @@ function invit_register_acf_fields() {
 
     invit_acf_options();
     invit_acf_home();
+    invit_acf_about();
+    invit_acf_contacts();
+    invit_acf_certificates();
 }
 
 function invit_acf_options() {
@@ -86,5 +89,92 @@ function invit_acf_home() {
             ['key' => 'field_invit_about_image', 'name' => 'about_image', 'label' => 'Кадр блока о компании', 'type' => 'image', 'return_format' => 'url'],
         ],
         'location' => [[['param' => 'page_type', 'operator' => '==', 'value' => 'front_page']]],
+    ]);
+}
+
+function invit_acf_about() {
+    acf_add_local_field_group([
+        'key'    => 'group_invit_about',
+        'title'  => 'Страница «О компании»',
+        'fields' => [
+            ['key' => 'field_invit_about_lead', 'name' => 'lead', 'label' => 'Вступление', 'type' => 'textarea', 'rows' => 3],
+            [
+                'key' => 'field_invit_facts', 'name' => 'facts', 'label' => 'Цифры',
+                'type' => 'repeater', 'layout' => 'table', 'button_label' => 'Добавить цифру',
+                'sub_fields' => [
+                    ['key' => 'field_invit_fact_value', 'name' => 'value', 'label' => 'Значение', 'type' => 'text'],
+                    ['key' => 'field_invit_fact_label', 'name' => 'label', 'label' => 'Подпись', 'type' => 'text'],
+                ],
+            ],
+            [
+                'key' => 'field_invit_production', 'name' => 'production', 'label' => 'Производство и отгрузка',
+                'type' => 'repeater', 'layout' => 'block', 'button_label' => 'Добавить блок',
+                'sub_fields' => [
+                    ['key' => 'field_invit_prod_value', 'name' => 'value', 'label' => 'Крупная строка', 'type' => 'text'],
+                    ['key' => 'field_invit_prod_title', 'name' => 'title', 'label' => 'Заголовок', 'type' => 'text'],
+                    ['key' => 'field_invit_prod_text', 'name' => 'text', 'label' => 'Текст', 'type' => 'textarea', 'rows' => 2],
+                ],
+            ],
+            [
+                'key' => 'field_invit_standards', 'name' => 'standards', 'label' => 'Стандарты и документы',
+                'type' => 'repeater', 'layout' => 'table', 'button_label' => 'Добавить строку',
+                'sub_fields' => [
+                    ['key' => 'field_invit_standard_line', 'name' => 'line', 'label' => 'Строка', 'type' => 'text'],
+                ],
+            ],
+            [
+                'key' => 'field_invit_requisites_full', 'name' => 'requisites_full', 'label' => 'Реквизиты',
+                'type' => 'repeater', 'layout' => 'table', 'button_label' => 'Добавить строку',
+                'sub_fields' => [
+                    ['key' => 'field_invit_req_label', 'name' => 'label', 'label' => 'Подпись', 'type' => 'text'],
+                    ['key' => 'field_invit_req_value', 'name' => 'value', 'label' => 'Значение', 'type' => 'text'],
+                ],
+            ],
+        ],
+        'location' => [[['param' => 'page_template', 'operator' => '==', 'value' => 'page-about.php']]],
+    ]);
+}
+
+function invit_acf_contacts() {
+    acf_add_local_field_group([
+        'key'    => 'group_invit_contacts',
+        'title'  => 'Страница «Контакты»',
+        'fields' => [
+            ['key' => 'field_invit_contacts_lead', 'name' => 'lead', 'label' => 'Вступление', 'type' => 'textarea', 'rows' => 2],
+            [
+                'key' => 'field_invit_offices', 'name' => 'offices', 'label' => 'Офисы и склады',
+                'type' => 'repeater', 'layout' => 'block', 'button_label' => 'Добавить адрес',
+                'sub_fields' => [
+                    ['key' => 'field_invit_office_city', 'name' => 'city', 'label' => 'Город', 'type' => 'text'],
+                    ['key' => 'field_invit_office_address', 'name' => 'address', 'label' => 'Адрес', 'type' => 'textarea', 'rows' => 2],
+                    ['key' => 'field_invit_office_phones', 'name' => 'phones', 'label' => 'Телефоны (по одному в строке)', 'type' => 'textarea', 'rows' => 3],
+                    ['key' => 'field_invit_office_hours', 'name' => 'hours', 'label' => 'Часы работы', 'type' => 'text'],
+                    ['key' => 'field_invit_office_map', 'name' => 'map', 'label' => 'Ссылка на карту (виджет Яндекс)', 'type' => 'url'],
+                ],
+            ],
+        ],
+        'location' => [[['param' => 'page_template', 'operator' => '==', 'value' => 'page-contacts.php']]],
+    ]);
+}
+
+function invit_acf_certificates() {
+    acf_add_local_field_group([
+        'key'    => 'group_invit_certificates',
+        'title'  => 'Страница «Документация»',
+        'fields' => [
+            ['key' => 'field_invit_docs_lead', 'name' => 'lead', 'label' => 'Вступление', 'type' => 'textarea', 'rows' => 2],
+            [
+                'key' => 'field_invit_docs', 'name' => 'documents', 'label' => 'Документы',
+                'type' => 'repeater', 'layout' => 'block', 'button_label' => 'Добавить документ',
+                'sub_fields' => [
+                    ['key' => 'field_invit_doc_title', 'name' => 'title', 'label' => 'Название', 'type' => 'text'],
+                    ['key' => 'field_invit_doc_text', 'name' => 'text', 'label' => 'Описание', 'type' => 'textarea', 'rows' => 2],
+                    ['key' => 'field_invit_doc_period', 'name' => 'period', 'label' => 'Срок действия', 'type' => 'text'],
+                    ['key' => 'field_invit_doc_file', 'name' => 'file', 'label' => 'Файл', 'type' => 'file', 'return_format' => 'url'],
+                    ['key' => 'field_invit_doc_scan', 'name' => 'scan', 'label' => 'Скан', 'type' => 'image', 'return_format' => 'url'],
+                ],
+            ],
+        ],
+        'location' => [[['param' => 'page_template', 'operator' => '==', 'value' => 'page-certificates.php']]],
     ]);
 }

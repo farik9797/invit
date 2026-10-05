@@ -11,6 +11,7 @@ define('INVIT_VERSION', '1.0.0');
 require_once get_template_directory() . '/inc/icons.php';
 require_once get_template_directory() . '/inc/nav-walker.php';
 require_once get_template_directory() . '/inc/acf-fields.php';
+require_once get_template_directory() . '/inc/checkout.php';
 
 /**
  * Значение поля ACF с запасным вариантом.
@@ -152,6 +153,7 @@ add_filter('woocommerce_get_price_html', 'invit_empty_price', 10, 2);
 function invit_drop_woo_layout() {
     wp_dequeue_style('woocommerce-layout');
     wp_dequeue_style('woocommerce-smallscreen');
+    wp_dequeue_style('woocommerce-general');
 }
 add_action('wp_enqueue_scripts', 'invit_drop_woo_layout', 20);
 

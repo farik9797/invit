@@ -1,4 +1,15 @@
-@import "tailwindcss";
+/*
+ * Tailwind подключается по частям, и утилиты — НАМЕРЕННО вне CSS-слоя.
+ * WordPress и WooCommerce выводят свои стили без слоя, а неслоёное правило
+ * побеждает любое слоёное независимо от специфичности: из-за этого у кнопок
+ * слетал цвет текста, а у картинок — высота. Вне слоя спор решает
+ * специфичность, и класс утилиты выигрывает у «a:where(...)» из ядра.
+ */
+@layer theme, base, components;
+
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "tailwindcss/utilities.css";
 
 /* Классы живут в шаблонах темы, их и просматриваем. */
 @source "../../**/*.php";
@@ -57,4 +68,126 @@ body.admin-bar .site-header {
   body.admin-bar .site-header {
     top: 46px;
   }
+}
+
+/*
+ * Собственные стили для разметки WooCommerce. Файлы Woo отключены целиком:
+ * они идут без CSS-слоя и перебивают утилиты Tailwind (у кнопок слетал цвет
+ * текста, у картинок — высота). Поэтому то немногое, что Woo рисует сам —
+ * уведомления, поле количества, строки заявки — оформляем здесь.
+ */
+
+.woocommerce-message,
+.woocommerce-info,
+.woocommerce-error {
+  margin: 0 0 1.25rem;
+  padding: 0.875rem 1rem;
+  border: 1px solid var(--color-inv-border);
+  border-radius: 4px;
+  background: var(--color-inv-surface-1);
+  color: var(--color-inv-ink);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  list-style: none;
+}
+
+.woocommerce-error {
+  border-color: color-mix(in srgb, var(--color-inv-error) 35%, white);
+  background: color-mix(in srgb, var(--color-inv-error) 8%, white);
+  color: var(--color-inv-error);
+}
+
+.woocommerce-message {
+  border-color: color-mix(in srgb, var(--color-inv-success) 35%, white);
+  background: color-mix(in srgb, var(--color-inv-success) 8%, white);
+}
+
+.woocommerce-error li + li,
+.woocommerce-message li + li {
+  margin-top: 0.375rem;
+}
+
+/* Кнопка «Открыть заявку» в уведомлении Woo. */
+.woocommerce-message .button,
+.woocommerce-error .button,
+.woocommerce-info .button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.25rem;
+  margin-right: 0.75rem;
+  padding: 0 0.875rem;
+  border-radius: 4px;
+  background: var(--color-inv-blue);
+  color: #fff;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* Количество в заявке: одна строка с числом и стрелками. */
+.quantity input[type="number"] {
+  height: 2.75rem;
+  width: 5rem;
+  padding: 0 0.75rem;
+  border: 1px solid var(--color-inv-border);
+  border-radius: 4px;
+  font-size: 0.875rem;
+  color: var(--color-inv-ink);
+}
+
+/* Таблица состава заявки на странице оформления. */
+.woocommerce-checkout-review-order-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.woocommerce-checkout-review-order-table th,
+.woocommerce-checkout-review-order-table td {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--color-inv-border-subtle);
+  font-size: 0.875rem;
+  text-align: left;
+}
+
+.woocommerce-checkout-review-order-table td {
+  text-align: right;
+}
+
+.woocommerce-checkout-review-order-table tfoot th {
+  font-weight: 600;
+}
+
+/* Кнопка отправки заявки — та же, что и везде на сайте. */
+#place_order {
+  width: 100%;
+  margin-top: 1.25rem;
+  min-height: 3rem;
+  border: 0;
+  border-radius: 4px;
+  background: var(--color-inv-blue);
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+#place_order:hover {
+  background: var(--color-inv-blue-hover);
+}
+
+.wc_payment_methods {
+  margin: 1.25rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.875rem;
+}
+
+.wc_payment_methods label {
+  font-weight: 600;
+  color: var(--color-inv-ink);
+}
+
+.payment_box {
+  margin-top: 0.5rem;
+  color: var(--color-inv-ink-muted);
 }
