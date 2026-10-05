@@ -5,11 +5,10 @@ import { motion, useReducedMotion } from 'motion/react';
 import { paths } from '../../routes';
 import eurobandMark from '../../assets/logo/euroband-color.svg';
 import butylWindowTapes from '../../assets/hero/butyl-window-tapes.webp';
-import aluButylFoil from '../../assets/hero/alu-butyl-foil.webp';
 import eurobandBoxes from '../../assets/hero/euroband-boxes-range.webp';
 import pesGreyRolls from '../../assets/hero/pes-grey-rolls.webp';
-import butylFoamRoll from '../../assets/hero/butyl-foam-roll.webp';
-import pesAndFoil from '../../assets/hero/pes-and-foil-tapes.webp';
+import windowTapes from '../../assets/hero/window-tapes-set.webp';
+import psulRolls from '../../assets/hero/psul-euroband.webp';
 
 interface HeroProps {
   onOpenCallback: () => void;
@@ -32,63 +31,59 @@ interface Slide {
  * scripts/make-hero-banner.py. Прежде здесь стояли стоковые кадры, и лента с
  * маркой на них были чужие: на одном по ленте шла нечитаемая кириллица под
  * видом надписи EUROBAND.
+ *
+ * Подписи — текст клиента из «Тексты на слайды 1» (05.10), пять штук: общий,
+ * ПЭС, оконные ВЛ(а)/НЛ, бутиловые ЛБ/ЛБА и ПСУЛ. Прежние слайды про полы,
+ * вентиляцию и сэндвич-панели ушли: текстов для них клиент не давал.
  */
 const SLIDES: Slide[] = [
   {
     id: 'about',
     lead: 'Уплотнительные и герметизирующие',
     accent: 'ленты',
-    text: 'Белорусский производитель с 2001 года. Изготовим ленты нетипичных размеров под ваш проект.',
+    text: 'Прямые поставки от производителя для оконных, кровельных и фасадных работ по всей РБ. Работаем с 2001 года. Гарантируем оптовые цены, объёмы и документы для технадзора. Изготовим ленты нетипичных размеров под ваш проект.',
     image: eurobandBoxes,
     href: paths.catalog,
     cta: 'Смотреть каталог'
   },
   {
-    id: 'joint',
-    lead: 'Стык плит и панелей —',
-    accent: 'уплотнительная лента ПЭС',
-    text: 'Самоклеящаяся лента из вспененного полиэтилена закрывает шов от воды, шума и холода: сэндвич-панели, перекрытия, металлоконструкции.',
+    id: 'pes',
+    lead: 'Самоклеящаяся тепло-звукоизоляционная',
+    accent: 'лента ПЭС',
+    text: 'Высокая адгезия, плотное соединение стыкуемых поверхностей: сэндвич-панели, перегородки из гипсокартона, фланцевые соединения воздуховодов, производство оборудования. Много размеров всегда на складе, остальное изготовим под вашу задачу.',
     image: pesGreyRolls,
-    href: `${paths.category('materialy-dlya-okon')}?sub=uplotnitelnye-lenty-pes-samokleyaschiesy`,
+    href: paths.category('uplotnitelnye-lenty-pes-samokleyaschiesy'),
     cta: 'Ленты ПЭС'
   },
   {
-    id: 'floor',
-    lead: 'Стыки оснований и покрытий —',
-    accent: 'лента EUROBAND',
-    text: 'Проклеиваем шов между бетоном и покрытием: кромка не задирается, пыль и влага в стык не идут.',
-    image: aluButylFoil,
-    href: `${paths.category('materialy-dlya-okon')}?sub=uplotnitelnye-lenty-pes-samokleyaschiesy`,
-    cta: 'Ленты ПЭС'
-  },
-  {
-    id: 'hvac',
-    lead: 'Воздуховоды и вентиляция —',
-    accent: 'межфланцевая лента ПЭС',
-    text: 'Лента проклеивается между фланцами: воздух не уходит через соединение, магистраль тише, затраты на подачу ниже.',
-    image: pesAndFoil,
-    href: `${paths.category('uplotnitelnye-lenty-pes-samokleyaschiesy')}?sub=pes-mezhflancevaya-lenta`,
-    cta: 'Межфланцевая лента'
-  },
-  {
-    id: 'sandwich',
-    lead: 'Сэндвич-панели и профлист —',
-    accent: 'герметизация стыков',
-    text: 'Бутилкаучуковая ЛБ на продольных и поперечных нахлёстах, ПЭС под прижимные планки. Стык не течёт и не свистит на ветру.',
-    image: butylFoamRoll,
-    href: `${paths.category('materialy-dlya-okon')}?sub=krovelnye-uplotniteli-kleykie-lenty`,
-    cta: 'Кровельные ленты'
+    id: 'windows',
+    lead: 'Защита стыков оконных проёмов —',
+    accent: 'ленты EUROBAND ВЛ(а) и НЛ',
+    text: 'Внутренняя пароизоляция примыкания окно/стена, наружная защита монтажного шва от ветра и дождя. Всегда в наличии на складе. Нетипичные размеры в любом сочетании клейких полос делаем под заказ.',
+    image: windowTapes,
+    href: `${paths.category('materialy-dlya-okon')}?sub=montazhnye-lenty-dlya-okon`,
+    cta: 'Ленты для окон'
   },
   {
     id: 'butyl',
-    lead: 'Примыкание окна к проёму —',
-    accent: 'бутиловые ленты ЛБ и ЛБА',
-    text: 'ЛБА на металлизированной основе закрывает шов от воды и ветра, двусторонняя ЛБ склеивает и герметизирует стык. Бутилкаучук не отверждается: масса остаётся пластичной.',
+    lead: 'Герметизация соединений —',
+    accent: 'бутилкаучуковые ленты EUROBAND ЛБ и ЛБА',
+    text: 'Надёжная гидроизоляция швов и стыков листовых материалов: перехлёсты профнастила, монтажные швы сэндвич-панелей, зенитные фонари и фасадные системы. Защита от ветра и воды, товар всегда в наличии.',
     image: butylWindowTapes,
     href: `${paths.category('materialy-dlya-okon')}?sub=polnobutilovye-lenty`,
     cta: 'Бутиловые ленты'
+  },
+  {
+    id: 'psul',
+    lead: 'Паропроницаемая лента',
+    accent: 'ПСУЛ EUROBAND',
+    text: 'Уплотняет зазоры, защищает швы и стыки: оконные проёмы, двери, кровля, вентиляция, фасады и деревянное домостроение. Быстрый монтаж благодаря клейкой полосе. Всегда в наличии, доставка по всей Беларуси.',
+    image: psulRolls,
+    href: `${paths.category('materialy-dlya-okon')}?sub=samorasshiryayuschayasya-lenta-psul`,
+    cta: 'Лента ПСУЛ'
   }
 ];
+
 
 /** Кадр держится 3,5 секунды — так попросил клиент. */
 const DURATION = 3500;
