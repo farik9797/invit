@@ -28,17 +28,36 @@ require_once ABSPATH . 'wp-admin/includes/media.php';
 require_once ABSPATH . 'wp-admin/includes/file.php';
 require_once ABSPATH . 'wp-admin/includes/image.php';
 
-/** Категория по пути «Раздел > Подраздел»; создаёт недостающие уровни. */
-function invit_term_path($path) {
+/**
+ * Категория по пути «Раздел > Подраздел»; создаёт недостающие уровни.
+ *
+ * Второй путь — те же разделы латинскими слагами: без него WordPress делает
+ * адрес из русского названия, и ссылка превращается в нечитаемый набор
+ * процентных кодов, не совпадающий с адресами нынешнего сайта.
+ */
+function invit_term_path($path, $slug_path = '') {
+    $names = array_map('trim', explode('>', $path));
+    $slugs = array_map('trim', explode('>', $slug_path));
+
     $parent = 0;
     $term_id = 0;
-    foreach (array_map('trim', explode('>', $path)) as $name) {
+
+    foreach ($names as $i => $name) {
         if ($name === '') continue;
+        $slug = $slugs[$i] ?? '';
+
         $existing = get_term_by('name', $name, 'product_cat');
         if ($existing && (int) $existing->parent === (int) $parent) {
             $term_id = (int) $existing->term_id;
+            // Раздел мог быть заведён раньше с кириллическим адресом — чиним.
+            if ($slug !== '' && $existing->slug !== $slug) {
+                wp_update_term($term_id, 'product_cat', ['slug' => $slug]);
+            }
         } else {
-            $made = wp_insert_term($name, 'product_cat', ['parent' => $parent]);
+            $args = ['parent' => $parent];
+            if ($slug !== '') $args['slug'] = $slug;
+
+            $made = wp_insert_term($name, 'product_cat', $args);
             if (is_wp_error($made)) {
                 // Имя уже занято на другом уровне — берём существующий термин.
                 $term_id = $existing ? (int) $existing->term_id : 0;
@@ -49,6 +68,7 @@ function invit_term_path($path) {
         }
         $parent = $term_id;
     }
+
     return $term_id;
 }
 
@@ -82,6 +102,9 @@ while (($line = fgetcsv($handle)) !== false) {
 
     $product = $existing_id ? wc_get_product($existing_id) : new WC_Product_Simple();
     $product->set_name($row['Name']);
+    if (!empty($row['Slug'])) {
+        $product->set_slug(sanitize_title($row['Slug']));
+    }
     $product->set_status('publish');
     $product->set_catalog_visibility('visible');
     $product->set_short_description((string) $row['Short description']);
@@ -122,10 +145,13 @@ while (($line = fgetcsv($handle)) !== false) {
     $terms = [];
     // Запятая делит категории, но в названии («Клинья, заглушки») она
     // экранирована слэшем — как того требует формат Woo.
-    foreach (preg_split('/(?<!\\\\),/', (string) $row['Categories']) as $path_name) {
+    $paths = preg_split('/(?<!\\\\),/', (string) $row['Categories']);
+    $slug_paths = array_map('trim', explode(',', (string) ($row['Category slugs'] ?? '')));
+
+    foreach ($paths as $i => $path_name) {
         $path_name = trim(str_replace('\\,', ',', $path_name));
         if ($path_name === '') continue;
-        $term_id = invit_term_path($path_name);
+        $term_id = invit_term_path($path_name, $slug_paths[$i] ?? '');
         if ($term_id) $terms[] = $term_id;
     }
     if ($terms) {

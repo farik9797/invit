@@ -31,7 +31,7 @@ PHOTO_BASE = 'https://farik9797.github.io/invit/products'
 CHUNK = 1000
 
 COLUMNS = [
-    'ID', 'Type', 'SKU', 'Name', 'Published', 'Is featured?',
+    'ID', 'Type', 'SKU', 'Slug', 'Category slugs', 'Name', 'Published', 'Is featured?',
     'Visibility in catalog', 'Short description', 'Description',
     'In stock?', 'Stock', 'Regular price', 'Categories', 'Tags', 'Images',
     'Attribute 1 name', 'Attribute 1 value(s)', 'Attribute 1 visible', 'Attribute 1 global',
@@ -47,6 +47,11 @@ def read_literal(text, name, opener):
     if not match:
         raise SystemExit(f'не нашёл {name}')
     return json.loads(match.group(1))
+
+
+def slug_path_of(section_slug, sub_slug):
+    """Путь из латинских слагов — по нему импортёр заводит разделы и адреса."""
+    return f"{section_slug} > {sub_slug}"
 
 
 def path_of(section, sub):
@@ -84,10 +89,12 @@ def main():
         pid = product['id']
 
         categories = [path_of(section_name[product['categorySlug']], sub_name[product['subcategorySlug']])]
+        slugs = [slug_path_of(product['categorySlug'], product['subcategorySlug'])]
         # Вторая прописка: товар виден сразу в двух подразделах, карточка одна.
         if product.get('alsoCategorySlug'):
             categories.append(path_of(section_name[product['alsoCategorySlug']],
                                       sub_name[product['alsoSubcategorySlug']]))
+            slugs.append(slug_path_of(product['alsoCategorySlug'], product['alsoSubcategorySlug']))
 
         # Снимок свой или общий — так же, как его выбирает витрина сайта.
         photo_id = pid if product.get('photo') else shared.get(pid, '')
@@ -105,6 +112,10 @@ def main():
             'ID': '',
             'Type': 'simple',
             'SKU': spec(product, 'Артикул') or pid,
+            # Адрес страницы — латиницей, как на нынешнем сайте: иначе WordPress
+            # сделает его из русского названия и ссылки станут нечитаемыми.
+            'Slug': product.get('slug') or pid,
+            'Category slugs': ', '.join(slugs),
             'Name': product['title'],
             'Published': 1,
             'Is featured?': 0,

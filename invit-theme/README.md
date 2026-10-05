@@ -48,7 +48,9 @@ npx @tailwindcss/cli -i invit-theme/assets/css/source.css -o invit-theme/assets/
 4. «Настройки → Постоянные ссылки» — любой вариант, кроме «Простые».
 5. Заполнить «Настройки сайта» (телефоны, почта, Telegram, реквизиты, оговорка).
 6. Импортировать каталог: `scripts/export-woocommerce.py` делает CSV,
-   `scripts/wp-import-products.php` заливает его через WP-CLI.
+   `scripts/wp-import-products.php` заливает его через WP-CLI. Адреса товаров и
+   разделов берутся из колонок `Slug` и `Category slugs` — латиницей, как на
+   нынешнем сайте; иначе WordPress сделал бы их из русских названий.
 
 ## Особенности
 
