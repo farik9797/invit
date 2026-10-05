@@ -14,7 +14,10 @@ export const CallbackModal: React.FC<CallbackModalProps> = ({ isOpen, onClose, c
   const [company, setCompany] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
-  const [note, setNote] = useState(customNote || '');
+  // Метка «откуда открыли окно» (шапка, главная, карточка товара) — служебная:
+  // в поле комментария её видел посетитель и отправлял как свой текст. Поле
+  // теперь пустое, а метка уходит с заявкой скрытым полем source.
+  const [note, setNote] = useState('');
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -66,6 +69,7 @@ export const CallbackModal: React.FC<CallbackModalProps> = ({ isOpen, onClose, c
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4 text-xs">
+              <input type="hidden" name="source" value={customNote || ''} />
               <p className="text-ink/70 text-xs leading-relaxed">
                 Оставьте контактный номер телефона для консультации по выбору лент EUROBAND и согласованию оптовых скидок.
               </p>
