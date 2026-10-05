@@ -21,7 +21,7 @@ $nav_fallback = [
     ['label' => 'Контакты', 'url' => home_url('/contacts/')],
 ];
 
-$nav_link = 'inline-flex items-center min-h-10 px-3.5 rounded-[4px] text-[15px] text-inv-ink whitespace-nowrap '
+$nav_link = 'inline-flex items-center min-h-10 px-2.5 xl:px-3.5 rounded-[4px] text-[14px] xl:text-[15px] text-inv-ink whitespace-nowrap '
     . 'transition-colors duration-[120ms] hover:bg-inv-blue hover:text-white '
     . 'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue';
 ?>
@@ -44,7 +44,7 @@ $nav_link = 'inline-flex items-center min-h-10 px-3.5 rounded-[4px] text-[15px] 
 <header class="site-header sticky top-0 z-30 bg-white border-b border-inv-border" data-header>
     <?php /* Десктоп: обе строки — одна сетка из трёх колонок, поэтому меню во
              второй строке встаёт ровно по ширине поля поиска в первой. */ ?>
-    <div class="hidden lg:grid max-w-[1400px] mx-auto px-4 lg:px-8 grid-cols-[auto_minmax(0,560px)_auto] grid-rows-[76px_1px_56px] items-center gap-x-6">
+    <div class="hidden xl:grid max-w-[1400px] mx-auto px-4 lg:px-8 grid-cols-[auto_minmax(0,560px)_auto] grid-rows-[76px_1px_56px] items-center gap-x-4 xl:gap-x-6">
         <a href="<?php echo esc_url(home_url('/')); ?>" class="flex items-center min-h-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue">
             <img src="<?php echo esc_url($logo); ?>" alt="<?php echo esc_attr(get_bloginfo('name')); ?>" class="h-11 w-auto" width="160" height="44">
         </a>
@@ -105,14 +105,14 @@ $nav_link = 'inline-flex items-center min-h-10 px-3.5 rounded-[4px] text-[15px] 
                 <?php endif; ?>
             </a>
 
-            <button type="button" data-request class="inline-flex items-center justify-center min-h-11 px-5 rounded-[4px] bg-inv-blue hover:bg-inv-blue-hover active:scale-[0.99] text-white text-sm font-semibold transition-[background-color,transform] duration-[120ms] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue">
+            <button type="button" data-request class="inline-flex items-center justify-center min-h-11 px-4 xl:px-5 rounded-[4px] bg-inv-blue hover:bg-inv-blue-hover active:scale-[0.99] text-white text-sm font-semibold whitespace-nowrap transition-[background-color,transform] duration-[120ms] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue">
                 Запросить расчёт
             </button>
         </div>
     </div>
 
     <?php /* Мобильная строка: логотип, поиск, заявка, бургер */ ?>
-    <div class="lg:hidden max-w-[1400px] mx-auto px-4 h-[68px] flex items-center gap-4">
+    <div class="xl:hidden max-w-[1400px] mx-auto px-4 h-[68px] flex items-center gap-4">
         <a href="<?php echo esc_url(home_url('/')); ?>" class="shrink-0 flex items-center min-h-11">
             <img src="<?php echo esc_url($logo); ?>" alt="<?php echo esc_attr(get_bloginfo('name')); ?>" class="h-10 w-auto" width="150" height="40">
         </a>
@@ -138,7 +138,7 @@ $nav_link = 'inline-flex items-center min-h-10 px-3.5 rounded-[4px] text-[15px] 
 
     <?php /* Список длиннее экрана, а шапка залипающая: своя прокрутка, иначе
              нижние разделы недостижимы. */ ?>
-    <div data-menu-panel hidden class="lg:hidden border-t border-inv-border bg-white px-4 py-4 space-y-1.5 max-h-[calc(100dvh-68px)] overflow-y-auto overscroll-contain">
+    <div data-menu-panel hidden class="xl:hidden border-t border-inv-border bg-white px-4 py-4 space-y-1.5 max-h-[calc(100dvh-68px)] overflow-y-auto overscroll-contain">
         <span class="block pt-1 pb-2 text-xs font-semibold uppercase tracking-[0.12em] text-inv-ink-muted">Каталог товаров</span>
         <?php foreach ($sections as $section) : ?>
             <a href="<?php echo esc_url(get_term_link($section)); ?>" class="flex items-center min-h-11 py-2 -mx-2 px-2 rounded-[4px] text-base font-semibold leading-snug text-inv-ink active:bg-inv-surface-1">

@@ -143,6 +143,39 @@ function invit_empty_price($price, $product) {
 }
 add_filter('woocommerce_get_price_html', 'invit_empty_price', 10, 2);
 
+/**
+ * Раскладочные стили WooCommerce мешают: правило «.woocommerce img {height:auto}»
+ * идёт без CSS-слоя и перебивает утилиты Tailwind, из-за чего у логотипа и
+ * снимков слетала заданная высота. Сетки и колонки мы рисуем сами, поэтому
+ * оставляем только общий файл с кнопками, сообщениями и таблицами.
+ */
+function invit_drop_woo_layout() {
+    wp_dequeue_style('woocommerce-layout');
+    wp_dequeue_style('woocommerce-smallscreen');
+}
+add_action('wp_enqueue_scripts', 'invit_drop_woo_layout', 20);
+
+/** Первая ссылка в хлебных крошках — по-русски. */
+function invit_breadcrumb_home($defaults) {
+    $defaults['home'] = 'Главная';
+    return $defaults;
+}
+add_filter('woocommerce_breadcrumb_defaults', 'invit_breadcrumb_home');
+
+/**
+ * Цены в белорусских рублях: сумма, пробел, «р.» — как в счетах клиента.
+ * Настройка живёт в коде темы, чтобы перенос на другой сервер не терял её.
+ */
+function invit_price_format($format, $pos) {
+    return '%2$s&nbsp;%1$s';
+}
+add_filter('woocommerce_price_format', 'invit_price_format', 10, 2);
+
+function invit_currency_symbol($symbol, $currency) {
+    return $currency === 'BYN' ? 'р.' : $symbol;
+}
+add_filter('woocommerce_currency_symbol', 'invit_currency_symbol', 10, 2);
+
 /** Сколько позиций в заявке — для значка в шапке. */
 function invit_cart_count() {
     if (!function_exists('WC') || !WC()->cart) return 0;

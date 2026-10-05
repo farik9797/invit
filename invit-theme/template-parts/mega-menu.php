@@ -23,14 +23,14 @@ foreach ($sections as $section) {
         data-mega-toggle
         aria-expanded="false"
         aria-controls="mega-menu"
-        class="inline-flex items-center gap-2 min-h-11 px-4 rounded-[4px] bg-inv-blue hover:bg-inv-red text-white text-sm font-semibold transition-colors duration-[120ms] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
+        class="inline-flex items-center gap-2 min-h-11 px-3 xl:px-4 rounded-[4px] bg-inv-blue hover:bg-inv-red text-white text-sm font-semibold transition-colors duration-[120ms] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
     >
         <?php echo invit_icon('menu', 'w-4 h-4'); ?>
         Каталог товаров
         <?php echo invit_icon('chevron-down', 'w-4 h-4'); ?>
     </button>
 
-    <div id="mega-menu" data-mega-panel hidden class="absolute left-0 right-0 top-full z-40 pt-3 w-[1100px]">
+    <div id="mega-menu" data-mega-panel hidden class="absolute left-0 top-full z-40 pt-3 w-[900px] xl:w-[1100px]">
         <div class="flex rounded-[8px] border border-inv-border bg-white/92 backdrop-blur-md shadow-[0_6px_24px_rgba(22,44,88,0.16)] overflow-hidden">
             <ul class="w-[350px] shrink-0 border-r border-inv-border bg-inv-surface-1/70 py-2 max-h-[70vh] overflow-y-auto">
                 <?php foreach ($sections as $index => $section) : ?>

@@ -116,6 +116,30 @@
         if (e.key === 'Escape') closeModals();
     });
 
+    /* ---- Каталог: разделы на телефоне и выбор снимка в карточке ---- */
+    var asideToggle = $('[data-aside-toggle]');
+    var asidePanel = $('[data-aside-panel]');
+    if (asideToggle && asidePanel) {
+        asideToggle.addEventListener('click', function () {
+            var open = asidePanel.hidden;
+            asidePanel.hidden = !open;
+            asideToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+    }
+
+    var productImage = $('[data-product-image]');
+    if (productImage) {
+        $$('[data-product-thumb]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                productImage.src = btn.getAttribute('data-product-thumb');
+                $$('[data-product-thumb]').forEach(function (other) {
+                    other.classList.toggle('border-inv-blue', other === btn);
+                    other.classList.toggle('border-inv-border', other !== btn);
+                });
+            });
+        });
+    }
+
     /* ---- Слайдер первого экрана ---- */
     var hero = $('[data-hero]');
     if (hero) {
