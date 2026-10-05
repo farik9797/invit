@@ -373,13 +373,13 @@ const HeaderSearch: React.FC<{ className?: string }> = ({ className = '' }) => {
           }`}
           onClick={() => setOpen(false)}
         >
-          <div className="flex h-full items-start justify-center px-4 py-6 sm:py-[12vh]">
+          <div className="flex min-h-full items-start justify-center px-4 py-6 sm:py-[12vh]">
           <div
             role="dialog"
             aria-modal="true"
             aria-label="Поиск по каталогу"
             onClick={(e) => e.stopPropagation()}
-            className={`relative w-full max-w-[640px] max-h-full overflow-y-auto overscroll-contain rounded-[8px] bg-white shadow-[0_24px_60px_rgba(10,25,60,0.35)] transition-[opacity,transform] duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] ${
+            className={`relative w-full max-w-[640px] max-h-[calc(100dvh-3rem)] sm:max-h-[76vh] overflow-y-auto overscroll-contain rounded-[8px] bg-white shadow-[0_24px_60px_rgba(10,25,60,0.35)] transition-[opacity,transform] duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] ${
               shown || motion ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-3'
             }`}
           >
