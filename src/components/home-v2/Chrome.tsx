@@ -361,25 +361,25 @@ const HeaderSearch: React.FC<{ className?: string }> = ({ className = '' }) => {
 
       {open && (
         /*
-         * Прокрутка висит на затемнении, а карточка лежит в обёртке min-h-full:
-         * когда на телефоне вылезает клавиатура и видимая высота падает, окно
-         * просто прокручивается. Прежде отступ сверху считался от 12vh, и на
-         * низком экране верх карточки уходил за кромку — клиент прислал кадр,
-         * где у окна срезана шапка.
+         * Затемнение само не прокручивается: оно ровно по экрану, а прокрутка
+         * живёт внутри карточки (max-h-full). Когда на телефоне вылезает
+         * клавиатура и видимая высота падает, окно ужимается по месту и
+         * листается внутри — прежде отступ считался от 12vh, и верх карточки
+         * уходил за кромку: клиент прислал кадр, где у окна срезана шапка.
          */
         <div
-          className={`fixed inset-0 z-50 overflow-y-auto overscroll-contain bg-inv-deep/55 backdrop-blur-sm transition-opacity duration-[200ms] ${
+          className={`fixed inset-0 z-50 bg-inv-deep/55 backdrop-blur-sm transition-opacity duration-[200ms] ${
             shown || motion ? 'opacity-100' : 'opacity-0'
           }`}
           onClick={() => setOpen(false)}
         >
-          <div className="flex min-h-full items-start justify-center px-4 py-6 sm:py-[12vh]">
+          <div className="flex h-full items-start justify-center px-4 py-6 sm:py-[12vh]">
           <div
             role="dialog"
             aria-modal="true"
             aria-label="Поиск по каталогу"
             onClick={(e) => e.stopPropagation()}
-            className={`relative w-full max-w-[640px] rounded-[8px] bg-white shadow-[0_24px_60px_rgba(10,25,60,0.35)] transition-[opacity,transform] duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] ${
+            className={`relative w-full max-w-[640px] max-h-full overflow-y-auto overscroll-contain rounded-[8px] bg-white shadow-[0_24px_60px_rgba(10,25,60,0.35)] transition-[opacity,transform] duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] ${
               shown || motion ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-3'
             }`}
           >
