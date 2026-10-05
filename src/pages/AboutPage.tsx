@@ -35,6 +35,9 @@ const SECTION = 'py-10 sm:py-14 lg:py-24';
 const FOUNDED = 2001;
 const OWN_TAPES = PRODUCTS.filter((p) => p.badge === 'Собственное производство');
 
+/** Блок «Что мы производим сами» клиент попросил временно убрать (05.10). */
+const SHOW_OWN_PRODUCTION = false;
+
 const FACTS = [
   { value: new Date().getFullYear() - FOUNDED, label: 'лет на рынке' },
   { value: OWN_TAPES.length, label: 'лент собственного производства' },
@@ -332,55 +335,59 @@ export const AboutPage: React.FC = () => {
       {/* Вкладки: клиент попросил вернуть их, как в архивной версии на /about-old */}
       <AboutTabs />
 
-      {/* Что мы производим: текст и четыре реальных фото лент */}
-      <section className="bg-white">
-        <div className={`${WRAP} ${SECTION} grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center`}>
-          <Fade className="lg:col-span-6">
-            <h2 className={`${H2} text-inv-ink`}>Что мы производим сами</h2>
+      {/* Что мы производим: текст и четыре реальных фото лент.
+          Блок временно скрыт по просьбе клиента (05.10): чтобы вернуть,
+          поставить SHOW_OWN_PRODUCTION = true. */}
+      {SHOW_OWN_PRODUCTION && (
+        <section className="bg-white">
+          <div className={`${WRAP} ${SECTION} grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center`}>
+            <Fade className="lg:col-span-6">
+              <h2 className={`${H2} text-inv-ink`}>Что мы производим сами</h2>
 
-            <p className="mt-5 sm:mt-6 text-base leading-[1.55] text-inv-ink-muted max-w-[60ch]">
-              Строительные клейкие ленты и уплотнители из синтетических материалов, в том
-              числе монтажные ленты для установки окон под маркой EUROBAND. Это
-              пароизоляционные ВЛ и ВЛ(а), наружная НЛ, саморасширяющаяся ПСУЛ,
-              бутилкаучуковые ЛБ и ЛБА, уплотнительные ПЭС.
-            </p>
+              <p className="mt-5 sm:mt-6 text-base leading-[1.55] text-inv-ink-muted max-w-[60ch]">
+                Строительные клейкие ленты и уплотнители из синтетических материалов, в том
+                числе монтажные ленты для установки окон под маркой EUROBAND. Это
+                пароизоляционные ВЛ и ВЛ(а), наружная НЛ, саморасширяющаяся ПСУЛ,
+                бутилкаучуковые ЛБ и ЛБА, уплотнительные ПЭС.
+              </p>
 
-            <p className="mt-4 text-base leading-[1.55] text-inv-ink-muted max-w-[60ch]">
-              Пену, герметики, крепёж, инструмент и комплектующие для вентиляции мы не
-              производим: это прямые поставки от производителей.
-            </p>
+              <p className="mt-4 text-base leading-[1.55] text-inv-ink-muted max-w-[60ch]">
+                Пену, герметики, крепёж, инструмент и комплектующие для вентиляции мы не
+                производим: это прямые поставки от производителей.
+              </p>
 
-            <Link
-              to={`${paths.catalog}`}
-              className="group mt-6 sm:mt-8 inline-flex items-center gap-2 min-h-11 text-sm font-semibold text-inv-blue hover:text-inv-blue-pressed transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
-            >
-              Все ленты в каталоге
-              <ArrowRight className="w-4 h-4 transition-transform duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:translate-x-1" />
-            </Link>
-          </Fade>
-
-          <FadeGroup className="lg:col-span-6 grid grid-cols-2 gap-3 sm:gap-4">
-            {OWN_TAPES.slice(0, 4).map((product) => (
               <Link
-                key={product.id}
-                to={paths.product(product)}
-                data-fade-item
-                className="group flex flex-col rounded-[8px] border border-inv-border bg-white overflow-hidden transition-[transform,box-shadow] duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(22,44,88,0.16)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
+                to={`${paths.catalog}`}
+                className="group mt-6 sm:mt-8 inline-flex items-center gap-2 min-h-11 text-sm font-semibold text-inv-blue hover:text-inv-blue-pressed transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
               >
-                <img
-                  src={productImage(product)}
-                  alt={product.shortTitle}
-                  loading="lazy"
-                  className="w-full h-[130px] sm:h-[160px] object-contain bg-white p-3"
-                />
-                <span className="px-4 pb-4 text-[13px] font-semibold text-inv-ink leading-snug">
-                  {product.shortTitle}
-                </span>
+                Все ленты в каталоге
+                <ArrowRight className="w-4 h-4 transition-transform duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:translate-x-1" />
               </Link>
-            ))}
-          </FadeGroup>
-        </div>
-      </section>
+            </Fade>
+
+            <FadeGroup className="lg:col-span-6 grid grid-cols-2 gap-3 sm:gap-4">
+              {OWN_TAPES.slice(0, 4).map((product) => (
+                <Link
+                  key={product.id}
+                  to={paths.product(product)}
+                  data-fade-item
+                  className="group flex flex-col rounded-[8px] border border-inv-border bg-white overflow-hidden transition-[transform,box-shadow] duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(22,44,88,0.16)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"
+                >
+                  <img
+                    src={productImage(product)}
+                    alt={product.shortTitle}
+                    loading="lazy"
+                    className="w-full h-[130px] sm:h-[160px] object-contain bg-white p-3"
+                  />
+                  <span className="px-4 pb-4 text-[13px] font-semibold text-inv-ink leading-snug">
+                    {product.shortTitle}
+                  </span>
+                </Link>
+              ))}
+            </FadeGroup>
+          </div>
+        </section>
+      )}
 
       {/* Производство: только те цифры, которые видно в каталоге */}
       <section className="bg-inv-surface-1">
