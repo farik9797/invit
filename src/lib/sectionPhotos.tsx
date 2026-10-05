@@ -8,10 +8,14 @@ import chemistry from '../assets/section-photos/kley-himiya-smazki.webp';
 import pesTapes from '../assets/section-photos/uplotnitelnye-lenty-pes-samokleyaschiesy.webp';
 import epdm from '../assets/section-photos/uplotnitel-rezinovyy-d-p-e.webp';
 import fasteners from '../assets/section-photos/krepezh.webp';
-import tapes from '../assets/section-photos/alyuminievye-armirovannye-lenty.webp';
+import stickyTapes from '../assets/section-photos/alyuminievye-armirovannye-lenty.webp';
 import hvac from '../assets/section-photos/ventilyaciya.webp';
 import tools from '../assets/section-photos/instrument-oborudovanie.webp';
 import roofing from '../assets/section-photos/krovelnye-uplotniteli-kleykie-lenty.webp';
+import foam from '../assets/section-photos/pena-montazhnaya.webp';
+import safety from '../assets/section-photos/siz-rashodnye-materialy.webp';
+import drillBits from '../assets/section-photos/osnastka-k-elektroinstrumentu.webp';
+import ownTapes from '../assets/section-photos/tapes.webp';
 
 /*
  * Знак раздела — снимок товара из него, а не пиктограмма.
@@ -39,20 +43,27 @@ const PICKED: Record<string, string> = {
 /*
  * Снимки разделов от клиента: сняты одним светом и показывают раздел целиком,
  * а не одну позицию из него. Где такой снимок есть, он идёт вперёд товарного.
+ *
+ * Правкой от 05.10 клиент прислал набор из одиннадцати кадров — по одному
+ * почти на каждый раздел. Прежние остались только у герметиков, клея и лент
+ * ПЭС: новых кадров для них не было.
  */
 const CLIENT: Record<string, string> = {
   'materialy-dlya-okon': windowMaterials,
+  'pena-montazhnaya': foam,
   germetiki: sealants,
   'kley-himiya-smazki': chemistry,
   'uplotnitelnye-lenty-pes-samokleyaschiesy': pesTapes,
+  'krovelnye-uplotniteli-kleykie-lenty': roofing,
   'uplotnitel-rezinovyy-d-p-e': epdm,
   krepezh: fasteners,
-  'alyuminievye-armirovannye-lenty': tapes,
+  'alyuminievye-armirovannye-lenty': stickyTapes,
   ventilyaciya: hvac,
   'instrument-oborudovanie': tools,
-  // Кадр с бутиловыми и алюминиевыми рулонами клиент правкой от 02.10
-  // перенёс сюда с материалов для монтажа окон — там вернулся прежний.
-  'krovelnye-uplotniteli-kleykie-lenty': roofing
+  'siz-rashodnye-materialy': safety,
+  'osnastka-k-elektroinstrumentu': drillBits,
+  // Сборная подборка лент собственного производства в мега-меню
+  tapes: ownTapes
 };
 
 const CATEGORY = new Map<string, string>();
