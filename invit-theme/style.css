@@ -1,0 +1,14 @@
+/*
+Theme Name: INVIT EUROBAND
+Theme URI: https://invit.by/
+Author: ООО «ИНВИТ»
+Description: Тема сайта ООО «ИНВИТ»: каталог уплотнительных и герметизирующих лент EUROBAND на WooCommerce. Заявка на счёт-фактуру вместо розничной корзины, содержимое страниц правится через ACF Pro.
+Version: 1.0.0
+Requires at least: 6.5
+Requires PHP: 8.0
+Text Domain: invit
+Tags: woocommerce, b2b, catalog
+*/
+
+/* Сами стили лежат в assets/css/app.css — он собирается Tailwind из
+   assets/css/source.css. Этот файл нужен WordPress только ради заголовка. */
