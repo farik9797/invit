@@ -358,12 +358,20 @@ const HeaderSearch: React.FC<{ className?: string }> = ({ className = '' }) => {
       </button>
 
       {open && (
+        /*
+         * Прокрутка висит на затемнении, а карточка лежит в обёртке min-h-full:
+         * когда на телефоне вылезает клавиатура и видимая высота падает, окно
+         * просто прокручивается. Прежде отступ сверху считался от 12vh, и на
+         * низком экране верх карточки уходил за кромку — клиент прислал кадр,
+         * где у окна срезана шапка.
+         */
         <div
-          className={`fixed inset-0 z-50 flex items-start justify-center px-4 pt-[12vh] pb-8 overflow-y-auto bg-inv-deep/55 backdrop-blur-sm transition-opacity duration-[200ms] ${
+          className={`fixed inset-0 z-50 overflow-y-auto overscroll-contain bg-inv-deep/55 backdrop-blur-sm transition-opacity duration-[200ms] ${
             shown || motion ? 'opacity-100' : 'opacity-0'
           }`}
           onClick={() => setOpen(false)}
         >
+          <div className="flex min-h-full items-start justify-center px-4 py-6 sm:py-[12vh]">
           <div
             role="dialog"
             aria-modal="true"
@@ -488,6 +496,7 @@ const HeaderSearch: React.FC<{ className?: string }> = ({ className = '' }) => {
                 Закрыть: <kbd className="px-1.5 py-0.5 rounded-[3px] border border-inv-border bg-inv-surface-1 font-sans">Esc</kbd>
               </p>
             </div>
+          </div>
           </div>
         </div>
       )}
