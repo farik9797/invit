@@ -41,6 +41,7 @@ do_action('woocommerce_before_cart');
                         <span class="mt-1 block text-xs text-inv-ink-muted">Артикул <?php echo esc_html($_product->get_sku()); ?></span>
                     <?php endif; ?>
 
+                    <?php /* Цена идёт через фильтр: у позиций «по запросу» вместо нуля стоит подпись. */ ?>
                     <span class="mt-1 block text-sm text-inv-ink"><?php echo wp_kses_post(apply_filters('woocommerce_cart_item_price', WC()->cart->get_product_price($_product), $cart_item, $cart_item_key)); ?></span>
                 </span>
 

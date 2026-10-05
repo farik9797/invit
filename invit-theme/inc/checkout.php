@@ -136,6 +136,38 @@ function invit_checkout_agreement() {
 }
 add_action('woocommerce_review_order_before_submit', 'invit_checkout_agreement');
 
+/**
+ * Позиции «по запросу» тоже должны попадать в заявку. WooCommerce считает товар
+ * без цены непродаваемым и отвечает «этот товар нельзя купить», но у нас не
+ * магазин: цену на такие позиции ставит менеджер при выставлении счёта.
+ */
+add_filter('woocommerce_is_purchasable', '__return_true');
+
+/**
+ * В листе заявки позиции без цены показываем словами, а не нулём: «0,00 р.»
+ * читается как бесплатно, хотя цену на такие позиции ставит менеджер.
+ */
+function invit_cart_price_html($html, $cart_item) {
+    $product = $cart_item['data'] ?? null;
+    if ($product && $product->get_price() === '') {
+        return '<span class="text-inv-ink-muted">Цена по запросу</span>';
+    }
+    return $html;
+}
+add_filter('woocommerce_cart_item_price', 'invit_cart_price_html', 10, 2);
+add_filter('woocommerce_cart_item_subtotal', 'invit_cart_price_html', 10, 2);
+
+/** Итог тоже предварительный, пока в заявке есть позиции по запросу. */
+function invit_cart_total_html($html) {
+    foreach (WC()->cart->get_cart() as $item) {
+        if (isset($item['data']) && $item['data']->get_price() === '') {
+            return $html . '<br><span class="text-xs font-normal text-inv-ink-muted">часть позиций — по запросу, итог подтвердит менеджер</span>';
+        }
+    }
+    return $html;
+}
+add_filter('woocommerce_cart_totals_order_total_html', 'invit_cart_total_html');
+
 /** Купонов у нас нет: цены согласовывает менеджер при выставлении счёта. */
 add_filter('woocommerce_coupons_enabled', '__return_false');
 

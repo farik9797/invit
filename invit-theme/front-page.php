@@ -26,7 +26,7 @@ $slides_default = [
         'text' => 'Высокая адгезия, плотное соединение стыкуемых поверхностей: сэндвич-панели, перегородки из гипсокартона, фланцевые соединения воздуховодов, производство оборудования. Много размеров всегда на складе, остальное изготовим под вашу задачу.',
         'image' => $img . '/hero/pes-grey-rolls.webp',
         'cta' => 'Ленты ПЭС',
-        'url' => home_url('/product-category/uplotnitelnye-lenty-pes-samokleyaschiesy/'),
+        'url' => home_url('/catalog/uplotnitelnye-lenty-pes-samokleyaschiesy/'),
     ],
     [
         'lead' => 'Защита стыков оконных проёмов —',
@@ -34,7 +34,7 @@ $slides_default = [
         'text' => 'Внутренняя пароизоляция примыкания окно/стена, наружная защита монтажного шва от ветра и дождя. Всегда в наличии на складе. Нетипичные размеры в любом сочетании клейких полос делаем под заказ.',
         'image' => $img . '/hero/alu-butyl-foil.webp',
         'cta' => 'Ленты для окон',
-        'url' => home_url('/product-category/materialy-dlya-okon/'),
+        'url' => home_url('/catalog/materialy-dlya-okon/'),
     ],
     [
         'lead' => 'Герметизация соединений —',
@@ -42,7 +42,7 @@ $slides_default = [
         'text' => 'Надёжная гидроизоляция швов и стыков листовых материалов: перехлёсты профнастила, монтажные швы сэндвич-панелей, зенитные фонари и фасадные системы. Защита от ветра и воды, товар всегда в наличии.',
         'image' => $img . '/hero/butyl-window-tapes.webp',
         'cta' => 'Бутиловые ленты',
-        'url' => home_url('/product-category/materialy-dlya-okon/'),
+        'url' => home_url('/catalog/materialy-dlya-okon/'),
     ],
     [
         'lead' => 'Паропроницаемая лента',
@@ -50,7 +50,7 @@ $slides_default = [
         'text' => 'Уплотняет зазоры, защищает швы и стыки: оконные проёмы, двери, кровля, вентиляция, фасады и деревянное домостроение. Быстрый монтаж благодаря клейкой полосе. Всегда в наличии, доставка по всей Беларуси.',
         'image' => $img . '/hero/psul-euroband.webp',
         'cta' => 'Лента ПСУЛ',
-        'url' => home_url('/product-category/materialy-dlya-okon/'),
+        'url' => home_url('/catalog/materialy-dlya-okon/'),
     ],
 ];
 
