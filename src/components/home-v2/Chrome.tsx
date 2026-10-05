@@ -803,7 +803,7 @@ const useHeaderSlide = (element: React.RefObject<HTMLElement | null>) => {
  */
 const NAV_LINK =
   'inline-flex items-center min-h-10 px-3.5 rounded-[4px] text-[15px] text-inv-ink whitespace-nowrap ' +
-  'transition-colors duration-[120ms] hover:bg-inv-deep/90 hover:text-white ' +
+  'transition-colors duration-[120ms] hover:bg-inv-blue hover:text-white ' +
   'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue';
 
 export const HeaderV2: React.FC<{ onRequest?: () => void }> = ({ onRequest }) => {

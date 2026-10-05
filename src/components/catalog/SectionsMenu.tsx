@@ -125,7 +125,7 @@ export const SectionsMenu: React.FC<SectionsMenuProps> = ({
           onMouseEnter={() => setHovered(null)}
           className={`flex items-center gap-2.5 min-h-11 px-2.5 rounded-[4px] text-sm transition-colors duration-[120ms] ${
             category
-              ? 'text-inv-ink hover:bg-inv-deep/90 hover:text-white'
+              ? 'text-inv-ink hover:bg-inv-blue hover:text-white'
               : 'bg-inv-surface-1 text-inv-red font-semibold'
           }`}
         >
@@ -141,7 +141,7 @@ export const SectionsMenu: React.FC<SectionsMenuProps> = ({
           className={`mt-0.5 flex items-center gap-2.5 min-h-11 px-2.5 rounded-[4px] text-sm transition-colors duration-[120ms] ${
             ownOnly
               ? 'text-inv-red font-semibold'
-              : 'text-inv-ink hover:bg-inv-deep/90 hover:text-white'
+              : 'text-inv-ink hover:bg-inv-blue hover:text-white'
           }`}
         >
           <SectionMark slug="tapes" size={32} className="w-8 h-8 shrink-0" />
@@ -168,7 +168,7 @@ export const SectionsMenu: React.FC<SectionsMenuProps> = ({
               aria-current={isHere}
               className={`mt-0.5 flex items-center gap-2.5 min-h-11 px-2.5 rounded-[4px] text-sm transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-inv-blue ${
                 isOpen
-                  ? 'bg-inv-deep/90 text-white font-semibold'
+                  ? 'bg-inv-blue text-white font-semibold'
                   : isHere
                     ? 'text-inv-red font-semibold'
                     : 'text-inv-ink'
@@ -236,7 +236,7 @@ export const SectionsMenu: React.FC<SectionsMenuProps> = ({
                           setHovered(null);
                         }
                       }}
-                      className={`group/sub flex items-center gap-2.5 min-h-10 px-2 py-1 rounded-[4px] text-[13px] leading-snug transition-colors duration-[120ms] hover:bg-inv-deep/90 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue ${
+                      className={`group/sub flex items-center gap-2.5 min-h-10 px-2 py-1 rounded-[4px] text-[13px] leading-snug transition-colors duration-[120ms] hover:bg-inv-blue hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue ${
                         chosen ? 'text-inv-red font-semibold' : 'text-inv-ink'
                       }`}
                     >

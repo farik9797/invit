@@ -60,7 +60,7 @@ const SubList: React.FC<{
               type="button"
               onClick={() => onSub(active === sub.slug ? null : sub.slug)}
               aria-pressed={active === sub.slug}
-              className={`group/sub w-full flex items-center gap-2.5 min-h-11 pl-2 pr-2.5 rounded-[4px] text-left text-sm cursor-pointer transition-colors duration-[120ms] hover:bg-inv-deep/90 hover:text-white ${
+              className={`group/sub w-full flex items-center gap-2.5 min-h-11 pl-2 pr-2.5 rounded-[4px] text-left text-sm cursor-pointer transition-colors duration-[120ms] hover:bg-inv-blue hover:text-white ${
                 active === sub.slug ? 'text-inv-red font-semibold' : 'text-inv-ink-muted'
               }`}
             >
@@ -143,7 +143,7 @@ const SectionsTree: React.FC<{
             className={`flex items-center gap-2.5 min-h-11 px-2.5 rounded-[4px] text-sm transition-colors duration-[120ms] ${
               !category
                 ? 'bg-inv-surface-1 text-inv-red font-semibold'
-                : 'text-inv-ink hover:bg-inv-deep/90 hover:text-white'
+                : 'text-inv-ink hover:bg-inv-blue hover:text-white'
             }`}
           >
             <span aria-hidden className="w-8 shrink-0" />
@@ -157,7 +157,7 @@ const SectionsTree: React.FC<{
           <Link
             to={`${paths.catalog}?brand=${OWN_BRAND}`}
             onClick={onNavigate}
-            className="mt-1 flex items-center gap-2.5 min-h-11 px-2.5 rounded-[4px] text-sm text-inv-ink hover:bg-inv-deep/90 hover:text-white transition-colors duration-[120ms]"
+            className="mt-1 flex items-center gap-2.5 min-h-11 px-2.5 rounded-[4px] text-sm text-inv-ink hover:bg-inv-blue hover:text-white transition-colors duration-[120ms]"
           >
             <SectionMark slug="tapes" size={32} className="w-8 h-8 shrink-0" />
             <span className="flex-1 leading-snug">Ленты EUROBAND</span>
@@ -175,7 +175,7 @@ const SectionsTree: React.FC<{
                   className={`flex items-center gap-2.5 min-h-11 px-2.5 rounded-[4px] text-sm transition-colors duration-[120ms] ${
                     isOpen
                       ? 'bg-inv-surface-1 text-inv-red font-semibold'
-                      : 'text-inv-ink hover:bg-inv-deep/90 hover:text-white'
+                      : 'text-inv-ink hover:bg-inv-blue hover:text-white'
                   }`}
                 >
                   <SectionMark slug={cat.slug} size={32} className="w-8 h-8 shrink-0" />
