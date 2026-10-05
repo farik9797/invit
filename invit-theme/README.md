@@ -64,6 +64,13 @@ npx @tailwindcss/cli -i invit-theme/assets/css/source.css -o invit-theme/assets/
 - Страницы «Заявка на счёт» и «Оформление заявки» должны содержать классические
   шорткоды `[woocommerce_cart]` и `[woocommerce_checkout]`: блочная корзина Woo
   шаблоны темы не использует.
+- Адреса каталога повторяют прежний сайт: `/catalog/`, `/catalog/<раздел>/`,
+  `/catalog/<раздел>/<товар>/`. Настройка: в `woocommerce_permalinks`
+  `product_base` = `/catalog/%product_cat%`, `category_base` = `catalog`,
+  страница магазина со слагом `catalog`. Остальное делает `inc/permalinks.php`:
+  короткая ссылка товара (только верхний раздел), короткий адрес раздела и
+  подраздела одним уровнем и снятие двух перенаправлений — канонического
+  WordPress и `wc_product_canonical_redirect` Woo, которые зацикливали 301.
 - Цены показываются в виде «26,47 р.»: формат задан в `functions.php`, чтобы не
   потерялся при переносе на другой сервер.
 - У логотипов в SVG убраны атрибуты `width`/`height` в пунктах: браузер считал
