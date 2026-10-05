@@ -315,7 +315,9 @@ const HeaderSearch: React.FC<{ className?: string }> = ({ className = '' }) => {
       return;
     }
     const id = requestAnimationFrame(() => setShown(true));
-    inputRef.current?.focus();
+    // preventScroll: иначе на низком экране (вылезла клавиатура) браузер
+    // подтягивает поле к себе и уводит шапку окна за верхнюю кромку.
+    inputRef.current?.focus({ preventScroll: true });
     return () => cancelAnimationFrame(id);
   }, [open]);
 
