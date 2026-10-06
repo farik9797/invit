@@ -1,0 +1,73 @@
+<?php
+/**
+ * Разовые правки каталога по просьбам клиента. Каждая выполняется один раз
+ * (замок — add_option), без консоли на хостинге: при первом запросе к сайту
+ * после выкладки темы.
+ */
+
+if (!defined('ABSPATH')) exit;
+
+/**
+ * 06.10: бутилкаучуковая лента ЛБ разделена на два товара по ширине.
+ * Прежний товар становится «15 мм» (адрес сохраняется), рядом заводится
+ * «45 мм». Фото: у 15 мм — тонкая лента на сэндвич-панелях, у 45 мм —
+ * рулоны широкой ленты (на старом сайте файл LB-45) и широкая лента в стыке.
+ * Таблица размеров и иллюстрации описания делятся в data/product-splits.json.
+ */
+function invit_split_butyl_tape() {
+    $key = 'invit_split_butyl_tape_v1';
+    if (get_option($key) || !add_option($key, time(), '', false)) return;
+
+    $id = wc_get_product_id_by_sku('lenta-butilkauchukovaja-euroband-lb');
+    $old = $id ? wc_get_product($id) : null;
+    if (!$old || wc_get_product_id_by_sku('lenta-butilkauchukovaja-euroband-lb-45')) return;
+
+    // Снимки по имени файла: рулоны — главный, остальные — галерея
+    $rolls = (int) $old->get_image_id();
+    $thin = 0;
+    $wide = 0;
+    foreach ($old->get_gallery_image_ids() as $att) {
+        $file = basename((string) get_attached_file($att));
+        if (str_contains($file, 'dvuhstronn')) $thin = (int) $att;
+        elseif (str_contains($file, 'butyl-tape-lb')) $wide = (int) $att;
+    }
+
+    $wide_tape = new WC_Product_Simple();
+    $wide_tape->set_name('Бутилкаучуковая лента EUROBAND ЛБ 45 мм, двусторонняя');
+    $wide_tape->set_slug('lenta-butilkauchukovaja-euroband-lb-45');
+    $wide_tape->set_sku('lenta-butilkauchukovaja-euroband-lb-45');
+    $wide_tape->set_status('publish');
+    $wide_tape->set_catalog_visibility('visible');
+    $wide_tape->set_stock_status('instock');
+    $wide_tape->set_short_description($old->get_short_description());
+    $wide_tape->set_description($old->get_description());
+    $wide_tape->set_attributes($old->get_attributes());
+    $wide_tape->set_category_ids($old->get_category_ids());
+    $wide_tape->set_tag_ids($old->get_tag_ids());
+    if ($old->get_regular_price() !== '') $wide_tape->set_regular_price($old->get_regular_price());
+    if ($rolls) $wide_tape->set_image_id($rolls);
+    if ($wide) $wide_tape->set_gallery_image_ids([$wide]);
+    $wide_tape->update_meta_data('_invit_after', $old->get_id());
+    $wide_tape->save();
+
+    $old->set_name('Бутилкаучуковая лента EUROBAND ЛБ 15 мм, двусторонняя');
+    if ($thin) $old->set_image_id($thin);
+    $old->set_gallery_image_ids([]);
+    $old->save();
+
+    invit_catalog_flush();
+}
+add_action('init', 'invit_split_butyl_tape', 30);
+
+/** Разделение уже выполнено без метки порядка — ставим её отдельно. */
+function invit_split_butyl_tape_order() {
+    $key = 'invit_split_butyl_tape_order_v1';
+    if (get_option($key) || !add_option($key, time(), '', false)) return;
+    $old = wc_get_product_id_by_sku('lenta-butilkauchukovaja-euroband-lb');
+    $new = wc_get_product_id_by_sku('lenta-butilkauchukovaja-euroband-lb-45');
+    if ($old && $new && !get_post_meta($new, '_invit_after', true)) {
+        update_post_meta($new, '_invit_after', $old);
+        invit_catalog_flush();
+    }
+}
+add_action('init', 'invit_split_butyl_tape_order', 31);

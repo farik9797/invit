@@ -29,7 +29,7 @@ const INVIT_I_FTITLE = 13;
 const INVIT_I_FSKU = 14;
 
 const INVIT_OWN_BRAND = 'EUROBAND';
-const INVIT_INDEX_VERSION = 3;
+const INVIT_INDEX_VERSION = 4;
 
 /* ------------------------------------------------------------------ индекс */
 
@@ -72,7 +72,7 @@ function invit_catalog_build() {
     $rows = $wpdb->get_results(
         "SELECT m.post_id, m.meta_key, m.meta_value FROM {$wpdb->postmeta} m
          JOIN {$wpdb->posts} p ON p.ID = m.post_id
-         WHERE p.post_type = 'product' AND m.meta_key IN ('_sku', '_thumbnail_id', '_product_attributes')",
+         WHERE p.post_type = 'product' AND m.meta_key IN ('_sku', '_thumbnail_id', '_product_attributes', '_invit_after')",
         ARRAY_N
     );
     foreach ($rows as [$id, $key, $value]) $meta[$id][$key] = $value;
@@ -150,6 +150,25 @@ function invit_catalog_build() {
                 if ($c && !isset($cat_photo[$c])) $cat_photo[$c] = $thumb;
             }
         }
+    }
+
+    // Товар, отделённый от другого (ЛБ 45 мм от ЛБ 15 мм), стоит сразу за ним,
+    // а не в конце каталога, куда его поставил бы новый номер записи
+    $moved = [];
+    foreach ($items as $i => $item) {
+        $after = (int) ($meta[$item[INVIT_I_ID]]['_invit_after'] ?? 0);
+        if ($after) $moved[$after][] = $item;
+    }
+    if ($moved) {
+        $ordered = [];
+        foreach ($items as $item) {
+            if (!empty($meta[$item[INVIT_I_ID]]['_invit_after'])) continue;
+            $ordered[] = $item;
+            foreach ($moved[$item[INVIT_I_ID]] ?? [] as $follower) $ordered[] = $follower;
+        }
+        $items = $ordered;
+        $by_slug = [];
+        foreach ($items as $i => $item) $by_slug[$item[INVIT_I_SLUG]] = $i;
     }
 
     // Ручной выбор там, где первый товар представляет раздел плохо
@@ -922,4 +941,39 @@ function invit_dedupe_content_blocks(array $blocks, $description) {
 function invit_content_image($remote) {
     $file = invit_data('contentImageMap')[$remote] ?? '';
     return $file !== '' ? invit_asset('img/content/' . $file . '.webp') : $remote;
+}
+
+/**
+ * Подробное описание товара с учётом разделения одного товара на несколько
+ * (data/product-splits.json): описание берётся у исходного, а в таблице
+ * размеров и иллюстрациях остаётся только своё.
+ */
+function invit_product_content($slug) {
+    static $splits = null;
+    if ($splits === null) {
+        $file = get_template_directory() . '/data/product-splits.json';
+        $splits = is_readable($file) ? (array) json_decode(file_get_contents($file), true) : [];
+    }
+    $split = $splits[$slug] ?? null;
+    $content = invit_data('productContent')[$split['from'] ?? $slug] ?? null;
+    if (!$split || !$content) return $content;
+
+    $blocks = [];
+    foreach ($content['blocks'] as $block) {
+        if ($block['kind'] === 'table') {
+            $rows = array_values(array_filter($block['rows'], static fn($r) => str_starts_with($r[0], $split['row'])));
+            if ($rows) $blocks[] = ['rows' => $rows] + $block;
+            continue;
+        }
+        if ($block['kind'] === 'image') {
+            $keep = false;
+            foreach ($split['images'] as $name) {
+                if (str_contains($block['src'], $name)) $keep = true;
+            }
+            if (!$keep) continue;
+        }
+        $blocks[] = $block;
+    }
+    $content['blocks'] = $blocks;
+    return $content;
 }

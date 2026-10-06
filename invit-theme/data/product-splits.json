@@ -1,0 +1,12 @@
+{
+ "lenta-butilkauchukovaja-euroband-lb": {
+  "from": "lenta-butilkauchukovaja-euroband-lb",
+  "row": "EUROBAND ЛБ 15",
+  "images": ["butyl_tape_lb_dvuhstronn"]
+ },
+ "lenta-butilkauchukovaja-euroband-lb-45": {
+  "from": "lenta-butilkauchukovaja-euroband-lb",
+  "row": "EUROBAND ЛБ 45",
+  "images": ["butyl_tape_lb.png"]
+ }
+}
