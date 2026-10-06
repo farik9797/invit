@@ -26,21 +26,37 @@ if (!function_exists('invit_term_path')) {
             if ($name === '') continue;
             $slug = $slugs[$i] ?? '';
 
-            $existing = get_term_by('name', $name, 'product_cat');
-            if ($existing && (int) $existing->parent === (int) $parent) {
-                $term_id = (int) $existing->term_id;
-                // Раздел мог быть заведён раньше с кириллическим адресом — чиним.
-                if ($slug !== '' && $existing->slug !== $slug) {
-                    wp_update_term($term_id, 'product_cat', ['slug' => $slug]);
-                }
+            // Ищем по адресу: он уникален. По имени нельзя — «Хомуты» есть и в
+            // «Крепеже», и в «Вентиляции», и поиск по имени уводил хомуты
+            // вентиляции в крепёж (14 из 15).
+            $term = $slug !== '' ? get_term_by('slug', $slug, 'product_cat') : null;
+
+            if (!$term) {
+                // Адреса нет — имя ищем только среди детей нужного родителя.
+                $found = get_terms([
+                    'taxonomy'   => 'product_cat',
+                    'name'       => $name,
+                    'parent'     => $parent,
+                    'hide_empty' => false,
+                    'number'     => 1,
+                ]);
+                $term = ($found && !is_wp_error($found)) ? $found[0] : null;
+            }
+
+            if ($term) {
+                $term_id = (int) $term->term_id;
+                $fix = [];
+                if ($slug !== '' && $term->slug !== $slug) $fix['slug'] = $slug;
+                if ((int) $term->parent !== (int) $parent) $fix['parent'] = $parent;
+                if ($fix) wp_update_term($term_id, 'product_cat', $fix);
             } else {
                 $args = ['parent' => $parent];
                 if ($slug !== '') $args['slug'] = $slug;
 
                 $made = wp_insert_term($name, 'product_cat', $args);
                 if (is_wp_error($made)) {
-                    // Имя уже занято на другом уровне — берём существующий термин.
-                    $term_id = $existing ? (int) $existing->term_id : 0;
+                    // Термин уже есть — WordPress сообщает его номер в ошибке.
+                    $term_id = (int) ($made->get_error_data('term_exists') ?: 0);
                     if (!$term_id) continue;
                 } else {
                     $term_id = (int) $made['term_id'];
