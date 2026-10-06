@@ -154,6 +154,14 @@ function invit_import_reset() {
     }
     delete_option(INVIT_IMPORT_STATE);
     delete_transient('invit_import_total');
+
+    // «Докачать снимки и галереи»: товары уже заведены, идём сразу ко второму
+    // проходу — он пропускает готовое и добирает недостающее.
+    if (($_POST['stage'] ?? '') === 'images') {
+        $state = invit_import_state();
+        $state['stage'] = 'images';
+        update_option(INVIT_IMPORT_STATE, $state, false);
+    }
     wp_send_json_success();
 }
 add_action('wp_ajax_invit_import_reset', 'invit_import_reset');
@@ -182,6 +190,7 @@ function invit_import_screen() {
             <button type="button" class="button button-primary button-hero" id="invit-import-start">
                 <?php echo $state['finished'] ? 'Импорт завершён' : ($state['created'] || $state['images'] ? 'Продолжить импорт' : 'Начать импорт'); ?>
             </button>
+            <button type="button" class="button" id="invit-import-images">Докачать снимки и галереи</button>
             <button type="button" class="button" id="invit-import-reset">Начать заново</button>
         </p>
 
@@ -239,6 +248,20 @@ function invit_import_screen() {
             start.disabled = true;
             start.textContent = 'Идёт импорт…';
             step();
+        });
+
+        document.getElementById('invit-import-images').addEventListener('click', function () {
+            if (running) return;
+            var body = new FormData();
+            body.append('action', 'invit_import_reset');
+            body.append('stage', 'images');
+            body.append('_ajax_nonce', nonce);
+            fetch(ajax, { method: 'POST', body: body, credentials: 'same-origin' }).then(function () {
+                running = true;
+                start.disabled = true;
+                start.textContent = 'Идёт импорт…';
+                step();
+            });
         });
 
         document.getElementById('invit-import-reset').addEventListener('click', function () {

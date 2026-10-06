@@ -87,6 +87,54 @@ if (!function_exists('invit_attach_image')) {
     }
 }
 
+if (!function_exists('invit_attach_local_image')) {
+    /**
+     * Файл с диска (папка gallery плагина) в медиатеку. По сети не идём:
+     * иллюстрации висели на invit.by, а там теперь сам этот сайт.
+     */
+    function invit_attach_local_image($file, $post_id) {
+        $path = dirname(__DIR__) . '/gallery/' . basename($file);
+        if (!is_readable($path)) return 0;
+
+        require_once ABSPATH . 'wp-admin/includes/media.php';
+        require_once ABSPATH . 'wp-admin/includes/file.php';
+        require_once ABSPATH . 'wp-admin/includes/image.php';
+
+        // media_handle_sideload удаляет исходник после переноса — даём копию.
+        $tmp = wp_tempnam($file);
+        if (!$tmp || !copy($path, $tmp)) return 0;
+
+        $id = media_handle_sideload(['name' => basename($file), 'tmp_name' => $tmp], $post_id);
+        if (is_wp_error($id)) {
+            @unlink($tmp);
+            return 0;
+        }
+        return (int) $id;
+    }
+}
+
+if (!function_exists('invit_attach_gallery')) {
+    /** Галерея товара из колонки Gallery; уже собранную не трогаем. */
+    function invit_attach_gallery(array $row, $product_id) {
+        $files = array_filter(array_map('trim', explode(',', (string) ($row['Gallery'] ?? ''))));
+        if (!$files) return 0;
+
+        $product = wc_get_product($product_id);
+        if (!$product || $product->get_gallery_image_ids()) return 0;
+
+        $ids = [];
+        foreach ($files as $file) {
+            $id = invit_attach_local_image($file, $product_id);
+            if ($id) $ids[] = $id;
+        }
+        if ($ids) {
+            $product->set_gallery_image_ids($ids);
+            $product->save();
+        }
+        return count($ids);
+    }
+}
+
 if (!function_exists('invit_import_row')) {
     /**
      * Создаёт или обновляет товар по строке CSV.
@@ -161,6 +209,9 @@ if (!function_exists('invit_import_row')) {
             $image_id = invit_attach_image($row['Images'], $id);
             if ($image_id) set_post_thumbnail($id, $image_id);
         }
+        if ($with_image) {
+            invit_attach_gallery($row, $id);
+        }
 
         return $existing_id ? 'updated' : 'created';
     }
@@ -177,12 +228,19 @@ if (!function_exists('invit_import_image_row')) {
         if ($sku === '' || empty($row['Images'])) return 'skipped';
 
         $id = wc_get_product_id_by_sku($sku);
-        if (!$id || get_post_thumbnail_id($id)) return 'skipped';
+        if (!$id) return 'skipped';
 
-        $image_id = invit_attach_image($row['Images'], $id);
-        if (!$image_id) return 'failed';
+        $done = false;
+        if (!get_post_thumbnail_id($id)) {
+            $image_id = invit_attach_image($row['Images'], $id);
+            if (!$image_id) return 'failed';
+            set_post_thumbnail($id, $image_id);
+            $done = true;
+        }
 
-        set_post_thumbnail($id, $image_id);
-        return 'attached';
+        // Галерея докачивается и у товаров, чей главный снимок уже есть.
+        if (invit_attach_gallery($row, $id)) $done = true;
+
+        return $done ? 'attached' : 'skipped';
     }
 }

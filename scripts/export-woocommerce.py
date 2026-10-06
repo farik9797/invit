@@ -23,6 +23,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 GENERATED = ROOT / 'src/data/catalog.generated.ts'
 DESCRIPTIONS = ROOT / 'src/data/catalogDescriptions.ts'
+CONTENT = ROOT / 'src/data/productContent.ts'
+CONTENT_MAP = ROOT / 'src/lib/contentImageMap.ts'
+CONTENT_DIR = ROOT / 'src/assets/content'
+GALLERY_DIR = ROOT / 'invit-import/gallery'
 OUT_DIR = ROOT / 'files/woocommerce-export'
 
 # Снимки лежат рядом с нынешним сайтом; импортёр Woo берёт их по ссылке.
@@ -31,7 +35,7 @@ PHOTO_BASE = 'https://farik9797.github.io/invit/products'
 CHUNK = 1000
 
 COLUMNS = [
-    'ID', 'Type', 'SKU', 'Slug', 'Category slugs', 'Name', 'Published', 'Is featured?',
+    'ID', 'Type', 'SKU', 'Slug', 'Category slugs', 'Gallery', 'Name', 'Published', 'Is featured?',
     'Visibility in catalog', 'Short description', 'Description',
     'In stock?', 'Stock', 'Regular price', 'Categories', 'Tags', 'Images',
     'Attribute 1 name', 'Attribute 1 value(s)', 'Attribute 1 visible', 'Attribute 1 global',
@@ -52,6 +56,30 @@ def read_literal(text, name, opener):
 def slug_path_of(section_slug, sub_slug):
     """Путь из латинских слагов — по нему импортёр заводит разделы и адреса."""
     return f"{section_slug} > {sub_slug}"
+
+
+def read_gallery():
+    """Дополнительные фото товаров, как их собирает карточка прежнего сайта.
+
+    Галерея = главный снимок + иллюстрации из описания со второй по последнюю
+    (contentImages.ts). Иллюстрации висели на invit.by, теперь там WordPress,
+    поэтому берём их локальные копии из src/assets/content по карте адресов.
+    Возвращает {id товара: [имя файла, ...]} и множество нужных файлов.
+    """
+    content = CONTENT.read_text(encoding='utf-8')
+    mapping = dict(re.findall(r'"(https?://[^"]+)":\s*\'([^\']+)\'', CONTENT_MAP.read_text(encoding='utf-8')))
+
+    gallery = {}
+    for pid, block in re.findall(r"^  '([^']+)': \{\s*images: \[(.*?)\]", content, re.S | re.M):
+        urls = re.findall(r"'(https?://[^']+)'", block)
+        files = []
+        for url in urls[1:]:
+            name = mapping.get(url)
+            if name and (CONTENT_DIR / f'{name}.webp').exists():
+                files.append(f'{name}.webp')
+        if files:
+            gallery[pid] = files
+    return gallery
 
 
 def path_of(section, sub):
@@ -75,6 +103,7 @@ def main():
     prices = read_literal(generated, 'PRICES', '[')
     shared = read_literal(generated, 'SHARED_PHOTOS', '{')
     descriptions = read_literal(DESCRIPTIONS.read_text(encoding='utf-8'), 'DESCRIPTIONS', '{')
+    gallery = read_gallery()
 
     # Русские имена разделов: в CSV Woo категории пишутся «Раздел > Подраздел».
     section_name = {}
@@ -119,6 +148,9 @@ def main():
             # сделает его из русского названия и ссылки станут нечитаемыми.
             'Slug': product.get('slug') or pid,
             'Category slugs': ', '.join(slugs),
+            # Только при главном снимке — как на прежнем сайте, где без него
+            # галереи нет вовсе.
+            'Gallery': ', '.join(gallery.get(pid, [])) if image else '',
             'Name': product['title'],
             'Published': 1,
             'Is featured?': 0,
@@ -154,11 +186,24 @@ def main():
             writer.writeheader()
             writer.writerows(rows[start:start + CHUNK])
 
+    # Файлы галереи кладём в плагин импорта: он берёт их с диска, без запросов
+    # по сети, потому что старые адреса на invit.by больше не отвечают.
+    GALLERY_DIR.mkdir(parents=True, exist_ok=True)
+    needed = {name for row in rows for name in row['Gallery'].split(', ') if name}
+    for old in GALLERY_DIR.glob('*.webp'):
+        if old.name not in needed:
+            old.unlink()
+    for name in needed:
+        target = GALLERY_DIR / name
+        if not target.exists():
+            target.write_bytes((CONTENT_DIR / name).read_bytes())
+
     with_price = sum(1 for row in rows if row['Regular price'] != '')
     with_photo = sum(1 for row in rows if row['Images'])
     print(f'товаров: {len(rows)}')
     print(f'  с ценой: {with_price}')
     print(f'  со снимком: {with_photo}')
+    print(f'  с галереей: {sum(1 for r in rows if r["Gallery"])}, файлов галереи: {len(needed)}')
     print(f'  во второй прописке: {sum(1 for r in rows if r["Categories"].count(">") > 1)}')
     print(f'файлов: {parts} (по {CHUNK} строк) в {OUT_DIR.relative_to(ROOT)}')
 
