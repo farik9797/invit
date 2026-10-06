@@ -55,7 +55,8 @@ while (have_posts()) : the_post();
     if ($item[INVIT_I_COUNTRY] !== '') $specs[] = ['Страна', $item[INVIT_I_COUNTRY]];
 
     $datasheet = invit_data('datasheets')[$slug] ?? '';
-    $companions = invit_cross_sell($item);
+    // Выбранные вручную у товара важнее правила раздела
+    $companions = invit_manual_cross_sells($product) ?: invit_cross_sell($item);
     $related = invit_related($item);
 
     $crumbs = [['label' => 'Каталог', 'url' => invit_url_catalog()]];

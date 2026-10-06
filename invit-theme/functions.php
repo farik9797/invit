@@ -15,6 +15,7 @@ require_once get_template_directory() . '/inc/catalog-page.php';
 require_once get_template_directory() . '/inc/forms.php';
 require_once get_template_directory() . '/inc/news.php';
 require_once get_template_directory() . '/inc/migrations.php';
+require_once get_template_directory() . '/inc/admin.php';
 require_once get_template_directory() . '/inc/acf-fields.php';
 require_once get_template_directory() . '/inc/checkout.php';
 require_once get_template_directory() . '/inc/permalinks.php';

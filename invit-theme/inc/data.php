@@ -46,9 +46,36 @@ function invit_plural($n, array $forms) {
     return $forms[2];
 }
 
-/** Разделы каталога в порядке React-сайта. */
+/**
+ * Подраздел, который показывается сразу в нескольких разделах: основной —
+ * тот, где он в данных (адреса товаров, хлебные крошки), остальные — здесь.
+ * 06.10: полнобутиловые ленты клиент попросил и в кровельных лентах.
+ */
+function invit_shared_subs() {
+    return [
+        'polnobutilovye-lenty' => ['krovelnye-uplotniteli-kleykie-lenty'],
+    ];
+}
+
+/** Разделы каталога в порядке React-сайта, с подразделами-«гостями». */
 function invit_sections() {
-    return invit_data('categories');
+    static $sections = null;
+    if ($sections !== null) return $sections;
+
+    $sections = invit_data('categories');
+    $names = [];
+    foreach ($sections as $section) {
+        foreach ($section['subcategories'] as $sub) $names[$sub['slug']] ??= $sub['name'];
+    }
+    foreach (invit_shared_subs() as $sub_slug => $targets) {
+        foreach ($sections as &$section) {
+            if (!in_array($section['slug'], $targets, true)) continue;
+            if (in_array($sub_slug, array_column($section['subcategories'], 'slug'), true)) continue;
+            $section['subcategories'][] = ['slug' => $sub_slug, 'name' => $names[$sub_slug] ?? $sub_slug, 'group' => ''];
+        }
+        unset($section);
+    }
+    return $sections;
 }
 
 function invit_section($slug) {
@@ -64,7 +91,7 @@ function invit_section_of_sub($sub_slug) {
     if ($map === null) {
         $map = [];
         foreach (invit_sections() as $section) {
-            foreach ($section['subcategories'] as $sub) $map[$sub['slug']] = $section['slug'];
+            foreach ($section['subcategories'] as $sub) $map[$sub['slug']] ??= $section['slug'];
         }
     }
     return $map[$sub_slug] ?? '';

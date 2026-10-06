@@ -29,7 +29,7 @@ const INVIT_I_FTITLE = 13;
 const INVIT_I_FSKU = 14;
 
 const INVIT_OWN_BRAND = 'EUROBAND';
-const INVIT_INDEX_VERSION = 4;
+const INVIT_INDEX_VERSION = 5;
 
 /* ------------------------------------------------------------------ индекс */
 
@@ -106,6 +106,8 @@ function invit_catalog_build() {
         $also_sub = $also[$slug] ?? '';
         $main = array_values(array_diff($subs, [$also_sub]))[0] ?? $subs[0];
         if (!in_array($also_sub, $subs, true)) $also_sub = '';
+        // Подраздел-«гость» в другом разделе: товар числится и там
+        $also_cat = $also_sub ? invit_section_of_sub($also_sub) : (invit_shared_subs()[$main][0] ?? '');
 
         $brand = '';
         $country = '';
@@ -129,7 +131,7 @@ function invit_catalog_build() {
             $slug,
             invit_section_of_sub($main),
             $main,
-            $also_sub ? invit_section_of_sub($also_sub) : '',
+            $also_cat,
             $also_sub,
             $brand,
             $country,
@@ -403,7 +405,7 @@ function invit_section_words($slug) {
         foreach (invit_sections() as $section) {
             $words[$section['slug']] = $split($section['name']);
             foreach ($section['subcategories'] as $sub) {
-                $words[$sub['slug']] = $split($section['name'] . ' ' . $sub['name']);
+                $words[$sub['slug']] ??= $split($section['name'] . ' ' . $sub['name']);
             }
         }
     }
@@ -699,10 +701,15 @@ function invit_related(array $item, $limit = 4) {
     return array_slice(array_merge(invit_sort_for_listing($siblings), invit_sort_for_listing($nearby)), 0, $limit);
 }
 
-/** «С этим товаром часто покупают» — подбор по делу, src/lib/crossSell.ts. */
-function invit_cross_sell(array $item, $limit = 4) {
-    static $companions = [
+/**
+ * Правило «С этим товаром часто покупают» по умолчанию (src/lib/crossSell.ts):
+ * к разделу — подразделы, без которых работу не сделать. Пена добавлена
+ * 06.10, в React для неё правила не было.
+ */
+function invit_default_companions() {
+    return [
         'materialy-dlya-okon' => ['pistolety-dlya-peny', 'germetiki-silikonovye', 'samorez-okonnyy-ostryy', 'himiya-dlya-okon-cosmofen'],
+        'pena-montazhnaya' => ['pistolety-dlya-peny', 'ochistiteli-peny', 'germetiki-silikonovye', 'perchatki'],
         'germetiki' => ['pistolety-dlya-germetika', 'himiya-dlya-okon-cosmofen', 'malyarnaya-lenta', 'perchatki'],
         'kley-himiya-smazki' => ['pistolety-dlya-germetika', 'malyarnaya-lenta', 'perchatki'],
         'uplotnitelnye-lenty-pes-samokleyaschiesy' => ['samorez-krovelnyy', 'germetiki-silikonovye', 'instrument-rezhuschiy'],
@@ -715,9 +722,25 @@ function invit_cross_sell(array $item, $limit = 4) {
         'siz-rashodnye-materialy' => ['perchatki', 'ochki', 'maski', 'plyonka-ukryvochnaya'],
         'osnastka-k-elektroinstrumentu' => ['ochki', 'perchatki', 'maski', 'naushniki'],
     ];
+}
 
+/**
+ * Подразделы-спутники раздела: заданные в админке (Товары -> Категории ->
+ * раздел -> «С этим товаром часто покупают»), иначе правило темы. Пустой
+ * список из админки — осознанное «не показывать».
+ */
+function invit_section_companions($section) {
+    $term = get_term_by('slug', $section, 'product_cat');
+    if ($term && metadata_exists('term', $term->term_id, 'invit_companions')) {
+        return array_values((array) get_term_meta($term->term_id, 'invit_companions', true));
+    }
+    return invit_default_companions()[$section] ?? [];
+}
+
+/** «С этим товаром часто покупают» — подбор по правилу раздела. */
+function invit_cross_sell(array $item, $limit = 4) {
     $groups = array_values(array_filter(
-        $companions[$item[INVIT_I_CAT]] ?? [],
+        invit_section_companions($item[INVIT_I_CAT]),
         static fn($slug) => $slug !== $item[INVIT_I_SUB]
     ));
     if (!$groups) return [];
@@ -816,13 +839,13 @@ function invit_mega_sections() {
         if ($item[INVIT_I_ALSO_SUB] !== '') $by_sub[$item[INVIT_I_ALSO_SUB]][] = $item;
     }
 
-    $group = static function ($sub_slug, $name) use ($by_sub) {
+    $group = static function ($sub_slug, $name, $section = '') use ($by_sub) {
         $items = $by_sub[$sub_slug] ?? [];
         usort($items, static fn($a, $b) => ($a[INVIT_I_OWN] ? 0 : 1) <=> ($b[INVIT_I_OWN] ? 0 : 1));
         return [
             'name' => $name,
             'slug' => $sub_slug,
-            'href' => invit_url_sub($sub_slug),
+            'href' => $section ? invit_url_category($section, ['sub' => $sub_slug]) : invit_url_sub($sub_slug),
             'items' => array_map(static fn($i) => [
                 'title' => invit_short_title($i[INVIT_I_TITLE]),
                 'href' => invit_item_url($i),
@@ -847,7 +870,7 @@ function invit_mega_sections() {
             'id' => $section['slug'],
             'label' => $section['name'],
             'href' => invit_url_category($section['slug']),
-            'groups' => array_map(static fn($sub) => $group($sub['slug'], $sub['name']), $section['subcategories']),
+            'groups' => array_map(static fn($sub) => $group($sub['slug'], $sub['name'], $section['slug']), $section['subcategories']),
         ];
     }
     return $sections;
@@ -976,4 +999,17 @@ function invit_product_content($slug) {
     }
     $content['blocks'] = $blocks;
     return $content;
+}
+
+/**
+ * Спутники, выбранные вручную у товара: «Данные товара» -> «Связанные
+ * товары» -> «Кросс-продажи». Порядок — как в админке, не больше восьми.
+ */
+function invit_manual_cross_sells(WC_Product $product) {
+    $items = [];
+    foreach ($product->get_cross_sell_ids() as $id) {
+        $item = invit_catalog_item_by_id($id);
+        if ($item && $item[INVIT_I_ID] !== $product->get_id()) $items[] = $item;
+    }
+    return array_slice($items, 0, 8);
 }
