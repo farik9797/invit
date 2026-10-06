@@ -38,10 +38,12 @@ $brand = $product->get_attribute('Бренд');
             <span class="mt-1 block text-xs text-inv-ink-muted">Бренд: <?php echo esc_html($brand); ?></span>
         <?php endif; ?>
 
-        <div class="mt-auto pt-3 flex items-center justify-between gap-2">
+        <?php /* На телефоне карточка 166px: «Цена по запросу» и кнопка в одну строку
+                 не влезали, кнопка вылезала за край — там они идут столбиком. */ ?>
+        <div class="mt-auto pt-3 flex flex-col items-stretch gap-2 sm:flex-row sm:items-center sm:justify-between">
             <span class="text-sm font-semibold text-inv-ink"><?php echo wp_kses_post($product->get_price_html()); ?></span>
 
-            <a href="<?php echo esc_url($product->add_to_cart_url()); ?>" data-quantity="1" data-product_id="<?php echo esc_attr($product->get_id()); ?>" class="inline-flex items-center gap-1.5 min-h-10 px-3 rounded-[4px] bg-inv-surface-1 text-xs font-semibold text-inv-ink whitespace-nowrap hover:bg-inv-blue hover:text-white transition-colors duration-[120ms] add_to_cart_button ajax_add_to_cart">
+            <a href="<?php echo esc_url($product->add_to_cart_url()); ?>" data-quantity="1" data-product_id="<?php echo esc_attr($product->get_id()); ?>" class="inline-flex items-center justify-center gap-1.5 min-h-10 px-3 rounded-[4px] bg-inv-surface-1 text-xs font-semibold text-inv-ink whitespace-nowrap hover:bg-inv-blue hover:text-white transition-colors duration-[120ms] add_to_cart_button ajax_add_to_cart">
                 <?php echo invit_icon('plus', 'w-4 h-4'); ?>
                 В заявку
             </a>
