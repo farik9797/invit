@@ -534,7 +534,7 @@
         var active = 0;
         var paused = false;
         var timer = null;
-        var DURATION = 3500; // кадр держится 3,5 секунды — так попросил клиент
+        var DURATION = 5000; // кадр держится 5 секунд — правка клиента от 06.10 (было 3,5)
         var total = texts.length;
 
         // Грузим только текущий кадр и следующий
