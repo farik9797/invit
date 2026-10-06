@@ -96,8 +96,11 @@ def main():
                                       sub_name[product['alsoSubcategorySlug']]))
             slugs.append(slug_path_of(product['alsoCategorySlug'], product['alsoSubcategorySlug']))
 
-        # Снимок свой или общий — так же, как его выбирает витрина сайта.
-        photo_id = pid if product.get('photo') else shared.get(pid, '')
+        # Тот же выбор, что у витрины сайта (catalogData.ts): общий снимок, затем
+        # файл по адресу товара, затем по идентификатору. Прежде общий снимок
+        # проверялся последним, и у товаров без своего файла (восьмимиллиметровая
+        # заглушка показывает снимок четырнадцатимиллиметровой) ссылка давала 404.
+        photo_id = (shared.get(pid) or product.get('slug') or pid) if product.get('photo') else ''
         image = f'{PHOTO_BASE}/{photo_id}.webp' if photo_id else ''
 
         short = product.get('description', '').strip()
