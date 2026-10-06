@@ -75,12 +75,14 @@ function invit_assets() {
         file_exists($css) ? filemtime($css) : INVIT_VERSION
     );
 
-    // Onest подключён, как в index.html React-сайта; сам текст набран font-v2.
+    // Onest — как в index.html React-сайта, но файлы шрифта лежат в теме:
+    // сайт не обращается к серверам Google.
+    $fonts = get_template_directory() . '/assets/fonts/onest/onest.css';
     wp_enqueue_style(
         'invit-fonts',
-        'https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap',
+        get_template_directory_uri() . '/assets/fonts/onest/onest.css',
         [],
-        null
+        file_exists($fonts) ? filemtime($fonts) : INVIT_VERSION
     );
 
     $js = get_template_directory() . '/assets/js/site.js';

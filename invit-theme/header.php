@@ -37,8 +37,6 @@ $cart_badge = '<span data-cart-count class="absolute top-1 right-0.5 min-w-[18px
     <meta charset="<?php bloginfo('charset'); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/svg+xml" href="<?php echo esc_url(invit_asset('img/favicon.svg')); ?>">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <script>document.documentElement.classList.add('js');</script>
     <?php wp_head(); ?>
 </head>
