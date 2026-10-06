@@ -1,6 +1,7 @@
 <?php
 /**
- * Новость целиком: обложка, дата, текст и возврат к списку.
+ * Заметка — перенос src/pages/NewsArticlePage.tsx: рубрика и дата, заголовок,
+ * обложка по теме, текст и две соседние заметки.
  */
 
 if (!defined('ABSPATH')) exit;
@@ -8,46 +9,60 @@ if (!defined('ABSPATH')) exit;
 get_header();
 
 while (have_posts()) : the_post();
+    $article = get_post();
+    $paragraphs = array_filter(array_map(
+        static fn($p) => trim(html_entity_decode(wp_strip_all_tags($p), ENT_QUOTES, 'UTF-8')),
+        preg_split('/<\/p>\s*/', $article->post_content)
+    ));
+    $others = get_posts(['post_type' => 'post', 'posts_per_page' => 2, 'post__not_in' => [$article->ID], 'post_status' => 'publish']);
     ?>
-    <section class="bg-inv-deep text-white">
-        <div class="max-w-[860px] mx-auto px-5 py-10 sm:py-14">
-            <a href="<?php echo esc_url(get_permalink(get_option('page_for_posts')) ?: home_url('/news/')); ?>" class="inline-flex items-center gap-2 min-h-11 text-sm text-inv-on-deep hover:text-white transition-colors duration-[120ms]">
-                <?php echo invit_icon('arrow-right', 'w-4 h-4 rotate-180'); ?>
-                Все новости
-            </a>
 
-            <h1 class="mt-4 text-3xl sm:text-4xl font-semibold tracking-[-0.01em] leading-[1.15]">
-                <?php the_title(); ?>
-            </h1>
+    <?php get_template_part('template-parts/breadcrumbs', null, ['items' => [['label' => 'Новости', 'url' => home_url('/news/')], ['label' => get_the_title()]]]); ?>
 
-            <time datetime="<?php echo esc_attr(get_the_date('c')); ?>" class="mt-4 block text-sm text-inv-on-deep">
-                <?php echo esc_html(get_the_date('j F Y')); ?>
-            </time>
-        </div>
-    </section>
-
-    <article class="bg-white py-10 sm:py-14">
-        <div class="max-w-[860px] mx-auto px-5">
-            <?php if (has_post_thumbnail()) : ?>
-                <div class="mb-8 rounded-[8px] border border-inv-border bg-inv-surface-1 overflow-hidden">
-                    <?php the_post_thumbnail('large', ['class' => 'w-full h-auto object-contain']); ?>
-                </div>
-            <?php endif; ?>
-
-            <div class="text-base leading-[1.65] text-inv-ink [&_p]:mt-4 [&_p:first-child]:mt-0 [&_h2]:mt-8 [&_h2]:text-2xl [&_h2]:font-semibold [&_h3]:mt-6 [&_h3]:text-lg [&_h3]:font-semibold [&_ul]:mt-4 [&_ul]:list-disc [&_ul]:pl-5 [&_li]:mt-1 [&_a:not([class])]:text-inv-blue [&_a:not([class]):hover]:underline [&_img]:rounded-[8px]">
-                <?php the_content(); ?>
+    <article class="max-w-[900px] mx-auto px-5 py-8 space-y-6">
+        <div class="space-y-3">
+            <div class="flex items-center gap-3 flex-wrap">
+                <span class="rounded-[4px] border border-line bg-surface-soft px-2.5 py-1 text-xs font-semibold text-ink"><?php echo esc_html(invit_news_category($article)); ?></span>
+                <span class="flex items-center gap-1.5 text-sm text-ink/55 tabular-nums">
+                    <?php echo invit_icon('calendar', 'w-4 h-4'); ?>
+                    <?php echo esc_html(get_the_date('j F Y')); ?>
+                </span>
             </div>
-
-            <div class="mt-10 pt-6 border-t border-inv-border flex flex-col sm:flex-row gap-3">
-                <a href="<?php echo esc_url(function_exists('wc_get_page_permalink') ? wc_get_page_permalink('shop') : home_url('/catalog/')); ?>" class="inline-flex items-center justify-center min-h-11 h-12 px-6 rounded-[4px] bg-inv-blue hover:bg-inv-blue-hover text-white text-sm font-semibold transition-colors duration-[120ms]">
-                    Смотреть каталог
-                </a>
-                <button type="button" data-request class="inline-flex items-center justify-center min-h-11 h-12 px-6 rounded-[4px] border border-inv-border text-inv-ink text-sm font-semibold hover:border-inv-blue hover:text-inv-blue transition-colors duration-[120ms] cursor-pointer">
-                    Запросить расчёт
-                </button>
-            </div>
+            <h1 class="text-2xl sm:text-3xl font-bold text-ink tracking-tight leading-snug"><?php the_title(); ?></h1>
         </div>
+
+        <img src="<?php echo esc_url(invit_news_cover($article)); ?>" alt="" loading="lazy" class="w-full h-56 sm:h-72 <?php echo esc_attr(invit_news_cover_fit($article)); ?> rounded-xl border border-line bg-white">
+
+        <div class="text-sm text-ink/80 leading-relaxed space-y-4">
+            <?php foreach ($paragraphs as $paragraph) : ?>
+                <p><?php echo esc_html($paragraph); ?></p>
+            <?php endforeach; ?>
+        </div>
+
+        <a href="<?php echo esc_url(home_url('/news/')); ?>" class="inline-flex items-center gap-2 text-xs font-bold text-brand-blue hover:text-brand-blue-hover transition-colors pt-2">
+            <?php echo invit_icon('arrow-left', 'w-4 h-4'); ?>
+            <span>Все новости</span>
+        </a>
     </article>
+
+    <?php if ($others) : ?>
+        <section class="py-12 bg-white border-t border-line">
+            <div class="max-w-[900px] mx-auto px-5 space-y-5">
+                <h2 class="text-lg font-bold text-ink tracking-tight">Другие новости</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <?php foreach ($others as $other) : ?>
+                        <a href="<?php echo esc_url(get_permalink($other)); ?>" class="flex gap-3 p-3 rounded-xl border border-line hover:border-brand-sky hover:shadow-xs transition-all group">
+                            <img src="<?php echo esc_url(invit_news_cover($other)); ?>" alt="<?php echo esc_attr(get_the_title($other)); ?>" class="w-20 h-20 <?php echo esc_attr(invit_news_cover_fit($other)); ?> bg-white border border-line rounded-xl shrink-0">
+                            <div class="min-w-0 space-y-1">
+                                <span class="text-[11px] text-ink/45 font-semibold"><?php echo esc_html(get_the_date('j F Y', $other)); ?></span>
+                                <span class="block text-xs font-semibold text-ink group-hover:text-brand-blue transition-colors line-clamp-3 leading-snug"><?php echo esc_html(get_the_title($other)); ?></span>
+                            </div>
+                        </a>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </section>
+    <?php endif; ?>
 <?php endwhile; ?>
 
 <?php get_footer(); ?>

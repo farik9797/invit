@@ -24,3 +24,9 @@ backups/
 wp-local/
 invit-import/data/
 invit-import/gallery/
+
+# Копии картинок, документов и данных React-сайта в теме WordPress:
+# их собирает scripts/build-theme-data.sh из src/ и public/
+invit-theme/assets/img/
+invit-theme/assets/docs/
+invit-theme/data/site.json

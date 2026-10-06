@@ -1,72 +1,77 @@
 <?php
 /**
- * Окно «Запросить расчёт». Поля повторяют нынешнюю форму: имя, компания,
- * телефон и почта обязательны — по ним менеджер выставляет счёт.
+ * «Обратный звонок / консультация» — перенос src/components/Modals/CallbackModal.tsx.
+ *
+ * Метка «откуда открыли окно» (шапка, главная, карточка товара) уходит скрытым
+ * полем source, а не в комментарий: там её видел посетитель и отправлял как
+ * свой текст. Заявка уходит письмом на почту компании (inc/forms.php).
  */
 
 if (!defined('ABSPATH')) exit;
 
-$field = 'w-full h-12 px-4 rounded-[4px] border border-inv-border bg-white text-base text-inv-ink '
-    . 'placeholder:text-inv-ink-muted transition-[border-color] duration-[120ms] focus:border-inv-blue focus-visible:outline-none';
-$label = 'block text-sm font-medium text-inv-ink';
+$field = 'w-full p-2.5 bg-surface-soft border border-line rounded-[4px] text-ink font-medium';
 ?>
-<div data-modal="request" hidden class="fixed inset-0 z-50 bg-inv-deep/55 backdrop-blur-sm">
-    <div class="flex min-h-full items-start justify-center px-4 py-6 sm:py-[10vh]">
-        <div role="dialog" aria-modal="true" aria-labelledby="request-title" class="relative w-full max-w-[560px] max-h-[calc(100dvh-3rem)] sm:max-h-[80vh] overflow-y-auto overscroll-contain rounded-[8px] bg-white shadow-[0_24px_60px_rgba(10,25,60,0.35)]">
-            <button type="button" data-modal-close aria-label="Закрыть" class="absolute top-2 right-2 flex items-center justify-center w-11 h-11 rounded-[4px] text-inv-ink-muted hover:text-inv-ink hover:bg-inv-surface-1 transition-colors cursor-pointer">
+<div data-modal="callback" hidden class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/70 backdrop-blur-sm">
+    <div class="relative bg-white rounded-xl max-w-md w-full shadow-lg border border-line overflow-hidden" data-modal-card>
+        <div class="bg-brand-blue text-white p-4 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <?php echo invit_icon('phone-call', 'w-5 h-5 text-white'); ?>
+                <span class="font-semibold text-sm uppercase tracking-wide">Обратный звонок / консультация</span>
+            </div>
+            <button type="button" data-modal-close aria-label="Закрыть" class="p-1 rounded-[4px] hover:bg-white/20 text-white transition-colors cursor-pointer">
                 <?php echo invit_icon('x', 'w-5 h-5'); ?>
             </button>
+        </div>
 
-            <div class="px-5 pt-6 pb-6 sm:px-7 sm:pt-7">
-                <h2 id="request-title" class="text-xl font-semibold text-inv-ink">Обратный звонок / консультация</h2>
-                <p class="mt-2 text-sm text-inv-ink-muted">
-                    Ответим по наличию, ценам и срокам. Нетиповую ширину и длину ленты считаем отдельно.
+        <div class="p-6">
+            <div data-form-done hidden class="py-6 text-center space-y-3">
+                <?php echo invit_icon('check-circle-2', 'w-12 h-12 text-emerald-600 mx-auto'); ?>
+                <h3 class="text-lg font-bold text-ink">Заявка принята!</h3>
+                <p class="text-xs text-ink/70">Специалист ООО «ИНВИТ» перезвонит вам в течение 10 минут.</p>
+                <button type="button" data-modal-close class="bg-brand-blue text-white font-bold text-xs px-4 py-2 rounded-[4px] cursor-pointer">Закрыть</button>
+            </div>
+
+            <form data-form="callback" class="space-y-4 text-xs" method="post" action="<?php echo esc_url(add_query_arg('wc-ajax', 'invit_request', home_url('/'))); ?>">
+                <input type="hidden" name="kind" value="callback">
+                <input type="hidden" name="source" value="" data-callback-source>
+                <?php wp_nonce_field('invit_form', 'invit_nonce'); ?>
+                <p class="hidden" aria-hidden="true"><label>Не заполняйте <input type="text" name="invit_website" tabindex="-1" autocomplete="off"></label></p>
+
+                <p class="text-ink/70 text-xs leading-relaxed">
+                    Оставьте контактный номер телефона для консультации по выбору лент EUROBAND и согласованию оптовых скидок.
                 </p>
 
-                <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="mt-5 space-y-4">
-                    <input type="hidden" name="action" value="invit_request">
-                    <?php wp_nonce_field('invit_request', 'invit_request_nonce'); ?>
-                    <input type="hidden" name="source" value="<?php echo esc_attr(home_url(add_query_arg([]))); ?>">
-                    <?php /* Ловушка для роботов: живой человек поле не видит и не заполняет. */ ?>
-                    <p class="hidden" aria-hidden="true">
-                        <label>Не заполняйте это поле <input type="text" name="invit_website" tabindex="-1" autocomplete="off"></label>
-                    </p>
+                <div>
+                    <label class="block font-bold text-ink/80 mb-1">Ваше имя <span class="text-red-500">*</span></label>
+                    <input type="text" name="name" required placeholder="Анатолий" class="<?php echo esc_attr($field); ?>">
+                </div>
 
-                    <div>
-                        <label class="<?php echo esc_attr($label); ?>" for="request-name">Ваше имя <span class="text-inv-red">*</span></label>
-                        <input id="request-name" name="name" type="text" required class="mt-1.5 <?php echo esc_attr($field); ?>" placeholder="Иван Иванов">
-                    </div>
+                <div>
+                    <label class="block font-bold text-ink/80 mb-1">Компания <span class="text-red-500">*</span></label>
+                    <input type="text" name="company" required placeholder="ООО «Вектор» или ИП Иванов И. И." class="<?php echo esc_attr($field); ?>">
+                </div>
 
-                    <div>
-                        <label class="<?php echo esc_attr($label); ?>" for="request-company">Компания <span class="text-inv-red">*</span></label>
-                        <input id="request-company" name="company" type="text" required class="mt-1.5 <?php echo esc_attr($field); ?>" placeholder="ООО «Вектор» или ИП Иванов И. И.">
-                    </div>
+                <div>
+                    <label class="block font-bold text-ink/80 mb-1">Номер телефона <span class="text-red-500">*</span></label>
+                    <input type="tel" name="phone" required placeholder="+375 (29) 000-00-00" class="<?php echo esc_attr($field); ?> text-sm">
+                </div>
 
-                    <div>
-                        <label class="<?php echo esc_attr($label); ?>" for="request-phone">Номер телефона <span class="text-inv-red">*</span></label>
-                        <input id="request-phone" name="phone" type="tel" required class="mt-1.5 <?php echo esc_attr($field); ?>" placeholder="+375 29 000-00-00">
-                    </div>
+                <div>
+                    <label class="block font-bold text-ink/80 mb-1">Email <span class="text-red-500">*</span></label>
+                    <input type="email" name="email" required placeholder="mail@company.by" class="<?php echo esc_attr($field); ?>">
+                </div>
 
-                    <div>
-                        <label class="<?php echo esc_attr($label); ?>" for="request-email">Email <span class="text-inv-red">*</span></label>
-                        <input id="request-email" name="email" type="email" required class="mt-1.5 <?php echo esc_attr($field); ?>" placeholder="zakupki@company.by">
-                    </div>
+                <div>
+                    <label class="block font-bold text-ink/80 mb-1">Комментарий / запрос</label>
+                    <textarea name="task" rows="2" placeholder="Например: запросить прайс или консультацию по ПСУЛ…" class="<?php echo esc_attr($field); ?>"></textarea>
+                </div>
 
-                    <div>
-                        <label class="<?php echo esc_attr($label); ?>" for="request-comment">Комментарий / запрос</label>
-                        <textarea id="request-comment" name="comment" rows="3" class="mt-1.5 w-full px-4 py-3 rounded-[4px] border border-inv-border bg-white text-base text-inv-ink placeholder:text-inv-ink-muted focus:border-inv-blue focus-visible:outline-none" placeholder="Нужна лента ПСУЛ 20×10, 300 м"></textarea>
-                    </div>
-
-                    <button type="submit" class="w-full inline-flex items-center justify-center gap-2 min-h-11 h-12 rounded-[4px] bg-inv-blue hover:bg-inv-blue-hover active:scale-[0.99] text-white text-sm font-semibold transition-[background-color,transform] duration-[120ms] cursor-pointer">
-                        Отправить запрос
-                    </button>
-
-                    <p class="text-xs leading-relaxed text-inv-ink-muted">
-                        Отправляя форму, вы соглашаетесь на обработку персональных данных.
-                        Работаем с юридическими лицами и ИП: розничной продажи нет.
-                    </p>
-                </form>
-            </div>
+                <button type="submit" class="w-full bg-brand-red hover:bg-brand-red-hover text-white font-bold py-3 px-4 rounded-[4px] shadow transition-all flex items-center justify-center gap-2 cursor-pointer">
+                    <?php echo invit_icon('send', 'w-4 h-4'); ?>
+                    <span>Жду звонка инженера</span>
+                </button>
+                <p data-form-error hidden role="alert" class="flex items-center gap-1.5 text-xs text-inv-error"></p>
+            </form>
         </div>
     </div>
 </div>

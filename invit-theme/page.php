@@ -7,6 +7,13 @@ if (!defined('ABSPATH')) exit;
 
 get_header();
 
+/* Заявка на счёт — своя страница, как в React (CartPage.tsx) */
+if (function_exists('is_cart') && is_cart()) {
+    get_template_part('template-parts/cart-page');
+    get_footer();
+    return;
+}
+
 /*
  * Заявка и её оформление — обычные страницы с шорткодом Woo. Отдельного
  * woocommerce.php в теме нет намеренно: он перехватывал бы и каталог,

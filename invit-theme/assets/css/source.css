@@ -15,15 +15,43 @@
 @source "../../**/*.php";
 
 /*
- * Палитра клиента: синий взят с действующего invit.by (#3F5B9E — фон активного
- * пункта меню), красный — из логотипа EUROBAND. Правило двух цветов: синий
- * отвечает за действия (кнопки, ссылки, наведение), красный — только за марку
- * EUROBAND и выбранный раздел каталога.
+ * Ниже — токены и общие стили React-сайта (src/index.css) без изменений:
+ * тема показывает его точь-в-точь. Правьте там и переносите сюда, иначе
+ * два сайта разойдутся.
  */
 @theme {
   --font-sans: 'Onest', ui-sans-serif, system-ui, sans-serif;
 
-  --color-inv-blue: #3f5b9e; /* кнопки, ссылки, наведение. Белый текст 6.6:1 */
+  --color-brand-green: #1fa85c; /* акцент: кнопки, ссылки, подчёркивания */
+  --color-brand-green-hover: #17874a;
+  --color-brand-green-soft: #e8f5ee; /* светлая подложка того же зелёного */
+
+  --color-ink: #1c2422; /* тёмные секции и подвал */
+  --color-ink-soft: #2a3532; /* карточки внутри тёмных секций */
+
+  --color-brand-red: #d91920; /* «EURO» из логотипа EUROBAND */
+  --color-brand-red-hover: #b71219;
+  --color-brand-red-light: #f0575d;
+
+  --color-surface: #ffffff;
+  --color-surface-soft: #eef1f0; /* фон чередующихся секций */
+  --color-line: #e1e6e4;
+
+  /*
+   * Вариант 2 главной страницы (маршрут /v2). Палитра клиента: синий взят
+   * с действующего invit.by (#3F5B9E — фон активного пункта меню), красный —
+   * из логотипа EUROBAND. От нынешнего сайта отличается тем, что чёрно-серые
+   * плиты заменены на белый и холодные светлые подложки: не мрачно.
+   *
+   * Правило двух цветов: синий отвечает за действия (кнопки, ссылки, акценты),
+   * красный — только за марку EUROBAND и выбранный пункт каталога.
+   *
+   * Benton Sans лицензионный, свободной веб-версии нет: стек честно
+   * откатывается на Helvetica Neue / Helvetica / Arial.
+   */
+  --font-v2: 'Benton Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+  --color-inv-blue: #3f5b9e; /* кнопки, ссылки, акцент. Белый текст 6.6:1 */
   --color-inv-blue-hover: #4a6bb4;
   --color-inv-blue-pressed: #2f4a85;
 
@@ -45,8 +73,49 @@
   --color-inv-success: #00875a;
   --color-inv-error: #c52720;
 
-  /* Шире стандартных 48rem: текстовая колонка слайдера и шапки секций. */
+  /*
+   * Шире стандартных 48rem: текстовая колонка слайдера и заголовки секций
+   * ходят по `max-w-3xl`, им нужна пара лишних сантиметров.
+   */
   --container-3xl: 50rem;
+
+  /* Совместимость со старой разметкой внутренних страниц */
+  --color-brand-navy: #1c2422;
+  --color-brand-blue: #1fa85c;
+  --color-brand-blue-hover: #17874a;
+  --color-brand-sky: #1fa85c;
+  --color-brand-sky-soft: #e8f5ee;
+  --color-brand-graphite: #3f464c;
+}
+
+/*
+ * Каталог живёт в тех же компонентах, что и раньше, но под этим классом
+ * переменные бренда подменяются на клиентские: зелёный становится синим,
+ * тёмные плиты — тёмно-синими. Утилиты Tailwind 4 ссылаются на переменные
+ * (`background-color: var(--color-brand-green)`), поэтому подмена в области
+ * видимости перекрашивает всё поддерево без правки разметки.
+ */
+.theme-v2 {
+  --color-brand-green: #3f5b9e;
+  --color-brand-green-hover: #2f4a85;
+  --color-brand-green-soft: #eef1f6;
+
+  --color-brand-blue: #3f5b9e;
+  --color-brand-blue-hover: #2f4a85;
+  --color-brand-sky: #3f5b9e;
+  --color-brand-sky-soft: #eef1f6;
+  --color-brand-navy: #162c58;
+  --color-brand-graphite: #53565a;
+
+  --color-brand-red: #d91920;
+  --color-brand-red-hover: #b31217;
+  --color-brand-red-light: #d91920;
+
+  --color-ink: #1a1a1a;
+  --color-ink-soft: #162c58;
+  --color-surface: #ffffff;
+  --color-surface-soft: #f5f7fa;
+  --color-line: #dbe2ec;
 }
 
 html {
@@ -55,8 +124,137 @@ html {
 
 body {
   font-family: var(--font-sans);
-  color: var(--color-inv-ink);
-  background: #ffffff;
+  color: var(--color-ink);
+  background: var(--color-surface);
+}
+
+/*
+ * Блик по кнопке при наведении: узкая светлая полоса проходит слева направо
+ * под наклоном. Приём с сайта, который показал клиент (zavodtm.belinfo.by) —
+ * там так подсвечена главная кнопка в шапке.
+ *
+ * Только для кнопок с заливкой: на белой кнопке светлая полоса не видна.
+ */
+.shine {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.shine::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -55%;
+  width: 40%;
+  background: linear-gradient(100deg, transparent, rgb(255 255 255 / 0.45), transparent);
+  transform: skewX(-20deg);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.shine:hover::before,
+.shine:focus-visible::before {
+  animation: shine-pass 0.75s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes shine-pass {
+  0% {
+    opacity: 0;
+    transform: skewX(-20deg) translateX(0);
+  }
+  12% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: skewX(-20deg) translateX(420%);
+  }
+}
+
+/* Стрелка «вниз» в первом экране: короткое покачивание, зовущее пролистать. */
+@keyframes nudge {
+  0%,
+  70%,
+  100% {
+    transform: translateY(0);
+  }
+  80% {
+    transform: translateY(5px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/*
+ * Появление при прокрутке — то же, что Reveal (motion) и Fade (GSAP) в React:
+ * подъём на 16/12px и проявление, один раз. Пока скрипт не подключился
+ * (класс js на <html>), блоки видны сразу.
+ */
+.js [data-reveal]:not([data-shown]) {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+[data-reveal] {
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.js [data-fade]:not([data-shown]) {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+.js [data-fade-item]:not([data-shown]) {
+  opacity: 0;
+  transform: translateY(14px);
+}
+
+[data-fade],
+[data-fade-item] {
+  transition: opacity 0.24s cubic-bezier(0.4, 0, 0.2, 1), transform 0.24s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/*
+ * Подписи слайдов: строки выходят лесенкой (Hero.tsx) — заголовок, текст,
+ * кнопки с разницей 0,1 с; уходящий слайд гаснет быстро и линейно.
+ */
+[data-hero-text] [data-line] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.2s linear, transform 0.2s linear;
+}
+
+[data-hero-text][data-active] [data-line] {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1) calc(0.22s + var(--step, 0) * 0.1s),
+    transform 0.55s cubic-bezier(0.16, 1, 0.3, 1) calc(0.22s + var(--step, 0) * 0.1s);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js [data-reveal]:not([data-shown]),
+  .js [data-fade]:not([data-shown]),
+  .js [data-fade-item]:not([data-shown]) {
+    opacity: 1;
+    transform: none;
+  }
+
+  [data-hero-text] [data-line] {
+    transform: none;
+  }
 }
 
 /* Админ-панель WordPress не должна накрывать залипающую шапку. */

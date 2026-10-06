@@ -21,6 +21,15 @@
       ],
       "port": 4173,
       "url": "http://localhost:4173"
+    },
+    {
+      "name": "wp-local",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": [
+        "-c",
+        "cd wp-local && PHP_CLI_SERVER_WORKERS=5 php -d error_reporting=0 -d memory_limit=512M -S localhost:8099 -t ."
+      ],
+      "port": 8099
     }
   ]
 }

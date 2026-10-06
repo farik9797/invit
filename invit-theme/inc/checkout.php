@@ -109,7 +109,8 @@ add_action('woocommerce_checkout_update_order_meta', 'invit_save_unp');
 
 /** УНП в карточке заказа в админке. */
 function invit_show_unp_admin($order) {
-    $unp = get_post_meta($order->get_id(), '_billing_unp', true);
+    // Заказы WooCommerce живут в своих таблицах (HPOS): мета — через сам заказ
+    $unp = $order->get_meta('_billing_unp');
     if ($unp) {
         echo '<p><strong>УНП:</strong> ' . esc_html($unp) . '</p>';
     }

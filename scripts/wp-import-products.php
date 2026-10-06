@@ -6,7 +6,10 @@
  * отваливается по памяти, поэтому тот же CSV заливаем из командной строки:
  *
  *     wp eval-file scripts/wp-import-products.php files/woocommerce-export/invit-products-01.csv
- *     wp eval-file scripts/wp-import-products.php <файл> --no-images   # без снимков, быстрее
+ *     wp eval-file scripts/wp-import-products.php <файл> no-images   # без снимков, быстрее
+ *
+ * Признак без дефисов: «--no-images» WP-CLI принимает за свой параметр и
+ * отказывается запускать файл.
  *
  * Повторный запуск того же файла не плодит дубли: товар ищется по артикулу и
  * обновляется.
@@ -18,7 +21,7 @@ if (!defined('WP_CLI') || !WP_CLI) {
 
 $args = $args ?? [];
 $path = $args[0] ?? '';
-$skip_images = in_array('--no-images', $args, true);
+$skip_images = in_array('no-images', $args, true);
 
 if (!$path || !file_exists($path)) {
     WP_CLI::error('не найден CSV: ' . $path);

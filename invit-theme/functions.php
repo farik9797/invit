@@ -8,8 +8,12 @@ if (!defined('ABSPATH')) exit;
 
 define('INVIT_VERSION', '1.0.0');
 
+require_once get_template_directory() . '/inc/data.php';
 require_once get_template_directory() . '/inc/icons.php';
-require_once get_template_directory() . '/inc/nav-walker.php';
+require_once get_template_directory() . '/inc/catalog.php';
+require_once get_template_directory() . '/inc/catalog-page.php';
+require_once get_template_directory() . '/inc/forms.php';
+require_once get_template_directory() . '/inc/news.php';
 require_once get_template_directory() . '/inc/acf-fields.php';
 require_once get_template_directory() . '/inc/checkout.php';
 require_once get_template_directory() . '/inc/permalinks.php';
@@ -71,7 +75,7 @@ function invit_assets() {
         file_exists($css) ? filemtime($css) : INVIT_VERSION
     );
 
-    // Onest — шрифт нынешнего сайта.
+    // Onest подключён, как в index.html React-сайта; сам текст набран font-v2.
     wp_enqueue_style(
         'invit-fonts',
         'https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap',
@@ -87,45 +91,9 @@ function invit_assets() {
         file_exists($js) ? filemtime($js) : INVIT_VERSION,
         true
     );
+    wp_localize_script('invit-site', 'INVIT', invit_script_config());
 }
 add_action('wp_enqueue_scripts', 'invit_assets');
-
-/** Телефон и почта из настроек — чтобы шаблоны не повторяли значения. */
-function invit_contacts() {
-    return [
-        'phone_minsk'     => invit_option('phone_minsk', '+375 29 644-49-79'),
-        'phone_soligorsk' => invit_option('phone_soligorsk', '+375 174 32-50-22'),
-        'email'           => invit_option('email', 'info@invit.by'),
-        'telegram'        => invit_option('telegram', 'https://t.me/invitby'),
-    ];
-}
-
-/**
- * Разделы каталога для меню: верхний уровень категорий WooCommerce.
- */
-function invit_catalog_sections($limit = 0) {
-    if (!taxonomy_exists('product_cat')) return [];
-
-    $terms = get_terms([
-        'taxonomy'   => 'product_cat',
-        'parent'     => 0,
-        'hide_empty' => true,
-        'number'     => $limit ?: 0,
-    ]);
-
-    return is_wp_error($terms) ? [] : $terms;
-}
-
-/** Подразделы одного раздела. */
-function invit_catalog_children($parent_id) {
-    $terms = get_terms([
-        'taxonomy'   => 'product_cat',
-        'parent'     => $parent_id,
-        'hide_empty' => true,
-    ]);
-
-    return is_wp_error($terms) ? [] : $terms;
-}
 
 /**
  * Корзина у нас не розничная: это лист заявки на счёт-фактуру. Поэтому цены
@@ -137,12 +105,13 @@ function invit_add_to_cart_text() {
 add_filter('woocommerce_product_add_to_cart_text', 'invit_add_to_cart_text');
 add_filter('woocommerce_product_single_add_to_cart_text', 'invit_add_to_cart_text');
 
-/** Товары без цены показываем с пометкой, а не с пустым местом. */
+/*
+ * Цены на витрине выключены, как на React-сайте (src/lib/price.ts, PRICES_SHOWN):
+ * клиент попросил показывать «по запросу» у всех позиций. Цены остаются в базе
+ * и попадают в заказ — менеджеру, но не посетителю.
+ */
 function invit_empty_price($price, $product) {
-    if ($price === '' || $product->get_price() === '') {
-        return '<span class="text-inv-ink-muted">Цена по запросу</span>';
-    }
-    return $price;
+    return 'Цена по запросу';
 }
 add_filter('woocommerce_get_price_html', 'invit_empty_price', 10, 2);
 
@@ -158,6 +127,27 @@ function invit_drop_woo_layout() {
     wp_dequeue_style('woocommerce-general');
 }
 add_action('wp_enqueue_scripts', 'invit_drop_woo_layout', 20);
+
+/*
+ * Скрипты WooCommerce тема не использует: корзина, поиск и заявка работают
+ * через site.js. Без них не грузятся jQuery и 150 КБ справочника стран на
+ * странице заявки. «Атрибуция заказов» (sourcebuster) ставит отслеживающие
+ * cookie — а политика сайта обещает, что своих счётчиков нет.
+ */
+function invit_drop_woo_scripts() {
+    $handles = [
+        'wc-add-to-cart', 'woocommerce', 'wc-cart-fragments', 'wc-cart', 'wc-checkout',
+        'wc-country-select', 'wc-address-i18n', 'selectWoo', 'jquery-blockui', 'js-cookie',
+        'sourcebuster-js', 'wc-order-attribution',
+    ];
+    foreach ($handles as $handle) wp_dequeue_script($handle);
+    wp_dequeue_style('select2');
+}
+add_action('wp_enqueue_scripts', 'invit_drop_woo_scripts', 100);
+
+/* Эмодзи WordPress: на React-сайте их нет, а скрипт грузится на каждой странице */
+remove_action('wp_head', 'print_emoji_detection_script', 7);
+remove_action('wp_print_styles', 'print_emoji_styles');
 
 /** Первая ссылка в хлебных крошках — по-русски. */
 function invit_breadcrumb_home($defaults) {
@@ -180,8 +170,20 @@ function invit_currency_symbol($symbol, $currency) {
 }
 add_filter('woocommerce_currency_symbol', 'invit_currency_symbol', 10, 2);
 
-/** Сколько позиций в заявке — для значка в шапке. */
+/** Сколько позиций (строк) в заявке — для значка в шапке, как в React. */
 function invit_cart_count() {
     if (!function_exists('WC') || !WC()->cart) return 0;
-    return WC()->cart->get_cart_contents_count();
+    return count(WC()->cart->get_cart());
+}
+
+/*
+ * Типографская замена WordPress выключена: React-сайт выводит текст как есть,
+ * и «ООО "ИНВИТ"» превращалось в «ООО «ИНВИТ»», а «10x100» в артикуле — в «10×100».
+ */
+add_filter('run_wptexturize', '__return_false');
+
+/** Каталог и карточки товаров: там нет медали «2013» (LayoutV2). */
+function invit_is_catalog_page() {
+    return function_exists('is_woocommerce') && (is_shop() || is_product_taxonomy() || is_product()
+        || (is_search() && get_query_var('post_type') === 'product'));
 }
