@@ -13,6 +13,7 @@ require_once get_template_directory() . '/inc/nav-walker.php';
 require_once get_template_directory() . '/inc/acf-fields.php';
 require_once get_template_directory() . '/inc/checkout.php';
 require_once get_template_directory() . '/inc/permalinks.php';
+require_once get_template_directory() . '/inc/setup.php';
 
 /**
  * Значение поля ACF с запасным вариантом.
