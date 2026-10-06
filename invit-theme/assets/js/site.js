@@ -941,6 +941,32 @@
         $$('[data-sections]', catalog).forEach(initSections);
         $$('[data-catalog-search]', catalog).forEach(initCatalogSearch);
 
+        // Описание раздела: показываем начало, целиком — по кнопке
+        var info = $('[data-category-info]', catalog);
+        if (info) {
+            var infoBody = $('[data-info-body]', info);
+            var infoToggle = $('[data-info-toggle]', info);
+            var fits = infoBody.scrollHeight <= infoBody.clientHeight + 24;
+            var setInfo = function (open) {
+                infoBody.classList.toggle('max-h-[260px]', !open);
+                $('[data-info-fade]', info).hidden = open;
+                infoToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+                $('[data-info-label]', info).textContent = open ? 'Свернуть' : 'Читать полностью';
+                $('[data-chevron]', infoToggle).classList.toggle('rotate-180', open);
+            };
+            if (fits) {
+                setInfo(true);
+                infoToggle.hidden = true;
+                infoBody.classList.add('pb-5', 'sm:pb-6');
+            } else {
+                infoBody.classList.add('pb-2');
+                infoToggle.classList.add('mb-3');
+                infoToggle.addEventListener('click', function () {
+                    setInfo(infoToggle.getAttribute('aria-expanded') !== 'true');
+                });
+            }
+        }
+
         var sort = $('[data-sort]', catalog);
         if (sort) sort.addEventListener('change', function () { softNav(sort.selectedOptions[0].getAttribute('data-url')); });
 

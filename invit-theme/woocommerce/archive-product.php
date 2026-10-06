@@ -58,6 +58,8 @@ foreach ($result['sizes'] as $size) {
     $facets[] = ['key' => $size['axis'], 'title' => invit_size_label($size['axis']), 'options' => $size['options'], 'selected' => $filters['sizes'][$size['axis']], 'preview' => 10];
 }
 
+$info = invit_catalog_info($category, $filters);
+
 $sort_labels = invit_sort_labels();
 $sort_urls = [];
 foreach (array_keys($sort_labels) as $mode) $sort_urls[$mode] = invit_catalog_link($category, array_merge($filters, ['sort' => $mode]));
@@ -93,6 +95,20 @@ $views = [
             </aside>
 
             <div class="lg:col-span-8">
+                <?php /* Описание раздела со старого сайта — над товарами, как там */ ?>
+                <?php if ($info !== '') : ?>
+                    <div data-category-info class="mb-6 rounded-[8px] border border-inv-border bg-white">
+                        <div data-info-body class="relative overflow-hidden max-h-[260px] p-5 sm:p-6 [&_h2]:text-lg sm:[&_h2]:text-xl [&_h2]:font-semibold [&_h2]:leading-snug [&_h2]:text-inv-ink [&_p]:mt-3 [&_p]:text-sm sm:[&_p]:text-base [&_p]:leading-relaxed [&_p]:text-inv-ink-muted [&_ul]:mt-3 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1 [&_li]:text-sm sm:[&_li]:text-base [&_li]:leading-relaxed [&_li]:text-inv-ink-muted [&_li]:marker:text-inv-blue [&_strong]:font-semibold [&_strong]:text-inv-ink [&_a]:font-semibold [&_a]:text-inv-blue [&_a]:hover:text-inv-blue-pressed">
+                            <?php echo wp_kses_post($info); ?>
+                            <div data-info-fade aria-hidden="true" class="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-white to-transparent"></div>
+                        </div>
+                        <button type="button" data-info-toggle aria-expanded="false" class="inline-flex items-center gap-1.5 min-h-11 px-5 sm:px-6 pb-1 text-sm font-semibold text-inv-blue hover:text-inv-blue-pressed cursor-pointer transition-colors duration-[120ms]">
+                            <span data-info-label>Читать полностью</span>
+                            <span data-chevron class="inline-flex transition-transform duration-[240ms]"><?php echo invit_icon('chevron-down', 'w-4 h-4'); ?></span>
+                        </button>
+                    </div>
+                <?php endif; ?>
+
                 <?php /* На телефоне колонки нет, поэтому поиск остаётся над выдачей */ ?>
                 <?php get_template_part('template-parts/catalog-search', null, ['query' => $filters['query'], 'category' => $category, 'filters' => $filters, 'button' => true, 'class' => 'lg:hidden']); ?>
 

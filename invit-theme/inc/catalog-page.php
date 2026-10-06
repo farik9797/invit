@@ -114,3 +114,39 @@ function invit_catalog_light_query($query) {
     }
 }
 add_action('pre_get_posts', 'invit_catalog_light_query');
+
+/*
+ * Описания разделов со старого invit.by (data/category-info.json, собирает
+ * scripts/build-category-info.py). Один раз заносятся в описание категории
+ * WooCommerce — дальше их правят в админке: Товары -> Категории. Занятое
+ * описание не трогаем.
+ */
+function invit_seed_category_info() {
+    $key = 'invit_seed_category_info_v1';
+    if (get_option($key) || !add_option($key, time(), '', false)) return;
+
+    $file = get_template_directory() . '/data/category-info.json';
+    $info = is_readable($file) ? json_decode(file_get_contents($file), true) : [];
+    global $wpdb;
+    foreach ((array) $info as $slug => $item) {
+        $term = get_term_by('slug', $slug, 'product_cat');
+        if (!$term || trim($term->description) !== '') continue;
+        // Мимо wp_update_term: его фильтр для гостя срезает списки и абзацы
+        $wpdb->update(
+            $wpdb->term_taxonomy,
+            ['description' => '<h2>' . esc_html($item['title']) . '</h2>' . $item['html']],
+            ['term_taxonomy_id' => $term->term_taxonomy_id]
+        );
+        clean_term_cache($term->term_id, 'product_cat');
+    }
+}
+add_action('init', 'invit_seed_category_info', 20);
+
+/** Описание текущего подраздела или раздела для блока над товарами. */
+function invit_catalog_info($category, array $filters) {
+    if ($filters['query'] !== '') return '';
+    $slug = $filters['sub'] ?: $category;
+    if (!$slug) return '';
+    $term = get_term_by('slug', $slug, 'product_cat');
+    return $term ? trim($term->description) : '';
+}
