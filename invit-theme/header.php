@@ -65,7 +65,7 @@ $cart_badge = '<span data-cart-count class="absolute top-1 right-0.5 min-w-[18px
             <div data-search-drop hidden class="absolute left-0 right-0 top-[calc(100%+6px)] z-40 rounded-[8px] border border-inv-border bg-white shadow-[0_16px_40px_rgba(10,25,60,0.18)] overflow-hidden"></div>
         </div>
 
-        <a href="<?php echo esc_attr(invit_tel_href($phone)); ?>" class="flex items-center gap-2 justify-self-end text-sm font-semibold text-inv-ink hover:text-inv-blue transition-colors duration-[120ms] whitespace-nowrap">
+        <a href="<?php echo esc_attr(invit_tel_href($phone)); ?>" class="flex items-center gap-2 justify-self-end text-[1.1rem] font-semibold text-inv-ink hover:text-inv-blue transition-colors duration-[120ms] whitespace-nowrap">
             <?php echo invit_icon('phone', 'w-4 h-4'); ?>
             <?php echo esc_html($phone); ?>
         </a>

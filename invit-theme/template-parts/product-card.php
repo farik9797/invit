@@ -19,7 +19,7 @@ $sub = $item[INVIT_I_SUB];
 $focus = 'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue';
 ?>
 <div class="h-full flex flex-col rounded-[8px] border border-inv-border bg-white overflow-hidden group transition-[transform,box-shadow] duration-[240ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:-translate-y-0.5 hover:shadow-[0_6px_24px_rgba(22,44,88,0.16)]">
-    <a href="<?php echo esc_url($url); ?>" class="block overflow-hidden bg-white border-b border-inv-border-subtle focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-inv-blue <?php echo $compact ? 'h-32 p-3' : 'h-48 p-4'; ?>">
+    <a href="<?php echo esc_url($url); ?>" class="relative block overflow-hidden bg-white border-b border-inv-border-subtle focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-inv-blue <?php echo $compact ? 'h-32 p-3' : 'h-48 p-4'; ?>">
         <?php if ($image) : ?>
             <img src="<?php echo esc_url($image); ?>" alt="<?php echo esc_attr($title); ?>" loading="lazy" class="w-full h-full object-contain transition-transform duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:scale-105">
         <?php else : ?>
@@ -28,6 +28,7 @@ $focus = 'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:o
                 <?php echo invit_section_icon($sub, 64, 'w-16 h-16'); ?>
             </div>
         <?php endif; ?>
+        <?php echo invit_badge_html($item[INVIT_I_BADGE], 'absolute z-10 ' . ($compact ? 'top-2 left-2' : 'top-3 left-3')); ?>
     </a>
 
     <div class="flex flex-1 flex-col <?php echo $compact ? 'p-3' : 'p-4 sm:p-5'; ?>">

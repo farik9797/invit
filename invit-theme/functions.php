@@ -13,6 +13,8 @@ require_once get_template_directory() . '/inc/icons.php';
 require_once get_template_directory() . '/inc/catalog.php';
 require_once get_template_directory() . '/inc/catalog-page.php';
 require_once get_template_directory() . '/inc/forms.php';
+require_once get_template_directory() . '/inc/leads.php';
+require_once get_template_directory() . '/inc/mail.php';
 require_once get_template_directory() . '/inc/news.php';
 require_once get_template_directory() . '/inc/migrations.php';
 require_once get_template_directory() . '/inc/admin.php';
@@ -136,7 +138,7 @@ add_action('wp_enqueue_scripts', 'invit_drop_woo_layout', 20);
  * Скрипты WooCommerce тема не использует: корзина, поиск и заявка работают
  * через site.js. Без них не грузятся jQuery и 150 КБ справочника стран на
  * странице заявки. «Атрибуция заказов» (sourcebuster) ставит отслеживающие
- * cookie — а политика сайта обещает, что своих счётчиков нет.
+ * cookie без согласия — источники визитов и так видят Метрика и GA4.
  */
 function invit_drop_woo_scripts() {
     $handles = [
@@ -152,6 +154,54 @@ add_action('wp_enqueue_scripts', 'invit_drop_woo_scripts', 100);
 /* Эмодзи WordPress: на React-сайте их нет, а скрипт грузится на каждой странице */
 remove_action('wp_head', 'print_emoji_detection_script', 7);
 remove_action('wp_print_styles', 'print_emoji_styles');
+
+/*
+ * Счётчики: Яндекс.Метрика 54452731 (тот же, что стоял на старом invit.by,
+ * статистика продолжается) и Google Analytics 4 G-1Y6VH54HTZ. Грузятся только
+ * после согласия на cookie: «Принять» в плашке (template-parts/cookie-banner.php)
+ * ставит invit_consent=all и вызывает invitCounters(). Только на боевом адресе:
+ * локальная копия и тестовые стенды визиты не шлют. Политика конфиденциальности
+ * (page-privacy.php) описывает оба — меняете счётчики, правьте и политику.
+ */
+function invit_counters() {
+    if (parse_url(home_url(), PHP_URL_HOST) !== 'invit.by') return;
+    ?>
+<script>
+window.invitCounters = function () {
+    if (window.invitCounters.on) return;
+    window.invitCounters.on = true;
+
+    /* Yandex.Metrika counter */
+    (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+    m[i].l=1*new Date();
+    for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+    k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+    (window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js?id=54452731', 'ym');
+    ym(54452731, 'init', {webvisor:true, clickmap:true, referrer:document.referrer, url:location.href, accurateTrackBounce:true, trackLinks:true});
+
+    /* Google tag (gtag.js) */
+    var g = document.createElement('script');
+    g.async = true;
+    g.src = 'https://www.googletagmanager.com/gtag/js?id=G-1Y6VH54HTZ';
+    document.head.appendChild(g);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function(){dataLayer.push(arguments);};
+    gtag('js', new Date());
+    gtag('config', 'G-1Y6VH54HTZ');
+
+    /* Каталог меняет адрес без перезагрузки (site.js, softNav): Метрике нужен
+       отдельный просмотр, GA4 смену адреса видит сам */
+    var last = location.href;
+    document.addEventListener('invit:pageview', function () {
+        ym(54452731, 'hit', location.href, {title: document.title, referer: last});
+        last = location.href;
+    });
+};
+if (/(?:^|;\s*)invit_consent=all(?:;|$)/.test(document.cookie)) window.invitCounters();
+</script>
+    <?php
+}
+add_action('wp_head', 'invit_counters', 1);
 
 /** Первая ссылка в хлебных крошках — по-русски. */
 function invit_breadcrumb_home($defaults) {

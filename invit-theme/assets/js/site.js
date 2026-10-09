@@ -523,6 +523,35 @@
         document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setFab(false); });
     }
 
+    /* ---- Согласие на cookie: Метрика и GA4 только после «Принять» ---- */
+    (function () {
+        var banner = $('[data-cookie-banner]');
+        if (!banner) return;
+        var show = function () {
+            banner.hidden = false;
+            void banner.offsetWidth; // иначе переход не сыграет
+            banner.classList.remove('opacity-0', 'translate-y-3');
+        };
+        if (!/(?:^|;\s*)invit_consent=/.test(document.cookie)) show();
+        $$('[data-cookie-choice]', banner).forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var choice = btn.getAttribute('data-cookie-choice');
+                document.cookie = 'invit_consent=' + choice + '; max-age=31536000; path=/; SameSite=Lax'
+                    + (location.protocol === 'https:' ? '; Secure' : '');
+                banner.hidden = true;
+                banner.classList.add('opacity-0', 'translate-y-3');
+                if (choice === 'all' && window.invitCounters) window.invitCounters();
+            });
+        });
+        // «Изменить выбор» в политике конфиденциальности
+        document.addEventListener('click', function (e) {
+            if (!e.target.closest('[data-cookie-settings]')) return;
+            e.preventDefault();
+            show();
+            $('[data-cookie-choice="all"]', banner).focus();
+        });
+    })();
+
     /* ---- Слайдер первого экрана (Hero.tsx) ---- */
     var hero = $('[data-hero]');
     if (hero) {
@@ -645,6 +674,8 @@
                     }
                 }
                 if (opts.push !== false) history.pushState({ soft: true }, '', url);
+                // Новый адрес — просмотр страницы для Метрики (invit_counters в functions.php)
+                document.dispatchEvent(new Event('invit:pageview'));
                 // React-роутер прокручивает к началу при каждой смене адреса
                 if (!before.drawer) window.scrollTo(0, 0);
                 initCatalog(main);

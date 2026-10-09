@@ -48,14 +48,16 @@ function invit_handle_request() {
     if ($errors) invit_respond(false, ['errors' => $errors]);
 
     $kind = invit_field_value('kind') === 'callback' ? 'Обратный звонок' : 'Запрос расчёта';
-    $lines = [
-        "Имя: {$fields['name']}",
-        "Компания: {$fields['company']}",
-        "Телефон: {$fields['phone']}",
-        "Email: {$fields['email']}",
-        'Что нужно: ' . ($fields['task'] !== '' ? $fields['task'] : '—'),
-        'Откуда: ' . ($fields['source'] !== '' ? $fields['source'] : (wp_get_referer() ?: '—')),
-    ];
+    if ($fields['source'] === '') $fields['source'] = (string) wp_get_referer();
+
+    // Сначала в админку (inc/leads.php): письмо может не уйти, заявка останется
+    $lead = invit_save_lead($kind, $fields);
+
+    $lines = [];
+    foreach (invit_lead_fields() as $key => $label) {
+        $lines[] = $label . ': ' . ($fields[$key] !== '' ? $fields[$key] : '—');
+    }
+    if ($lead) $lines[] = "\nЗаявка в админке: " . admin_url('post.php?post=' . $lead . '&action=edit');
 
     $sent = wp_mail(
         invit_company('email'),
@@ -63,8 +65,10 @@ function invit_handle_request() {
         implode("\n", $lines),
         ['Reply-To: ' . $fields['name'] . ' <' . $fields['email'] . '>']
     );
+    if ($lead) update_post_meta($lead, '_invit_lead_mail', $sent ? 'sent' : 'failed');
 
-    invit_respond($sent, $sent ? [] : ['message' => 'Не удалось отправить. Позвоните нам, пожалуйста.']);
+    $ok = $lead || $sent;
+    invit_respond($ok, $ok ? [] : ['message' => 'Не удалось отправить. Позвоните нам, пожалуйста.']);
 }
 add_action('wc_ajax_invit_request', 'invit_handle_request');
 

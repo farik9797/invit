@@ -33,7 +33,7 @@ $slides = [
         'lead' => 'Защита стыков оконных проёмов —',
         'accent' => 'ленты EUROBAND ВЛ(а) и НЛ',
         'text' => 'Внутренняя пароизоляция примыкания окно/стена, наружная защита монтажного шва от ветра и дождя. Всегда в наличии на складе. Нетипичные размеры в любом сочетании клейких полос делаем под заказ.',
-        'image' => 'hero/alu-butyl-foil.webp',
+        'image' => 'hero/window-tapes-vla-nl.webp',
         'href' => invit_url_category('materialy-dlya-okon', ['sub' => 'montazhnye-lenty-dlya-okon']),
         'cta' => 'Ленты для окон',
     ],

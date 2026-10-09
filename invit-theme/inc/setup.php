@@ -126,6 +126,8 @@ function invit_run_setup() {
     $cod['enabled'] = 'yes';
     $cod['title'] = 'Счёт-фактура';
     $cod['description'] = 'Менеджер выставит счёт-фактуру и пришлёт его на указанную почту.';
+    // Инструкция идёт в письмо покупателю; штатная — «оплата наличными при доставке»
+    $cod['instructions'] = $cod['description'];
     update_option('woocommerce_cod_settings', $cod);
     $log[] = 'Способ оплаты «Счёт-фактура» включён';
 

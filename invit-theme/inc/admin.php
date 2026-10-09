@@ -73,3 +73,26 @@ function invit_admin_companions_save($term_id) {
     update_term_meta($term_id, 'invit_companions', $chosen);
 }
 add_action('edited_product_cat', 'invit_admin_companions_save');
+
+/* Товар: метка в углу снимка — «Хит продаж» или «Новинка» */
+function invit_admin_badge_field() {
+    $options = ['' => 'Без метки'];
+    foreach (invit_badges() as $key => $badge) $options[$key] = $badge['label'];
+    woocommerce_wp_select([
+        'id' => '_invit_badge',
+        'label' => 'Метка на фото',
+        'options' => $options,
+        'desc_tip' => true,
+        'description' => 'Плашка в углу снимка товара в каталоге и в карточке.',
+    ]);
+}
+add_action('woocommerce_product_options_general_product_data', 'invit_admin_badge_field');
+
+function invit_admin_badge_save($product) {
+    if (!isset($_POST['_invit_badge'])) return;
+    $badge = sanitize_key(wp_unslash($_POST['_invit_badge']));
+    if ($badge !== '' && !isset(invit_badges()[$badge])) $badge = '';
+    if ($badge === '') $product->delete_meta_data('_invit_badge');
+    else $product->update_meta_data('_invit_badge', $badge);
+}
+add_action('woocommerce_admin_process_product_object', 'invit_admin_badge_save');

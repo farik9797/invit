@@ -71,3 +71,18 @@ function invit_split_butyl_tape_order() {
     }
 }
 add_action('init', 'invit_split_butyl_tape_order', 31);
+
+/**
+ * 08.10: в письме покупателю стояла штатная инструкция способа оплаты —
+ * «Оплата наличными при доставке». Теперь — про счёт-фактуру, как в описании
+ * способа (inc/setup.php ставит то же при первичной настройке).
+ */
+function invit_cod_instructions() {
+    $key = 'invit_cod_instructions_v1';
+    if (get_option($key) || !add_option($key, time(), '', false)) return;
+    $cod = get_option('woocommerce_cod_settings', []);
+    $cod = is_array($cod) ? $cod : [];
+    $cod['instructions'] = 'Менеджер выставит счёт-фактуру и пришлёт его на указанную почту.';
+    update_option('woocommerce_cod_settings', $cod);
+}
+add_action('init', 'invit_cod_instructions', 32);

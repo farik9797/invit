@@ -47,7 +47,9 @@ $button = static function ($size) use ($item, $in_cart, $focus) {
     </span>
 
     <div class="flex-1 min-w-0">
+        <?php /* Снимок в строке мелкий, плашка в углу закрыла бы его — она перед подразделом */ ?>
         <span class="flex items-center gap-2 text-inv-blue">
+            <?php echo invit_badge_html($item[INVIT_I_BADGE], 'shrink-0 !px-1.5 !text-[10px]'); ?>
             <?php echo invit_section_icon($sub, 14, 'w-3.5 h-3.5 shrink-0'); ?>
             <span class="text-[11px] font-semibold uppercase tracking-[0.08em] line-clamp-1"><?php echo esc_html(invit_sub_name($sub)); ?></span>
         </span>

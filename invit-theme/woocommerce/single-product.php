@@ -70,11 +70,13 @@ while (have_posts()) : the_post();
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
             <div class="lg:col-span-4 space-y-3 lg:sticky lg:top-32 lg:self-start">
                 <?php if ($gallery) : ?>
-                    <button type="button" data-photo-open class="flex items-center justify-center w-full max-w-[420px] aspect-square bg-white border border-line rounded-xl overflow-hidden cursor-zoom-in hover:border-brand-sky transition-colors" aria-label="Открыть фото">
+                    <button type="button" data-photo-open class="relative flex items-center justify-center w-full max-w-[420px] aspect-square bg-white border border-line rounded-xl overflow-hidden cursor-zoom-in hover:border-brand-sky transition-colors" aria-label="Открыть фото">
                         <img data-photo src="<?php echo esc_url($gallery[0]); ?>" alt="<?php echo esc_attr($captions[0]); ?>" width="500" height="500" class="w-auto h-auto max-w-full max-h-full object-contain p-4">
+                        <?php echo invit_badge_html($item[INVIT_I_BADGE], 'absolute z-10 top-4 left-4 !text-xs !px-2.5 !py-1.5'); ?>
                     </button>
                 <?php else : ?>
-                    <div class="flex flex-col items-center justify-center gap-3 w-full max-w-[420px] aspect-square bg-white border border-line rounded-xl text-line">
+                    <div class="relative flex flex-col items-center justify-center gap-3 w-full max-w-[420px] aspect-square bg-white border border-line rounded-xl text-line">
+                        <?php echo invit_badge_html($item[INVIT_I_BADGE], 'absolute z-10 top-4 left-4 !text-xs !px-2.5 !py-1.5'); ?>
                         <?php echo invit_section_icon($sub, 96, 'w-24 h-24'); ?>
                         <span class="text-xs text-ink/40">Фото уточняйте у менеджера</span>
                     </div>

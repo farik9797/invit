@@ -27,9 +27,11 @@ const INVIT_I_THUMB = 11;
 const INVIT_I_OWN = 12;
 const INVIT_I_FTITLE = 13;
 const INVIT_I_FSKU = 14;
+const INVIT_I_INSTOCK = 15;
+const INVIT_I_BADGE = 16;
 
 const INVIT_OWN_BRAND = 'EUROBAND';
-const INVIT_INDEX_VERSION = 5;
+const INVIT_INDEX_VERSION = 6;
 
 /* ------------------------------------------------------------------ индекс */
 
@@ -50,6 +52,7 @@ add_action('save_post_product', 'invit_catalog_flush');
 add_action('deleted_post', 'invit_catalog_flush');
 add_action('set_object_terms', 'invit_catalog_flush');
 add_action('woocommerce_update_product', 'invit_catalog_flush');
+add_action('woocommerce_product_set_stock_status', 'invit_catalog_flush');
 
 /** Артикул из «Артикул» поставщика; служебный (равный адресу товара) не показываем. */
 function invit_real_sku($sku, $slug) {
@@ -72,7 +75,7 @@ function invit_catalog_build() {
     $rows = $wpdb->get_results(
         "SELECT m.post_id, m.meta_key, m.meta_value FROM {$wpdb->postmeta} m
          JOIN {$wpdb->posts} p ON p.ID = m.post_id
-         WHERE p.post_type = 'product' AND m.meta_key IN ('_sku', '_thumbnail_id', '_product_attributes', '_invit_after')",
+         WHERE p.post_type = 'product' AND m.meta_key IN ('_sku', '_thumbnail_id', '_product_attributes', '_invit_after', '_stock_status', '_invit_badge')",
         ARRAY_N
     );
     foreach ($rows as [$id, $key, $value]) $meta[$id][$key] = $value;
@@ -141,6 +144,9 @@ function invit_catalog_build() {
             $own,
             invit_fold($title),
             invit_fold($sku),
+            // «Нет в наличии» в админке прячет товар из каталога, поиска и меню
+            ($meta[$id]['_stock_status'] ?? 'instock') === 'outofstock' ? 0 : 1,
+            (string) ($meta[$id]['_invit_badge'] ?? ''),
         ];
         $items[] = $item;
         $by_slug[$slug] = count($items) - 1;
@@ -215,8 +221,13 @@ function invit_catalog_index() {
     return $index;
 }
 
+/** Товары витрины: все, кроме отмеченных в админке «Нет в наличии». */
 function invit_catalog_items() {
-    return invit_catalog_index()['items'];
+    static $items = null;
+    if ($items === null) {
+        $items = array_values(array_filter(invit_catalog_index()['items'], static fn($i) => $i[INVIT_I_INSTOCK]));
+    }
+    return $items;
 }
 
 /** Запись индекса по ID товара WordPress. */
@@ -224,10 +235,11 @@ function invit_catalog_item_by_id($id) {
     static $by_id = null;
     if ($by_id === null) {
         $by_id = [];
-        foreach (invit_catalog_items() as $i => $item) $by_id[$item[INVIT_I_ID]] = $i;
+        // По всем товарам: позиция без наличия могла остаться в чьей-то заявке
+        foreach (invit_catalog_index()['items'] as $i => $item) $by_id[$item[INVIT_I_ID]] = $i;
     }
     $i = $by_id[(int) $id] ?? null;
-    return $i === null ? null : invit_catalog_items()[$i];
+    return $i === null ? null : invit_catalog_index()['items'][$i];
 }
 
 /* ------------------------------------------------------------ счётчики */
@@ -1012,4 +1024,26 @@ function invit_manual_cross_sells(WC_Product $product) {
         if ($item && $item[INVIT_I_ID] !== $product->get_id()) $items[] = $item;
     }
     return array_slice($items, 0, 8);
+}
+
+/* ------------------------------------------------- метка на фото товара */
+
+/** Метки, которые можно поставить товару в админке (поле «Метка на фото»). */
+function invit_badges() {
+    return [
+        'hit' => ['label' => 'Хит продаж', 'class' => 'bg-inv-red text-white'],
+        'new' => ['label' => 'Новинка', 'class' => 'bg-inv-success text-white'],
+    ];
+}
+
+/** Плашка метки; положение задаёт $class. Пусто, если метки нет. */
+function invit_badge_html($badge, $class = '') {
+    $badges = invit_badges();
+    if (!isset($badges[$badge])) return '';
+    return sprintf(
+        '<span class="pointer-events-none inline-flex items-center rounded-[4px] px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] leading-none shadow-[0_2px_8px_rgba(22,44,88,0.18)] %s %s">%s</span>',
+        esc_attr($badges[$badge]['class']),
+        esc_attr($class),
+        esc_html($badges[$badge]['label'])
+    );
 }

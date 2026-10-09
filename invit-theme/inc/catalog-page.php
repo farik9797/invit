@@ -94,6 +94,15 @@ function invit_catalog_redirects() {
         wp_safe_redirect(wc_get_cart_url());
         exit;
     }
+    // Товар «Нет в наличии» скрыт: со своей страницы — в раздел. Временно
+    // (302): вернётся в наличие — адрес снова откроется
+    if (function_exists('is_product') && is_product()) {
+        $item = invit_catalog_item_by_id(get_queried_object_id());
+        if ($item && !$item[INVIT_I_INSTOCK]) {
+            wp_safe_redirect(invit_url_category($item[INVIT_I_CAT], ['sub' => $item[INVIT_I_SUB]]), 302);
+            exit;
+        }
+    }
     if (is_search() && get_query_var('post_type') === 'product') {
         wp_safe_redirect(invit_url_catalog(['q' => get_search_query(false)]), 301);
         exit;

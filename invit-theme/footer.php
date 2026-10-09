@@ -159,6 +159,7 @@ $channels = [
 
 <?php get_template_part('template-parts/modal-search'); ?>
 <?php get_template_part('template-parts/modal-request'); ?>
+<?php get_template_part('template-parts/cookie-banner'); ?>
 
 <?php invit_icon_sprite(); ?>
 
