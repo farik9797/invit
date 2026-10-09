@@ -107,8 +107,20 @@ function invit_catalog_redirects() {
         wp_safe_redirect(invit_url_catalog(['q' => get_search_query(false)]), 301);
         exit;
     }
+    // Страница бренда WooCommerce (/brand/…/) — это каталог с отбором по бренду
+    if (is_tax('product_brand')) {
+        wp_safe_redirect(invit_url_catalog(['brand' => get_queried_object()->name]), 301);
+        exit;
+    }
 }
 add_action('template_redirect', 'invit_catalog_redirects', 5);
+
+/** Страниц брендов нет (ведут в каталог) — в карте сайта им не место. */
+function invit_sitemap_taxonomies($taxonomies) {
+    unset($taxonomies['product_brand']);
+    return $taxonomies;
+}
+add_filter('wp_sitemaps_taxonomies', 'invit_sitemap_taxonomies');
 
 /*
  * Выдачу каталог собирает сам из индекса, поэтому основной запрос WordPress

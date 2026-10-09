@@ -31,7 +31,7 @@ const INVIT_I_INSTOCK = 15;
 const INVIT_I_BADGE = 16;
 
 const INVIT_OWN_BRAND = 'EUROBAND';
-const INVIT_INDEX_VERSION = 6;
+const INVIT_INDEX_VERSION = 7;
 
 /* ------------------------------------------------------------------ индекс */
 
@@ -53,6 +53,8 @@ add_action('deleted_post', 'invit_catalog_flush');
 add_action('set_object_terms', 'invit_catalog_flush');
 add_action('woocommerce_update_product', 'invit_catalog_flush');
 add_action('woocommerce_product_set_stock_status', 'invit_catalog_flush');
+add_action('edited_product_brand', 'invit_catalog_flush');
+add_action('delete_product_brand', 'invit_catalog_flush');
 
 /** Артикул из «Артикул» поставщика; служебный (равный адресу товара) не показываем. */
 function invit_real_sku($sku, $slug) {
@@ -85,11 +87,11 @@ function invit_catalog_build() {
         "SELECT tr.object_id, tt.taxonomy, t.slug, t.name FROM {$wpdb->term_relationships} tr
          JOIN {$wpdb->term_taxonomy} tt ON tt.term_taxonomy_id = tr.term_taxonomy_id
          JOIN {$wpdb->terms} t ON t.term_id = tt.term_id
-         WHERE tt.taxonomy IN ('product_cat', 'product_tag')",
+         WHERE tt.taxonomy IN ('product_cat', 'product_tag', 'product_brand')",
         ARRAY_N
     );
     foreach ($rows as [$id, $tax, $slug, $name]) {
-        $terms[$id][$tax][] = $tax === 'product_tag' ? $name : urldecode($slug);
+        $terms[$id][$tax][] = $tax === 'product_cat' ? urldecode($slug) : $name;
     }
 
     $also = invit_data('alsoSub');
@@ -112,12 +114,13 @@ function invit_catalog_build() {
         // Подраздел-«гость» в другом разделе: товар числится и там
         $also_cat = $also_sub ? invit_section_of_sub($also_sub) : (invit_shared_subs()[$main][0] ?? '');
 
-        $brand = '';
+        // Бренд — из «Товары → Бренды» WooCommerce; характеристика «Бренд»
+        // перенесена туда миграцией invit_brands_from_attribute и не читается
+        $brand = $terms[$id]['product_brand'][0] ?? '';
         $country = '';
         $attrs = maybe_unserialize($meta[$id]['_product_attributes'] ?? '');
         if (is_array($attrs)) {
             foreach ($attrs as $attr) {
-                if (($attr['name'] ?? '') === 'Бренд') $brand = (string) $attr['value'];
                 if (($attr['name'] ?? '') === 'Страна') $country = (string) $attr['value'];
             }
         }
@@ -937,7 +940,7 @@ function invit_product_cards(array $items, $compact, array $in_cart, $offset = 0
  * dedupeContentBlocks() из src/lib/product.ts: убирает абзац, повторяющий
  * краткое описание, и перечни бывших ссылок «…доступны:».
  */
-function invit_dedupe_content_blocks(array $blocks, $description) {
+function invit_dedupe_content_blocks(array $blocks, $description, array $also = []) {
     $norm = static fn($s) => mb_strtolower(trim(preg_replace('/\s+/u', ' ', (string) $s)));
     $target = $norm($description);
     $cross = static fn($text) => (bool) preg_match('/доступны\s*:?\s*$/iu', (string) $text);
@@ -954,7 +957,15 @@ function invit_dedupe_content_blocks(array $blocks, $description) {
     $kept = [];
     foreach ($blocks as $idx => $b) {
         if ($is_duplicate($b)) continue;
-        if ($b['kind'] === 'heading' && $cross($b['text'] ?? '')) continue;
+        if ($b['kind'] === 'heading' && $cross($b['text'] ?? '')) {
+            // Ссылки восстановлены (invit_product_also): перечень — последний в описании
+            if ($also) {
+                $kept[] = $b;
+                $kept[] = ['kind' => 'links', 'items' => $also];
+                break;
+            }
+            continue;
+        }
         $prev = $blocks[$idx - 1] ?? null;
         if ($b['kind'] === 'list' && $prev && $prev['kind'] === 'heading' && $cross($prev['text'] ?? '')) continue;
         $kept[] = $b;
@@ -970,6 +981,45 @@ function invit_dedupe_content_blocks(array $blocks, $description) {
         $out[] = $b;
     }
     return $out;
+}
+
+/**
+ * «Также … доступны:» в конце описания. На invit.by это были ссылки на
+ * сопутствующие товары; при переносе они потерялись, адреса восстановлены
+ * вручную в data/product-also.json: «p:товар», «s:подраздел» (или
+ * «s:раздел/подраздел»), «c:раздел».
+ * Пусто или товар скрыт — пункт остаётся текстом.
+ */
+function invit_product_also($slug) {
+    static $also = null, $by_slug = null;
+    if ($also === null) {
+        $file = get_template_directory() . '/data/product-also.json';
+        $also = is_readable($file) ? (array) json_decode(file_get_contents($file), true) : [];
+    }
+    if (empty($also[$slug])) return [];
+
+    $links = [];
+    foreach ($also[$slug] as [$label, $target]) {
+        [$type, $key] = array_pad(explode(':', $target, 2), 2, '');
+        $href = '';
+        if ($type === 'p') {
+            if ($by_slug === null) {
+                $by_slug = [];
+                foreach (invit_catalog_items() as $item) $by_slug[$item[INVIT_I_SLUG]] = $item;
+            }
+            if (isset($by_slug[$key])) $href = invit_item_url($by_slug[$key]);
+        } elseif ($type === 's' && str_contains($key, '/')) {
+            // «s:раздел/подраздел» — подраздел-«гость» в другом разделе
+            [$section, $sub] = explode('/', $key, 2);
+            if (invit_section($section)) $href = invit_url_category($section, ['sub' => $sub]);
+        } elseif ($type === 's' && invit_section_of_sub($key) !== '') {
+            $href = invit_url_sub($key);
+        } elseif ($type === 'c' && invit_section($key)) {
+            $href = invit_url_category($key);
+        }
+        $links[] = ['label' => $label, 'href' => $href];
+    }
+    return $links;
 }
 
 /** Локальная копия иллюстрации со старого invit.by (contentImages.ts). */

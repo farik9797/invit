@@ -96,3 +96,25 @@ function invit_admin_badge_save($product) {
     else $product->update_meta_data('_invit_badge', $badge);
 }
 add_action('woocommerce_admin_process_product_object', 'invit_admin_badge_save');
+
+/* Товары: колонка «Бренды товара» сортируется — по названию бренда, товары без бренда в конце */
+function invit_admin_brand_sortable($columns) {
+    $columns['taxonomy-product_brand'] = 'product_brand';
+    return $columns;
+}
+add_filter('manage_edit-product_sortable_columns', 'invit_admin_brand_sortable');
+
+function invit_admin_brand_orderby($clauses, $query) {
+    if (!is_admin() || !$query->is_main_query() || $query->get('orderby') !== 'product_brand') return $clauses;
+    global $wpdb;
+    $clauses['join'] .= " LEFT JOIN (
+        SELECT tr.object_id, MIN(t.name) AS name FROM {$wpdb->term_relationships} tr
+        JOIN {$wpdb->term_taxonomy} tt ON tt.term_taxonomy_id = tr.term_taxonomy_id AND tt.taxonomy = 'product_brand'
+        JOIN {$wpdb->terms} t ON t.term_id = tt.term_id
+        GROUP BY tr.object_id
+    ) invit_brand ON invit_brand.object_id = {$wpdb->posts}.ID";
+    $order = strtoupper((string) $query->get('order')) === 'DESC' ? 'DESC' : 'ASC';
+    $clauses['orderby'] = "invit_brand.name IS NULL, invit_brand.name {$order}, {$wpdb->posts}.post_title ASC";
+    return $clauses;
+}
+add_filter('posts_clauses', 'invit_admin_brand_orderby', 10, 2);

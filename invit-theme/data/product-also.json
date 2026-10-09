@@ -1,0 +1,24 @@
+{
+    "lenta-dlja-sjendvich-panelej": [
+        ["Уплотнительная лента ПСУЛ", "p:psul-euroband-dlja-okon"],
+        ["Саморезы для сэндвич-панелей", "s:samorez-dlya-sendvich-paneley"],
+        ["Лента алюминиевая клейкая", "p:lenta-aljuminievaja-klejkaja"],
+        ["Герметизирующая бутилкаучуковая двусторонняя лента EUROBAND ЛБ", "p:lenta-butilkauchukovaja-euroband-lb"],
+        ["Металлизированная бутилкаучуковая одностороння лента EUROBAND ЛБА", "p:lenta-butilovaja-euroband-lba"],
+        ["Герметики", "c:germetiki"],
+        ["Пена монтажная", "s:pena-montazhnaya-ppu"]
+    ],
+    "lenta-pod-kontrobreshjotku-krovli": [
+        ["Уплотнитель универсальный под конек кровли (ПСУЛ)", "p:uplotnitel-27-universal-27nyj"],
+        ["Ленты бутиловые двусторонние для склеивания подкровельных пленок", "s:krovelnye-uplotniteli-kleykie-lenty/polnobutilovye-lenty"],
+        ["Герметизирующие бутиловые двухсторонние ленты", "p:lenta-butilkauchukovaja-euroband-lb"],
+        ["Ленты бутиловые металлизированные односторонние", "p:lenta-butilovaja-euroband-lba"]
+    ],
+    "uplotnitel-27-universal-27nyj": [
+        ["Ленты уплотнительные ПЭС под контробрешетку", "p:lenta-pod-kontrobreshjotku-krovli"],
+        ["Двусторонняя клейкая полипропиленовая лента", ""],
+        ["Ленты бутиловые двусторонние для склеивания подкровельных пленок", "s:krovelnye-uplotniteli-kleykie-lenty/polnobutilovye-lenty"],
+        ["Герметизирующие бутиловые двухсторонние ленты EUROBAND ЛБ", "p:lenta-butilkauchukovaja-euroband-lb"],
+        ["Ленты бутиловые металлизированные односторонние EUROBAND ЛБА", "p:lenta-butilovaja-euroband-lba"]
+    ]
+}

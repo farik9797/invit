@@ -32,7 +32,7 @@ while (have_posts()) : the_post();
     $description = $paragraphs ? implode("\n", $paragraphs) : $item[INVIT_I_DESC];
 
     $content = invit_product_content($slug);
-    $blocks = invit_dedupe_content_blocks($content['blocks'] ?? [], $description);
+    $blocks = invit_dedupe_content_blocks($content['blocks'] ?? [], $description, invit_product_also($slug));
 
     // Галерея: снимок товара и иллюстрации из описания (они же в галерее WooCommerce)
     $gallery = [];

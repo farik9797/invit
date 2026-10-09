@@ -86,3 +86,51 @@ function invit_cod_instructions() {
     update_option('woocommerce_cod_settings', $cod);
 }
 add_action('init', 'invit_cod_instructions', 32);
+
+/**
+ * 09.10: бренд из характеристики «Бренд» — в штатные «Бренды» WooCommerce
+ * (Товары → Бренды). Там их видно списком, у товара бренд ставится галочкой,
+ * каталог и фильтр берут его оттуда (invit_catalog_build). Характеристика
+ * остаётся в товаре, но на сайт больше не влияет. «без товарного знака» —
+ * не бренд, не переносится. Связи пишутся одним запросом на 500 товаров:
+ * через wp_set_object_terms 8 тыс. товаров не уложились бы в запрос.
+ */
+function invit_brands_from_attribute() {
+    $key = 'invit_brands_v1';
+    if (!taxonomy_exists('product_brand') || get_option($key) || !add_option($key, time(), '', false)) return;
+    global $wpdb;
+
+    $rows = $wpdb->get_results(
+        "SELECT m.post_id, m.meta_value FROM {$wpdb->postmeta} m
+         JOIN {$wpdb->posts} p ON p.ID = m.post_id
+         WHERE p.post_type = 'product' AND m.meta_key = '_product_attributes'",
+        ARRAY_N
+    );
+    $by_brand = [];
+    foreach ($rows as [$id, $value]) {
+        $attrs = maybe_unserialize($value);
+        if (!is_array($attrs)) continue;
+        foreach ($attrs as $attr) {
+            $brand = trim((string) ($attr['value'] ?? ''));
+            if (($attr['name'] ?? '') !== 'Бренд' || $brand === '' || $brand === 'без товарного знака') continue;
+            $by_brand[$brand][] = (int) $id;
+        }
+    }
+
+    $tt_ids = [];
+    foreach ($by_brand as $brand => $ids) {
+        $term = term_exists($brand, 'product_brand')
+            ?: wp_insert_term($brand, 'product_brand', ['slug' => sanitize_title(invit_fold($brand))]);
+        if (is_wp_error($term)) continue;
+        $tt = (int) $term['term_taxonomy_id'];
+        $tt_ids[] = $tt;
+        foreach (array_chunk($ids, 500) as $chunk) {
+            $values = implode(',', array_map(static fn($id) => $wpdb->prepare('(%d, %d)', $id, $tt), $chunk));
+            $wpdb->query("INSERT IGNORE INTO {$wpdb->term_relationships} (object_id, term_taxonomy_id) VALUES $values");
+        }
+    }
+    wp_update_term_count_now($tt_ids, 'product_brand');
+    clean_taxonomy_cache('product_brand');
+    invit_catalog_flush();
+}
+add_action('init', 'invit_brands_from_attribute', 33);

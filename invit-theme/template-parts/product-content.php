@@ -36,6 +36,20 @@ foreach ($args['blocks'] as $block) {
                     </li>
                 <?php endforeach; ?>
             </ul>
+        <?php elseif ($block['kind'] === 'links') : ?>
+            <?php /* «Также … доступны:» — ссылки на сопутствующие товары (invit_product_also) */ ?>
+            <ul class="space-y-2">
+                <?php foreach ($block['items'] as $link) : ?>
+                    <li class="flex gap-2.5 text-sm text-ink/75 leading-relaxed">
+                        <span class="mt-2 w-1.5 h-1.5 rounded-full bg-brand-sky shrink-0"></span>
+                        <?php if ($link['href'] !== '') : ?>
+                            <a href="<?php echo esc_url($link['href']); ?>" class="text-inv-blue hover:text-inv-blue-pressed underline-offset-2 hover:underline transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue"><?php echo esc_html($link['label']); ?></a>
+                        <?php else : ?>
+                            <span><?php echo esc_html($link['label']); ?></span>
+                        <?php endif; ?>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
         <?php elseif ($block['kind'] === 'table') : ?>
             <div class="border border-line rounded-xl overflow-hidden">
                 <div class="overflow-x-auto">
