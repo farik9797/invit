@@ -98,22 +98,12 @@
         io.observe(el);
     });
 
-    /* ---- Шапка уезжает при прокрутке вниз и возвращается вверх ---- */
+    /* ---- Шапка закреплена; при прокрутке у неё появляется тень ---- */
     var header = $('[data-header]');
     var menuPanel = $('[data-menu-panel]');
     if (header) {
-        var lastY = 0;
         var onScroll = function () {
-            var y = Math.max(window.scrollY, 0);
-            header.classList.toggle('shadow-[0_6px_24px_rgb(15_37_55_/_0.10)]', y > 8);
-            var step = y - lastY;
-            if (Math.abs(step) < 6) return;
-            lastY = y;
-            // Пока в шапке что-то раскрыто, не прячем: оно уехало бы вместе с ней
-            var busy = header.querySelector('[aria-expanded="true"]');
-            var hide = !busy && step > 0 && y > 200;
-            header.classList.toggle('-translate-y-full', hide);
-            header.classList.toggle('translate-y-0', !hide);
+            header.classList.toggle('shadow-[0_6px_24px_rgb(15_37_55_/_0.10)]', window.scrollY > 8);
         };
         onScroll();
         window.addEventListener('scroll', onScroll, { passive: true });
@@ -1110,18 +1100,18 @@
             t.addEventListener('dblclick', function () { showLightbox(i); });
         });
 
-        // В описании — локальная копия иллюстрации, в галерее — та же картинка
-        // из медиатеки: сверяем по имени файла
-        $$('[data-content-image]', productBox).forEach(function (btn) {
-            btn.addEventListener('click', function () {
-                var name = btn.getAttribute('data-content-image');
-                var idx = -1;
-                gallery.forEach(function (src, i) {
-                    var file = src.split('/').pop().replace(/\.[a-z0-9]+$/i, '');
-                    if (idx < 0 && (file === name || file.indexOf(name) === 0)) idx = i;
-                });
-                showLightbox(idx >= 0 ? idx : 0);
+        // Картинка в описании открывается в просмотре, если она же есть в галерее
+        // товара (там — копия из медиатеки): сверяем по имени файла
+        $$('.invit-content img', productBox).forEach(function (img) {
+            var name = (img.getAttribute('src') || '').split('/').pop().replace(/\.[a-z0-9]+$/i, '').replace(/-\d+x\d+$/, '');
+            var idx = -1;
+            gallery.forEach(function (src, i) {
+                var file = src.split('/').pop().replace(/\.[a-z0-9]+$/i, '');
+                if (idx < 0 && name && (file === name || file.indexOf(name) === 0)) idx = i;
             });
+            if (idx < 0) return;
+            img.setAttribute('data-zoomable', '');
+            img.addEventListener('click', function () { showLightbox(idx); });
         });
 
         if (box) {

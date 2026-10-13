@@ -134,3 +134,80 @@ function invit_brands_from_attribute() {
     invit_catalog_flush();
 }
 add_action('init', 'invit_brands_from_attribute', 33);
+
+/**
+ * 09.10: подробное описание товара — в «Описание» WooCommerce, чтобы всё
+ * правилось в админке. Раньше ниже первого абзаца шли блоки из site.json
+ * (перенос со старого invit.by), и в админке их видно не было. Теперь в записи:
+ * абзацы как были, линия «Далее» (<!--more-->), затем заголовки, списки,
+ * таблицы, иллюстрации и «Также … доступны» — single-product.php выводит текст
+ * до линии вверху у фото, после — ниже. Прежний текст — в мете
+ * _invit_description_before (откат).
+ */
+function invit_full_descriptions() {
+    $key = 'invit_full_descriptions_v1';
+    if (get_option($key) || !add_option($key, time(), '', false)) return;
+    global $wpdb;
+
+    foreach (invit_catalog_index()['items'] as $item) {
+        $id = $item[INVIT_I_ID];
+        $content = invit_product_content($item[INVIT_I_SLUG]);
+        if (!$content) continue;
+
+        $before = (string) get_post_field('post_content', $id);
+        if (str_contains($before, '<!--more-->')) continue;
+        $paragraphs = array_filter(array_map(
+            static fn($p) => trim(html_entity_decode(wp_strip_all_tags($p), ENT_QUOTES, 'UTF-8')),
+            preg_split('/<\/p>\s*/', $before)
+        ));
+        $description = $paragraphs ? implode("\n", $paragraphs) : $item[INVIT_I_DESC];
+        $blocks = invit_dedupe_content_blocks($content['blocks'] ?? [], $description, invit_product_also($item[INVIT_I_SLUG]));
+        if (!$blocks) continue;
+
+        update_post_meta($id, '_invit_description_before', wp_slash($before));
+        $wpdb->update($wpdb->posts, [
+            'post_content' => trim($before) . "\n\n<!--more-->\n\n" . invit_blocks_to_html($blocks),
+        ], ['ID' => $id]);
+        clean_post_cache($id);
+    }
+}
+add_action('init', 'invit_full_descriptions', 34);
+
+/** Блоки описания из site.json — в HTML для редактора WordPress. */
+function invit_blocks_to_html(array $blocks) {
+    $html = [];
+    $gallery = [];
+    $flush = static function () use (&$gallery, &$html) {
+        if (!$gallery) return;
+        $html[] = count($gallery) > 1
+            ? '<div class="invit-gallery">' . implode('', $gallery) . '</div>'
+            : $gallery[0];
+        $gallery = [];
+    };
+    foreach ($blocks as $b) {
+        if ($b['kind'] === 'image') {
+            $title = (string) ($b['title'] ?? '');
+            $gallery[] = '<figure><img src="' . esc_url(invit_content_image($b['src'])) . '" alt="' . esc_attr($title) . '">'
+                . ($title !== '' ? '<figcaption>' . esc_html($title) . '</figcaption>' : '') . '</figure>';
+            continue;
+        }
+        $flush();
+        if ($b['kind'] === 'heading') {
+            $html[] = '<h2>' . esc_html($b['text']) . '</h2>';
+        } elseif ($b['kind'] === 'text') {
+            $html[] = '<p>' . esc_html($b['text']) . '</p>';
+        } elseif ($b['kind'] === 'list') {
+            $html[] = '<ul>' . implode('', array_map(static fn($li) => '<li>' . esc_html($li) . '</li>', $b['items'])) . '</ul>';
+        } elseif ($b['kind'] === 'links') {
+            $html[] = '<ul>' . implode('', array_map(static fn($l) => '<li>' . ($l['href'] !== ''
+                ? '<a href="' . esc_url($l['href']) . '">' . esc_html($l['label']) . '</a>'
+                : esc_html($l['label'])) . '</li>', $b['items'])) . '</ul>';
+        } elseif ($b['kind'] === 'table') {
+            $head = $b['headers'] ? '<thead><tr>' . implode('', array_map(static fn($h) => '<th>' . esc_html($h) . '</th>', $b['headers'])) . '</tr></thead>' : '';
+            $rows = implode('', array_map(static fn($r) => '<tr>' . implode('', array_map(static fn($c) => '<td>' . esc_html($c) . '</td>', $r)) . '</tr>', $b['rows']));
+            $html[] = '<table>' . $head . '<tbody>' . $rows . '</tbody></table>';
+        }
+    }
+    $flush();
+    return implode("\n\n", $html);
+}

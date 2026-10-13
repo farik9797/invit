@@ -139,7 +139,7 @@ $requisites = array_values(array_filter(invit_data('requisites'), static fn($row
 </section>
 
 <?php /* Форма: та же, что на главной */ ?>
-<section id="zapros" class="bg-white scroll-mt-20">
+<section id="zapros" class="bg-white scroll-mt-20 lg:scroll-mt-[150px]">
     <div class="<?php echo $wrap . ' ' . $section_pad; ?>">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16">
             <div data-fade class="lg:col-span-5">

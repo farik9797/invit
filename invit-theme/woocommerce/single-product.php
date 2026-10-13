@@ -24,15 +24,13 @@ while (have_posts()) : the_post();
     $unit = invit_item_unit($item);
     $in_cart = in_array($item[INVIT_I_ID], invit_cart_product_ids(), true);
 
-    // Полное описание: абзацы из записи, как DESCRIPTIONS в React
-    $paragraphs = array_filter(array_map(
-        static fn($p) => trim(html_entity_decode(wp_strip_all_tags($p), ENT_QUOTES, 'UTF-8')),
-        preg_split('/<\/p>\s*/', get_post_field('post_content', get_the_ID()))
-    ));
-    $description = $paragraphs ? implode("\n", $paragraphs) : $item[INVIT_I_DESC];
+    // Описание целиком из записи — правится в админке: до линии «Далее» —
+    // вверху у фото, после — подробное ниже (invit_product_description)
+    [$description, $details] = invit_product_description(get_the_ID());
+    if ($description === '') $description = $item[INVIT_I_DESC];
 
+    // Подписи иллюстраций для галереи — из данных старого сайта
     $content = invit_product_content($slug);
-    $blocks = invit_dedupe_content_blocks($content['blocks'] ?? [], $description, invit_product_also($slug));
 
     // Галерея: снимок товара и иллюстрации из описания (они же в галерее WooCommerce)
     $gallery = [];
@@ -68,7 +66,7 @@ while (have_posts()) : the_post();
 
     <section class="max-w-[1340px] mx-auto px-5 py-10" data-product data-gallery="<?php echo esc_attr(wp_json_encode($gallery)); ?>" data-captions="<?php echo esc_attr(wp_json_encode($captions)); ?>">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
-            <div class="lg:col-span-4 space-y-3 lg:sticky lg:top-32 lg:self-start">
+            <div class="lg:col-span-4 space-y-3 lg:sticky lg:top-[150px] lg:self-start">
                 <?php if ($gallery) : ?>
                     <button type="button" data-photo-open class="relative flex items-center justify-center w-full max-w-[420px] aspect-square bg-white border border-line rounded-xl overflow-hidden cursor-zoom-in hover:border-brand-sky transition-colors" aria-label="Открыть фото">
                         <img data-photo src="<?php echo esc_url($gallery[0]); ?>" alt="<?php echo esc_attr($captions[0]); ?>" width="500" height="500" class="w-auto h-auto max-w-full max-h-full object-contain p-4">
@@ -170,7 +168,9 @@ while (have_posts()) : the_post();
                     <?php endif; ?>
                 </div>
 
-                <?php if ($blocks) get_template_part('template-parts/product-content', null, ['blocks' => $blocks]); ?>
+                <?php if ($details !== '') : ?>
+                    <div class="invit-content"><?php echo $details; ?></div>
+                <?php endif; ?>
             </div>
         </div>
     </section>

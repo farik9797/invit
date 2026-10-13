@@ -43,7 +43,7 @@ $cart_badge = '<span data-cart-count class="absolute top-1 right-0.5 min-w-[18px
 <body <?php body_class('theme-v2 font-v2 min-h-screen flex flex-col bg-white text-inv-ink antialiased selection:bg-inv-blue selection:text-white'); ?>>
 <?php wp_body_open(); ?>
 
-<header class="site-header sticky top-0 z-30 bg-white border-b border-inv-border transition-[transform,box-shadow] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] translate-y-0" data-header>
+<header class="site-header sticky top-0 z-30 bg-white border-b border-inv-border transition-shadow duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]" data-header>
     <div class="hidden lg:grid max-w-[1400px] mx-auto px-4 lg:px-8 grid-cols-[auto_minmax(0,560px)_auto] grid-rows-[76px_1px_56px] items-center gap-x-6">
         <a href="<?php echo esc_url(home_url('/')); ?>" class="flex items-center min-h-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue">
             <img src="<?php echo esc_url($logo); ?>" alt="ООО «ИНВИТ»" class="h-11 w-auto">
@@ -92,13 +92,18 @@ $cart_badge = '<span data-cart-count class="absolute top-1 right-0.5 min-w-[18px
         </div>
     </div>
 
-    <?php /* Мобильная строка: логотип, поиск, корзина, бургер */ ?>
-    <div class="lg:hidden max-w-[1400px] mx-auto px-4 h-[68px] flex items-center gap-4">
-        <a href="<?php echo esc_url(home_url('/')); ?>" class="shrink-0 flex items-center min-h-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue">
-            <img src="<?php echo esc_url($logo); ?>" alt="ООО «ИНВИТ»" class="h-10 w-auto">
+    <?php /* Мобильная строка: логотип, телефон, поиск, корзина, бургер. Логотип
+             сжимается на узком экране, кнопки остаются по 44px */ ?>
+    <div class="lg:hidden max-w-[1400px] mx-auto px-4 h-[68px] flex items-center gap-3">
+        <a href="<?php echo esc_url(home_url('/')); ?>" class="min-w-0 flex items-center min-h-11 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue">
+            <img src="<?php echo esc_url($logo); ?>" alt="ООО «ИНВИТ»" class="w-auto h-auto max-h-10 max-w-full">
         </a>
 
-        <div class="flex items-center gap-1 ml-auto">
+        <div class="shrink-0 flex items-center gap-1 ml-auto">
+            <a href="<?php echo esc_attr(invit_tel_href($phone)); ?>" aria-label="<?php echo esc_attr('Позвонить: ' . $phone); ?>" class="flex items-center justify-center w-11 h-11 rounded-[4px] text-inv-ink hover:text-inv-blue hover:bg-inv-surface-1 transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue">
+                <?php echo invit_icon('phone', 'w-5 h-5'); ?>
+            </a>
+
             <button type="button" data-search-open aria-label="Поиск по каталогу" aria-expanded="false" class="flex items-center justify-center w-11 h-11 rounded-[4px] text-inv-ink hover:text-inv-blue hover:bg-inv-surface-1 transition-colors duration-[120ms] cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue">
                 <?php echo invit_icon('search', 'w-5 h-5'); ?>
             </button>

@@ -984,6 +984,37 @@ function invit_dedupe_content_blocks(array $blocks, $description, array $also = 
 }
 
 /**
+ * Описание товара из записи (правится в админке): до линии «Далее»
+ * (<!--more-->) — текст вверху у фото, после — подробное описание ниже. Без
+ * линии подробное начинается с первого заголовка, списка, таблицы или картинки.
+ *
+ * @return array [верхний текст абзацами через перевод строки, HTML подробного]
+ */
+function invit_product_description($post_id) {
+    $raw = (string) get_post_field('post_content', $post_id);
+    if (str_contains($raw, '<!--more-->')) {
+        [$top, $rest] = explode('<!--more-->', $raw, 2);
+    } elseif (preg_match('/<(h[2-6]|ul|ol|table|figure|img|div)\b/i', $raw, $m, PREG_OFFSET_CAPTURE)) {
+        $top = substr($raw, 0, $m[0][1]);
+        $rest = substr($raw, $m[0][1]);
+    } else {
+        [$top, $rest] = [$raw, ''];
+    }
+
+    $paragraphs = array_filter(array_map(
+        static fn($p) => trim(html_entity_decode(wp_strip_all_tags($p), ENT_QUOTES, 'UTF-8')),
+        preg_split('/<\/p>\s*/', $top)
+    ));
+
+    $rest = trim($rest);
+    $details = $rest === '' ? '' : apply_filters('the_content', $rest);
+    // Широкая таблица прокручивается в рамке, а не растягивает страницу
+    $details = preg_replace(['/<table\b/i', '/<\/table>/i'], ['<div class="invit-table"><table', '</table></div>'], $details);
+
+    return [implode("\n", $paragraphs), trim($details)];
+}
+
+/**
  * «Также … доступны:» в конце описания. На invit.by это были ссылки на
  * сопутствующие товары; при переносе они потерялись, адреса восстановлены
  * вручную в data/product-also.json: «p:товар», «s:подраздел» (или

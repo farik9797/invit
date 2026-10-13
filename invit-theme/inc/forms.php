@@ -60,7 +60,7 @@ function invit_handle_request() {
     if ($lead) $lines[] = "\nЗаявка в админке: " . admin_url('post.php?post=' . $lead . '&action=edit');
 
     $sent = wp_mail(
-        invit_company('email'),
+        invit_notify_emails(),
         "{$kind} с сайта — {$fields['company']}",
         implode("\n", $lines),
         ['Reply-To: ' . $fields['name'] . ' <' . $fields['email'] . '>']

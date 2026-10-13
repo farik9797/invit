@@ -231,7 +231,7 @@ $tab_off = 'bg-white text-inv-ink border border-inv-border hover:border-inv-blue
 <section class="bg-inv-surface-1">
     <div class="<?php echo $wrap . ' ' . $section_pad; ?> grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16">
         <div data-fade class="lg:col-span-5">
-            <div class="lg:sticky lg:top-24">
+            <div class="lg:sticky lg:top-[150px]">
                 <h2 class="<?php echo $h2; ?> text-inv-ink">Производство и отгрузка</h2>
                 <p class="mt-5 sm:mt-6 text-base leading-[1.55] text-inv-ink-muted max-w-[46ch]">
                     Режем ленты под задачу заказчика и держим ходовые позиции на складе.

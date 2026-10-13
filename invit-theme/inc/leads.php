@@ -112,7 +112,7 @@ function invit_lead_details($post) {
         echo '<tr><th scope="row">', esc_html($label), '</th><td>', $html, '</td></tr>';
     }
     $mail = get_post_meta($post->ID, '_invit_lead_mail', true);
-    echo '<tr><th scope="row">Письмо на ', esc_html(invit_company('email')), '</th><td>',
+    echo '<tr><th scope="row">Письмо на ', esc_html(implode(', ', invit_notify_emails())), '</th><td>',
         $mail === 'sent' ? 'отправлено' : ($mail === 'failed' ? 'не ушло' : '—'), '</td></tr>';
     echo '</tbody></table>';
 }
