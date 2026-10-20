@@ -16,6 +16,7 @@ require_once get_template_directory() . '/inc/forms.php';
 require_once get_template_directory() . '/inc/leads.php';
 require_once get_template_directory() . '/inc/mail.php';
 require_once get_template_directory() . '/inc/seo.php';
+require_once get_template_directory() . '/inc/redirects.php';
 require_once get_template_directory() . '/inc/news.php';
 require_once get_template_directory() . '/inc/migrations.php';
 require_once get_template_directory() . '/inc/admin.php';
