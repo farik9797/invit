@@ -107,6 +107,12 @@ function invit_catalog_redirects() {
         wp_safe_redirect(invit_url_catalog(['q' => get_search_query(false)]), 301);
         exit;
     }
+    // Метка «Собственное производство» — это ленты EUROBAND; страницы меток не нужны
+    if (is_tax('product_tag')) {
+        $own = get_queried_object()->name === 'Собственное производство';
+        wp_safe_redirect(invit_url_catalog($own ? ['brand' => INVIT_OWN_BRAND] : []), 301);
+        exit;
+    }
     // Страница бренда WooCommerce (/brand/…/) — это каталог с отбором по бренду
     if (is_tax('product_brand')) {
         wp_safe_redirect(invit_url_catalog(['brand' => get_queried_object()->name]), 301);
