@@ -363,6 +363,10 @@
                 if (!val('company')) errors.company = 'Укажите название организации или ИП';
                 if (val('phone').replace(/\D/g, '').length < 9) errors.phone = 'Введите номер телефона полностью';
                 if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val('email'))) errors.email = 'Введите адрес почты, например mail@company.by';
+                if (!form.elements.consent.checked) errors.consent = 'Нужно согласие на обработку персональных данных';
+                var consentError = $('[data-error-for="consent"]', form);
+                consentError.hidden = !errors.consent;
+                consentError.innerHTML = errors.consent ? alertIcon + esc(errors.consent) : '';
                 ['name', 'company', 'phone', 'email'].forEach(function (n) {
                     var input = form.elements[n];
                     var holder = $('[data-error-for="' + n + '"]', form);
@@ -1201,9 +1205,13 @@
         var order = $('[data-order-form]', cartPage);
         if (order) {
             var agree = $('[data-agree]', order);
+            var consent = $('[data-consent]', order);
             var submit = $('button[type="submit"]', order);
             var unp = order.elements.unp;
-            agree.addEventListener('change', function () { submit.disabled = !agree.checked; });
+            // Отправить можно, когда отмечены обе галочки: статус покупателя и согласие
+            var toggleSubmit = function () { submit.disabled = !(agree.checked && consent.checked); };
+            agree.addEventListener('change', toggleSubmit);
+            consent.addEventListener('change', toggleSubmit);
             unp.addEventListener('input', function () { unp.value = unp.value.replace(/\D/g, '').slice(0, 9); });
 
             order.addEventListener('submit', function (e) {
@@ -1225,7 +1233,7 @@
                     holder.hidden = !errors[n];
                     holder.innerHTML = errors[n] ? hint + esc(errors[n]) : '';
                 });
-                if (Object.keys(errors).length || !agree.checked) return;
+                if (Object.keys(errors).length || !agree.checked || !consent.checked) return;
 
                 submit.disabled = true;
                 var data = { ajax: '1' };

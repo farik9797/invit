@@ -183,10 +183,13 @@ $summary = $count ? $count . ' ' . invit_plural($count, ['позиция', 'по
                         <label class="flex gap-2.5 items-start cursor-pointer">
                             <input type="checkbox" name="agree" value="1" data-agree class="mt-0.5 w-4 h-4 shrink-0 accent-inv-blue cursor-pointer">
                             <span class="text-xs leading-relaxed text-inv-ink">
-                                Я подтверждаю, что оформляю заказ от имени юридического лица (ИП), и
-                                даю согласие на обработку персональных данных в целях формирования
-                                индивидуального счёта-фактуры.
+                                Я подтверждаю, что оформляю заказ от имени юридического лица (ИП).
                             </span>
+                        </label>
+
+                        <label class="flex gap-2.5 items-start cursor-pointer">
+                            <input type="checkbox" name="consent" value="1" data-consent class="mt-0.5 w-4 h-4 shrink-0 accent-inv-blue cursor-pointer">
+                            <span class="text-xs leading-relaxed text-inv-ink">Я даю согласие на <a href="<?php echo esc_url(home_url('/privacy/')); ?>" class="text-inv-blue underline underline-offset-2 hover:text-inv-blue-pressed" target="_blank" rel="noopener">обработку моих персональных данных</a></span>
                         </label>
 
                         <button type="submit" disabled class="w-full inline-flex items-center justify-center gap-2 min-h-11 rounded-[4px] bg-inv-blue hover:bg-inv-blue-hover text-white text-sm font-semibold transition-colors cursor-pointer disabled:bg-inv-border disabled:text-inv-ink-muted disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue">

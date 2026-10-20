@@ -66,6 +66,11 @@ $field = 'w-full p-2.5 bg-surface-soft border border-line rounded-[4px] text-ink
                     <textarea name="task" rows="2" placeholder="Например: запросить прайс или консультацию по ПСУЛ…" class="<?php echo esc_attr($field); ?>"></textarea>
                 </div>
 
+                <label class="flex gap-2 items-start cursor-pointer">
+                    <input type="checkbox" name="consent" value="1" required class="mt-0.5 w-4 h-4 shrink-0 accent-inv-blue cursor-pointer">
+                    <span class="leading-relaxed text-ink/80">Я даю согласие на <a href="<?php echo esc_url(home_url('/privacy/')); ?>" class="text-inv-blue underline underline-offset-2 hover:text-inv-blue-pressed" target="_blank" rel="noopener">обработку моих персональных данных</a></span>
+                </label>
+
                 <button type="submit" class="w-full bg-brand-red hover:bg-brand-red-hover text-white font-bold py-3 px-4 rounded-[4px] shadow transition-all flex items-center justify-center gap-2 cursor-pointer">
                     <?php echo invit_icon('send', 'w-4 h-4'); ?>
                     <span>Жду звонка инженера</span>

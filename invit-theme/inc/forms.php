@@ -45,7 +45,8 @@ function invit_handle_request() {
     if ($fields['company'] === '') $errors['company'] = 'Укажите название организации или ИП';
     if (strlen(preg_replace('/\D/', '', $fields['phone'])) < 9) $errors['phone'] = 'Введите номер телефона полностью';
     if (!is_email($fields['email'])) $errors['email'] = 'Введите адрес почты, например mail@company.by';
-    if ($errors) invit_respond(false, ['errors' => $errors]);
+    if (empty($_POST['consent'])) $errors['consent'] = 'Нужно согласие на обработку персональных данных';
+    if ($errors) invit_respond(false, ['errors' => $errors, 'message' => reset($errors)]);
 
     $kind = invit_field_value('kind') === 'callback' ? 'Обратный звонок' : 'Запрос расчёта';
     if ($fields['source'] === '') $fields['source'] = (string) wp_get_referer();
@@ -161,6 +162,7 @@ function invit_handle_order() {
     if (!is_email($f['email'])) $errors['email'] = 'Счёт придёт на этот адрес — проверьте его';
     if (strlen(preg_replace('/\D/', '', $f['phone'])) < 9) $errors['phone'] = 'Введите номер телефона полностью';
     if (empty($_POST['agree'])) $errors['agree'] = 'Подтвердите статус покупателя';
+    if (empty($_POST['consent'])) $errors['consent'] = 'Нужно согласие на обработку персональных данных';
     if ($errors) invit_respond(false, ['errors' => $errors]);
 
     try {

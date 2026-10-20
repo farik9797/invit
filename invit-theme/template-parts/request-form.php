@@ -72,6 +72,14 @@ $error = 'flex items-center gap-1.5 text-sm text-inv-error';
             розничная продажа физическим лицам не ведётся.
         </p>
 
+        <div class="sm:col-span-2 flex flex-col gap-2">
+            <label class="flex gap-2.5 items-start cursor-pointer">
+                <input type="checkbox" name="consent" value="1" class="mt-0.5 w-4 h-4 shrink-0 accent-inv-blue cursor-pointer">
+                <span class="text-sm leading-relaxed text-inv-ink">Я даю согласие на <a href="<?php echo esc_url(home_url('/privacy/')); ?>" class="text-inv-blue underline underline-offset-2 hover:text-inv-blue-pressed" target="_blank" rel="noopener">обработку моих персональных данных</a></span>
+            </label>
+            <p data-error-for="consent" hidden class="<?php echo $error; ?>"></p>
+        </div>
+
         <div class="sm:col-span-2">
             <button type="submit" class="inline-flex items-center justify-center w-full sm:w-auto min-h-11 px-8 rounded-[4px] bg-inv-blue text-white text-sm font-semibold cursor-pointer transition-[background-color,transform] duration-[120ms] ease-[cubic-bezier(0.4,0,0.2,1)] hover:bg-inv-blue-hover active:bg-inv-blue-pressed active:scale-[0.98] disabled:opacity-70 disabled:cursor-wait focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inv-blue">
                 Запросить расчёт
